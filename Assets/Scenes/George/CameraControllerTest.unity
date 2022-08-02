@@ -751,14 +751,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   zoomLevels:
-  - 1
-  - 0.5
-  - 0
+  - interp: 1
+    WASDMoveSpeed: 0
+  - interp: 0.5
+    WASDMoveSpeed: 10
+  - interp: 0
+    WASDMoveSpeed: 1
   zoomLevelIndex: 0
   zoomInterpSpeed: 2
   zoomedIn: {fileID: 683209671}
   zoomedOut: {fileID: 1577242657}
-  WASDMoveSpeed: 10
   zoomCurveHandle: {fileID: 441917809}
   bounds: {fileID: 1201432590}
 --- !u!114 &963194230
