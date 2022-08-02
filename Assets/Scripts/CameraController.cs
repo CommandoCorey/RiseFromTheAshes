@@ -1,8 +1,20 @@
 using UnityEngine;
 using System.Collections.Generic;
 
+[System.Serializable]
+public struct ZoomLevel
+{
+	[Range(0, 1)]
+	[Tooltip("Describes where on the curve that the camera will be placed at this zoom level index. " +
+		"1 is fully zoomed in, 0 is fully zoomed out.")]
+	public float interp;
+
+	[Tooltip("How fast the camera will move with WASD at this zoom level index.")]
+	public float WASDMoveSpeed;
+};
+
 public class CameraController : MonoBehaviour {
-	[SerializeField] [Range(0, 1)] List<float> zoomLevels;
+	[SerializeField] List<ZoomLevel> zoomLevels;
 	[SerializeField] int zoomLevelIndex;
 
 	float zoomTime;
@@ -16,8 +28,6 @@ public class CameraController : MonoBehaviour {
 
 	Transform zoomedInTransform;
 	Transform zoomedOutTransform;
-
-	[SerializeField] float WASDMoveSpeed;
 
 	[SerializeField] Transform zoomCurveHandle;
 
@@ -44,7 +54,7 @@ public class CameraController : MonoBehaviour {
 			if (zoomLevelIndex < 0) { zoomLevelIndex = 0; }
 			if (zoomLevelIndex > zoomLevels.Count - 1) { zoomLevelIndex = zoomLevels.Count - 1; }
 
-			zoomRange = new Vector2(zoomLevel, zoomLevels[zoomLevelIndex]);
+			zoomRange = new Vector2(zoomLevel, zoomLevels[zoomLevelIndex].interp);
 			zoomTime = 0.0f;
 		}
 
@@ -54,7 +64,7 @@ public class CameraController : MonoBehaviour {
 		}
 
 		Vector2 axis = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-		Vector2 mod = axis * WASDMoveSpeed * Time.deltaTime;
+		Vector2 mod = axis * zoomLevels[zoomLevelIndex].WASDMoveSpeed * Time.deltaTime;
 		zoomedInTransform.position += new Vector3(mod.x, 0.0f, mod.y);
 		zoomedInTransform.position = new Vector3(
 			Mathf.Clamp(zoomedInTransform.position.x, bounds.bounds.min.x, bounds.bounds.max.x),
