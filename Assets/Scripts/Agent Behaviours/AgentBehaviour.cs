@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AgentBehaviour : MonoBehaviour
 {
-    [SerializeField] float weight = 1.0f;
+    public float weight = 1.0f;
 
     public GameObject target;    
 
