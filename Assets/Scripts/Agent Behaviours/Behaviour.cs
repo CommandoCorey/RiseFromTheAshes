@@ -12,7 +12,7 @@ public class Behaviour : MonoBehaviour
     //[HideInInspector]
     //public FleeBehaviour flee;
 
-    SeekState seekState;
+    FlockState seekState;
 
     // Flocking behaviours
     [HideInInspector]
@@ -28,7 +28,7 @@ public class Behaviour : MonoBehaviour
     public enum UnitState
     {
         Idle,
-        Seek,
+        Flock,
         Attack
     }
     
@@ -36,10 +36,10 @@ public class Behaviour : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        agent = gameObject.AddComponent<Agent>(); // add agent component to game object
+        //agent = gameObject.AddComponent<Agent>(); // add agent component to game object
         //seek = gameObject.GetComponent<SeekBehaviour>();        
 
-        ChangeState(UnitState.Seek);
+        ChangeState(UnitState.Flock);
 
         /*
         if (seek == null)
@@ -62,7 +62,7 @@ public class Behaviour : MonoBehaviour
         {
             if(state == UnitState.Idle)
             {
-                ChangeState(UnitState.Seek);
+                ChangeState(UnitState.Flock);
             }
             else
             {
@@ -81,13 +81,12 @@ public class Behaviour : MonoBehaviour
             case UnitState.Idle:
                 DestroyImmediate(seekState);
                 //DestroyImmediate(attackState);
-
             break;
 
-            case UnitState.Seek:
-                if(GetComponent<SeekState>() == null)
+            case UnitState.Flock:
+                if(GetComponent<FlockState>() == null)
                 {
-                    seekState = gameObject.AddComponent<SeekState>();
+                    seekState = gameObject.AddComponent<FlockState>();
                 }
 
                 //DestroyImmediate(attackState);
@@ -95,7 +94,6 @@ public class Behaviour : MonoBehaviour
 
             case UnitState.Attack:
                 DestroyImmediate(seekState);
-
             break;
         }
     }
@@ -108,7 +106,7 @@ public class Behaviour : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        UnityEditor.Handles.Label(transform.position + Vector3.up * 3, "Seek");
+        //UnityEditor.Handles.Label(transform.position + Vector3.up * 3, "Seek");
     }
 
 }

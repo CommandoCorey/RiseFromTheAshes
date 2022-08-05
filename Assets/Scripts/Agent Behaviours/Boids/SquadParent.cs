@@ -16,6 +16,7 @@ public class SquadParent : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        /*
         children = new List<GameObject>();
 
         // spawn squard children
@@ -27,7 +28,7 @@ public class SquadParent : MonoBehaviour
             temp.GetComponent<Behaviour>().target = gameObject; // set squad leader as the object to follow
 
             children.Add(temp);
-        }
+        }*/
     }
 
     // Update is called once per frame
@@ -35,5 +36,7 @@ public class SquadParent : MonoBehaviour
     {
         // moves gameobject towards target in a straight line
         transform.position += (target.transform.position - transform.position).normalized * Time.deltaTime * 5.0f;
+        transform.LookAt(target.transform, Vector3.up);
+        //transform.rotation = Quaternion.Euler(0, transform.rotation.y, 0);
     }
 }

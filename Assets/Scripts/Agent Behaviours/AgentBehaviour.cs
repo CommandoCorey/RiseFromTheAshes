@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,14 +7,15 @@ public class AgentBehaviour : MonoBehaviour
 {
     public float weight = 1.0f;
 
+    [HideInInspector]
     public GameObject target;    
 
-    [SerializeField] Vector3 destination;
+    //[SerializeField] Vector3 destination;
 
-    [SerializeField] protected float maxSpeed = 50.0f;
-    [SerializeField] protected float maxAccel = 50.0f;
-    [SerializeField] protected float maxRotation = 5.0f;
-    [SerializeField] protected float maxAngularAccel = 5.0f;
+    //[SerializeField] protected float maxSpeed = 50.0f;
+    //[SerializeField] protected float maxAccel = 50.0f;
+    //[SerializeField] protected float maxRotation = 5.0f;
+    //[SerializeField] protected float maxAngularAccel = 5.0f;
 
     protected float angularVelocity = 0;
     protected float angularAccel = 0;    
@@ -25,14 +27,23 @@ public class AgentBehaviour : MonoBehaviour
         agent = GetComponent<Agent>();
     }
 
+    /*
     public virtual void State()
     {
         agent = gameObject.GetComponent<Agent>();
-    }
+    }*/
 
     public virtual void Update()
     {
-        agent.SetSteering(GetSteering(), weight);
+        try
+        {
+            agent.SetSteering(GetSteering(), weight);
+        }
+        catch(NullReferenceException e)
+        {
+            Debug.LogError(e.Message);
+        }
+        
     }
 
     /// <summary>

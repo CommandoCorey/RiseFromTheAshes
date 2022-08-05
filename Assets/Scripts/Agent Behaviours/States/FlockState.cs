@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SeekState : MonoBehaviour
+public class FlockState : MonoBehaviour
 {
     Behaviour behaviours;
     GameObject target;
@@ -15,9 +15,9 @@ public class SeekState : MonoBehaviour
 
         if(behaviours.seek == null)
         {
-            behaviours.seek = gameObject.AddComponent<SeekBehaviour>();
+            behaviours.seek = gameObject.GetComponent<SeekBehaviour>();
             behaviours.seek.target = target;
-            //behaviours.seek.weight = 0.7f;
+            behaviours.seek.weight = 0.7f;
             behaviours.seek.enabled = true;
 
             //behaviours.flee = gameObject.AddComponent<FleeBehaviour>();
@@ -25,15 +25,15 @@ public class SeekState : MonoBehaviour
             //behaviours.enabled = true;
 
             // Add the boid cohesion behaviour
-            behaviours.cohesion = gameObject.AddComponent<BoidCohesion>();
+            behaviours.cohesion = gameObject.GetComponent<BoidCohesion>();
             behaviours.cohesion.targets = behaviours.target.GetComponent<SquadParent>().children;
             behaviours.cohesion.weight = 0.4f;
             behaviours.cohesion.enabled = true;
 
             // Add the boid seperation behaviour
-            behaviours.sepearation = gameObject.AddComponent<BoidSepearation>();
+            behaviours.sepearation = gameObject.GetComponent<BoidSepearation>();
             behaviours.sepearation.targets = behaviours.target.GetComponent<SquadParent>().children;
-            behaviours.sepearation.weight = 70.0f;
+            behaviours.sepearation.weight = 10.0f;
             behaviours.sepearation.enabled = true;
         }
 
