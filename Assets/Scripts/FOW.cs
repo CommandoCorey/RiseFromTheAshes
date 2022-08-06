@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 
 /* NOTE (George):
@@ -14,6 +15,7 @@ using UnityEngine;
  * version performs well enough, and maybe run tests to
  * see if that's actually worth the extra effort. */
 
+[RequireComponent(typeof(MeshFilter))]
 class FOW : MonoBehaviour {
 	struct MaskRect {
 		Vector2Int position;
@@ -27,6 +29,11 @@ class FOW : MonoBehaviour {
 
 	[SerializeField] GameObject cubePrefab;
 
+	Mesh mesh;
+
+	Vector3[] vertices;
+	int[] tris;
+
 	byte[] FOWMask;
 
 	void Start() {
@@ -34,16 +41,10 @@ class FOW : MonoBehaviour {
 
 		SetMaskFromTexture(maskTexture);
 
-		/* Temporary. */
-		for (int y = 0; y < maskExtent.y; y++) {
-			for (int x = 0; x < maskExtent.x; x++) {
-				if (FOWMask[x + y * maskExtent.x] == 0x1) {
-					Instantiate(cubePrefab,
-						new Vector3(offset.x + (float)x * cellSize.x, offset.y, offset.z + (float)y * cellSize.y),
-						Quaternion.identity, transform);
-				}
-			}
-		}
+		mesh = new Mesh();
+		GetComponent<MeshFilter>().mesh = mesh;
+
+		GenerateMesh();
 	}
 
 	void Update() {
@@ -73,5 +74,40 @@ class FOW : MonoBehaviour {
 				}
 			}
 		}
+	}
+
+	public void GenerateMesh() {
+		List<Vector3> vertices = new List<Vector3>();
+		List<int> tris = new List<int>();
+
+		int index_offset = 0;
+		for (int y = 0; y < maskExtent.y; y++) {
+			for (int x = 0; x < maskExtent.x; x++) {
+				int idx = x + y * maskExtent.x;
+
+				if (FOWMask[idx] == 0x0) { continue; }
+
+			//	Debug.Log(x.ToString() + ", " + y.ToString());
+
+				vertices.Add(new Vector3((float)x,        0.0f, (float)y));
+				vertices.Add(new Vector3((float)x,        0.0f, (float)y + 1.0f));
+				vertices.Add(new Vector3((float)x + 1.0f, 0.0f, (float)y));
+				vertices.Add(new Vector3((float)x + 1.0f, 0.0f, (float)y + 1.0f));
+
+				tris.Add(index_offset + 0);
+				tris.Add(index_offset + 1);
+				tris.Add(index_offset + 2);
+				tris.Add(index_offset + 1);
+				tris.Add(index_offset + 3);
+				tris.Add(index_offset + 2);
+
+				index_offset += 4;
+			}
+		}
+
+		mesh.Clear();
+		mesh.vertices = vertices.ToArray();
+		mesh.triangles = tris.ToArray();
+		mesh.RecalculateNormals();
 	}
 }
