@@ -47,7 +47,7 @@ public class FlockState : MonoBehaviour
 
     private void OnDestroy()
     {
-        Destroy(behaviours.seek);
+        //Destroy(behaviours.seek);
     }
 
     private void OnDrawGizmos()
