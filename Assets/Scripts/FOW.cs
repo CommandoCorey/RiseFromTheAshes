@@ -31,10 +31,10 @@ class FOW : MonoBehaviour {
 
 	Mesh mesh;
 
-	Vector3[] vertices;
-	int[] tris;
-
 	byte[] FOWMask;
+
+	List<Vector3> vertices;
+	List<int> tris;
 
 	void Start() {
 		FOWMask = new byte[maskExtent.x * maskExtent.y];
@@ -44,6 +44,12 @@ class FOW : MonoBehaviour {
 		mesh = new Mesh();
 		GetComponent<MeshFilter>().mesh = mesh;
 
+		vertices = new List<Vector3>();
+		tris = new List<int>();
+	}
+
+	private void Update()
+	{
 		GenerateMesh();
 	}
 
@@ -80,12 +86,39 @@ class FOW : MonoBehaviour {
 		return FOWMask[x + y * maskExtent.x] == 0x0 ? true : false;
 	}
 
+	void EmitTriangle(Vector2 a, Vector2 b, Vector2 c)
+	{
+		int indexOffset = vertices.Count;
+		vertices.Add(new Vector3(a.x, 0.0f, a.y));
+		vertices.Add(new Vector3(b.x, 0.0f, b.y));
+		vertices.Add(new Vector3(c.x, 0.0f, c.y));
+
+		tris.Add(indexOffset + 0);
+		tris.Add(indexOffset + 1);
+		tris.Add(indexOffset + 2);
+	}
+
+	void EmitQuad(Vector2 pos, Vector2 size)
+	{
+		int indexOffset = vertices.Count;
+
+		vertices.Add(new Vector3(pos.x,          0.0f, pos.y + size.y));
+		vertices.Add(new Vector3(pos.x + size.x, 0.0f, pos.y + size.y));
+		vertices.Add(new Vector3(pos.x + size.x, 0.0f, pos.y));
+		vertices.Add(new Vector3(pos.x,          0.0f, pos.y));
+	
+		tris.Add(indexOffset + 1);
+		tris.Add(indexOffset + 2);
+		tris.Add(indexOffset + 3);
+		tris.Add(indexOffset + 0);
+		tris.Add(indexOffset + 1);
+		tris.Add(indexOffset + 3);
+	}
+
 	private void GenerateMesh()
 	{
-		List<Vector3> vertices = new List<Vector3>();
-		List<int> tris = new List<int>();
-
-		int index_offset = 0;
+		vertices.Clear();
+		tris.Clear();
 
 		int endY = maskExtent.y - 1;
 		int endX = maskExtent.x - 1;
@@ -106,52 +139,69 @@ class FOW : MonoBehaviour {
 				 * TODO (George): Make an ID from the combination of topLeft, topRight, botLeft, botRight
 				 * and use it as an index into an array to get the state. Be faster, hopefully.
 				 *
-				 * TODO (George): Blur the mask and lerp between the values for better smoothing. */
+				 * TODO (George): Blur the mask and lerp between the values for better smoothing.
+				 * 
+				 * This generates quite an ineffecient mesh; It doesn't care much about reusing vertices.
+				 *
+				 * There's currently unhandled cases, such as the two ambigous ones that exist in this
+				 * algorithm. I think it's fine to leave them unhandled, though we will see once we
+				 * get some actual gameplay happening. I doubt anybody will notice - it's not like there's
+				 * going to be gaps in an outline or something. */
 				int state = 0;
 
 				Gizmos.color = Color.white;
 				if (topLeft && topRight && botLeft && botRight)
 				{
-
 					state = 15;
 				} else if (!topLeft && !topRight && !botLeft && !botRight)
 				{
-					vertices.Add(new Vector3(pos.x,              0.0f, pos.y + cellSize.y));
-					vertices.Add(new Vector3(pos.x + cellSize.x, 0.0f, pos.y + cellSize.y));
-					vertices.Add(new Vector3(pos.x + cellSize.x, 0.0f, pos.y));
-					vertices.Add(new Vector3(pos.x,              0.0f, pos.y));
-
-					tris.Add(index_offset + 1);
-					tris.Add(index_offset + 2);
-					tris.Add(index_offset + 3);
-					tris.Add(index_offset + 0);
-					tris.Add(index_offset + 1);
-					tris.Add(index_offset + 3);
-					
-					index_offset += 4;
+					EmitQuad(pos, cellSize);
 					state = 0;
 				} else if (!topLeft && !topRight && botLeft && !botRight)
 				{
-					//Gizmos.DrawLine(new Vector3(pos.x, 0.0f, pos.y + hcs.y), new Vector3(pos.x + hcs.x, 0.0f, pos.y + cellSize.y));
+					//Debug.DrawLine(new Vector3(pos.x, 0.0f, pos.y + hcs.y), new Vector3(pos.x + hcs.x, 0.0f, pos.y + cellSize.y));
+					EmitQuad(new Vector2(pos.x + hcs.x, pos.y), new Vector2(hcs.x, cellSize.y));
+					EmitQuad(pos, hcs);
+					EmitTriangle(
+						new Vector2(pos.x + hcs.x, pos.y + cellSize.y),
+						pos + hcs,
+						new Vector2(pos.x, pos.y + hcs.y)
+						);
 					state = 1;
 				} else if (!topLeft && !topRight && !botLeft && botRight)
 				{
-				//	Gizmos.DrawLine(new Vector3(pos.x + cellSize.x, 0.0f, pos.y + hcs.y), new Vector3(pos.x + hcs.x, 0.0f, pos.y + cellSize.y));
+					//Debug.DrawLine(new Vector3(pos.x + cellSize.x, 0.0f, pos.y + hcs.y), new Vector3(pos.x + hcs.x, 0.0f, pos.y + cellSize.y));
+					EmitQuad(pos, new Vector2(hcs.x, cellSize.y));
+					EmitQuad(new Vector2(pos.x + hcs.x, pos.y), hcs);
+					EmitTriangle(
+						new Vector2(pos.x + cellSize.x, pos.y + hcs.y),
+						pos + hcs,
+						new Vector2(pos.x + hcs.x, pos.y + cellSize.y)
+						);
 					state = 2;
 				} else if (!topLeft && !topRight && botLeft && botRight)
 				{
-				//	Gizmos.DrawLine(new Vector3(pos.x, 0.0f, pos.y + hcs.y), new Vector3(pos.x + cellSize.x, 0.0f, pos.y + hcs.y));
+					//Debug.DrawLine(new Vector3(pos.x, 0.0f, pos.y + hcs.y), new Vector3(pos.x + cellSize.x, 0.0f, pos.y + hcs.y));
+					EmitQuad(pos, new Vector2(cellSize.x, hcs.y));
 					state = 3;
 				} else if (!topLeft && topRight && !botLeft && !botRight)
 				{
-				//	Gizmos.DrawLine(new Vector3(pos.x + hcs.x, 0.0f, pos.y), new Vector3(pos.x + cellSize.x, 0.0f, pos.y + hcs.y));
+					//Debug.DrawLine(new Vector3(pos.x + hcs.x, 0.0f, pos.y), new Vector3(pos.x + cellSize.x, 0.0f, pos.y + hcs.y));
+					EmitQuad(pos, new Vector2(hcs.x, cellSize.y));
+					EmitQuad(pos + hcs, hcs);
+					EmitTriangle(
+						new Vector2(pos.x + hcs.x, pos.y),
+						pos + hcs,
+						new Vector2(pos.x + cellSize.x, pos.y + hcs.y)
+						);
 					state = 4;
 				} else if (!topLeft && topRight && botLeft && !botRight)
 				{
 					state = 5;
 				} else if (!topLeft && topRight && !botLeft && botRight)
 				{
-				//	Gizmos.DrawLine(new Vector3(pos.x + hcs.x, 0.0f, pos.y), new Vector3(pos.x + hcs.x, 0.0f, pos.y + cellSize.y));
+					//Debug.DrawLine(new Vector3(pos.x + hcs.x, 0.0f, pos.y), new Vector3(pos.x + hcs.x, 0.0f, pos.y + cellSize.y));
+					EmitQuad(pos, new Vector2(hcs.x, cellSize.y));
 					state = 6;
 				} else if (!topLeft && topRight && botLeft && botRight)
 				{
@@ -191,8 +241,7 @@ class FOW : MonoBehaviour {
 		mesh.Clear();
 		mesh.vertices = vertices.ToArray();
 		mesh.triangles = tris.ToArray();
-		Debug.Log(tris.Count);
-		//mesh.RecalculateNormals();
+		mesh.RecalculateNormals();
 		mesh.RecalculateBounds();
 	}
 }
