@@ -55,6 +55,8 @@ class FOW : MonoBehaviour {
 	}
 
 	public void SetMaskFromTexture(Texture2D texture) {
+		if (FOWMask == null) { FOWMask = new byte[maskExtent.x * maskExtent.y]; }
+
 		/* Texture.GetPixel is incredibly slow.
 		 *
 		 * This function should be used *very* sparingly, if at
@@ -76,38 +78,137 @@ class FOW : MonoBehaviour {
 		}
 	}
 
+	bool GetMask(int x, int y)
+	{
+		return FOWMask[x + y * maskExtent.x] == 0x0 ? true : false;
+	}
+
 	public void GenerateMesh() {
-		List<Vector3> vertices = new List<Vector3>();
-		List<int> tris = new List<int>();
+	}
 
-		int index_offset = 0;
-		for (int y = 0; y < maskExtent.y; y++) {
-			for (int x = 0; x < maskExtent.x; x++) {
-				int idx = x + y * maskExtent.x;
+	private void OnDrawGizmos()
+	{
+		/*		List<Vector3> vertices = new List<Vector3>();
+				List<int> tris = new List<int>();
 
-				if (FOWMask[idx] == 0x0) { continue; }
+				int index_offset = 0;
+				for (int y = 0; y < maskExtent.y; y++) {
+					for (int x = 0; x < maskExtent.x; x++) {
+						int idx = x + y * maskExtent.x;
 
-			//	Debug.Log(x.ToString() + ", " + y.ToString());
+						if (FOWMask[idx] == 0x0) { continue; }
 
-				vertices.Add(new Vector3((float)x,        0.0f, (float)y));
-				vertices.Add(new Vector3((float)x,        0.0f, (float)y + 1.0f));
-				vertices.Add(new Vector3((float)x + 1.0f, 0.0f, (float)y));
-				vertices.Add(new Vector3((float)x + 1.0f, 0.0f, (float)y + 1.0f));
+						vertices.Add(new Vector3((float)x - cellSize.x * 0.5f, 0.0f, (float)y - cellSize.y * 0.5f));
+						vertices.Add(new Vector3((float)x - cellSize.x * 0.5f, 0.0f, (float)y - cellSize.y * 0.5f));
+						vertices.Add(new Vector3((float)x + cellSize.x * 0.5f, 0.0f, (float)y + cellSize.y * 0.5f));
+						vertices.Add(new Vector3((float)x + cellSize.x * 0.5f, 0.0f, (float)y + cellSize.y * 0.5f));
 
-				tris.Add(index_offset + 0);
-				tris.Add(index_offset + 1);
-				tris.Add(index_offset + 2);
-				tris.Add(index_offset + 1);
-				tris.Add(index_offset + 3);
-				tris.Add(index_offset + 2);
+						tris.Add(index_offset + 0);
+						tris.Add(index_offset + 1);
+						tris.Add(index_offset + 2);
+						tris.Add(index_offset + 1);
+						tris.Add(index_offset + 3);
+						tris.Add(index_offset + 2);
 
-				index_offset += 4;
+						index_offset += 4;
+					}
+				}
+
+				mesh.Clear();
+				mesh.vertices = vertices.ToArray();
+				mesh.triangles = tris.ToArray();
+				mesh.RecalculateNormals(); */
+
+		/* TODO (George): Get rid of this. */
+		if (!Application.isPlaying) { return; }
+
+		int endY = maskExtent.y - 1;
+		int endX = maskExtent.x - 1;
+		for (int y = 0; y < endY; y++)
+		{
+			for (int x = 0; x < endX; x++)
+			{
+				bool topLeft  = GetMask(x, y);
+				bool topRight = GetMask(x + 1, y);
+				bool botLeft  = GetMask(x, y + 1);
+				bool botRight = GetMask(x + 1, y + 1);
+
+				Vector2 pos = new Vector2((float)x * cellSize.x, (float)y * cellSize.y);
+				Vector2 hcs = cellSize / 2.0f;
+
+				/* I hate this.
+				 *
+				 * TODO (George): Make an ID from the combination of topLeft, topRight, botLeft, botRight
+				 * and use it as an index into an array to get the state. Be faster, hopefully.
+				 *
+				 * TODO (George): Blur the mask and lerp between the values for better smoothing. */
+				int state = 0;
+
+				Gizmos.color = Color.white;
+
+				if (!topLeft && !topRight && !botLeft && !botRight)
+				{
+					state = 0;
+				} else if (!topLeft && !topRight && botLeft && !botRight)
+				{
+					Gizmos.DrawLine(new Vector3(pos.x, 0.0f, pos.y + hcs.y), new Vector3(pos.x + hcs.x, 0.0f, pos.y + cellSize.y));
+					state = 1;
+				} else if (!topLeft && !topRight && !botLeft && botRight)
+				{
+					Gizmos.DrawLine(new Vector3(pos.x + cellSize.x, 0.0f, pos.y + hcs.y), new Vector3(pos.x + hcs.x, 0.0f, pos.y + cellSize.y));
+					state = 2;
+				} else if (!topLeft && !topRight && botLeft && botRight)
+				{
+					Gizmos.DrawLine(new Vector3(pos.x, 0.0f, pos.y + hcs.y), new Vector3(pos.x + cellSize.x, 0.0f, pos.y + hcs.y));
+					state = 3;
+				} else if (!topLeft && topRight && !botLeft && !botRight)
+				{
+					Gizmos.DrawLine(new Vector3(pos.x + hcs.x, 0.0f, pos.y), new Vector3(pos.x + cellSize.x, 0.0f, pos.y + hcs.y));
+					state = 4;
+				} else if (!topLeft && topRight && botLeft && !botRight)
+				{
+					state = 5;
+				} else if (!topLeft && topRight && !botLeft && botRight)
+				{
+					Gizmos.DrawLine(new Vector3(pos.x + hcs.x, 0.0f, pos.y), new Vector3(pos.x + hcs.x, 0.0f, pos.y + cellSize.y));
+					state = 6;
+				} else if (!topLeft && topRight && botLeft && botRight)
+				{
+					Gizmos.DrawLine(new Vector3(pos.x + hcs.x, 0.0f, pos.y), new Vector3(pos.x, 0.0f, pos.y + hcs.x));
+					state = 7;
+				} else if (topLeft && !topRight && !botLeft && !botRight)
+				{
+					Gizmos.DrawLine(new Vector3(pos.x + hcs.x, 0.0f, pos.y), new Vector3(pos.x, 0.0f, pos.y + hcs.x));
+					state = 8;
+				} else if (topLeft && !topRight && botLeft && !botRight)
+				{
+					Gizmos.DrawLine(new Vector3(pos.x + hcs.x, 0.0f, pos.y), new Vector3(pos.x + hcs.x, 0.0f, pos.y + cellSize.y));
+					state = 9;
+				} else if (topLeft && !topRight && !botLeft && botRight)
+				{
+					state = 10;
+				} else if (topLeft && !topRight && botLeft && botRight)
+				{
+					Gizmos.DrawLine(new Vector3(pos.x + hcs.x, 0.0f, pos.y), new Vector3(pos.x + cellSize.x, 0.0f, pos.y + hcs.y));
+					state = 11;
+				} else if (topLeft && topRight && !botLeft && !botRight)
+				{
+					Gizmos.DrawLine(new Vector3(pos.x, 0.0f, pos.y + hcs.y), new Vector3(pos.x + cellSize.x, 0.0f, pos.y + hcs.y));
+					state = 12;
+				} else if (topLeft && topRight && botLeft && !botRight)
+				{
+
+					Gizmos.DrawLine(new Vector3(pos.x + cellSize.x, 0.0f, pos.y + hcs.y), new Vector3(pos.x + hcs.x, 0.0f, pos.y + cellSize.y));
+					state = 13;
+				} else if (topLeft && topRight && !botLeft && botRight)
+				{
+					Gizmos.DrawLine(new Vector3(pos.x, 0.0f, pos.y + hcs.y), new Vector3(pos.x + hcs.x, 0.0f, pos.y + cellSize.y));
+					state = 14;
+				} else if (topLeft && topRight && botLeft && botRight)
+				{
+					state = 15;
+				}
 			}
 		}
-
-		mesh.Clear();
-		mesh.vertices = vertices.ToArray();
-		mesh.triangles = tris.ToArray();
-		mesh.RecalculateNormals();
 	}
 }
