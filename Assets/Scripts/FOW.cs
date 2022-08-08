@@ -121,12 +121,12 @@ class FOW : MonoBehaviour {
 					vertices.Add(new Vector3(pos.x + cellSize.x, 0.0f, pos.y));
 					vertices.Add(new Vector3(pos.x,              0.0f, pos.y));
 
+					tris.Add(index_offset + 1);
 					tris.Add(index_offset + 2);
 					tris.Add(index_offset + 3);
+					tris.Add(index_offset + 0);
 					tris.Add(index_offset + 1);
 					tris.Add(index_offset + 3);
-					tris.Add(index_offset + 1);
-					tris.Add(index_offset + 0);
 					
 					index_offset += 4;
 					state = 0;
@@ -192,7 +192,7 @@ class FOW : MonoBehaviour {
 		mesh.vertices = vertices.ToArray();
 		mesh.triangles = tris.ToArray();
 		Debug.Log(tris.Count);
-		mesh.RecalculateNormals();
+		//mesh.RecalculateNormals();
 		mesh.RecalculateBounds();
 	}
 }
