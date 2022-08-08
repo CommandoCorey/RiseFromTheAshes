@@ -24,7 +24,7 @@ public class SelectedDictionary : MonoBehaviour
             if (go.GetComponent<SelectionComponent>() != null)
             {
                 go.GetComponent<SelectionComponent>().SetHighlight(true);
-                Debug.Log("Added " + id + " to selected dict");
+                //Debug.Log("Added " + id + " to selected dict");
             }
         }
     }
@@ -51,7 +51,8 @@ public class SelectedDictionary : MonoBehaviour
         {
             if(pair.Value != null)
             {
-                Destroy(selectedTable[pair.Key].GetComponent<SelectedDictionary>());
+                //Destroy(selectedTable[pair.Key].GetComponent<SelectedDictionary>());
+                selectedTable[pair.Key].GetComponent<SelectionComponent>().SetHighlight(false);                
             }
         }
         selectedTable.Clear(); // clears the whole dictionary

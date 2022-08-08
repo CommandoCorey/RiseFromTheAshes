@@ -28,6 +28,8 @@ public class GlobalSelection : MonoBehaviour
     Vector3[] verts;
     Vector3[] vecs;
 
+    private float boxHeight = 10;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -38,7 +40,7 @@ public class GlobalSelection : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //1. when left mous button clicked
+        //1. when left mouse button clicked (but not released)
         if (Input.GetMouseButtonDown(0))
         {
             p1 = Input.mousePosition;
@@ -47,92 +49,90 @@ public class GlobalSelection : MonoBehaviour
         //2. while left mouse button held
         if (Input.GetMouseButton(0))
         {
-            // check if cursor is a minimum
-            if ((p1 - Input.mousePosition).magnitude > minBoxSize)
+            if ((p1 - Input.mousePosition).magnitude > 40)
             {
                 dragSelect = true;
             }
         }
 
-        //3. when mous button comes up
+        //3. when mouse button comes up
         if (Input.GetMouseButtonUp(0))
         {
-            if (dragSelect == false)
+            if (dragSelect == false) //single select
             {
-                // cast ray from camera at cursor position
                 Ray ray = Camera.main.ScreenPointToRay(p1);
 
                 if (Physics.Raycast(ray, out hit, 50000.0f, selectionLayer))
                 {
-                    // if the left key is held down then perform and inclusive select
-                    // where new selection is added to the current selection                    
-                    if (Input.GetKey(KeyCode.LeftShift))
+                    if (Input.GetKey(KeyCode.LeftShift)) //inclusive select
                     {
                         selectedTable.AddSelected(hit.transform.gameObject);
                     }
-                    else // exclusive select: Deslect the current selection before adding
+                    else //exclusive selected
                     {
                         selectedTable.DeselectAll();
                         selectedTable.AddSelected(hit.transform.gameObject);
                     }
                 }
-                else // if we didn't hit something
+                else //if we didnt hit something
                 {
-                    // do nothing if shift is held down otherwise deselect all units
                     if (Input.GetKey(KeyCode.LeftShift))
                     {
-
+                        //do nothing
                     }
                     else
                     {
                         selectedTable.DeselectAll();
                     }
                 }
-
             }
-        }
-        else // marquee select
-        {
-            verts = new Vector3[4];
-            vecs = new Vector3[4];
-            int i = 0;
-            p2 = Input.mousePosition;
-
-            corners = GetBoundingBox(p1, p2);
-
-            foreach (Vector2 corner in corners)
+            else //marquee select
             {
-                Ray ray = Camera.main.ScreenPointToRay(corner);
+                verts = new Vector3[4];
+                vecs = new Vector3[4];
+                int i = 0;
+                p2 = Input.mousePosition;
 
-                if (Physics.Raycast(ray, out hit, 50000.0f, (1 << 8)))
+                corners = GetBoundingBox(p1, p2);
+
+                foreach (Vector2 corner in corners)
                 {
-                    verts[i] = new Vector3(hit.point.x, 0, hit.point.z);
-                    vecs[i] = ray.origin - hit.point;
-                    Debug.DrawLine(Camera.main.ScreenToWorldPoint(corner), hit.point, Color.red, 1.0f);
+                    Ray ray = Camera.main.ScreenPointToRay(corner);
+
+                    if (Physics.Raycast(ray, out hit, 50000.0f))// (1 << 8)))
+                    {
+                        verts[i] = new Vector3(hit.point.x, hit.point.y, hit.point.z);
+                        vecs[i] = ray.origin - hit.point;
+                        Debug.DrawLine(Camera.main.ScreenToWorldPoint(corner), hit.point, Color.red, 1.0f);
+                    }
+                    i++;
                 }
-                i++;
-            }
 
-            // generate the mesh
-            selectionMesh = generateSelectionMesh(verts);
+                if (!Input.GetKey(KeyCode.LeftShift))
+                {
+                    selectedTable.DeselectAll();
+                }
 
-            selectionBox = gameObject.AddComponent<MeshCollider>();
-            selectionBox.sharedMesh = selectionMesh;
-            selectionBox.convex = true;
-            selectionBox.isTrigger = true;
+                Vector3 centerPoint = GetBoxCenter();
+                Vector3 halfExtents = GetHalfExtents();
 
-            // if the shift key is not held down deselect all of the units
-            if (!Input.GetKey(KeyCode.LeftShift))
-            {
-                selectedTable.DeselectAll();
-            }
+                DrawOverlapBox(centerPoint, halfExtents);
 
-            // removes the selection box from the screen before the next frame
-            Destroy(selectionBox, 0.02f);
+                var collisions = Physics.OverlapBox(centerPoint, halfExtents, Quaternion.identity, selectionLayer);
 
-        } // end marquee select
+                foreach (Collider collision in collisions)
+                {
+                    //Debug.Log("Selected: " + collision.gameObject.name);
+                    selectedTable.AddSelected(collision.gameObject);
+                }                
 
-        dragSelect = false;
+                Destroy(selectionBox, 0.02f);
+
+            }//end marquee select
+
+            dragSelect = false;
+        }
+
     }
 
     private void OnGUI()
@@ -148,84 +148,108 @@ public class GlobalSelection : MonoBehaviour
     // create a bounding vox (4 corners in order) from the start and end mouse position
     Vector2[] GetBoundingBox(Vector2 p1, Vector2 p2)
     {
-        Vector2 newP1;
-        Vector2 newP2;
-        Vector2 newP3;
-        Vector2 newP4;
+        // Min and Max to get 2 corners of rectangle regardless of drag direction.
+        var bottomLeft = Vector3.Min(p1, p2);
+        var topRight = Vector3.Max(p1, p2);
 
-        if (p1.x > p2.x) // if p1 is to the left of p2
+        // 0 = top left; 1 = top right; 2 = bottom left; 3 = bottom right;
+        Vector2[] corners =
         {
-            if (p1.y > p2.y) // if p1 is above p2
-            {
-                newP1 = p1;
-                newP2 = new Vector2(p2.x, p1.y);
-                newP3 = new Vector2(p1.x, p2.y);
-                newP4 = p2;
-            }
-            else // if p1 is below p2
-            {
-                newP1 = new Vector2(p1.x, p2.y);
-                newP2 = p2;
-                newP3 = p1;
-                newP4 = new Vector2(p2.x, p1.y);
-            }
-        }
-        else
-        {
-            if (p1.y > p2.y) // if p1 is above p2
-            {
-                newP1 = new Vector2(p2.x, p1.y);
-                newP2 = p1;
-                newP3 = p2;
-                newP4 = new Vector2(p1.x, p2.y);
-            }
-            else // if p1 is below p2
-            {
-                newP1 = p2;
-                newP2 = new Vector2(p1.x, p2.y);
-                newP3 = new Vector2(p2.x, p1.y);
-                newP4 = p1;
-            }
-        }
-
-        // create the corner positions for the bounding box and return them
-        Vector2[] corners = { newP1, newP2, newP3, newP4 };
+            new Vector2(bottomLeft.x, topRight.y),
+            new Vector2(topRight.x, topRight.y),
+            new Vector2(bottomLeft.x, bottomLeft.y),
+            new Vector2(topRight.x, bottomLeft.y)
+        };
         return corners;
-    }
 
-    // generate a meshh from the 4 bottom points
-    Mesh generateSelectionMesh(Vector3[] corners)
-    {
-        Vector3[] verts = new Vector3[8]; // the 8 vertices on a cube
-        //map the triangles of our cube
-        int[] tris = { 0, 1, 2, 2, 1, 3, 4, 6, 0, // top triangle 1
-                       0, 6, 2, 6, 7, 2, 2, 7, 3, // top triangle 2
-                       7, 5, 3, 3, 5, 1, 5, 0, 1, // bottom triangle 1
-                       1, 4, 0, 4, 5, 6, 6, 5, 7 }; // bottom triangle 2
-
-        // create vertices for bottom rectanlge
-        for (int i = 0; i < 4; i++)
-        {
-            verts[i] = corners[i];
-        }
-
-        // create vertices for top rectangle
-        for (int j = 4; j < 8; j++)
-        {
-            verts[j] = corners[j - 4] + Vector3.up * 100.0f;
-        }
-
-        // create mesh using the verticie and triangle data
-        Mesh selectionMesh = new Mesh();
-        selectionMesh.vertices = verts;
-        selectionMesh.triangles = tris;
-
-        return selectionMesh;
     }
 
     private void OnTriggerEnter(Collider other)
     {
         selectedTable.AddSelected(other.gameObject);
+    }
+
+    private Vector3 GetBoxCenter()
+    {
+        // 0 = top left; 1 = top right; 2 = bottom left; 3 = bottom right;
+        float width = verts[1].x - verts[0].x;
+        float height = verts[0].z - verts[2].z;
+
+        Vector3 centerPoint;
+        centerPoint.x = verts[0].x + (width / 2);
+        centerPoint.y = boxHeight / 2;
+        centerPoint.z = verts[2].z + (height / 2);     
+
+        return centerPoint;
+    }
+
+    private Vector3 GetHalfExtents()
+    {
+        Vector3 halfExtents = new Vector3();
+
+        halfExtents.x = Mathf.Abs(verts[1].x - verts[0].x) / 2;
+        halfExtents.y = boxHeight / 2;
+        halfExtents.z = Mathf.Abs(verts[2].z - verts[0].z) / 2;
+
+        return halfExtents;
+    }
+
+    private void DrawOverlapBox(Vector3 centerPoint, Vector3 HalfExtents)
+    {
+        Vector3 p1, p2, p3, p4, p5, p6, p7, p8;
+
+        // Top
+        p1.x = centerPoint.x - HalfExtents.x;
+        p1.y = centerPoint.y + HalfExtents.y;
+        p1.z = centerPoint.z + HalfExtents.z;
+
+        p2.x = centerPoint.x + HalfExtents.x;
+        p2.y = centerPoint.y + HalfExtents.y;
+        p2.z = centerPoint.z + HalfExtents.z;
+
+        p3.x = centerPoint.x - HalfExtents.x;
+        p3.y = centerPoint.y + HalfExtents.y;
+        p3.z = centerPoint.z - HalfExtents.z;
+
+        p4.x = centerPoint.x + HalfExtents.x;
+        p4.y = centerPoint.y + HalfExtents.y;
+        p4.z = centerPoint.z - HalfExtents.z;
+
+        // bottom
+        p5.x = centerPoint.x - HalfExtents.x;
+        p5.y = centerPoint.y - HalfExtents.y;
+        p5.z = centerPoint.z + HalfExtents.z;
+
+        p6.x = centerPoint.x + HalfExtents.x;
+        p6.y = centerPoint.y - HalfExtents.y;
+        p6.z = centerPoint.z + HalfExtents.z;
+
+        p7.x = centerPoint.x - HalfExtents.x;
+        p7.y = centerPoint.y - HalfExtents.y;
+        p7.z = centerPoint.z - HalfExtents.z;
+
+        p8.x = centerPoint.x + HalfExtents.x;
+        p8.y = centerPoint.y - HalfExtents.y;
+        p8.z = centerPoint.z - HalfExtents.z;
+
+        // Draw lines
+        // top
+        Debug.DrawLine(p1, p2, Color.yellow, 1.0f);
+        Debug.DrawLine(p2, p4, Color.yellow, 1.0f);
+        Debug.DrawLine(p4, p3, Color.yellow, 1.0f);
+        Debug.DrawLine(p3, p1, Color.yellow, 1.0f);
+
+        // bottom
+        Debug.DrawLine(p5, p6, Color.yellow, 1.0f);
+        Debug.DrawLine(p6, p8, Color.yellow, 1.0f);
+        Debug.DrawLine(p8, p7, Color.yellow, 1.0f);
+        Debug.DrawLine(p7, p5, Color.yellow, 1.0f);
+
+        // verticles
+        Debug.DrawLine(p1, p5, Color.yellow, 1.0f);
+        Debug.DrawLine(p2, p6, Color.yellow, 1.0f);
+        Debug.DrawLine(p3, p7, Color.yellow, 1.0f);
+        Debug.DrawLine(p4, p8, Color.yellow, 1.0f);
     }
 
 }
