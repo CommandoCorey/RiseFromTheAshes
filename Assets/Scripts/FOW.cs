@@ -205,34 +205,62 @@ class FOW : MonoBehaviour {
 					state = 6;
 				} else if (!topLeft && topRight && botLeft && botRight)
 				{
-				//	Gizmos.DrawLine(new Vector3(pos.x + hcs.x, 0.0f, pos.y), new Vector3(pos.x, 0.0f, pos.y + hcs.x));
+					//Debug.DrawLine(new Vector3(pos.x + hcs.x, 0.0f, pos.y), new Vector3(pos.x, 0.0f, pos.y + hcs.y));
+					EmitTriangle(
+						new Vector2(pos.x + hcs.x, pos.y),
+						pos,
+						new Vector2(pos.x, pos.y + hcs.y)
+						);
 					state = 7;
 				} else if (topLeft && !topRight && !botLeft && !botRight)
 				{
-				//	Gizmos.DrawLine(new Vector3(pos.x + hcs.x, 0.0f, pos.y), new Vector3(pos.x, 0.0f, pos.y + hcs.x));
+					//Debug.DrawLine(new Vector3(pos.x + hcs.x, 0.0f, pos.y), new Vector3(pos.x, 0.0f, pos.y + hcs.y));
+					EmitQuad(new Vector2(pos.x, pos.y + hcs.y), hcs);
+					EmitQuad(new Vector2(pos.x + hcs.x, pos.y), new Vector2(hcs.x, cellSize.y));
+					EmitTriangle(
+						new Vector2(pos.x, pos.y + hcs.y),
+						pos + hcs,
+						new Vector2(pos.x + hcs.x, pos.y)
+						);
 					state = 8;
 				} else if (topLeft && !topRight && botLeft && !botRight)
 				{
-				//	Gizmos.DrawLine(new Vector3(pos.x + hcs.x, 0.0f, pos.y), new Vector3(pos.x + hcs.x, 0.0f, pos.y + cellSize.y));
+					//Debug.DrawLine(new Vector3(pos.x + hcs.x, 0.0f, pos.y), new Vector3(pos.x + hcs.x, 0.0f, pos.y + cellSize.y));
+					EmitQuad(new Vector2(pos.x + hcs.x, pos.y), new Vector2(hcs.x, cellSize.y));
 					state = 9;
 				} else if (topLeft && !topRight && !botLeft && botRight)
 				{
 					state = 10;
 				} else if (topLeft && !topRight && botLeft && botRight)
 				{
-				//	Gizmos.DrawLine(new Vector3(pos.x + hcs.x, 0.0f, pos.y), new Vector3(pos.x + cellSize.x, 0.0f, pos.y + hcs.y));
+					//Debug.DrawLine(new Vector3(pos.x + hcs.x, 0.0f, pos.y), new Vector3(pos.x + cellSize.x, 0.0f, pos.y + hcs.y));
+					EmitTriangle(
+						new Vector2(pos.x + cellSize.x, pos.y + hcs.y),
+						new Vector2(pos.x + cellSize.x, pos.y),
+						new Vector2(pos.x + hcs.x, pos.y));
 					state = 11;
 				} else if (topLeft && topRight && !botLeft && !botRight)
 				{
-				//	Gizmos.DrawLine(new Vector3(pos.x, 0.0f, pos.y + hcs.y), new Vector3(pos.x + cellSize.x, 0.0f, pos.y + hcs.y));
+					//Debug.DrawLine(new Vector3(pos.x, 0.0f, pos.y + hcs.y), new Vector3(pos.x + cellSize.x, 0.0f, pos.y + hcs.y));
+					EmitQuad(new Vector2(pos.x, pos.y + hcs.y), new Vector2(cellSize.x, hcs.y));
 					state = 12;
 				} else if (topLeft && topRight && botLeft && !botRight)
 				{
-				//	Gizmos.DrawLine(new Vector3(pos.x + cellSize.x, 0.0f, pos.y + hcs.y), new Vector3(pos.x + hcs.x, 0.0f, pos.y + cellSize.y));
+					//Debug.DrawLine(new Vector3(pos.x + cellSize.x, 0.0f, pos.y + hcs.y), new Vector3(pos.x + hcs.x, 0.0f, pos.y + cellSize.y));
+					EmitTriangle(
+						new Vector2(pos.x + hcs.x, pos.y + cellSize.y),
+						pos + cellSize,
+						new Vector2(pos.x + cellSize.x, pos.y + hcs.y)
+						);
 					state = 13;
 				} else if (topLeft && topRight && !botLeft && botRight)
 				{
-				//	Gizmos.DrawLine(new Vector3(pos.x, 0.0f, pos.y + hcs.y), new Vector3(pos.x + hcs.x, 0.0f, pos.y + cellSize.y));
+					//Debug.DrawLine(new Vector3(pos.x, 0.0f, pos.y + hcs.y), new Vector3(pos.x + hcs.x, 0.0f, pos.y + cellSize.y));
+					EmitTriangle(
+						new Vector2(pos.x, pos.y + hcs.y),
+						new Vector2(pos.x, pos.y + cellSize.y),
+						new Vector2(pos.x + hcs.x, pos.y + cellSize.y)
+						);
 					state = 14;
 				}
 			}
