@@ -2,14 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GlobalSelection : MonoBehaviour
+public class SelectionManager : MonoBehaviour
 {
     public LayerMask selectionLayer;
-    [SerializeField]
+    [SerializeField][Range(1, 100)]
     float minBoxSize = 40;
 
+    // contains all of the selected units
+    private Dictionary<int, GameObject> selectedTable = new Dictionary<int, GameObject>();
+
     //id_dictionary idTable;
-    SelectedDictionary selectedTable; // contains the dictionary of selected units
+    //SelectedDictionary selectedTable; // contains the dictionary of selected units
     RaycastHit hit;
 
     bool dragSelect; // defines whether or not to show a box on screen
@@ -26,14 +29,28 @@ public class GlobalSelection : MonoBehaviour
 
     // the vertices of our meshcollider
     Vector3[] verts;
-    Vector3[] vecs;
 
     private float boxHeight = 10;
+
+    // properties
+    public List<GameObject> Units
+    {
+        get {
+            List<GameObject> units = new List<GameObject>();
+
+            foreach (KeyValuePair<int, GameObject> unit in selectedTable)
+                units.Add(unit.Value);     
+            
+            return units;
+        }
+
+    }
+
 
     // Start is called before the first frame update
     void Start()
     {
-        selectedTable = GetComponent<SelectedDictionary>();
+        //selectedTable = GetComponent<SelectedDictionary>();
         dragSelect = false;
     }
 
@@ -66,12 +83,12 @@ public class GlobalSelection : MonoBehaviour
                 {
                     if (Input.GetKey(KeyCode.LeftShift)) //inclusive select
                     {
-                        selectedTable.AddSelected(hit.transform.gameObject);
+                        AddSelected(hit.transform.gameObject);
                     }
                     else //exclusive selected
                     {
-                        selectedTable.DeselectAll();
-                        selectedTable.AddSelected(hit.transform.gameObject);
+                        DeselectAll();
+                        AddSelected(hit.transform.gameObject);
                     }
                 }
                 else //if we didnt hit something
@@ -82,14 +99,13 @@ public class GlobalSelection : MonoBehaviour
                     }
                     else
                     {
-                        selectedTable.DeselectAll();
+                        DeselectAll();
                     }
                 }
             }
             else //marquee select
             {
                 verts = new Vector3[4];
-                vecs = new Vector3[4];
                 int i = 0;
                 p2 = Input.mousePosition;
 
@@ -101,8 +117,7 @@ public class GlobalSelection : MonoBehaviour
 
                     if (Physics.Raycast(ray, out hit, 50000.0f))// (1 << 8)))
                     {
-                        verts[i] = new Vector3(hit.point.x, hit.point.y, hit.point.z);
-                        vecs[i] = ray.origin - hit.point;
+                        verts[i] = new Vector3(hit.point.x, hit.point.y, hit.point.z);                        
                         Debug.DrawLine(Camera.main.ScreenToWorldPoint(corner), hit.point, Color.red, 1.0f);
                     }
                     i++;
@@ -110,7 +125,7 @@ public class GlobalSelection : MonoBehaviour
 
                 if (!Input.GetKey(KeyCode.LeftShift))
                 {
-                    selectedTable.DeselectAll();
+                    DeselectAll();
                 }
 
                 Vector3 centerPoint = GetBoxCenter();
@@ -123,7 +138,7 @@ public class GlobalSelection : MonoBehaviour
                 foreach (Collider collision in collisions)
                 {
                     //Debug.Log("Selected: " + collision.gameObject.name);
-                    selectedTable.AddSelected(collision.gameObject);
+                    AddSelected(collision.gameObject);
                 }                
 
                 Destroy(selectionBox, 0.02f);
@@ -145,6 +160,57 @@ public class GlobalSelection : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Gets an instant ID from game object and addes it to the unit selection
+    /// if it is not already in there
+    /// </summary>
+    /// <param name="go">The unit to add to the selection</param>
+    public void AddSelected(GameObject go)
+    {
+        int id = go.GetInstanceID();
+
+        // check if the game object is already in the dictionary
+        if (!(selectedTable.ContainsKey(id)))
+        {
+            selectedTable.Add(id, go);
+
+            if (go.GetComponent<Agent>() != null)
+            {
+                go.GetComponent<Agent>().SetSelected(true);
+                //Debug.Log("Added " + id + " to selected dict");
+            }
+        }
+    }
+
+    /// <summary>
+    /// Removes a specific unit from the selection specified by an id
+    /// </summary>
+    /// <param name="id">The instance id of the game object to be deselected</param>
+    public void Deselect(int id)
+    {
+        //Destroy(selectedTable[id].GetComponent<SelectionComponent>());
+        selectedTable[id].GetComponent<Agent>().SetSelected(false);
+        selectedTable.Remove(id);
+    }
+
+    /// <summary>
+    /// Remove all units from the selection
+    /// </summary>
+    public void DeselectAll()
+    {
+        // looks trhough every value in the dictionary and if it is
+        // not null, destroys it
+        foreach (KeyValuePair<int, GameObject> pair in selectedTable)
+        {
+            if (pair.Value != null)
+            {
+                //Destroy(selectedTable[pair.Key].GetComponent<SelectedDictionary>());
+                selectedTable[pair.Key].GetComponent<Agent>().SetSelected(false);
+            }
+        }
+        selectedTable.Clear(); // clears the whole dictionary
+    }
+
     // create a bounding vox (4 corners in order) from the start and end mouse position
     Vector2[] GetBoundingBox(Vector2 p1, Vector2 p2)
     {
@@ -162,11 +228,6 @@ public class GlobalSelection : MonoBehaviour
         };
         return corners;
 
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        selectedTable.AddSelected(other.gameObject);
     }
 
     private Vector3 GetBoxCenter()

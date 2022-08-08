@@ -39,7 +39,7 @@ public class TankController : MonoBehaviour
             if (Physics.Raycast(firingPoint.position, turret.forward, out hit) && hit.transform == target)            
             {
                 Debug.DrawLine(turret.position, target.position, Color.yellow);
-                target.GetComponent<UnitController>().SubtractHealth(damagePerHit);
+                target.GetComponent<Agent>().SubtractHealth(damagePerHit);
             }
             else
             {
@@ -56,13 +56,6 @@ public class TankController : MonoBehaviour
         //create the rotation we need to be in to look at the target
         lookRotation = Quaternion.LookRotation(direction);
 
-    }
-
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawWireSphere(transform.position, detectionRadius);
-        
     }
 
 }

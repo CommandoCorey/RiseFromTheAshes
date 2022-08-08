@@ -3,16 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class UnitController : MonoBehaviour
-{
-    public GameObject highlight;  
+public class MoveState : MonoBehaviour
+{       
+    //[SerializeField] float movementSpeed = 100;
 
-    [SerializeField] float maxHealth = 100;
-
-    [SerializeField]
-    private float health;
-
-    [SerializeField] float movementSpeed = 100;
+    GameObject highlight;
 
     private NavMeshPath path;
     private Rigidbody body;
@@ -21,25 +16,26 @@ public class UnitController : MonoBehaviour
 
     private bool moving = false;
 
+    Agent agent;
+    UnitState state;
+
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
+        agent = GetComponent<Agent>();
         path = new NavMeshPath();
         body = GetComponent<Rigidbody>();
+        highlight = agent.highlight;
 
-        health = maxHealth;
         waypointNum = 1;
     }
 
     // Update is called once per frame
     void Update()
     {        
-        if(health <= 0)
-        {
-            GameObject.Destroy(this.gameObject);
-        }
+        state = GetComponent<Behaviour>().State;       
 
-        if (moving)
+        if (state == UnitState.Moving)
         {
             for (int i = 0; i < path.corners.Length - 1; i++)
                 Debug.DrawLine(path.corners[i], path.corners[i + 1], Color.red);
@@ -47,28 +43,17 @@ public class UnitController : MonoBehaviour
             MoveTank();
         }
 
-    }
-
-
-    public void SubtractHealth(float amount)
-    {
-        health -= amount;
-    }
+    }    
 
     public void MoveTo(Vector3 position)
     {
         NavMesh.CalculatePath(transform.position, position, NavMesh.AllAreas, path);
         waypoint = path.corners[waypointNum];
 
-        moving = true;
+        //moving = true;
 
         //foreach (Vector3 coord in path.corners)
             //Debug.Log("Position: " + coord);    
-    }
-
-    public void SetSelected(bool selected)
-    {
-        highlight.SetActive(selected);
     }
 
     private void MoveTank()
@@ -76,7 +61,7 @@ public class UnitController : MonoBehaviour
         Vector3 direction = (waypoint - transform.position).normalized;
 
         transform.forward = direction; // face moving direction
-        body.velocity = direction * movementSpeed * Time.deltaTime; // moves the rigid body
+        body.velocity = direction * agent.Speed * Time.deltaTime; // moves the rigid body
 
         highlight.transform.transform.position = transform.position;
 
@@ -89,7 +74,9 @@ public class UnitController : MonoBehaviour
                 waypoint = path.corners[waypointNum];
             else
             {
-                moving = false;
+                //moving = false;
+                GetComponent<Behaviour>().ChangeState(UnitState.Idle);
+
                 waypointNum = 1;
                 body.velocity = Vector3.zero;
             }

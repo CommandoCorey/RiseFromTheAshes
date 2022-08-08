@@ -5,7 +5,15 @@ using UnityEngine;
 // Used to move unit with steering behaviours
 public class Agent : MonoBehaviour
 {
-    //[Header("Speed")]
+    public GameObject highlight;
+
+    [Header("Unit Stats")]
+    [SerializeField] float maxHealth = 100;
+    [SerializeField]
+    private float health;
+
+
+    [Header("Physics & Steering Behaviours")]
     [SerializeField] float maxSpeed = 10.0f;
     [SerializeField] float trueMaxSpeed; // used for group formations
     [SerializeField] float maxAccel = 30.0f; // maximum increase in speed each frame
@@ -21,6 +29,7 @@ public class Agent : MonoBehaviour
     protected Steering steer;
 
     // Properties
+    public float Speed { get => maxSpeed; }
     public float MaxAccel { get => maxAccel; }
     public float MaxRotation { get => maxRotation; }
     public float MaxAnagulerAccel { get => maxAnagulerAccel; }
@@ -40,6 +49,8 @@ public class Agent : MonoBehaviour
 
     void Start()
     {
+        health = maxHealth;
+
         velocity = Vector3.zero;
         steer = new Steering();
         trueMaxSpeed = maxSpeed;
@@ -70,6 +81,11 @@ public class Agent : MonoBehaviour
         //transform.Rotate(Vector3.up, orientation);
 
         transform.LookAt(transform.position + displacement.normalized, Vector3.up);
+
+        if (health <= 0)
+        {
+            GameObject.Destroy(this.gameObject);
+        }
     }    
 
     // update movement for the next frame
@@ -99,6 +115,16 @@ public class Agent : MonoBehaviour
     public void SpeedReset()
     {
         maxSpeed = trueMaxSpeed;
+    }
+
+    public void SetSelected(bool selected)
+    {
+        highlight.SetActive(selected);
+    }
+
+    public void SubtractHealth(float amount)
+    {
+        health -= amount;
     }
 
 }

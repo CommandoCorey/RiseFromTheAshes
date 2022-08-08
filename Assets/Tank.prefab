@@ -124,8 +124,9 @@ GameObject:
   - component: {fileID: 7490394118831632736}
   - component: {fileID: 7490394118831632739}
   - component: {fileID: 7490394118831632740}
-  - component: {fileID: 7490394118831632738}
-  - component: {fileID: 7490394118831632743}
+  - component: {fileID: 6442939534348259523}
+  - component: {fileID: 1608555301507571338}
+  - component: {fileID: 8203223622361363122}
   m_Layer: 6
   m_Name: Tank
   m_TagString: Untagged
@@ -209,8 +210,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1.0136124, z: 1}
-  m_Center: {x: 0, y: 1.2309339, z: 0}
+  m_Size: {x: 1, y: 0.96039903, z: 1}
+  m_Center: {x: 0, y: 0.015631376, z: 0}
 --- !u!54 &7490394118831632740
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -227,7 +228,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &7490394118831632738
+--- !u!114 &6442939534348259523
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -236,33 +237,53 @@ MonoBehaviour:
   m_GameObject: {fileID: 7490394118831632749}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bff8ec26bdf366241b66244dcabd6b83, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  turret: {fileID: 7490394118974306319}
-  firingPoint: {fileID: 7490394117755671002}
-  rotateSpeed: 2
-  detectionRadius: 5
-  damagePerHit: 0.2
-  detectionLayer:
-    serializedVersion: 2
-    m_Bits: 128
---- !u!114 &7490394118831632743
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7490394118831632749}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b3d967753a51c4147ba4cd7f0b2f6efd, type: 3}
+  m_Script: {fileID: 11500000, guid: 8c448d9b6244c7b49a08a9cfc39a4bcc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   highlight: {fileID: 7490394118869249958}
   maxHealth: 100
   health: 0
-  movementSpeed: 200
+  maxSpeed: 10
+  trueMaxSpeed: 0
+  maxAccel: 30
+  orientation: 0
+  rotation: 0
+  velocity: {x: 0, y: 0, z: 0}
+  maxRotation: 45
+  maxAnagulerAccel: 45
+--- !u!114 &1608555301507571338
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7490394118831632749}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fa04341dc6b54841b1f7ead5cfe4445, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  team: 0
+  detectionRadius: 3
+  detectionLayer:
+    serializedVersion: 2
+    m_Bits: 640
+  target: {fileID: 0}
+  seek: {fileID: 0}
+  cohesion: {fileID: 0}
+  sepearation: {fileID: 0}
+--- !u!114 &8203223622361363122
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7490394118831632749}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65c81c12c96e7264d88709d8b451b5d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7490394118869249958
 GameObject:
   m_ObjectHideFlags: 0
