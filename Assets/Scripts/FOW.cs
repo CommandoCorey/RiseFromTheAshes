@@ -158,6 +158,8 @@ class FOW : MonoBehaviour {
 				 *
 				 * TODO (George): Make an ID from the combination of topLeft, topRight, botLeft, botRight
 				 * and use it as an index into an array to get the state. Be faster, hopefully.
+				 * 
+				 * TODO (George): Cache the mesh and only re-generate if the mask has changed.
 				 *
 				 * TODO (George): Blur the mask and lerp between the values for better smoothing.
 				 * 
