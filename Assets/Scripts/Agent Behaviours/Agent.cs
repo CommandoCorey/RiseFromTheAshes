@@ -12,7 +12,6 @@ public class Agent : MonoBehaviour
     [SerializeField]
     private float health;
 
-
     [Header("Physics & Steering Behaviours")]
     [SerializeField] float maxSpeed = 10.0f;
     [SerializeField] float trueMaxSpeed; // used for group formations
@@ -22,9 +21,14 @@ public class Agent : MonoBehaviour
     [SerializeField] float rotation; // the amount of rotation to be applied each frame
     [SerializeField] Vector3 velocity; // distance to travel per frame
 
-    //[Header("Turning")]
+    [Header("Turning")]
     [SerializeField] float maxRotation = 45.0f; // maximum angularVelocity per frame
     [SerializeField] float maxAnagulerAccel = 45.0f; // maximum angular acceleration per frame
+
+    [Header("Stopping Distances")]
+    [SerializeField] float minDistanceFromTarget = 1.0f; // distance from target before stopping
+    [SerializeField] float maxDistanceFromTarget = 3.0f; // distance from target before stopping
+    [SerializeField] float distanceFromNeighbour = 1.0f; // distance from stationary unit before stopping
 
     protected Steering steer;
 
@@ -34,6 +38,9 @@ public class Agent : MonoBehaviour
     public float MaxRotation { get => maxRotation; }
     public float MaxAnagulerAccel { get => maxAnagulerAccel; }
     public Vector3 Vecloity { get => velocity; }
+    public float MinDistanceFromTarget { get => minDistanceFromTarget; }
+    public float MaxDistanceFromTarget { get => maxDistanceFromTarget; }
+    public float MinDistanceFromNeighbour { get => distanceFromNeighbour; }
 
 
     /// <summary>

@@ -9,7 +9,6 @@ public class SeekBehaviour : AgentBehaviour
         agent = GetComponent<Agent>();
     }
 
-
     /// <summary>
     /// Moves agent towards a target
     /// </summary>
@@ -17,7 +16,7 @@ public class SeekBehaviour : AgentBehaviour
     public override Steering GetSteering()
     {
         Steering steer = new Steering();
-        steer.linearVelocity = target.transform.position - transform.position;
+        steer.linearVelocity = target - transform.position;
         steer.linearVelocity.Normalize();
         steer.linearVelocity = steer.linearVelocity * agent.MaxAccel;
 

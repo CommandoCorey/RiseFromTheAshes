@@ -8,7 +8,7 @@ public class AgentBehaviour : MonoBehaviour
     public float weight = 1.0f;
 
     [HideInInspector]
-    public GameObject target;    
+    public Vector3 target;    
 
     //[SerializeField] Vector3 destination;
 

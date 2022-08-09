@@ -19,7 +19,7 @@ public class IdleState : MonoBehaviour
 
         if (unitsInRange.Length > 0)
         {
-            behaviours.target = unitsInRange[0].gameObject;
+            behaviours.AttackTarget = unitsInRange[0].gameObject;
             behaviours.ChangeState(UnitState.Attack);
         }
     }
