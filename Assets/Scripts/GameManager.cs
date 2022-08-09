@@ -7,17 +7,41 @@ public class GameManager : MonoBehaviour
 {
     RaycastHit hitInfo;
 
-    private List<UnitController> selectedUnits;
+    List<GameObject> selectedUnits;
+    SelectionManager selection;
+
+    public GameObject[] GetPlayerUnits()
+    {
+        return GameObject.FindGameObjectsWithTag("Boid");
+    }
+
+    public List<GameObject> GetNeighbourUnits(GameObject current)
+    {
+        List<GameObject> neighbours = new List<GameObject> ();
+        var units = GameObject.FindGameObjectsWithTag("Boid");
+
+        foreach (var unit in units)
+        {
+            if(unit != current)
+                neighbours.Add(unit);
+        }
+
+        return neighbours;
+
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-        selectedUnits = new List<UnitController>();
+        selectedUnits = new List<GameObject>();
+        //selectedUnits = new Dictionary<int, GameObject>();
+        selection = GetComponent<SelectionManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        /*
         if (Input.GetMouseButtonDown(0))
         {
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo))
@@ -39,16 +63,20 @@ public class GameManager : MonoBehaviour
                 }
             }
 
-        }
+        }*/
 
+        // move units when right mouse buttons is clicked
         if(Input.GetMouseButtonDown(1))
         {
-            if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo))
+            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo))
             {
                 if(hitInfo.transform.gameObject.layer == 3) // Ground
                 {
-                    foreach (UnitController unit in selectedUnits)
-                        unit.MoveTo(hitInfo.point);
+                    foreach (GameObject unit in selection.Units)
+                    {
+                        unit.GetComponent<StateManager>().ChangeState(UnitState.Moving);
+                        unit.GetComponent<MoveState>().MoveTo(hitInfo.point);
+                    }
                 }
 
             }

@@ -6,12 +6,12 @@ public class BoidSepearation : FleeBehaviour
 {
     [SerializeField] float desiredSepearation = 15.0f; // how much space we want between each unit
     public List<GameObject> targets;
-
+    private int count = 0;
 
     public override Steering GetSteering()
     {
         Steering steer = new Steering();
-        int count = 0;
+        count = 0;
 
         // for each boid in the system, check if it is too close
         foreach(GameObject other in targets)
@@ -43,6 +43,12 @@ public class BoidSepearation : FleeBehaviour
 
         return steer;
 
+    }
+
+    private void OnDrawGizmos()
+    {
+        //UnityEditor.Handles.Label(transform.position + Vector3.up * 2, "Separation: " + count.ToString());
+        Gizmos.DrawWireSphere(transform.position, desiredSepearation);
     }
 
 }

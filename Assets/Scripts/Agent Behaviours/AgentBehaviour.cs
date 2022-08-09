@@ -22,7 +22,7 @@ public class AgentBehaviour : MonoBehaviour
 
     protected Agent agent;
 
-    public void Start()
+    protected virtual void Start()
     {
         agent = GetComponent<Agent>();
     }
@@ -37,7 +37,7 @@ public class AgentBehaviour : MonoBehaviour
     {
         try
         {
-            agent.SetSteering(GetSteering(), weight);
+            agent.AddSteering(GetSteering(), weight);
         }
         catch(NullReferenceException e)
         {

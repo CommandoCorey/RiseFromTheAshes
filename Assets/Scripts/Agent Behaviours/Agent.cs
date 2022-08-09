@@ -5,7 +5,15 @@ using UnityEngine;
 // Used to move unit with steering behaviours
 public class Agent : MonoBehaviour
 {
-    //[Header("Speed")]
+    public GameObject highlight;
+
+    [Header("Unit Stats")]
+    [SerializeField] float maxHealth = 100;
+    [SerializeField]
+    private float health;
+
+
+    [Header("Physics & Steering Behaviours")]
     [SerializeField] float maxSpeed = 10.0f;
     [SerializeField] float trueMaxSpeed; // used for group formations
     [SerializeField] float maxAccel = 30.0f; // maximum increase in speed each frame
@@ -21,9 +29,11 @@ public class Agent : MonoBehaviour
     protected Steering steer;
 
     // Properties
+    public float Speed { get => maxSpeed; }
     public float MaxAccel { get => maxAccel; }
     public float MaxRotation { get => maxRotation; }
     public float MaxAnagulerAccel { get => maxAnagulerAccel; }
+    public Vector3 Vecloity { get => velocity; }
 
 
     /// <summary>
@@ -32,7 +42,7 @@ public class Agent : MonoBehaviour
     /// <param name="steer">Sets the steering behaviour to use</param>
     /// <param name="weight">Sets the weight of the steering behaviour when combining different ones</param>
     /// e.g. avoiding a wall is more important than avoiding another unit
-    public void SetSteering(Steering steer, float weight)
+    public void AddSteering(Steering steer, float weight)
     {
         this.steer.linearVelocity += (weight * steer.linearVelocity);
         this.steer.angularVelocity += (weight * steer.angularVelocity);
@@ -40,6 +50,8 @@ public class Agent : MonoBehaviour
 
     void Start()
     {
+        health = maxHealth;
+
         velocity = Vector3.zero;
         steer = new Steering();
         trueMaxSpeed = maxSpeed;
@@ -47,7 +59,7 @@ public class Agent : MonoBehaviour
 
     // change the transform based off the last frame's steering
     public virtual void Update()
-    {
+    {       
         // moves the agent on the x and z axis only
         Vector3 displacement = velocity * Time.deltaTime;
         displacement.y = 0;
@@ -70,6 +82,11 @@ public class Agent : MonoBehaviour
         //transform.Rotate(Vector3.up, orientation);
 
         transform.LookAt(transform.position + displacement.normalized, Vector3.up);
+
+        if (health <= 0)
+        {
+            GameObject.Destroy(this.gameObject);
+        }
     }    
 
     // update movement for the next frame
@@ -99,6 +116,16 @@ public class Agent : MonoBehaviour
     public void SpeedReset()
     {
         maxSpeed = trueMaxSpeed;
+    }
+
+    public void SetSelected(bool selected)
+    {
+        highlight.SetActive(selected);
+    }
+
+    public void SubtractHealth(float amount)
+    {
+        health -= amount;
     }
 
 }
