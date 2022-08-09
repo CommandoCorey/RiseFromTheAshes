@@ -43,6 +43,7 @@ class FOW : MonoBehaviour {
 		SetMaskFromTexture(maskTexture);
 
 		mesh = new Mesh();
+		mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
 		GetComponent<MeshFilter>().mesh = mesh;
 
 		vertices = new List<Vector3>();
@@ -52,6 +53,7 @@ class FOW : MonoBehaviour {
 	private void Update()
 	{
 		GenerateMesh();
+		ClearMask();
 	}
 
 	public void RequestMaskUpdate(byte value, Vector2Int position) {
@@ -325,5 +327,43 @@ class FOW : MonoBehaviour {
 		mesh.triangles = tris.ToArray();
 		mesh.RecalculateNormals();
 		mesh.RecalculateBounds();
+	}
+
+	public void ClearMask()
+	{
+		for (int i = 0; i < maskExtent.x * maskExtent.y; i++)
+		{
+			FOWMask[i] = 0x1;
+		}
+	}
+
+	public void MaskDrawCircle(Vector2Int position, int radius)
+	{
+		int diametre = radius * 2;
+
+		int start_x = Mathf.Min(Mathf.Max(position.x - radius, 0), maskExtent.x);
+		int start_y = Mathf.Min(Mathf.Max(position.y - radius, 0), maskExtent.y);
+		int end_x   = Mathf.Min(position.x + diametre, maskExtent.x);
+		int end_y   = Mathf.Min(position.y + diametre, maskExtent.y);
+
+		var centre = position;
+
+		for (int y = start_y; y < end_y; y++)
+		{
+			for (int x = start_x; x < end_x; x++)
+			{
+				if (Vector2Int.Distance(new Vector2Int(x, y), centre) <= radius) {
+					FOWMask[x + y * maskExtent.x] = 0x0;
+				}
+			}
+		}
+	}
+
+	public Vector2Int WorldPosToMaskPos(Vector3 worldPos)
+	{
+		Vector3 topCorner = transform.position;
+		Vector3 pos = worldPos - topCorner;
+		pos = new Vector3(pos.x, pos.y, pos.z);
+		return new Vector2Int((int)pos.x, (int)pos.z);
 	}
 }
