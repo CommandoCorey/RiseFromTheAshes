@@ -2,8 +2,12 @@ Shader "Unlit/FOW"
 {
     SubShader
     {
-        Tags { "RenderType"="Opaque" }
+        Tags {
+            "RenderType"="Transparent"
+            "RenderPipeline" = "UniversalRenderPipeline"
+        }
         LOD 100
+        Blend SrcAlpha OneMinusSrcAlpha
 
         Pass
         {
@@ -37,9 +41,9 @@ Shader "Unlit/FOW"
                 return o;
             }
 
-            fixed4 frag(v2f i) : SV_Target
+            float4 frag(v2f i) : SV_Target
             {
-                return fixed4(0, 0, 0, 0);
+                return float4(0, 0, 0, 0.5f);
             }
             ENDCG
         }
