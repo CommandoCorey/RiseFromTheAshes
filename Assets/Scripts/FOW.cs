@@ -26,6 +26,7 @@ class FOW : MonoBehaviour {
 	[SerializeField] Vector2 cellSize = new Vector2(1.0f, 1.0f);
 	[SerializeField] Vector3 offset;
 	[SerializeField] Texture2D maskTexture;
+	[SerializeField] float height = 1.0f;
 
 	[SerializeField] GameObject cubePrefab;
 
@@ -115,6 +116,23 @@ class FOW : MonoBehaviour {
 		tris.Add(indexOffset + 3);
 	}
 
+	void EmitWall(Vector2 a, Vector2 b) {
+
+		int indexOffset = vertices.Count;
+
+		vertices.Add(new Vector3(a.x, 0.0f, a.y));
+		vertices.Add(new Vector3(b.x, 0.0f, b.y));
+		vertices.Add(new Vector3(a.x, -height, a.y));
+		vertices.Add(new Vector3(b.x, -height, b.y));
+
+		tris.Add(indexOffset + 3);
+		tris.Add(indexOffset + 1);
+		tris.Add(indexOffset + 0);
+		tris.Add(indexOffset + 0);
+		tris.Add(indexOffset + 2);
+		tris.Add(indexOffset + 3);
+	}
+
 	private void GenerateMesh()
 	{
 		vertices.Clear();
@@ -159,108 +177,144 @@ class FOW : MonoBehaviour {
 					state = 0;
 				} else if (!topLeft && !topRight && botLeft && !botRight)
 				{
-					//Debug.DrawLine(new Vector3(pos.x, 0.0f, pos.y + hcs.y), new Vector3(pos.x + hcs.x, 0.0f, pos.y + cellSize.y));
+					Vector2 start = new Vector2(pos.x,         pos.y + hcs.y);
+					Vector2 end   = new Vector2(pos.x + hcs.x, pos.y + cellSize.y);
+					//Debug.DrawLine(new Vector3(start.x, 0.0f, start.y), new Vector3(end.x, 0.0f, end.y));
 					EmitQuad(new Vector2(pos.x + hcs.x, pos.y), new Vector2(hcs.x, cellSize.y));
 					EmitQuad(pos, hcs);
 					EmitTriangle(
-						new Vector2(pos.x + hcs.x, pos.y + cellSize.y),
+						end,
 						pos + hcs,
-						new Vector2(pos.x, pos.y + hcs.y)
+						start
 						);
+					EmitWall(start, end);
 					state = 1;
 				} else if (!topLeft && !topRight && !botLeft && botRight)
 				{
-					//Debug.DrawLine(new Vector3(pos.x + cellSize.x, 0.0f, pos.y + hcs.y), new Vector3(pos.x + hcs.x, 0.0f, pos.y + cellSize.y));
+					Vector2 start = new Vector2(pos.x + cellSize.x, pos.y + hcs.y);
+					Vector2 end   = new Vector2(pos.x + hcs.x,      pos.y + cellSize.y);
+					//Debug.DrawLine(new Vector3(start.x, 0.0f, start.y), new Vector3(end.x, 0.0f, end.y));
 					EmitQuad(pos, new Vector2(hcs.x, cellSize.y));
 					EmitQuad(new Vector2(pos.x + hcs.x, pos.y), hcs);
 					EmitTriangle(
-						new Vector2(pos.x + cellSize.x, pos.y + hcs.y),
+						start,
 						pos + hcs,
-						new Vector2(pos.x + hcs.x, pos.y + cellSize.y)
+						end
 						);
+					EmitWall(end, start);
 					state = 2;
 				} else if (!topLeft && !topRight && botLeft && botRight)
 				{
+					Vector2 start = new Vector2(pos.x,              pos.y + hcs.y);
+					Vector2 end   = new Vector2(pos.x + cellSize.x, pos.y + hcs.y);
 					//Debug.DrawLine(new Vector3(pos.x, 0.0f, pos.y + hcs.y), new Vector3(pos.x + cellSize.x, 0.0f, pos.y + hcs.y));
 					EmitQuad(pos, new Vector2(cellSize.x, hcs.y));
+					EmitWall(start, end);
 					state = 3;
 				} else if (!topLeft && topRight && !botLeft && !botRight)
 				{
-					//Debug.DrawLine(new Vector3(pos.x + hcs.x, 0.0f, pos.y), new Vector3(pos.x + cellSize.x, 0.0f, pos.y + hcs.y));
+					Vector2 start = new Vector2(pos.x + hcs.x,      pos.y);
+					Vector2 end   = new Vector2(pos.x + cellSize.x, pos.y + hcs.y);
+					//Debug.DrawLine(new Vector3(start.x, 0.0f, start.y), new Vector3(end.x, 0.0f, end.y));
 					EmitQuad(pos, new Vector2(hcs.x, cellSize.y));
 					EmitQuad(pos + hcs, hcs);
 					EmitTriangle(
-						new Vector2(pos.x + hcs.x, pos.y),
+						start,
 						pos + hcs,
-						new Vector2(pos.x + cellSize.x, pos.y + hcs.y)
+						end
 						);
+					EmitWall(end, start);
 					state = 4;
 				} else if (!topLeft && topRight && botLeft && !botRight)
 				{
 					state = 5;
 				} else if (!topLeft && topRight && !botLeft && botRight)
 				{
-					//Debug.DrawLine(new Vector3(pos.x + hcs.x, 0.0f, pos.y), new Vector3(pos.x + hcs.x, 0.0f, pos.y + cellSize.y));
+					Vector2 start = new Vector2(pos.x + hcs.x, pos.y);
+					Vector2 end   = new Vector2(pos.x + hcs.x, pos.y + cellSize.y);
+					//Debug.DrawLine(new Vector3(start.x, 0.0f, start.y), new Vector3(end.x, 0.0f, end.y));
 					EmitQuad(pos, new Vector2(hcs.x, cellSize.y));
+					EmitWall(end, start); 
 					state = 6;
 				} else if (!topLeft && topRight && botLeft && botRight)
 				{
+					Vector2 start = new Vector2(pos.x + hcs.x, pos.y);
+					Vector2 end   = new Vector2(pos.x,         pos.y + hcs.y);
 					//Debug.DrawLine(new Vector3(pos.x + hcs.x, 0.0f, pos.y), new Vector3(pos.x, 0.0f, pos.y + hcs.y));
 					EmitTriangle(
-						new Vector2(pos.x + hcs.x, pos.y),
+						start,
 						pos,
-						new Vector2(pos.x, pos.y + hcs.y)
+						end
 						);
+					EmitWall(end, start);
 					state = 7;
 				} else if (topLeft && !topRight && !botLeft && !botRight)
 				{
-					//Debug.DrawLine(new Vector3(pos.x + hcs.x, 0.0f, pos.y), new Vector3(pos.x, 0.0f, pos.y + hcs.y));
+					Vector2 start = new Vector2(pos.x + hcs.x, pos.y);
+					Vector2 end   = new Vector2(pos.x, pos.y + hcs.y);
+					//Debug.DrawLine(new Vector3(start.x, 0.0f, start.y), new Vector3(end.x, 0.0f, end.y));
 					EmitQuad(new Vector2(pos.x, pos.y + hcs.y), hcs);
 					EmitQuad(new Vector2(pos.x + hcs.x, pos.y), new Vector2(hcs.x, cellSize.y));
 					EmitTriangle(
-						new Vector2(pos.x, pos.y + hcs.y),
+						end,
 						pos + hcs,
-						new Vector2(pos.x + hcs.x, pos.y)
+						start
 						);
+					EmitWall(start, end);
 					state = 8;
 				} else if (topLeft && !topRight && botLeft && !botRight)
 				{
-					//Debug.DrawLine(new Vector3(pos.x + hcs.x, 0.0f, pos.y), new Vector3(pos.x + hcs.x, 0.0f, pos.y + cellSize.y));
+					Vector2 start = new Vector2(pos.x + hcs.x, pos.y);
+					Vector2 end   = new Vector2(pos.x + hcs.x, pos.y + cellSize.y);
+					//Debug.DrawLine(new Vector3(start.x, 0.0f, start.y), new Vector3(end.x, 0.0f, end.y));
 					EmitQuad(new Vector2(pos.x + hcs.x, pos.y), new Vector2(hcs.x, cellSize.y));
+					EmitWall(start, end);
 					state = 9;
 				} else if (topLeft && !topRight && !botLeft && botRight)
 				{
 					state = 10;
 				} else if (topLeft && !topRight && botLeft && botRight)
 				{
-					//Debug.DrawLine(new Vector3(pos.x + hcs.x, 0.0f, pos.y), new Vector3(pos.x + cellSize.x, 0.0f, pos.y + hcs.y));
+					Vector2 start = new Vector2(pos.x + hcs.x,      pos.y);
+					Vector2 end   = new Vector2(pos.x + cellSize.x, pos.y + hcs.y);
+					//Debug.DrawLine(new Vector3(start.x, 0.0f, start.y), new Vector3(end.x, 0.0f, end.y));
 					EmitTriangle(
-						new Vector2(pos.x + cellSize.x, pos.y + hcs.y),
+						end,
 						new Vector2(pos.x + cellSize.x, pos.y),
-						new Vector2(pos.x + hcs.x, pos.y));
+						start);
+					EmitWall(start, end);
 					state = 11;
 				} else if (topLeft && topRight && !botLeft && !botRight)
 				{
-					//Debug.DrawLine(new Vector3(pos.x, 0.0f, pos.y + hcs.y), new Vector3(pos.x + cellSize.x, 0.0f, pos.y + hcs.y));
+					Vector2 start = new Vector2(pos.x,              pos.y + hcs.y);
+					Vector2 end   = new Vector2(pos.x + cellSize.x, pos.y + hcs.y);
+					//Debug.DrawLine(new Vector3(start.x, 0.0f, start.y), new Vector3(end.x, 0.0f, end.y));
 					EmitQuad(new Vector2(pos.x, pos.y + hcs.y), new Vector2(cellSize.x, hcs.y));
+					EmitWall(end, start);
 					state = 12;
 				} else if (topLeft && topRight && botLeft && !botRight)
 				{
-					//Debug.DrawLine(new Vector3(pos.x + cellSize.x, 0.0f, pos.y + hcs.y), new Vector3(pos.x + hcs.x, 0.0f, pos.y + cellSize.y));
+					Vector2 start = new Vector2(pos.x + cellSize.x, pos.y + hcs.y);
+					Vector2 end   = new Vector2(pos.x + hcs.x,      pos.y + cellSize.y);
+					//Debug.DrawLine(new Vector3(start.x, 0.0f, start.y), new Vector3(end.x, 0.0f, end.y));
 					EmitTriangle(
-						new Vector2(pos.x + hcs.x, pos.y + cellSize.y),
+						end,
 						pos + cellSize,
-						new Vector2(pos.x + cellSize.x, pos.y + hcs.y)
+						start
 						);
+					EmitWall(start, end);
 					state = 13;
 				} else if (topLeft && topRight && !botLeft && botRight)
 				{
-					//Debug.DrawLine(new Vector3(pos.x, 0.0f, pos.y + hcs.y), new Vector3(pos.x + hcs.x, 0.0f, pos.y + cellSize.y));
+					Vector2 start = new Vector2(pos.x, pos.y + hcs.y);
+					Vector2 end = new Vector2(pos.x + hcs.x, pos.y + cellSize.y);
+					//Debug.DrawLine(new Vector3(start.x, 0.0f, start.y), new Vector3(end.x, 0.0f, end.y));
 					EmitTriangle(
-						new Vector2(pos.x, pos.y + hcs.y),
+						start,
 						new Vector2(pos.x, pos.y + cellSize.y),
-						new Vector2(pos.x + hcs.x, pos.y + cellSize.y)
+						end
 						);
+					EmitWall(end, start);
 					state = 14;
 				}
 			}
