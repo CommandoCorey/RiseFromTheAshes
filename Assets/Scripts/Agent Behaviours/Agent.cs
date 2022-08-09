@@ -33,6 +33,7 @@ public class Agent : MonoBehaviour
     public float MaxAccel { get => maxAccel; }
     public float MaxRotation { get => maxRotation; }
     public float MaxAnagulerAccel { get => maxAnagulerAccel; }
+    public Vector3 Vecloity { get => velocity; }
 
 
     /// <summary>
@@ -41,7 +42,7 @@ public class Agent : MonoBehaviour
     /// <param name="steer">Sets the steering behaviour to use</param>
     /// <param name="weight">Sets the weight of the steering behaviour when combining different ones</param>
     /// e.g. avoiding a wall is more important than avoiding another unit
-    public void SetSteering(Steering steer, float weight)
+    public void AddSteering(Steering steer, float weight)
     {
         this.steer.linearVelocity += (weight * steer.linearVelocity);
         this.steer.angularVelocity += (weight * steer.angularVelocity);
@@ -58,7 +59,7 @@ public class Agent : MonoBehaviour
 
     // change the transform based off the last frame's steering
     public virtual void Update()
-    {
+    {       
         // moves the agent on the x and z axis only
         Vector3 displacement = velocity * Time.deltaTime;
         displacement.y = 0;

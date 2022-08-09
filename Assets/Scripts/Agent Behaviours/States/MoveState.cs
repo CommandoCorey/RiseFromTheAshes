@@ -33,7 +33,7 @@ public class MoveState : MonoBehaviour
     // Update is called once per frame
     void Update()
     {        
-        state = GetComponent<Behaviour>().State;       
+        state = GetComponent<StateManager>().State;       
 
         if (state == UnitState.Moving)
         {
@@ -75,7 +75,7 @@ public class MoveState : MonoBehaviour
             else
             {
                 //moving = false;
-                GetComponent<Behaviour>().ChangeState(UnitState.Idle);
+                GetComponent<StateManager>().ChangeState(UnitState.Idle);
 
                 waypointNum = 1;
                 body.velocity = Vector3.zero;

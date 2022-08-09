@@ -10,7 +10,7 @@ public enum UnitState
     Attack
 }
 
-public class Behaviour : MonoBehaviour
+public class StateManager : MonoBehaviour
 {
     [SerializeField] int team;
 
@@ -20,24 +20,29 @@ public class Behaviour : MonoBehaviour
 
     public GameObject target;
 
-    [HideInInspector]
-    public SeekBehaviour seek;
+    //[HideInInspector]
+    
     //[HideInInspector]
     //public FleeBehaviour flee;
 
     IdleState idleState;
     MoveState moveState;
-    FlockState seekState;
-    TankController attackState;
+    FlockState flockState;
+    AttackState attackState;
 
     // Flocking behaviours
+    [HideInInspector]
+    public SeekBehaviour seek;
+
     [HideInInspector]
     public BoidCohesion cohesion;
     [HideInInspector]
     public BoidSepearation sepearation;
+    [HideInInspector]
+    public BoidAlignment alignment;
 
     // intelligent movement script
-    Agent agent;
+    //Agent agent;
 
     UnitState state;
 
@@ -51,11 +56,11 @@ public class Behaviour : MonoBehaviour
     {
         //agent = gameObject.AddComponent<Agent>(); // add agent component to game object
         //seek = gameObject.GetComponent<SeekBehaviour>();
-        //
+        
         idleState = GetComponent<IdleState>();
-        attackState = GetComponent<TankController>();
+        attackState = GetComponent<AttackState>();
 
-        ChangeState(UnitState.Idle);
+        ChangeState(UnitState.Flock);
 
         /*
         if (seek == null)
@@ -86,6 +91,7 @@ public class Behaviour : MonoBehaviour
             }
 
         }
+        
     }
 
     public void ChangeState(UnitState newState)
@@ -100,7 +106,7 @@ public class Behaviour : MonoBehaviour
                     idleState = gameObject.AddComponent<IdleState>();
                 }
 
-                DestroyImmediate(seekState);
+                DestroyImmediate(flockState);
                 DestroyImmediate(moveState);
                 //DestroyImmediate(attackState);
                 attackState.enabled = false;
@@ -115,7 +121,7 @@ public class Behaviour : MonoBehaviour
 
                 idleState.enabled = false;
                 DestroyImmediate(idleState);
-                DestroyImmediate(seekState);
+                DestroyImmediate(flockState);
                 //DestroyImmediate(attackState);
                 attackState.enabled = false;
 
@@ -124,7 +130,7 @@ public class Behaviour : MonoBehaviour
             case UnitState.Flock:
                 if(GetComponent<FlockState>() == null)
                 {
-                    seekState = gameObject.AddComponent<FlockState>();
+                    flockState = gameObject.AddComponent<FlockState>();
                 }
 
                 DestroyImmediate(idleState);
@@ -135,14 +141,14 @@ public class Behaviour : MonoBehaviour
             break;
 
             case UnitState.Attack:
-                if(GetComponent<TankController>() == null)
+                if(GetComponent<AttackState>() == null)
                 {
-                    attackState = gameObject.AddComponent<TankController>();
+                    attackState = gameObject.AddComponent<AttackState>();
                 }
 
                 DestroyImmediate(idleState);
                 DestroyImmediate(moveState);
-                DestroyImmediate(seekState);
+                DestroyImmediate(flockState);
 
                 attackState.enabled = true;
             break;
@@ -151,7 +157,7 @@ public class Behaviour : MonoBehaviour
 
     private void OnDestroy()
     {
-        Destroy(seek);
+        //Destroy(seek);
         //Destroy(flee);
     }
 

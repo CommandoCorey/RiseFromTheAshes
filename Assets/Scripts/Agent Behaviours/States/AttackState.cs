@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class TankController : MonoBehaviour
+public class AttackState : MonoBehaviour
 {
     public Transform turret;
     public Transform firingPoint;

@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class IdleState : MonoBehaviour
 {
-    Behaviour behaviours;
+    StateManager behaviours;
 
     // Start is called before the first frame update
     void Awake()
     {
-        behaviours = GetComponent<Behaviour>();
+        behaviours = GetComponent<StateManager>();
     }
 
     // Update is called once per frame

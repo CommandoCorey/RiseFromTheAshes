@@ -10,6 +10,26 @@ public class GameManager : MonoBehaviour
     List<GameObject> selectedUnits;
     SelectionManager selection;
 
+    public GameObject[] GetPlayerUnits()
+    {
+        return GameObject.FindGameObjectsWithTag("Boid");
+    }
+
+    public List<GameObject> GetNeighbourUnits(GameObject current)
+    {
+        List<GameObject> neighbours = new List<GameObject> ();
+        var units = GameObject.FindGameObjectsWithTag("Boid");
+
+        foreach (var unit in units)
+        {
+            if(unit != current)
+                neighbours.Add(unit);
+        }
+
+        return neighbours;
+
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -54,7 +74,7 @@ public class GameManager : MonoBehaviour
                 {
                     foreach (GameObject unit in selection.Units)
                     {
-                        unit.GetComponent<Behaviour>().ChangeState(UnitState.Moving);
+                        unit.GetComponent<StateManager>().ChangeState(UnitState.Moving);
                         unit.GetComponent<MoveState>().MoveTo(hitInfo.point);
                     }
                 }

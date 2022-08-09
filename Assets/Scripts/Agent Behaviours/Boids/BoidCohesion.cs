@@ -4,13 +4,15 @@ using UnityEngine;
 
 public class BoidCohesion : AgentBehaviour
 {
-    public float neighbourDistance = 15.0f;
+    [SerializeField] float neighbourDistance = 15.0f;
     public List<GameObject> targets;
+
+    private int count = 0;
 
     public override Steering GetSteering()
     {
         Steering steer = new Steering();
-        int count = 0;
+        count = 0;
 
         foreach(GameObject other in targets)
         {
@@ -36,6 +38,11 @@ public class BoidCohesion : AgentBehaviour
         }
 
         return steer;
+    }
+
+    private void OnDrawGizmos()
+    {
+        //UnityEditor.Handles.Label(transform.position + new Vector3(0, 3, 1), "Cohesion: " + count.ToString());
     }
 
 }
