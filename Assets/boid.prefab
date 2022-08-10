@@ -14,8 +14,9 @@ GameObject:
   - component: {fileID: 829398744485436827}
   - component: {fileID: -5914012348275633291}
   - component: {fileID: 1101342345677354878}
-  - component: {fileID: 4345280741034317516}
   - component: {fileID: 5486477884804087374}
+  - component: {fileID: 8086080953959980249}
+  - component: {fileID: 4345280741034317516}
   - component: {fileID: -2230462904013938908}
   - component: {fileID: -4518203209093221220}
   - component: {fileID: -857949967202315424}
@@ -116,7 +117,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c448d9b6244c7b49a08a9cfc39a4bcc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  highlight: {fileID: 0}
+  highlight: {fileID: 8726823584126190087}
   maxHealth: 100
   health: 0
   maxSpeed: 10
@@ -127,6 +128,8 @@ MonoBehaviour:
   velocity: {x: 0, y: 0, z: 0}
   maxRotation: 45
   maxAnagulerAccel: 45
+  distanceFromTarget: 1
+  distanceFromNeighbour: 1
 --- !u!114 &1101342345677354878
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -144,11 +147,35 @@ MonoBehaviour:
   detectionLayer:
     serializedVersion: 2
     m_Bits: 0
-  target: {fileID: 0}
+  target: {x: 0, y: 0, z: 0}
   seek: {fileID: 0}
   cohesion: {fileID: 0}
   sepearation: {fileID: 0}
   alignment: {fileID: 0}
+--- !u!114 &5486477884804087374
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5798167006062429957}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65c81c12c96e7264d88709d8b451b5d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8086080953959980249
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5798167006062429957}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f0fcbc6baa44db4792f53aa2395aad2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &4345280741034317516
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -169,18 +196,6 @@ MonoBehaviour:
   detectionLayer:
     serializedVersion: 2
     m_Bits: 640
---- !u!114 &5486477884804087374
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5798167006062429957}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65c81c12c96e7264d88709d8b451b5d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &-2230462904013938908
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -194,7 +209,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weight: 1
-  target: {fileID: 0}
+  target: {x: 0, y: 0, z: 0}
 --- !u!114 &-4518203209093221220
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -208,7 +223,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weight: 1
-  target: {fileID: 0}
+  target: {x: 0, y: 0, z: 0}
   neighbourDistance: 5
   targets: []
 --- !u!114 &-857949967202315424
@@ -224,7 +239,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weight: 3
-  target: {fileID: 0}
+  target: {x: 0, y: 0, z: 0}
   neighbourDistance: 15
   targets: []
 --- !u!114 &-8550247451570193451
@@ -240,7 +255,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weight: 1.5
-  target: {fileID: 0}
+  target: {x: 0, y: 0, z: 0}
   desiredSepearation: 15
   targets: []
 --- !u!1 &8726823584126190087

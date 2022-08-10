@@ -5,10 +5,14 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public Transform marker;
+
     RaycastHit hitInfo;
 
     List<GameObject> selectedUnits;
     SelectionManager selection;
+
+    List<List<GameObject>> squads;
 
     public GameObject[] GetPlayerUnits()
     {
@@ -27,6 +31,33 @@ public class GameManager : MonoBehaviour
         }
 
         return neighbours;
+    }
+
+    public List<GameObject> GetMovingUnits(GameObject current)
+    {
+        List<GameObject> movingUnits = new List<GameObject>();
+        var units = GameObject.FindGameObjectsWithTag("Boid");
+
+        foreach(var unit in units)
+        {
+            UnitState state = unit.GetComponent<StateManager>().State;
+
+            if(state == UnitState.Moving || state == UnitState.Flock)
+                movingUnits.Add(unit);
+        }
+
+        return movingUnits;
+    }
+
+
+    public void StopGroupMoving()
+    {
+        var squad = GameObject.FindGameObjectsWithTag("Boid");
+
+        foreach(GameObject unit in squad)
+        {
+            unit.GetComponent<StateManager>().ChangeState(UnitState.Idle);
+        }
 
     }
 
@@ -36,53 +67,49 @@ public class GameManager : MonoBehaviour
         selectedUnits = new List<GameObject>();
         //selectedUnits = new Dictionary<int, GameObject>();
         selection = GetComponent<SelectionManager>();
+
+        squads = new List<List<GameObject>>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        /*
-        if (Input.GetMouseButtonDown(0))
-        {
-            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo))
-            {
-                //Debug.Log("Clicked on " + hitInfo.transform.name);
-                
-                if(hitInfo.transform.gameObject.layer == 6) // Unit
-                {
-                    //Debug.Log("Selected Unit");
-                    selectedUnits.Add(hitInfo.transform.GetComponent<UnitController>());
-                    selectedUnits.Last().SetSelected(true);
-                }
-                else if(selectedUnits.Count > 0)
-                {
-                    foreach (UnitController unit in selectedUnits)
-                        unit.SetSelected(false);
-
-                    selectedUnits.Clear();
-                }
-            }
-
-        }*/
-
         // move units when right mouse buttons is clicked
-        if(Input.GetMouseButtonDown(1))
+        if(Input.GetMouseButtonDown(1) && Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo))
         {
-            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo))
-            {
-                if(hitInfo.transform.gameObject.layer == 3) // Ground
-                {
-                    foreach (GameObject unit in selection.Units)
-                    {
-                        unit.GetComponent<StateManager>().ChangeState(UnitState.Moving);
-                        unit.GetComponent<MoveState>().MoveTo(hitInfo.point);
-                    }
-                }
-
-            }
+            if(selection.Units.Count > 0)
+                MoveUnits(hitInfo);        
 
         }
 
+    }
+
+    private void MoveUnits(RaycastHit hit)
+    {
+        if (hit.transform.gameObject.layer == 3) // Ground
+        {
+            marker.transform.position = new Vector3(hit.point.x, 1, hit.point.z);
+
+            if(selection.Units.Count > 1)
+            {
+                foreach (GameObject unit in selection.Units)
+                {
+                    var states = unit.GetComponent<StateManager>();
+
+                    states.target = hit.point;
+                    states.ChangeState(UnitState.Flock);                    
+                }
+            }
+            else
+            {
+                GameObject unit = selection.Units[0];
+                unit.GetComponent<MoveState>().MoveTo(hitInfo.point);
+                unit.GetComponent<StateManager>().ChangeState(UnitState.Moving);
+                
+            }            
+
+            squads.Add(selection.Units);
+        }
     }
 
 }
