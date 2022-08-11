@@ -65,7 +65,7 @@ public class SeekState : MonoBehaviour
         }
 
         // check if the agent has reached minimum speed
-        if(behaviours.decelerate.enabled && agent.Vecloity.magnitude <= 1.6f)
+        if(behaviours.decelerate.enabled && agent.Vecloity.magnitude <= minSpeedWhenStopping)
         {
             agent.StopMoving();
 
