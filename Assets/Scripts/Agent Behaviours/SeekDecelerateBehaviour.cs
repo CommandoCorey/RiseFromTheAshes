@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SeekBehaviour : AgentBehaviour
+public class SeekDecelerateBehaviour : AgentBehaviour
 {
     private void Awake()
     {
@@ -18,7 +18,7 @@ public class SeekBehaviour : AgentBehaviour
         Steering steer = new Steering();
         steer.linearVelocity = target - transform.position;
         steer.linearVelocity.Normalize();
-        steer.linearVelocity = steer.linearVelocity * agent.Acceleration;
+        steer.linearVelocity = -(steer.linearVelocity * agent.Deceleration);
 
         Vector3 direction = steer.linearVelocity;
         Vector3 rotation = Vector3.RotateTowards(transform.forward, direction, agent.MaxRotation, 0);

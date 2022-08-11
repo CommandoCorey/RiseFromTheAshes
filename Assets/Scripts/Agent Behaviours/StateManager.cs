@@ -28,13 +28,16 @@ public class StateManager : MonoBehaviour
     //public FleeBehaviour flee;
 
     IdleState idleState;
-    MoveState moveState;
+    //MoveState moveState;
+    SeekState moveState;
     FlockState flockState;
     AttackState attackState;
 
     // Flocking behaviours
     [HideInInspector]
     public SeekBehaviour seek;
+    [HideInInspector]
+    public SeekDecelerateBehaviour decelerate;
     [HideInInspector]
     public BoidCohesion cohesion;
     [HideInInspector]
@@ -61,21 +64,10 @@ public class StateManager : MonoBehaviour
         idleState = GetComponent<IdleState>();
         attackState = GetComponent<AttackState>();
         flockState = GetComponent<FlockState>();
+        moveState = GetComponent<SeekState>();
+        decelerate = GetComponent<SeekDecelerateBehaviour>();
 
         ChangeState(UnitState.Idle);
-
-        /*
-        if (seek == null)
-        {
-            //seek = gameObject.AddComponent<SeekBehaviour>();
-            //seek.target = target;
-            //seek.enabled = true;
-
-            //flee = gameObject.AddComponent<FleeBehaviour>();
-            //flee.target = target;
-            //enabled = true;
-        }*/
-
     }
 
     // Update is called once per frame
@@ -108,12 +100,17 @@ public class StateManager : MonoBehaviour
                     idleState = gameObject.AddComponent<IdleState>();
                 }
 
-                if(flockState != null && flockState.enabled == true)
+                if(flockState != null && flockState.enabled)
                 {
                     flockState.EndState();
                     //flockState.enabled = false;
                     //Destroy(flockState);
-                }                    
+                }
+
+                if(moveState != null && moveState.enabled)
+                    moveState.EndState();
+
+                moveState.enabled = false;
 
                 attackState.enabled = false;
                 idleState.enabled = true;                
@@ -124,9 +121,9 @@ public class StateManager : MonoBehaviour
             break;
 
             case UnitState.Moving:
-                if(GetComponent<MoveState>() == null)
+                if(GetComponent<SeekState>() == null)
                 {
-                    moveState = gameObject.AddComponent<MoveState>();
+                    moveState = gameObject.AddComponent<SeekState>();
                 }
 
                 idleState.enabled = false;
@@ -134,7 +131,9 @@ public class StateManager : MonoBehaviour
                 //DestroyImmediate(flockState);
                 //DestroyImmediate(attackState);
                 attackState.enabled = false;
+                moveState.enabled = true;
 
+                moveState.Init();
             break;
 
             case UnitState.Flock:

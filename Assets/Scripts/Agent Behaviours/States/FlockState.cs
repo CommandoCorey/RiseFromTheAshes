@@ -46,9 +46,7 @@ public class FlockState : MonoBehaviour
 
             // Add the boid cohesion behaviour
             behaviours.cohesion = gameObject.GetComponent<BoidCohesion>();
-            behaviours.cohesion.targets = gameManager.GetNeighbourUnits(this.gameObject);
-                //behaviours.target.GetComponent<SquadParent>().children;
-            //behaviours.cohesion.weight = 0.4f;
+            behaviours.cohesion.targets = gameManager.GetNeighbourUnits(this.gameObject);                
             behaviours.cohesion.enabled = true;
 
             steer = behaviours.cohesion.GetSteering();
@@ -56,8 +54,7 @@ public class FlockState : MonoBehaviour
 
             // add alignment behaviour
             behaviours.alignment = gameObject.GetComponent<BoidAlignment>();
-            behaviours.alignment.targets = gameManager.GetNeighbourUnits(this.gameObject);
-                //behaviours.target.GetComponent<SquadParent>().children;
+            behaviours.alignment.targets = gameManager.GetNeighbourUnits(this.gameObject);               
             behaviours.alignment.enabled = true;
 
             steer = behaviours.alignment.GetSteering();
@@ -65,9 +62,7 @@ public class FlockState : MonoBehaviour
 
             // Add the boid seperation behaviour
             behaviours.sepearation = gameObject.GetComponent<BoidSepearation>();
-            behaviours.sepearation.targets = gameManager.GetNeighbourUnits(this.gameObject);
-                //behaviours.target.GetComponent<SquadParent>().children;
-            //behaviours.sepearation.weight = 10.0f;
+            behaviours.sepearation.targets = gameManager.GetNeighbourUnits(this.gameObject);                
             behaviours.sepearation.enabled = true;
 
             steer = behaviours.sepearation.GetSteering();

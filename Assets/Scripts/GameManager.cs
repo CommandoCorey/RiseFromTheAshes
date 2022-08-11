@@ -103,10 +103,12 @@ public class GameManager : MonoBehaviour
             else
             {
                 GameObject unit = selection.Units[0];
-                unit.GetComponent<MoveState>().MoveTo(hitInfo.point);
-                unit.GetComponent<StateManager>().ChangeState(UnitState.Moving);
-                
-            }            
+                var states = unit.GetComponent<StateManager>();
+
+                states.target = hit.point;
+                states.ChangeState(UnitState.Moving);
+                //unit.GetComponent<SeekState>().MoveTo(hitInfo.point);
+            }
 
             squads.Add(selection.Units);
         }

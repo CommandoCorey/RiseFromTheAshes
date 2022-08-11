@@ -5,11 +5,13 @@ using UnityEngine;
 public class IdleState : MonoBehaviour
 {
     StateManager behaviours;
+    //Agent agent;
 
     // Start is called before the first frame update
     void Awake()
     {
         behaviours = GetComponent<StateManager>();
+        //agent = GetComponent<Agent>();
     }
 
     // Update is called once per frame
