@@ -7,6 +7,7 @@ public enum UnitState
     Idle,
     Moving,
     Flock,
+    Formation,
     Attack
 }
 
@@ -24,16 +25,23 @@ public class StateManager : MonoBehaviour
     SeekState moveState;
     FlockState flockState;
     AttackState attackState;
+    FormationState formationState;
 
     // intelligent movement script
     Agent agent;
-
     UnitState state;
+
+    Vector3 formationTarget;
 
     public UnitState State { get => state; }
 
     public float DetectionRadius { get => detectionRadius; }
     public LayerMask DetectionLayer { get => detectionLayer; }
+
+    public void SetFormationTarget(Vector3 position)
+    {
+        formationTarget = position;
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -70,6 +78,7 @@ public class StateManager : MonoBehaviour
 
     public void ChangeState(UnitState newState, Vector3 target = new Vector3())
     {
+        
         state = newState;
 
         switch(newState)
@@ -98,7 +107,8 @@ public class StateManager : MonoBehaviour
 
                 Destroy(flockState);
                 Destroy(moveState);
-                Destroy(attackState);                
+                Destroy(attackState);
+                Destroy(formationState);
             break;
 
             case UnitState.Moving:
@@ -133,7 +143,22 @@ public class StateManager : MonoBehaviour
                 //flockState.enabled = true;
 
                 flockState.Target = target;
+                flockState.FormationTarget = formationTarget;
+
                 //flockState.Init();
+            break;
+
+            case UnitState.Formation:
+                if (GetComponent<FormationState>() == null)
+                {
+                    formationState = gameObject.AddComponent<FormationState>();
+                }
+
+                Destroy(idleState);
+                Destroy(moveState);
+                Destroy(attackState);
+                Destroy(flockState);
+
             break;
 
             case UnitState.Attack:
