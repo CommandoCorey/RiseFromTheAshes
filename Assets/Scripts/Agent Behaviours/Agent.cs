@@ -27,10 +27,12 @@ public class Agent : MonoBehaviour
     [SerializeField] float maxRotation = 45.0f; // maximum angularVelocity per frame
     [SerializeField] float maxAnagulerAccel = 45.0f; // maximum angular acceleration per frame
 
-    [Header("Stopping Distances")]
+    [Header("Stopping")]
     [SerializeField] float minDistanceFromTarget = 1.0f; // distance from target before stopping
     [SerializeField] float maxDistanceFromTarget = 3.0f; // distance from target before stopping
     [SerializeField] float distanceFromNeighbour = 1.0f; // distance from stationary unit before stopping
+    [SerializeField] float minSpeedWhenStopping = 1.6f;
+
 
     protected Steering steer;
 
@@ -126,7 +128,6 @@ public class Agent : MonoBehaviour
         //}
 
         steer = new Steering();
-
     }
 
     /// <summary>
@@ -150,6 +151,13 @@ public class Agent : MonoBehaviour
     public void StopMoving()
     {
         velocity = Vector3.zero;
+        steer.linearVelocity = Vector3.zero;
+        steer.angularVelocity = 0;
+    }
+
+    public float GetDecelerateDistance()
+    {
+        return (velocity.magnitude * velocity.magnitude) / (2 * deceleration);
     }
 
 }
