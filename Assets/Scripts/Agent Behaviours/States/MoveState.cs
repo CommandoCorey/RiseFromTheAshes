@@ -61,7 +61,7 @@ public class MoveState : MonoBehaviour
         Vector3 direction = (waypoint - transform.position).normalized;
 
         transform.forward = direction; // face moving direction
-        body.velocity = direction * agent.Speed * Time.deltaTime; // moves the rigid body
+        body.velocity = direction * agent.MaxSpeed * Time.deltaTime; // moves the rigid body
 
         highlight.transform.transform.position = transform.position;
 

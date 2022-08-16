@@ -20,27 +20,10 @@ public class StateManager : MonoBehaviour
    
     public GameObject AttackTarget {  get; set; }
 
-    public Vector3 target;
-
-    //[HideInInspector]
-    
-    //[HideInInspector]
-    //public FleeBehaviour flee;
-
     IdleState idleState;
-    MoveState moveState;
+    SeekState moveState;
     FlockState flockState;
     AttackState attackState;
-
-    // Flocking behaviours
-    [HideInInspector]
-    public SeekBehaviour seek;
-    [HideInInspector]
-    public BoidCohesion cohesion;
-    [HideInInspector]
-    public BoidSepearation sepearation;
-    [HideInInspector]
-    public BoidAlignment alignment;
 
     // intelligent movement script
     Agent agent;
@@ -61,21 +44,10 @@ public class StateManager : MonoBehaviour
         idleState = GetComponent<IdleState>();
         attackState = GetComponent<AttackState>();
         flockState = GetComponent<FlockState>();
+        moveState = GetComponent<SeekState>();
+        //decelerate = GetComponent<SeekDecelerateBehaviour>();
 
         ChangeState(UnitState.Idle);
-
-        /*
-        if (seek == null)
-        {
-            //seek = gameObject.AddComponent<SeekBehaviour>();
-            //seek.target = target;
-            //seek.enabled = true;
-
-            //flee = gameObject.AddComponent<FleeBehaviour>();
-            //flee.target = target;
-            //enabled = true;
-        }*/
-
     }
 
     // Update is called once per frame
@@ -96,7 +68,7 @@ public class StateManager : MonoBehaviour
         
     }
 
-    public void ChangeState(UnitState newState)
+    public void ChangeState(UnitState newState, Vector3 target = new Vector3())
     {
         state = newState;
 
@@ -108,33 +80,42 @@ public class StateManager : MonoBehaviour
                     idleState = gameObject.AddComponent<IdleState>();
                 }
 
-                if(flockState != null && flockState.enabled == true)
+                /*
+                if(flockState != null && flockState.enabled)
                 {
                     flockState.EndState();
                     //flockState.enabled = false;
                     //Destroy(flockState);
-                }                    
+                }*/
 
-                attackState.enabled = false;
-                idleState.enabled = true;                
+                //if(moveState != null && moveState.enabled)
+                   // moveState.EndState();
 
-                //Destroy(flockState);
-                //Destroy(moveState);
-                //DestroyImmediate(attackState);                
+                //moveState.enabled = false;
+
+                //attackState.enabled = false;
+                //idleState.enabled = true;                
+
+                Destroy(flockState);
+                Destroy(moveState);
+                Destroy(attackState);                
             break;
 
             case UnitState.Moving:
-                if(GetComponent<MoveState>() == null)
+                if(GetComponent<SeekState>() == null)
                 {
-                    moveState = gameObject.AddComponent<MoveState>();
+                    moveState = gameObject.AddComponent<SeekState>();
                 }
 
-                idleState.enabled = false;
-                //DestroyImmediate(idleState);
-                //DestroyImmediate(flockState);
-                //DestroyImmediate(attackState);
-                attackState.enabled = false;
+                //idleState.enabled = false;
+                Destroy(idleState);
+                Destroy(flockState);
+                Destroy(attackState);
+                //attackState.enabled = false;
+                //moveState.enabled = true;
 
+                moveState.Target = target;
+                //moveState.Init();
             break;
 
             case UnitState.Flock:
@@ -143,15 +124,16 @@ public class StateManager : MonoBehaviour
                     flockState = gameObject.AddComponent<FlockState>();
                 }
 
-                //DestroyImmediate(idleState);
-                //DestroyImmediate(moveState);
-                //DestroyImmediate(attackState);
+                Destroy(idleState);
+                Destroy(moveState);
+                Destroy(attackState);
 
-                idleState.enabled = false;
-                attackState.enabled = false;
-                flockState.enabled = true;
+                //idleState.enabled = false;
+                //attackState.enabled = false;
+                //flockState.enabled = true;
 
-                flockState.Init();
+                flockState.Target = target;
+                //flockState.Init();
             break;
 
             case UnitState.Attack:
@@ -160,19 +142,13 @@ public class StateManager : MonoBehaviour
                     attackState = gameObject.AddComponent<AttackState>();
                 }
 
-                //DestroyImmediate(idleState);
-                //DestroyImmediate(moveState);
-                //DestroyImmediate(flockState);
+                Destroy(idleState);
+                Destroy(moveState);
+                Destroy(flockState);
 
-                attackState.enabled = true;
+                //attackState.enabled = true;
             break;
         }
-    }
-
-    private void OnDestroy()
-    {
-        //Destroy(seek);
-        //Destroy(flee);
     }
 
     private void OnDrawGizmos()

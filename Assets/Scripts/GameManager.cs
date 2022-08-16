@@ -9,20 +9,22 @@ public class GameManager : MonoBehaviour
 
     RaycastHit hitInfo;
 
+    [SerializeField]
     List<GameObject> selectedUnits;
     SelectionManager selection;
 
+    [SerializeField]
     List<List<GameObject>> squads;
 
     public GameObject[] GetPlayerUnits()
     {
-        return GameObject.FindGameObjectsWithTag("Boid");
+        return GameObject.FindGameObjectsWithTag("PlayerUnit");
     }
 
     public List<GameObject> GetNeighbourUnits(GameObject current)
     {
         List<GameObject> neighbours = new List<GameObject> ();
-        var units = GameObject.FindGameObjectsWithTag("Boid");
+        var units = GameObject.FindGameObjectsWithTag("PlayerUnit");
 
         foreach (var unit in units)
         {
@@ -36,7 +38,7 @@ public class GameManager : MonoBehaviour
     public List<GameObject> GetMovingUnits(GameObject current)
     {
         List<GameObject> movingUnits = new List<GameObject>();
-        var units = GameObject.FindGameObjectsWithTag("Boid");
+        var units = GameObject.FindGameObjectsWithTag("PlayerUnit");
 
         foreach(var unit in units)
         {
@@ -49,10 +51,14 @@ public class GameManager : MonoBehaviour
         return movingUnits;
     }
 
+    public List<GameObject> GetUnitsInSquad(int squadNum)
+    {
+        return squads[squadNum];
+    }
 
     public void StopGroupMoving()
     {
-        var squad = GameObject.FindGameObjectsWithTag("Boid");
+        var squad = GameObject.FindGameObjectsWithTag("PlayerUnit");
 
         foreach(GameObject unit in squad)
         {
@@ -96,20 +102,55 @@ public class GameManager : MonoBehaviour
                 {
                     var states = unit.GetComponent<StateManager>();
 
-                    states.target = hit.point;
-                    states.ChangeState(UnitState.Flock);                    
+                    //states.target = hit.point;
+                    states.ChangeState(UnitState.Flock, hit.point);                    
                 }
             }
             else
             {
                 GameObject unit = selection.Units[0];
-                unit.GetComponent<MoveState>().MoveTo(hitInfo.point);
-                unit.GetComponent<StateManager>().ChangeState(UnitState.Moving);
-                
-            }            
+                var states = unit.GetComponent<StateManager>();
+
+                //states.target = hit.point;
+                states.ChangeState(UnitState.Moving, hit.point);
+                //unit.GetComponent<SeekState>().MoveTo(hitInfo.point);
+            }
 
             squads.Add(selection.Units);
         }
+    }
+
+
+    private void CheckSquadsIdle()
+    {
+
+
+    }
+
+    private bool UnitsNotMoving(List<GameObject> units)
+    {
+        foreach(GameObject unit in units)
+        {
+            if (unit.GetComponent<StateManager>().State == UnitState.Flock)
+                return false;
+        }
+
+        return true;
+    } 
+
+    private void CheckNeigboursMoving(int squadNum)
+    {
+        bool unitsStillMoving = false;
+
+        foreach (GameObject unit in squads[squadNum])
+        {
+            if (unit.GetComponent<StateManager>().State == UnitState.Flock)
+                unitsStillMoving = true;
+        }
+
+        if (!unitsStillMoving)
+            squads.RemoveAt(squadNum);
+
     }
 
 }

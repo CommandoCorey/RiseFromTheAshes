@@ -13,9 +13,11 @@ public class Agent : MonoBehaviour
     private float health;
 
     [Header("Physics & Steering Behaviours")]
-    [SerializeField] float maxSpeed = 10.0f;
+    [SerializeField] float maxSpeed = 10.0f; // the maximum velocity the agent can reach
     [SerializeField] float trueMaxSpeed; // used for group formations
-    [SerializeField] float maxAccel = 30.0f; // maximum increase in speed each frame
+    [SerializeField] float acceleration = 3.0f; // increase in velocity each frame
+    [SerializeField] float deceleration = 3.0f; // decrease in vecloity each frame
+    //[SerializeField] float maxAccel = 30.0f; // maximum increase in speed each frame
 
     [SerializeField] float orientation; // angle on the y axis
     [SerializeField] float rotation; // the amount of rotation to be applied each frame
@@ -25,16 +27,23 @@ public class Agent : MonoBehaviour
     [SerializeField] float maxRotation = 45.0f; // maximum angularVelocity per frame
     [SerializeField] float maxAnagulerAccel = 45.0f; // maximum angular acceleration per frame
 
-    [Header("Stopping Distances")]
+    [Header("Stopping")]
     [SerializeField] float minDistanceFromTarget = 1.0f; // distance from target before stopping
     [SerializeField] float maxDistanceFromTarget = 3.0f; // distance from target before stopping
     [SerializeField] float distanceFromNeighbour = 1.0f; // distance from stationary unit before stopping
+    [SerializeField] float minSpeedWhenStopping = 1.6f;
+
 
     protected Steering steer;
 
     // Properties
-    public float Speed { get => maxSpeed; }
-    public float MaxAccel { get => maxAccel; }
+    public float MaxSpeed { get => maxSpeed; }
+    public float CurrentSpeed { get => velocity.magnitude; }
+    public float Acceleration { get => acceleration; }
+    public float Deceleration { get => deceleration; }
+
+    //public float MaxAccel { get => maxAccel; }
+
     public float MaxRotation { get => maxRotation; }
     public float MaxAnagulerAccel { get => maxAnagulerAccel; }
     public Vector3 Vecloity { get => velocity; }
@@ -99,7 +108,11 @@ public class Agent : MonoBehaviour
     // update movement for the next frame
     public virtual void LateUpdate()
     {
-        velocity += steer.linearVelocity * Time.deltaTime;
+        //if (velocity.magnitude < maxSpeed)
+            //velocity += steer.linearVelocity * Time.deltaTime;
+        //else
+            velocity += steer.linearVelocity * Time.deltaTime;
+
         rotation += steer.angularVelocity * Time.deltaTime;
 
         // cap the velocity to the max speed
@@ -109,12 +122,12 @@ public class Agent : MonoBehaviour
         }
 
         // if the steering behaviour is not moving set the velocity to zero
-        if(steer.linearVelocity.magnitude == 0.0f)
-        {
-            velocity = Vector3.zero;
-        }
-        steer = new Steering();
+        //if(steer.linearVelocity.magnitude == 0.0f)
+        //{
+           //velocity = Vector3.zero;
+        //}
 
+        steer = new Steering();
     }
 
     /// <summary>
@@ -133,6 +146,18 @@ public class Agent : MonoBehaviour
     public void SubtractHealth(float amount)
     {
         health -= amount;
+    }
+
+    public void StopMoving()
+    {
+        velocity = Vector3.zero;
+        steer.linearVelocity = Vector3.zero;
+        steer.angularVelocity = 0;
+    }
+
+    public float GetDecelerateDistance()
+    {
+        return (velocity.magnitude * velocity.magnitude) / (2 * deceleration);
     }
 
 }

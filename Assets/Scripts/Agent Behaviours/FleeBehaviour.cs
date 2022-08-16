@@ -9,7 +9,7 @@ public class FleeBehaviour : AgentBehaviour
         Steering steer = new Steering();
         steer.linearVelocity = transform.position - target;
         steer.linearVelocity.Normalize();
-        steer.linearVelocity = steer.linearVelocity * agent.MaxAccel;
+        steer.linearVelocity = steer.linearVelocity * agent.Acceleration;
 
         return steer;
     }

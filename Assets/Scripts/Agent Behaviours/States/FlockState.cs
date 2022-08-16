@@ -2,77 +2,80 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FlockState : MonoBehaviour
+public class FlockState : State
 {
     GameManager gameManager;
 
-    StateManager behaviours;
-    Vector3 target;
+    StateManager states;
     Agent agent;
     Steering steer;
+    BehaviourManager behaviours;
     
     [SerializeField]
     float distanceFromTarget;
 
+    // Behaviours
+    SeekBehaviour seekAccel;
+    SeekDecelerateBehaviour seekDecel;
+    BoidCohesion cohesion;
+    BoidAlignment alignment;
+    BoidSepearation sepearation;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        states = GetComponent<StateManager>();
+        agent = GetComponent<Agent>();
+        behaviours = GetComponent<BehaviourManager>();
+
+        gameManager = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
+
+        // add seek acceleration
+        seekAccel = gameObject.AddComponent<SeekBehaviour>();
+        seekAccel.target = target;
+        seekAccel.weight = behaviours.SeekWeight;
+        seekAccel.enabled = true;
+
+        steer = seekAccel.GetSteering();
+        agent.AddSteering(steer, seekAccel.weight);
+
+
+
+        // Add the boid cohesion behaviour
+        cohesion = gameObject.AddComponent<BoidCohesion>();
+        cohesion.targets = //gameManager.GetNeighbourUnits(this.gameObject);
+            gameManager.GetUnitsInSquad(0);
+        cohesion.weight = behaviours.CohesionWeight;
+        cohesion.enabled = true;
+
+        steer = cohesion.GetSteering();
+        agent.AddSteering(steer, cohesion.weight);
+
+        // add alignment behaviour
+        alignment = gameObject.AddComponent<BoidAlignment>();
+        alignment.targets = //gameManager.GetNeighbourUnits(this.gameObject);
+            gameManager.GetUnitsInSquad(0);
+        alignment.weight = behaviours.AlignmentWeight;
+        alignment.enabled = true;
+
+        steer = alignment.GetSteering();
+        agent.AddSteering(steer, cohesion.weight);
+
+        // Add the boid seperation behaviour
+        sepearation = gameObject.AddComponent<BoidSepearation>();
+        sepearation.targets = //gameManager.GetNeighbourUnits(this.gameObject);
+            gameManager.GetUnitsInSquad(0);
+        sepearation.weight = behaviours.SeparationWeight;
+        sepearation.enabled = true;
+
+        steer = sepearation.GetSteering();
+        agent.AddSteering(steer, sepearation.weight);       
 
     }
 
     public void Init()
     {
-        behaviours = GetComponent<StateManager>();
-        agent = GetComponent<Agent>();
 
-        gameManager = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
-
-        target = behaviours.target;
-
-        //if(behaviours.seek == null)
-        //{
-            behaviours.seek = gameObject.GetComponent<SeekBehaviour>();
-            behaviours.seek.target = target;
-            //behaviours.seek.weight = 0.7f;
-            behaviours.seek.enabled = true;
-
-            steer = behaviours.seek.GetSteering();
-            agent.AddSteering(steer, behaviours.seek.weight);
-
-            //behaviours.flee = gameObject.AddComponent<FleeBehaviour>();
-            //behaviours.flee.target = target;
-            //behaviours.enabled = true;
-
-            // Add the boid cohesion behaviour
-            behaviours.cohesion = gameObject.GetComponent<BoidCohesion>();
-            behaviours.cohesion.targets = gameManager.GetNeighbourUnits(this.gameObject);
-                //behaviours.target.GetComponent<SquadParent>().children;
-            //behaviours.cohesion.weight = 0.4f;
-            behaviours.cohesion.enabled = true;
-
-            steer = behaviours.cohesion.GetSteering();
-            agent.AddSteering(steer, behaviours.cohesion.weight);
-
-            // add alignment behaviour
-            behaviours.alignment = gameObject.GetComponent<BoidAlignment>();
-            behaviours.alignment.targets = gameManager.GetNeighbourUnits(this.gameObject);
-                //behaviours.target.GetComponent<SquadParent>().children;
-            behaviours.alignment.enabled = true;
-
-            steer = behaviours.alignment.GetSteering();
-            agent.AddSteering(steer, behaviours.cohesion.weight);
-
-            // Add the boid seperation behaviour
-            behaviours.sepearation = gameObject.GetComponent<BoidSepearation>();
-            behaviours.sepearation.targets = gameManager.GetNeighbourUnits(this.gameObject);
-                //behaviours.target.GetComponent<SquadParent>().children;
-            //behaviours.sepearation.weight = 10.0f;
-            behaviours.sepearation.enabled = true;
-
-            steer = behaviours.sepearation.GetSteering();
-            agent.AddSteering(steer, behaviours.sepearation.weight);
-         //}
     }
 
     // Update is called once per frame
@@ -81,28 +84,22 @@ public class FlockState : MonoBehaviour
         distanceFromTarget = Vector3.Distance(target, transform.position);
 
         if (distanceFromTarget <= agent.MinDistanceFromTarget)
-            behaviours.ChangeState(UnitState.Idle);
+            states.ChangeState(UnitState.Idle);
 
         if(distanceFromTarget <= agent.MaxDistanceFromTarget && StationaryUnitInRange())
-            behaviours.ChangeState(UnitState.Idle);
+            states.ChangeState(UnitState.Idle);
 
         //gameManager.StopGroupMoving();
     }
 
     private void OnDestroy()
-    {        
-        //Destroy(behaviours.seek);
-        //Destroy(behaviours.cohesion);
-        //Destroy(behaviours.alignment);
-        //Destroy(behaviours.sepearation);
-    }
-
-    public void EndState()
     {
-        behaviours.seek.enabled = false;
-        behaviours.cohesion.enabled = false;
-        behaviours.alignment.enabled = false;
-        behaviours.sepearation.enabled = false;
+        agent.StopMoving();
+
+        Destroy(seekAccel);
+        Destroy(cohesion);
+        Destroy(alignment);
+        Destroy(sepearation);
     }
 
     private void OnDrawGizmos()
