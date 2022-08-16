@@ -6,8 +6,13 @@ public class BoidCohesion : AgentBehaviour
 {
     [SerializeField] float neighbourDistance = 15.0f;
     public List<GameObject> targets;
-
     private int count = 0;
+
+    public void start()
+    {
+        neighbourDistance = GetComponent<BehaviourManager>().CohesionDistance;
+    }
+
 
     public override Steering GetSteering()
     {

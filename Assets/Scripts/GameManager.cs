@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class GameManager : MonoBehaviour
 {
@@ -15,6 +16,11 @@ public class GameManager : MonoBehaviour
 
     [SerializeField]
     List<List<GameObject>> squads;
+
+    [Header("Unit formations")]
+    [SerializeField]float offsetLength = 1.0f;
+
+    List<Vector3> positions;
 
     public GameObject[] GetPlayerUnits()
     {
@@ -67,6 +73,29 @@ public class GameManager : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="destination"></param>
+    /// <returns></returns>
+    public Vector3[] GetPath(Vector3 destination)
+    {
+        NavMeshPath path = new NavMeshPath();
+
+        // get the average position of all units
+        Vector3 unitCenter = new Vector3();
+
+        foreach (GameObject unit in selection.Units)
+        {
+            unitCenter += unit.transform.position;
+        }
+        unitCenter /= selection.Units.Count;
+
+        NavMesh.CalculatePath(unitCenter, destination, NavMesh.AllAreas, path);
+
+        return path.corners;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -75,6 +104,7 @@ public class GameManager : MonoBehaviour
         selection = GetComponent<SelectionManager>();
 
         squads = new List<List<GameObject>>();
+        positions = new List<Vector3>();
     }
 
     // Update is called once per frame
@@ -84,27 +114,39 @@ public class GameManager : MonoBehaviour
         if(Input.GetMouseButtonDown(1) && Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo))
         {
             if(selection.Units.Count > 0)
-                MoveUnits(hitInfo);        
-
+                MoveUnits(hitInfo);
         }
 
     }
 
     private void MoveUnits(RaycastHit hit)
     {
+        positions.Clear();
+
         if (hit.transform.gameObject.layer == 3) // Ground
         {
             marker.transform.position = new Vector3(hit.point.x, 1, hit.point.z);
 
             if(selection.Units.Count > 1)
             {
+                positions = GetFormationPositions(hit.point);
+
+                /*
                 foreach (GameObject unit in selection.Units)
                 {
                     var states = unit.GetComponent<StateManager>();
 
                     //states.target = hit.point;
                     states.ChangeState(UnitState.Flock, hit.point);                    
+                }*/
+
+                // move all units to their designated target
+                for(int i=0; i < selection.Units.Count; i++)
+                {
+                    var unit = selection.Units[i].GetComponent<StateManager>();
+                    unit.ChangeState(UnitState.Flock, positions[i]);
                 }
+
             }
             else
             {
@@ -120,11 +162,38 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    
+    private List<Vector3> GetFormationPositions(Vector3 point)
+    {        
+        Vector3 unitCenter = new Vector3();        
 
-    private void CheckSquadsIdle()
+        foreach (GameObject unit in selection.Units)
+        {
+            unitCenter += unit.transform.position;
+        }
+        unitCenter /= selection.Units.Count;
+
+        Vector3 moveDirection = (point - unitCenter).normalized;
+        Vector3 offsetDirection = GetRightAngle(moveDirection);
+
+        // create the formation positions
+        for(int i = 0; i < selection.Units.Count; i++)
+        {
+            Vector3 position = point + (offsetDirection * i * offsetLength);
+            positions.Add(position);
+        }
+
+        return positions;
+    }
+
+    private Vector3 GetRightAngle(Vector3 current)
     {
+        Vector3 newVector;
+        newVector.x = current.z;
+        newVector.y = 0;
+        newVector.z = current.x;
 
-
+        return newVector;
     }
 
     private bool UnitsNotMoving(List<GameObject> units)
@@ -150,7 +219,20 @@ public class GameManager : MonoBehaviour
 
         if (!unitsStillMoving)
             squads.RemoveAt(squadNum);
+    }
 
+    
+
+
+    private void OnDrawGizmos()
+    {
+        if (positions != null)
+        {
+            foreach (Vector3 position in positions)
+            {
+                Gizmos.DrawSphere(position, 1);
+            }
+        }
     }
 
 }

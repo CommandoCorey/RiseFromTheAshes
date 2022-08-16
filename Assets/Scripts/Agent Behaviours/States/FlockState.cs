@@ -19,7 +19,11 @@ public class FlockState : State
     SeekDecelerateBehaviour seekDecel;
     BoidCohesion cohesion;
     BoidAlignment alignment;
-    BoidSepearation sepearation;
+    BoidSeparation sepearation;
+
+    private float decelerationDistance;
+
+    Transform leader;
 
     // Start is called before the first frame update
     void Start()
@@ -39,7 +43,11 @@ public class FlockState : State
         steer = seekAccel.GetSteering();
         agent.AddSteering(steer, seekAccel.weight);
 
-
+        // add seek deceleration
+        seekDecel = gameObject.AddComponent<SeekDecelerateBehaviour>();
+        seekDecel.target = target;
+        seekDecel.weight = behaviours.SeekWeight;
+        seekDecel.enabled = false;
 
         // Add the boid cohesion behaviour
         cohesion = gameObject.AddComponent<BoidCohesion>();
@@ -62,7 +70,7 @@ public class FlockState : State
         agent.AddSteering(steer, cohesion.weight);
 
         // Add the boid seperation behaviour
-        sepearation = gameObject.AddComponent<BoidSepearation>();
+        sepearation = gameObject.AddComponent<BoidSeparation>();
         sepearation.targets = //gameManager.GetNeighbourUnits(this.gameObject);
             gameManager.GetUnitsInSquad(0);
         sepearation.weight = behaviours.SeparationWeight;
@@ -81,15 +89,34 @@ public class FlockState : State
     // Update is called once per frame
     void Update()
     {
+        //decelerationDistance = GetDecelerateDistance();
+
         distanceFromTarget = Vector3.Distance(target, transform.position);
 
+        // if the distance to start deccelerating has bene reached then change behaviours
         if (distanceFromTarget <= agent.MinDistanceFromTarget)
-            states.ChangeState(UnitState.Idle);
+        {
+            //states.ChangeState(UnitState.Idle);
+            seekDecel.enabled = true;
+            seekAccel.enabled = false;
+        }
 
-        if(distanceFromTarget <= agent.MaxDistanceFromTarget && StationaryUnitInRange())
-            states.ChangeState(UnitState.Idle);
+        // if the distance from a stationary target has been reached and the unit
+        // is close enough to the target then start decelearting
+        /*if (distanceFromTarget <= agent.MaxDistanceFromTarget && StationaryUnitInRange())
+        {            
+            seekDecel.enabled = true;
+            seekAccel.enabled = false;
+        }
 
-        //gameManager.StopGroupMoving();
+        // check if the agent has reached minimum speed
+        if (seekDecel.enabled && agent.Vecloity.magnitude <= agent.MinSpeedWhenStopping)
+        {
+            //agent.StopMoving();
+
+            seekDecel.enabled = false;
+            states.ChangeState(UnitState.Idle);
+        }*/
     }
 
     private void OnDestroy()
@@ -97,14 +124,10 @@ public class FlockState : State
         agent.StopMoving();
 
         Destroy(seekAccel);
+        Destroy(seekDecel);
         Destroy(cohesion);
         Destroy(alignment);
         Destroy(sepearation);
-    }
-
-    private void OnDrawGizmos()
-    {
-        //UnityEditor.Handles.Label(transform.position + Vector3.up * 3, "Seek");
     }
 
     private bool StationaryUnitInRange()
@@ -120,4 +143,13 @@ public class FlockState : State
 
         return false;
     }
+
+    private float GetDecelerateDistance()
+    {
+        return (agent.CurrentSpeed * agent.CurrentSpeed) / (2 * agent.Deceleration);
+    }
+
+    
+
+
 }
