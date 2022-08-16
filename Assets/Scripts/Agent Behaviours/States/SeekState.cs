@@ -10,7 +10,6 @@ public class SeekState : State
     GameManager gameManager;
 
     StateManager states;
-    Vector3 target;
     Agent agent;
     Steering steer;
 
@@ -19,9 +18,6 @@ public class SeekState : State
     // Behaviour classes
     SeekBehaviour seek;
     SeekDecelerateBehaviour decelerate;
-    BoidCohesion cohesion;
-    BoidSepearation sepearation;
-    BoidAlignment alignment;
 
     private float distanceFromTarget;
     private float decelerateDistance;
@@ -87,9 +83,6 @@ public class SeekState : State
     private void OnDestroy()
     {        
         Destroy(seek);
-        Destroy(cohesion);
-        Destroy(alignment);
-        Destroy(sepearation);
     }
 
     public void EndState()

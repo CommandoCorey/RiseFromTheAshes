@@ -33,8 +33,9 @@ public class Agent : MonoBehaviour
     [SerializeField] float distanceFromNeighbour = 1.0f; // distance from stationary unit before stopping
     [SerializeField] float minSpeedWhenStopping = 1.6f;
 
-
     protected Steering steer;
+
+    private StateManager states;
 
     // Properties
     public float MaxSpeed { get => maxSpeed; }
@@ -50,7 +51,7 @@ public class Agent : MonoBehaviour
     public float MinDistanceFromTarget { get => minDistanceFromTarget; }
     public float MaxDistanceFromTarget { get => maxDistanceFromTarget; }
     public float MinDistanceFromNeighbour { get => distanceFromNeighbour; }
-
+    public float MinSpeedWhenStopping { get => minSpeedWhenStopping; }
 
     /// <summary>
     /// Sets internal steering and applies a weight to it
@@ -108,10 +109,7 @@ public class Agent : MonoBehaviour
     // update movement for the next frame
     public virtual void LateUpdate()
     {
-        //if (velocity.magnitude < maxSpeed)
-            //velocity += steer.linearVelocity * Time.deltaTime;
-        //else
-            velocity += steer.linearVelocity * Time.deltaTime;
+        velocity += steer.linearVelocity * Time.deltaTime;
 
         rotation += steer.angularVelocity * Time.deltaTime;
 

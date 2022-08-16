@@ -7,6 +7,7 @@ public enum UnitState
     Idle,
     Moving,
     Flock,
+    Formation,
     Attack
 }
 
@@ -24,16 +25,25 @@ public class StateManager : MonoBehaviour
     SeekState moveState;
     FlockState flockState;
     AttackState attackState;
+    FormationState formationState;
 
     // intelligent movement script
     Agent agent;
-
     UnitState state;
+
+    Vector3 formationTarget;
+
+    private Color drawColor = Color.white;
 
     public UnitState State { get => state; }
 
     public float DetectionRadius { get => detectionRadius; }
     public LayerMask DetectionLayer { get => detectionLayer; }
+
+    public void SetFormationTarget(Vector3 position)
+    {
+        formationTarget = position;
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -70,6 +80,7 @@ public class StateManager : MonoBehaviour
 
     public void ChangeState(UnitState newState, Vector3 target = new Vector3())
     {
+        
         state = newState;
 
         switch(newState)
@@ -98,7 +109,10 @@ public class StateManager : MonoBehaviour
 
                 Destroy(flockState);
                 Destroy(moveState);
-                Destroy(attackState);                
+                Destroy(attackState);
+                Destroy(formationState);
+
+                drawColor = Color.white;
             break;
 
             case UnitState.Moving:
@@ -116,6 +130,8 @@ public class StateManager : MonoBehaviour
 
                 moveState.Target = target;
                 //moveState.Init();
+
+                drawColor = Color.red;
             break;
 
             case UnitState.Flock:
@@ -133,7 +149,24 @@ public class StateManager : MonoBehaviour
                 //flockState.enabled = true;
 
                 flockState.Target = target;
+                flockState.FormationTarget = formationTarget;
+
                 //flockState.Init();
+                drawColor = Color.blue;
+            break;
+
+            case UnitState.Formation:
+                if (GetComponent<FormationState>() == null)
+                {
+                    formationState = gameObject.AddComponent<FormationState>();
+                }
+
+                Destroy(idleState);
+                Destroy(moveState);
+                Destroy(attackState);
+                Destroy(flockState);
+
+                drawColor = Color.yellow;
             break;
 
             case UnitState.Attack:
@@ -152,9 +185,14 @@ public class StateManager : MonoBehaviour
     }
 
     private void OnDrawGizmos()
-    {
-        //UnityEditor.Handles.Label(transform.position + Vector3.up * 3, "Seek");
+    {        
+        if (Application.isPlaying)
+            Gizmos.color = drawColor;       
+
         Gizmos.DrawWireSphere(transform.position, detectionRadius);
+
+        if (state == UnitState.Idle)
+            UnityEditor.Handles.Label(transform.position + Vector3.up * 3, "Idle");
     }
 
 }

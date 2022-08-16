@@ -14,11 +14,14 @@ public class BehaviourManager : MonoBehaviour
     [SerializeField] float cohesionDistance = 15.0f;
     [SerializeField] float desiredSeparation = 6.0f;
 
+    [Header("Obstacle Avoidance")]
+    [SerializeField] float ahadDistance = 10;
+
     // properties for steering behaviour classes
     public SeekBehaviour Seek { get; set; }
     public SeekDecelerateBehaviour Decelerate { get; set; }
     public BoidCohesion Cohesion { get; set; }
-    public BoidSepearation Sepearation { get; set; }
+    public BoidSeparation Separation { get; set; }
     public BoidAlignment Alignment { get; set; }
 
     // other properties
@@ -26,17 +29,35 @@ public class BehaviourManager : MonoBehaviour
     public float CohesionWeight { get => cohesion; }
     public float SeparationWeight { get => separation; }   
     public float AlignmentWeight { get => alignment; }  
+    public float CohesionDistance {  get => cohesionDistance; }
+    public float DesiredSeparation { get=> desiredSeparation; }
 
-    // Start is called before the first frame update
-    void Start()
+    private void OnDrawGizmos()
     {
+        Gizmos.color = Color.white;
+        if (GetComponent<SeekBehaviour>() != null && GetComponent<SeekBehaviour>().enabled)
+            UnityEditor.Handles.Label(transform.position + Vector3.up * 5, "Seeking");
+        else if (GetComponent<SeekDecelerateBehaviour>() != null && GetComponent<SeekDecelerateBehaviour>().enabled)
+            UnityEditor.Handles.Label(transform.position + Vector3.up * 5, "Decelerating");
         
-    }
+        if (GetComponent<BoidCohesion>() != null && GetComponent<BoidAlignment>() != null && 
+            GetComponent<BoidSeparation>() != null)
+        {
+            Gizmos.color = Color.blue;
+            UnityEditor.Handles.Label(transform.position + Vector3.up * 3, "Flocking");
+        }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        /*
+        if (GetComponent<BoidCohesion>() != null)
+            UnityEditor.Handles.Label(transform.position + Vector3.up * 3, "Cohesion");
+
+        if (GetComponent<BoidAlignment>() != null)
+            UnityEditor.Handles.Label(transform.position + Vector3.up * 2, "Cohesion");
+
+        if (GetComponent<BoidSeparation>() != null)
+            UnityEditor.Handles.Label(transform.position + Vector3.up * 1, "Separation");
+        */
+
     }
 
 }

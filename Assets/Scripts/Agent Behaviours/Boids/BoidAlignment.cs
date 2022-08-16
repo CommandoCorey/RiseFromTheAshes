@@ -9,6 +9,11 @@ public class BoidAlignment : AgentBehaviour
 
     private Vector3 averageVelocity;
 
+    private void Start()
+    {
+        neighbourDistance = GetComponent<BehaviourManager>().CohesionDistance;
+    }
+
     public override Steering GetSteering()
     {
         Steering steer = new Steering();

@@ -36,6 +36,9 @@ public class AgentBehaviour : MonoBehaviour
     {
         try
         {
+            if(agent == null)
+                agent = GetComponent<Agent>();
+
             agent.AddSteering(GetSteering(), weight);
         }
         catch(NullReferenceException e)
