@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class GameManager : MonoBehaviour
 {
@@ -72,6 +73,29 @@ public class GameManager : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="destination"></param>
+    /// <returns></returns>
+    public Vector3[] GetPath(Vector3 destination)
+    {
+        NavMeshPath path = new NavMeshPath();
+
+        // get the average position of all units
+        Vector3 unitCenter = new Vector3();
+
+        foreach (GameObject unit in selection.Units)
+        {
+            unitCenter += unit.transform.position;
+        }
+        unitCenter /= selection.Units.Count;
+
+        NavMesh.CalculatePath(unitCenter, destination, NavMesh.AllAreas, path);
+
+        return path.corners;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -120,7 +144,7 @@ public class GameManager : MonoBehaviour
                 for(int i=0; i < selection.Units.Count; i++)
                 {
                     var unit = selection.Units[i].GetComponent<StateManager>();
-                    unit.ChangeState(UnitState.Moving, positions[i]);
+                    unit.ChangeState(UnitState.Flock, positions[i]);
                 }
 
             }
@@ -196,6 +220,9 @@ public class GameManager : MonoBehaviour
         if (!unitsStillMoving)
             squads.RemoveAt(squadNum);
     }
+
+    
+
 
     private void OnDrawGizmos()
     {
