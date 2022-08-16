@@ -33,6 +33,8 @@ public class StateManager : MonoBehaviour
 
     Vector3 formationTarget;
 
+    private Color drawColor = Color.white;
+
     public UnitState State { get => state; }
 
     public float DetectionRadius { get => detectionRadius; }
@@ -109,6 +111,8 @@ public class StateManager : MonoBehaviour
                 Destroy(moveState);
                 Destroy(attackState);
                 Destroy(formationState);
+
+                drawColor = Color.white;
             break;
 
             case UnitState.Moving:
@@ -126,6 +130,8 @@ public class StateManager : MonoBehaviour
 
                 moveState.Target = target;
                 //moveState.Init();
+
+                drawColor = Color.red;
             break;
 
             case UnitState.Flock:
@@ -146,6 +152,7 @@ public class StateManager : MonoBehaviour
                 flockState.FormationTarget = formationTarget;
 
                 //flockState.Init();
+                drawColor = Color.blue;
             break;
 
             case UnitState.Formation:
@@ -159,6 +166,7 @@ public class StateManager : MonoBehaviour
                 Destroy(attackState);
                 Destroy(flockState);
 
+                drawColor = Color.yellow;
             break;
 
             case UnitState.Attack:
@@ -177,9 +185,14 @@ public class StateManager : MonoBehaviour
     }
 
     private void OnDrawGizmos()
-    {
-        //UnityEditor.Handles.Label(transform.position + Vector3.up * 3, "Seek");
+    {        
+        if (Application.isPlaying)
+            Gizmos.color = drawColor;       
+
         Gizmos.DrawWireSphere(transform.position, detectionRadius);
+
+        if (state == UnitState.Idle)
+            UnityEditor.Handles.Label(transform.position + Vector3.up * 3, "Idle");
     }
 
 }

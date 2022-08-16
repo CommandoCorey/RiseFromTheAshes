@@ -19,7 +19,7 @@ public class FlockState : State
     SeekDecelerateBehaviour seekDecel;
     BoidCohesion cohesion;
     BoidAlignment alignment;
-    BoidSepearation sepearation;
+    BoidSeparation sepearation;
 
     private float decelerationDistance;
 
@@ -70,7 +70,7 @@ public class FlockState : State
         agent.AddSteering(steer, cohesion.weight);
 
         // Add the boid seperation behaviour
-        sepearation = gameObject.AddComponent<BoidSepearation>();
+        sepearation = gameObject.AddComponent<BoidSeparation>();
         sepearation.targets = //gameManager.GetNeighbourUnits(this.gameObject);
             gameManager.GetUnitsInSquad(0);
         sepearation.weight = behaviours.SeparationWeight;
@@ -96,13 +96,9 @@ public class FlockState : State
         // if the distance to start deccelerating has bene reached then change behaviours
         if (distanceFromTarget <= agent.MinDistanceFromTarget)
         {
-            //seekDecel.enabled = true;
-            //seekAccel.enabled = false;
-            //cohesion.enabled = false;
-            //alignment.enabled = false;
-            //sepearation.enabled = false;
-
-            states.ChangeState(UnitState.Idle);
+            //states.ChangeState(UnitState.Idle);
+            seekDecel.enabled = true;
+            seekAccel.enabled = false;
         }
 
         // if the distance from a stationary target has been reached and the unit
@@ -121,8 +117,6 @@ public class FlockState : State
             seekDecel.enabled = false;
             states.ChangeState(UnitState.Idle);
         }*/
-
-        //gameManager.StopGroupMoving();
     }
 
     private void OnDestroy()
@@ -134,11 +128,6 @@ public class FlockState : State
         Destroy(cohesion);
         Destroy(alignment);
         Destroy(sepearation);
-    }
-
-    private void OnDrawGizmos()
-    {
-        //UnityEditor.Handles.Label(transform.position + Vector3.up * 3, "Seek");
     }
 
     private bool StationaryUnitInRange()
@@ -159,4 +148,8 @@ public class FlockState : State
     {
         return (agent.CurrentSpeed * agent.CurrentSpeed) / (2 * agent.Deceleration);
     }
+
+    
+
+
 }
