@@ -22,7 +22,7 @@ public class StateManager : MonoBehaviour
     public GameObject AttackTarget {  get; set; }
 
     IdleState idleState;
-    SeekState moveState;
+    MoveState moveState;
     FlockState flockState;
     AttackState attackState;
     FormationState formationState;
@@ -52,7 +52,7 @@ public class StateManager : MonoBehaviour
         idleState = GetComponent<IdleState>();
         attackState = GetComponent<AttackState>();
         flockState = GetComponent<FlockState>();
-        moveState = GetComponent<SeekState>();
+        moveState = GetComponent<MoveState>();
         
 
         ChangeState(UnitState.Idle);
@@ -76,6 +76,7 @@ public class StateManager : MonoBehaviour
         
     }
 
+    //
     public void ChangeState(UnitState newState, Vector3 target = new Vector3())
     {        
         state = newState;
@@ -96,19 +97,25 @@ public class StateManager : MonoBehaviour
                 drawColor = Color.white;
             break;
 
-            case UnitState.Moving:                
+            case UnitState.Moving: 
+            /*               
                 if(GetComponent<SeekState>() == null)
                 {
                     moveState = gameObject.AddComponent<SeekState>();
+                }*/
+
+                if(GetComponent<MoveState>() == null)
+                {
+                    moveState = gameObject.AddComponent<MoveState>();
                 }
 
                 Destroy(idleState);
                 Destroy(flockState);
                 Destroy(attackState);
 
-                moveState.Target = target;
-
-                agent.SetPath(target);
+                //moveState.Target = target;
+                //agent.SetPath(target);
+                moveState.MoveTo(target);
 
                 drawColor = Color.red;
             break;
