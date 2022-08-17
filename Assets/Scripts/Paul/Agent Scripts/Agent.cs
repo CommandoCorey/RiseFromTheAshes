@@ -175,7 +175,8 @@ public class Agent : MonoBehaviour
     {
         NavMesh.CalculatePath(transform.position, targetPos, NavMesh.AllAreas, path);
     }
-
+    
+    
     private void OnDrawGizmos()
     {
         if (path != null)

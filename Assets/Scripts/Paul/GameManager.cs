@@ -76,7 +76,7 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 
+    /// Creates a path for a group based on the center of mass
     /// </summary>
     /// <param name="destination"></param>
     /// <returns></returns>
@@ -131,10 +131,9 @@ public class GameManager : MonoBehaviour
 
             if(selection.Units.Count > 1)
             {
-                groupPath = GetPath(hit.point);
-
+                //groupPath = GetPath(hit.point);
                 
-                //positions = GetFormationPositions(hit.point);
+                positions = GetFormationPositions(hit.point);
 
                 /*
                 foreach (GameObject unit in selection.Units)
@@ -145,13 +144,13 @@ public class GameManager : MonoBehaviour
                     states.ChangeState(UnitState.Flock, hit.point);                    
                 }*/
 
-                /*
+                
                 // move all units to their designated target
                 for(int i=0; i < selection.Units.Count; i++)
                 {
                     var unit = selection.Units[i].GetComponent<StateManager>();
-                    unit.ChangeState(UnitState.Flock, positions[i]);
-                }*/
+                    unit.ChangeState(UnitState.Moving, positions[i]);
+                }
 
             }
             else
@@ -171,10 +170,10 @@ public class GameManager : MonoBehaviour
 
     
     /// <summary>
-    /// 
+    /// Create a formations for all the selected units based on the position the player clicked
     /// </summary>
-    /// <param name="point"></param>
-    /// <returns></returns>
+    /// <param name="point">The target position on the map to created a formation around</param>
+    /// <returns>A list of coordinates for all positions in the formation</returns>
     private List<Vector3> GetFormationPositions(Vector3 point)
     {        
         Vector3 unitCenter = new Vector3();        
