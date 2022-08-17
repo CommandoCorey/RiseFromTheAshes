@@ -28,11 +28,13 @@ class FOW : MonoBehaviour {
 	[SerializeField] Texture2D maskTexture;
 	[SerializeField] float height = 1.0f;
 
-	[SerializeField] GameObject cubePrefab;
+	[SerializeField] bool permanent;
 
 	Mesh mesh;
 
 	byte[] FOWMask;
+
+	bool wantMaskUpdate = true;
 
 	List<Vector3> vertices;
 	List<int> tris;
@@ -52,11 +54,16 @@ class FOW : MonoBehaviour {
 
 	private void Update()
 	{
-		GenerateMesh();
-		ClearMask();
+		if (wantMaskUpdate) {
+			GenerateMesh();
+			wantMaskUpdate = false;
+		}
+
+		if (permanent) { ClearMask(); }
 	}
 
 	public void RequestMaskUpdate(byte value, Vector2Int position) {
+		wantMaskUpdate = true;
 		FOWMask[position.x + position.y * maskExtent.x] = value;
 	}
 
@@ -158,17 +165,18 @@ class FOW : MonoBehaviour {
 				 *
 				 * TODO (George): Make an ID from the combination of topLeft, topRight, botLeft, botRight
 				 * and use it as an index into an array to get the state. Be faster, hopefully.
-				 * 
-				 * TODO (George): Cache the mesh and only re-generate if the mask has changed.
 				 *
-				 * TODO (George): Blur the mask and lerp between the values for better smoothing.
+				 * TODO (George): Blur the mask and lerp between the values for better smoothing. This also
+				 * might not be necessary if it's just used to spawn particles.
 				 * 
 				 * This generates quite an ineffecient mesh; It doesn't care much about reusing vertices.
 				 *
 				 * There's currently unhandled cases, such as the two ambigous ones that exist in this
 				 * algorithm. I think it's fine to leave them unhandled, though we will see once we
 				 * get some actual gameplay happening. I doubt anybody will notice - it's not like there's
-				 * going to be gaps in an outline or something. */
+				 * going to be gaps in an outline or something since this mesh will be used to spawn
+				 * particles - It doesn't have to be perfect. If that doesn't work out, then the edge
+				 * cases will need to be handled. */
 				int state = 0;
 
 				Gizmos.color = Color.white;
@@ -333,6 +341,8 @@ class FOW : MonoBehaviour {
 
 	public void ClearMask()
 	{
+		wantMaskUpdate = true;
+
 		for (int i = 0; i < maskExtent.x * maskExtent.y; i++)
 		{
 			FOWMask[i] = 0x1;
@@ -355,7 +365,11 @@ class FOW : MonoBehaviour {
 			for (int x = start_x; x < end_x; x++)
 			{
 				if (Vector2Int.Distance(new Vector2Int(x, y), centre) <= radius) {
-					FOWMask[x + y * maskExtent.x] = 0x0;
+					int pos = x + y * maskExtent.x;
+					if (FOWMask[pos] != 0x0) {
+						FOWMask[pos] = 0x0;
+						wantMaskUpdate = true;
+					}
 				}
 			}
 		}
