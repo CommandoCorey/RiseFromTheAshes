@@ -46,11 +46,6 @@ public class SeekState : State
 
     }
 
-    public void Init()
-    {
-              
-    }
-
     // Update is called once per frame
     void Update()
     {
@@ -98,9 +93,6 @@ public class SeekState : State
 
     private float GetDecelerateDistance()
     {
-        //float framesUntilStopped = agent.CurrentSpeed / agent.Deceleration;
-        //float v = agent.Deceleration * framesUntilStopped;
-
         return (agent.CurrentSpeed * agent.CurrentSpeed) / (2 * agent.Deceleration);
     }
 

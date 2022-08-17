@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 // Used to move unit with steering behaviours
 public class Agent : MonoBehaviour
@@ -33,18 +34,15 @@ public class Agent : MonoBehaviour
     [SerializeField] float distanceFromNeighbour = 1.0f; // distance from stationary unit before stopping
     [SerializeField] float minSpeedWhenStopping = 1.6f;
 
-    protected Steering steer;
-
+    private Steering steer;
     private StateManager states;
+    private NavMeshPath path;
 
     // Properties
     public float MaxSpeed { get => maxSpeed; }
     public float CurrentSpeed { get => velocity.magnitude; }
     public float Acceleration { get => acceleration; }
     public float Deceleration { get => deceleration; }
-
-    //public float MaxAccel { get => maxAccel; }
-
     public float MaxRotation { get => maxRotation; }
     public float MaxAnagulerAccel { get => maxAnagulerAccel; }
     public Vector3 Vecloity { get => velocity; }
@@ -52,6 +50,8 @@ public class Agent : MonoBehaviour
     public float MaxDistanceFromTarget { get => maxDistanceFromTarget; }
     public float MinDistanceFromNeighbour { get => distanceFromNeighbour; }
     public float MinSpeedWhenStopping { get => minSpeedWhenStopping; }
+
+    public Vector3[] Path { get => path.corners; } // returns all waypoints in the path
 
     /// <summary>
     /// Sets internal steering and applies a weight to it
@@ -72,6 +72,8 @@ public class Agent : MonoBehaviour
         velocity = Vector3.zero;
         steer = new Steering();
         trueMaxSpeed = maxSpeed;
+
+        path = new NavMeshPath();
     }
 
     // change the transform based off the last frame's steering
@@ -104,13 +106,12 @@ public class Agent : MonoBehaviour
         {
             GameObject.Destroy(this.gameObject);
         }
-    }    
+    }
 
     // update movement for the next frame
     public virtual void LateUpdate()
     {
         velocity += steer.linearVelocity * Time.deltaTime;
-
         rotation += steer.angularVelocity * Time.deltaTime;
 
         // cap the velocity to the max speed
@@ -118,12 +119,6 @@ public class Agent : MonoBehaviour
         {
             velocity.Normalize();
         }
-
-        // if the steering behaviour is not moving set the velocity to zero
-        //if(steer.linearVelocity.magnitude == 0.0f)
-        //{
-           //velocity = Vector3.zero;
-        //}
 
         steer = new Steering();
     }
@@ -136,16 +131,27 @@ public class Agent : MonoBehaviour
         maxSpeed = trueMaxSpeed;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="selected"></param>
     public void SetSelected(bool selected)
     {
         highlight.SetActive(selected);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="amount"></param>
     public void SubtractHealth(float amount)
     {
         health -= amount;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public void StopMoving()
     {
         velocity = Vector3.zero;
@@ -153,9 +159,34 @@ public class Agent : MonoBehaviour
         steer.angularVelocity = 0;
     }
 
+    /// <summary>
+    /// Calculates required to stop moving from current velocity
+    /// </summary>
+    /// <returns>floating point value based on the magnitude of the distance vector</returns>
     public float GetDecelerateDistance()
     {
         return (velocity.magnitude * velocity.magnitude) / (2 * deceleration);
+    }
+
+    /// <summary>
+    /// Sets path along navigation mesh from current position to the destination
+    /// </summary>
+    public void SetPath(Vector3 targetPos)
+    {
+        NavMesh.CalculatePath(transform.position, targetPos, NavMesh.AllAreas, path);
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (path != null)
+        {
+            // Draws the path
+            for (int i = 0; i < path.corners.Length - 1; i++)
+            {
+                Gizmos.DrawLine(path.corners[i], path.corners[i + 1]);
+            }
+        }
+
     }
 
 }
