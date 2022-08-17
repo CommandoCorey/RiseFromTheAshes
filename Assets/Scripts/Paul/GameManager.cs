@@ -156,9 +156,8 @@ public class GameManager : MonoBehaviour
             else
             {
                 GameObject unit = selection.Units[0];
-                var states = unit.GetComponent<StateManager>();                
-
-                //states.target = hit.point;
+                var states = unit.GetComponent<StateManager>();
+                
                 states.ChangeState(UnitState.Moving, hit.point);
 
                 //unit.GetComponent<SeekState>().MoveTo(hitInfo.point);
@@ -246,7 +245,8 @@ public class GameManager : MonoBehaviour
         {
             foreach (Vector3 position in positions)
             {
-                Gizmos.DrawSphere(position, 1);
+                Gizmos.color = Color.green;
+                Gizmos.DrawWireSphere(position, 1);
             }
         }
     }

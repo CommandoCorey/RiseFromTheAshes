@@ -174,20 +174,6 @@ public class Agent : MonoBehaviour
     public void SetPath(Vector3 targetPos)
     {
         NavMesh.CalculatePath(transform.position, targetPos, NavMesh.AllAreas, path);
-    }
-    
-    
-    private void OnDrawGizmos()
-    {
-        if (path != null)
-        {
-            // Draws the path
-            for (int i = 0; i < path.corners.Length - 1; i++)
-            {
-                Gizmos.DrawLine(path.corners[i], path.corners[i + 1]);
-            }
-        }
-
-    }
+    }  
 
 }
