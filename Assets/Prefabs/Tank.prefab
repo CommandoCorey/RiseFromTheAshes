@@ -93,7 +93,7 @@ GameObject:
   m_Layer: 6
   m_Name: Firing Point
   m_TagString: Untagged
-  m_Icon: {fileID: 7250588514170254948, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -129,7 +129,7 @@ GameObject:
   - component: {fileID: 8203223622361363122}
   m_Layer: 6
   m_Name: Tank
-  m_TagString: Untagged
+  m_TagString: PlayerUnit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -245,12 +245,17 @@ MonoBehaviour:
   health: 0
   maxSpeed: 10
   trueMaxSpeed: 0
-  maxAccel: 30
+  acceleration: 3
+  deceleration: 3
   orientation: 0
   rotation: 0
   velocity: {x: 0, y: 0, z: 0}
   maxRotation: 45
   maxAnagulerAccel: 45
+  minDistanceFromTarget: 1
+  maxDistanceFromTarget: 3
+  distanceFromNeighbour: 1
+  minSpeedWhenStopping: 1.6
 --- !u!114 &1608555301507571338
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -268,10 +273,6 @@ MonoBehaviour:
   detectionLayer:
     serializedVersion: 2
     m_Bits: 640
-  target: {fileID: 0}
-  seek: {fileID: 0}
-  cohesion: {fileID: 0}
-  sepearation: {fileID: 0}
 --- !u!114 &8203223622361363122
 MonoBehaviour:
   m_ObjectHideFlags: 0

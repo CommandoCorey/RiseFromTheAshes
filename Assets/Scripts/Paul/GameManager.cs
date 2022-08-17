@@ -22,6 +22,8 @@ public class GameManager : MonoBehaviour
 
     List<Vector3> positions;
 
+    Vector3[] groupPath;
+
     public GameObject[] GetPlayerUnits()
     {
         return GameObject.FindGameObjectsWithTag("PlayerUnit");
@@ -129,7 +131,10 @@ public class GameManager : MonoBehaviour
 
             if(selection.Units.Count > 1)
             {
-                positions = GetFormationPositions(hit.point);
+                groupPath = GetPath(hit.point);
+
+                
+                //positions = GetFormationPositions(hit.point);
 
                 /*
                 foreach (GameObject unit in selection.Units)
@@ -140,21 +145,23 @@ public class GameManager : MonoBehaviour
                     states.ChangeState(UnitState.Flock, hit.point);                    
                 }*/
 
+                /*
                 // move all units to their designated target
                 for(int i=0; i < selection.Units.Count; i++)
                 {
                     var unit = selection.Units[i].GetComponent<StateManager>();
                     unit.ChangeState(UnitState.Flock, positions[i]);
-                }
+                }*/
 
             }
             else
             {
                 GameObject unit = selection.Units[0];
-                var states = unit.GetComponent<StateManager>();
+                var states = unit.GetComponent<StateManager>();                
 
                 //states.target = hit.point;
                 states.ChangeState(UnitState.Moving, hit.point);
+
                 //unit.GetComponent<SeekState>().MoveTo(hitInfo.point);
             }
 
@@ -163,6 +170,11 @@ public class GameManager : MonoBehaviour
     }
 
     
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="point"></param>
+    /// <returns></returns>
     private List<Vector3> GetFormationPositions(Vector3 point)
     {        
         Vector3 unitCenter = new Vector3();        
@@ -221,11 +233,16 @@ public class GameManager : MonoBehaviour
             squads.RemoveAt(squadNum);
     }
 
-    
-
-
     private void OnDrawGizmos()
     {
+        if(groupPath != null)
+        {
+            Gizmos.color = Color.red;
+
+            for(int i=0; i < groupPath.Length - 1; i++)
+                Gizmos.DrawLine(groupPath[i], groupPath[i + 1]);
+        }
+
         if (positions != null)
         {
             foreach (Vector3 position in positions)

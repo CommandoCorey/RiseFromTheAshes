@@ -5,6 +5,7 @@ using UnityEngine;
 public class SimpleCameraMovement : MonoBehaviour
 {
     public float panSpeed = 10.0f;
+    public float zoomSpeed = 5.0f;
 
     private Vector3 velocity;
     Vector3 xVelocity, zVelocity;
