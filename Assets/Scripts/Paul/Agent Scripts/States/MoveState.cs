@@ -53,7 +53,7 @@ public class MoveState : MonoBehaviour
         //moving = true;
 
         //foreach (Vector3 coord in path.corners)
-            //Debug.Log("Position: " + coord);    
+            //Debug.Log("Position: " + coord); 
     }
 
     private void MoveTank()

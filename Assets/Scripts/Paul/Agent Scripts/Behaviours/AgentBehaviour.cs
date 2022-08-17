@@ -17,8 +17,7 @@ public class AgentBehaviour : MonoBehaviour
     //[SerializeField] protected float maxAngularAccel = 5.0f;
 
     protected float angularVelocity = 0;
-    protected float angularAccel = 0;    
-
+    protected float angularAccel = 0;
     protected Agent agent;
 
     protected virtual void Start()

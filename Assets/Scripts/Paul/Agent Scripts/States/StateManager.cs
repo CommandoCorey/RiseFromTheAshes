@@ -48,14 +48,12 @@ public class StateManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //agent = gameObject.AddComponent<Agent>(); // add agent component to game object
-        //seek = gameObject.GetComponent<SeekBehaviour>();
-        
+        agent = GetComponent<Agent>(); // add agent component to game object        
         idleState = GetComponent<IdleState>();
         attackState = GetComponent<AttackState>();
         flockState = GetComponent<FlockState>();
         moveState = GetComponent<SeekState>();
-        //decelerate = GetComponent<SeekDecelerateBehaviour>();
+        
 
         ChangeState(UnitState.Idle);
     }
@@ -79,8 +77,7 @@ public class StateManager : MonoBehaviour
     }
 
     public void ChangeState(UnitState newState, Vector3 target = new Vector3())
-    {
-        
+    {        
         state = newState;
 
         switch(newState)
@@ -89,23 +86,7 @@ public class StateManager : MonoBehaviour
                 if(GetComponent<IdleState>() == null)
                 {
                     idleState = gameObject.AddComponent<IdleState>();
-                }
-
-                /*
-                if(flockState != null && flockState.enabled)
-                {
-                    flockState.EndState();
-                    //flockState.enabled = false;
-                    //Destroy(flockState);
-                }*/
-
-                //if(moveState != null && moveState.enabled)
-                   // moveState.EndState();
-
-                //moveState.enabled = false;
-
-                //attackState.enabled = false;
-                //idleState.enabled = true;                
+                }              
 
                 Destroy(flockState);
                 Destroy(moveState);
@@ -115,21 +96,19 @@ public class StateManager : MonoBehaviour
                 drawColor = Color.white;
             break;
 
-            case UnitState.Moving:
+            case UnitState.Moving:                
                 if(GetComponent<SeekState>() == null)
                 {
                     moveState = gameObject.AddComponent<SeekState>();
                 }
 
-                //idleState.enabled = false;
                 Destroy(idleState);
                 Destroy(flockState);
                 Destroy(attackState);
-                //attackState.enabled = false;
-                //moveState.enabled = true;
 
                 moveState.Target = target;
-                //moveState.Init();
+
+                agent.SetPath(target);
 
                 drawColor = Color.red;
             break;
@@ -144,14 +123,9 @@ public class StateManager : MonoBehaviour
                 Destroy(moveState);
                 Destroy(attackState);
 
-                //idleState.enabled = false;
-                //attackState.enabled = false;
-                //flockState.enabled = true;
-
                 flockState.Target = target;
                 flockState.FormationTarget = formationTarget;
-
-                //flockState.Init();
+                
                 drawColor = Color.blue;
             break;
 
@@ -177,9 +151,7 @@ public class StateManager : MonoBehaviour
 
                 Destroy(idleState);
                 Destroy(moveState);
-                Destroy(flockState);
-
-                //attackState.enabled = true;
+                Destroy(flockState);                
             break;
         }
     }
