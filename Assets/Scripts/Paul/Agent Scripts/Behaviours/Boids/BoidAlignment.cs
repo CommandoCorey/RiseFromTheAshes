@@ -9,8 +9,9 @@ public class BoidAlignment : AgentBehaviour
 
     private Vector3 averageVelocity;
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
         neighbourDistance = GetComponent<BehaviourManager>().CohesionDistance;
     }
 
@@ -29,7 +30,7 @@ public class BoidAlignment : AgentBehaviour
 
             if ((distance > 0) && (distance < neighbourDistance))
             {
-                averageVelocity += other.GetComponent<Agent>().Vecloity;
+                averageVelocity += other.GetComponent<AgentMovement>().Vecloity;
                 count++;
             }
         }

@@ -174,9 +174,9 @@ public class SelectionManager : MonoBehaviour
         {
             selectedTable.Add(id, go);
 
-            if (go.GetComponent<Agent>() != null)
+            if (go.GetComponent<UnitController>() != null)
             {
-                go.GetComponent<Agent>().SetSelected(true);
+                go.GetComponent<UnitController>().SetSelected(true);
                 //Debug.Log("Added " + id + " to selected dict");
             }
         }
@@ -189,7 +189,7 @@ public class SelectionManager : MonoBehaviour
     public void Deselect(int id)
     {
         //Destroy(selectedTable[id].GetComponent<SelectionComponent>());
-        selectedTable[id].GetComponent<Agent>().SetSelected(false);
+        selectedTable[id].GetComponent<UnitController>().SetSelected(false);
         selectedTable.Remove(id);
     }
 
@@ -205,7 +205,7 @@ public class SelectionManager : MonoBehaviour
             if (pair.Value != null)
             {
                 //Destroy(selectedTable[pair.Key].GetComponent<SelectedDictionary>());
-                selectedTable[pair.Key].GetComponent<Agent>().SetSelected(false);
+                selectedTable[pair.Key].GetComponent<UnitController>().SetSelected(false);
             }
         }
         selectedTable.Clear(); // clears the whole dictionary

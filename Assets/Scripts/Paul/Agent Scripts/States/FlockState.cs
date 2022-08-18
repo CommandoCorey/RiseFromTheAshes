@@ -6,8 +6,8 @@ public class FlockState : State
 {
     GameManager gameManager;
 
-    StateManager states;
-    Agent agent;
+    UnitController unit;
+    AgentMovement agent;
     Steering steer;
     BehaviourManager behaviours;
     
@@ -28,8 +28,8 @@ public class FlockState : State
     // Start is called before the first frame update
     void Start()
     {
-        states = GetComponent<StateManager>();
-        agent = GetComponent<Agent>();
+        unit = GetComponent<UnitController>();
+        agent = GetComponent<AgentMovement>();
         behaviours = GetComponent<BehaviourManager>();
 
         gameManager = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
@@ -103,7 +103,7 @@ public class FlockState : State
 
         // if the distance from a stationary target has been reached and the unit
         // is close enough to the target then start decelearting
-        /*if (distanceFromTarget <= agent.MaxDistanceFromTarget && StationaryUnitInRange())
+        if (distanceFromTarget <= agent.MaxDistanceFromTarget && StationaryUnitInRange())
         {            
             seekDecel.enabled = true;
             seekAccel.enabled = false;
@@ -115,8 +115,8 @@ public class FlockState : State
             //agent.StopMoving();
 
             seekDecel.enabled = false;
-            states.ChangeState(UnitState.Idle);
-        }*/
+            unit.ChangeState(UnitState.Idle);
+        }
     }
 
     private void OnDestroy()

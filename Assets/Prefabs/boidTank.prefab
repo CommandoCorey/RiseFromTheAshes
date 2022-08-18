@@ -12,12 +12,13 @@ GameObject:
   - component: {fileID: 9150629310046856661}
   - component: {fileID: 829398744485436827}
   - component: {fileID: 1950773433}
+  - component: {fileID: 1338965320307225585}
   - component: {fileID: -5914012348275633291}
-  - component: {fileID: 1101342345677354878}
   - component: {fileID: 1727009965}
   - component: {fileID: 5486477884804087374}
+  - component: {fileID: -8268247658432732276}
   m_Layer: 6
-  m_Name: boid
+  m_Name: boidTank
   m_TagString: PlayerUnit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -70,11 +71,32 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 1
-  m_IsKinematic: 0
+  m_UseGravity: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1338965320307225585
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5798167006062429957}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d337556d8371dc349a90c78320b2f3fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selectionHighlight: {fileID: 8726823584126190087}
+  maxHealth: 100
+  movmentSpeed: 1
+  damagePerAttack: 1
+  attackRate: 1
+  detectionRadius: 1
+  detectionLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!114 &-5914012348275633291
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -87,9 +109,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c448d9b6244c7b49a08a9cfc39a4bcc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  highlight: {fileID: 8726823584126190087}
-  maxHealth: 100
-  health: 0
   maxSpeed: 10
   trueMaxSpeed: 0
   acceleration: 3
@@ -103,23 +122,6 @@ MonoBehaviour:
   maxDistanceFromTarget: 10
   distanceFromNeighbour: 5
   minSpeedWhenStopping: 1.6
---- !u!114 &1101342345677354878
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5798167006062429957}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7fa04341dc6b54841b1f7ead5cfe4445, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  team: 0
-  detectionRadius: 1
-  detectionLayer:
-    serializedVersion: 2
-    m_Bits: 640
 --- !u!114 &1727009965
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -138,7 +140,7 @@ MonoBehaviour:
   separation: 10
   cohesionDistance: 15
   desiredSeparation: 6
-  ahadDistance: 10
+  aheadDistance: 10
 --- !u!114 &5486477884804087374
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -151,6 +153,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65c81c12c96e7264d88709d8b451b5d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-8268247658432732276
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5798167006062429957}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62c0e9bedd811934ba1b67fab761f762, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radius: 5
 --- !u!1 &8726823584126190087
 GameObject:
   m_ObjectHideFlags: 0
