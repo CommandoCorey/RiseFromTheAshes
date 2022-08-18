@@ -6,7 +6,7 @@ public class SeekDecelerateBehaviour : AgentBehaviour
 {
     private void Awake()
     {
-        agent = GetComponent<Agent>();
+        agent = GetComponent<AgentMovement>();
     }
 
     /// <summary>

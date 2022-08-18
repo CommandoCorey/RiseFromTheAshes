@@ -11,8 +11,8 @@ public class SeekState : State
 
     // external scripts
     GameManager gameManager;
-    StateManager states;
-    Agent agent;
+    UnitController unit;
+    AgentMovement agent;
     Steering steer;
     BehaviourManager behaviours;
 
@@ -31,11 +31,13 @@ public class SeekState : State
     // Start is called before the first frame update
     void Start()
     {
-        states = GetComponent<StateManager>();
-        agent = GetComponent<Agent>();
+        unit = GetComponent<UnitController>();
+        agent = GetComponent<AgentMovement>();
         behaviours = GetComponent<BehaviourManager>();
 
-        gameManager = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
+        //gameManager = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
+
+        gameManager = GameObject.FindObjectOfType<GameManager>();
 
         MoveTo(target);
 
@@ -94,7 +96,7 @@ public class SeekState : State
                 decelerate.enabled = false;
                 agent.StopMoving();
 
-                states.ChangeState(UnitState.Idle);                
+                unit.ChangeState(UnitState.Idle);                
             }
 
         }

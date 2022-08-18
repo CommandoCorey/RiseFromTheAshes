@@ -4,39 +4,25 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class AgentBehaviour : MonoBehaviour
-{
-    public float weight = 1.0f;
-
+{    
+    public float weight { get; set; } = 1.0f;
     public Vector3 target { get; set; }
-
-    //[SerializeField] Vector3 destination;
-
-    //[SerializeField] protected float maxSpeed = 50.0f;
-    //[SerializeField] protected float maxAccel = 50.0f;
-    //[SerializeField] protected float maxRotation = 5.0f;
-    //[SerializeField] protected float maxAngularAccel = 5.0f;
 
     protected float angularVelocity = 0;
     protected float angularAccel = 0;
-    protected Agent agent;
+    protected AgentMovement agent;
 
     protected virtual void Start()
     {
-        agent = GetComponent<Agent>();
+        agent = GetComponent<AgentMovement>();
     }
-
-    /*
-    public virtual void State()
-    {
-        agent = gameObject.GetComponent<Agent>();
-    }*/
 
     public virtual void Update()
     {
         try
         {
             if(agent == null)
-                agent = GetComponent<Agent>();
+                agent = GetComponent<AgentMovement>();
 
             agent.AddSteering(GetSteering(), weight);
         }
@@ -74,6 +60,19 @@ public class AgentBehaviour : MonoBehaviour
     public virtual Steering GetSteering()
     {
         return new Steering();
+    }
+
+}
+
+public class Steering
+{
+    public float angularVelocity; // rotation 0->360
+    public Vector3 linearVelocity; //instantaneous velocity
+
+    public Steering(float angularVelocity = 0.0f, Vector3 linearVelocity = new Vector3())
+    {
+        this.angularVelocity = angularVelocity;
+        this.linearVelocity = linearVelocity;
     }
 
 }

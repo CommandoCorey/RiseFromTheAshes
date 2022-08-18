@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class AttackState : MonoBehaviour
+public class CombatState : MonoBehaviour
 {
     public Transform turret;
     public Transform firingPoint;
@@ -39,7 +39,7 @@ public class AttackState : MonoBehaviour
             if (Physics.Raycast(firingPoint.position, turret.forward, out hit) && hit.transform == target)            
             {
                 Debug.DrawLine(turret.position, target.position, Color.yellow);
-                target.GetComponent<Agent>().SubtractHealth(damagePerHit);
+                target.GetComponent<UnitController>().TakeDamage(damagePerHit);
             }
             else
             {

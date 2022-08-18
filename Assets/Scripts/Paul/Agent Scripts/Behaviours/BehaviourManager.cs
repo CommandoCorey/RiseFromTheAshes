@@ -17,13 +17,6 @@ public class BehaviourManager : MonoBehaviour
     [Header("Obstacle Avoidance")]
     [SerializeField] float aheadDistance = 10;
 
-    // properties for steering behaviour classes
-    public SeekBehaviour Seek { get; set; }
-    public SeekDecelerateBehaviour Decelerate { get; set; }
-    public BoidCohesion Cohesion { get; set; }
-    public BoidSeparation Separation { get; set; }
-    public BoidAlignment Alignment { get; set; }
-
     // other properties
     public float SeekWeight { get => seek; }
     public float CohesionWeight { get => cohesion; }
