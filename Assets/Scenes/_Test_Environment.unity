@@ -461,7 +461,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3235123660149911136, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
       propertyPath: m_RootOrder
-      value: 20
+      value: 21
       objectReference: {fileID: 0}
     - target: {fileID: 3235123660149911136, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1090,7 +1090,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 18
+  m_RootOrder: 19
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &336318501
 GameObject:
@@ -1104,8 +1104,9 @@ GameObject:
   - component: {fileID: 336318504}
   - component: {fileID: 336318503}
   - component: {fileID: 336318502}
+  - component: {fileID: 336318506}
   m_Layer: 20
-  m_Name: Unit
+  m_Name: '[Cube] Red with Revealer'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1185,8 +1186,21 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 15
+  m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &336318506
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 336318501}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62c0e9bedd811934ba1b67fab761f762, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radius: 5
 --- !u!1001 &342118733
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1871,7 +1885,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 8670958033621823643, guid: 08a08a05b4a556649a2ec266c3096fd7, type: 3}
       propertyPath: m_RootOrder
-      value: 19
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 8670958033621823643, guid: 08a08a05b4a556649a2ec266c3096fd7, type: 3}
       propertyPath: m_LocalScale.x
@@ -1944,7 +1958,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8108257719185741698, guid: 882fe79944895445c9eb29b2a5be68a6, type: 3}
       propertyPath: m_RootOrder
-      value: 14
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 8108257719185741698, guid: 882fe79944895445c9eb29b2a5be68a6, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2180,7 +2194,7 @@ GameObject:
   - component: {fileID: 642535720}
   - component: {fileID: 642535719}
   m_Layer: 0
-  m_Name: Base
+  m_Name: '[Cube] Green with Revealer'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2198,7 +2212,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62c0e9bedd811934ba1b67fab761f762, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  radius: 0
+  radius: 5
 --- !u!65 &642535720
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2273,7 +2287,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 16
+  m_RootOrder: 17
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &651437870
 GameObject:
@@ -2609,7 +2623,7 @@ GameObject:
   - component: {fileID: 1072632264}
   - component: {fileID: 1072632263}
   m_Layer: 0
-  m_Name: '[GameManager]'
+  m_Name: "\u2022GameManager"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2778,7 +2792,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1094158057}
   m_Layer: 0
-  m_Name: --------------------
+  m_Name: -------------------- Fog of War & Zoom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2796,7 +2810,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 12
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1391933784
 GameObject:
@@ -3042,7 +3056,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8106752273784228763, guid: a048b73dba1e87d548b02d84f647b65c, type: 3}
       propertyPath: m_RootOrder
-      value: 13
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 8106752273784228763, guid: a048b73dba1e87d548b02d84f647b65c, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3543,7 +3557,7 @@ GameObject:
   - component: {fileID: 1816789888}
   - component: {fileID: 1816789887}
   m_Layer: 3
-  m_Name: Plane
+  m_Name: '[Plane] Floor 130x130'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3621,10 +3635,10 @@ Transform:
   m_GameObject: {fileID: 1816789886}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 13.14024, y: 13.14024, z: 13.14024}
+  m_LocalScale: {x: 13, y: 1, z: 13}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 21
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1827766442
 GameObject:
@@ -4458,7 +4472,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3296082224386543019, guid: 52a9014df1a5b961380edef8c0ad966e, type: 3}
       propertyPath: m_RootOrder
-      value: 17
+      value: 18
       objectReference: {fileID: 0}
     - target: {fileID: 3296082224386543019, guid: 52a9014df1a5b961380edef8c0ad966e, type: 3}
       propertyPath: m_LocalPosition.x
