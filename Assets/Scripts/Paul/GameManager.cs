@@ -21,7 +21,8 @@ public class GameManager : MonoBehaviour
     List<List<GameObject>> squads;
 
     [Header("Unit formations")]
-    [SerializeField]float offsetLength = 1.5f;
+    [SerializeField] float spaceBetweenUnits = 1.5f;
+    [SerializeField] int maxUnitsPerRow = 5;
 
     List<Vector3> positions;
 
@@ -166,19 +167,19 @@ public class GameManager : MonoBehaviour
         {
             //groupPath = GetPath(hit.point);
                 
-            positions = GetFormationPositions(targetPos);            
-
+            positions = GetFormationPositions(targetPos);  
+            //positions = GetBasicFormations(targetPos);
+            
             /*
             foreach (GameObject unit in selection.Units)
             {
-                var states = unit.GetComponent<StateManager>();
+                var states = unit.GetComponent<UnitController>();
 
                 //states.target = hit.point;
                 states.ChangeState(UnitState.Flock, hit.point);                    
             }*/
-
                 
-            // move all units to their designated target
+            // move all units to their designated targets
             for(int i=0; i < selection.Units.Count; i++)
             {
                 var unit = selection.Units[i].GetComponent<UnitController>();
@@ -219,11 +220,119 @@ public class GameManager : MonoBehaviour
 
         Vector3 moveDirection = (point - unitCenter).normalized;
         Vector3 offsetDirection = GetRightAngle(moveDirection);
+        Vector3 position;
+        int unitsOnLeft = 0;
+        int unitsOnRight = 0;
+        int unitsPlaced = 0;
+
+        for (int row = 0; unitsPlaced < selection.Units.Count; row++)
+        {            
+            // create the formation positions
+            for (int column = 0; column < maxUnitsPerRow; column++)
+            {                
+                if (column <= maxUnitsPerRow / 2)
+                {  
+                    position = point + (offsetDirection * unitsOnRight * spaceBetweenUnits);
+                    unitsOnRight++;
+                }
+                else
+                {
+                    unitsOnLeft++;
+                    position = point - (offsetDirection * unitsOnLeft * spaceBetweenUnits);
+                }
+
+                //Debug.Log("Old position: " + position);
+                position -= moveDirection * spaceBetweenUnits * row;
+                //Debug.Log("New position: " + position);
+
+                //bool positionIsValid = false;
+
+                // check that the position is not out of bounds
+                if (Physics.Raycast(position + Vector3.up * 10, Vector3.down, out rayHit, 10))
+                {
+                    // check if the position is on the navigation mesh
+                    if (rayHit.transform.gameObject.layer == groundLayer)
+                    {
+                        positions.Add(position);
+                        unitsPlaced++;
+                    }
+                    else
+                    {
+                        // get a new position
+                        if (NavMesh.SamplePosition(position, out navHit, 5, NavMesh.AllAreas))
+                        {
+                            //This position is valid
+                            //positionIsValid = true;
+
+                            positions.Add(navHit.position);
+                            unitsPlaced++;
+                        }
+                    }
+
+                }
+                else if(NavMesh.SamplePosition(position, out navHit, 5, NavMesh.AllAreas))
+                {
+                    //This position is valid
+                    positions.Add(navHit.position);
+                    unitsPlaced++; 
+                }
+
+            }
+
+            unitsOnLeft = 0;
+            unitsOnRight = 0;
+        }
+
+        return positions;
+    }
+
+    bool IsOutOfBounds(Vector3 position)
+    {
+        if(Physics.Raycast(position + Vector3.up * 10, Vector3.down, 10))
+            return false;
+        
+        return true;
+    }
+
+    private List<Vector3> GetBasicFormations(Vector3 point)
+    {
+        Vector3 unitCenter = new Vector3();
+        RaycastHit rayHit;
+        NavMeshHit navHit;
+
+        foreach (GameObject unit in selection.Units)
+        {
+            unitCenter += unit.transform.position;
+        }
+        unitCenter /= selection.Units.Count;
+
+        Vector3 moveDirection = (point - unitCenter).normalized;
+        Vector3 offset;
+        Vector3 position;
+        int xOffset;
+        int unitsInRow = 0;
+        int row = 0;
 
         // create the formation positions
-        for(int i = 0; i < selection.Units.Count; i++)
+        for (int i = 0; i < selection.Units.Count; i++)
         {
-            Vector3 position = point + (offsetDirection * i * offsetLength);
+            offset = new Vector3();
+
+            if (i <= selection.Units.Count / 2)            
+                xOffset = i;               
+            else            
+                xOffset = i - (selection.Units.Count / 2);            
+
+            position.x = point.x + xOffset * spaceBetweenUnits;
+            position.y = point.y;
+            position.z = point.z + row * spaceBetweenUnits;
+
+            // move units to next row
+            if (unitsInRow == maxUnitsPerRow)
+            {
+                row++;
+                unitsInRow = 0;
+            }
 
             // check if the position is on the navigation mesh
             if (!Physics.Raycast(position + Vector3.up * 10, Vector3.down, out rayHit, 10, groundLayer))
@@ -236,7 +345,7 @@ public class GameManager : MonoBehaviour
             }
 
             positions.Add(position);
-
+            unitsInRow++;
         }
 
         return positions;

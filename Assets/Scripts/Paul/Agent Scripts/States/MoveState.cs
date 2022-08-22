@@ -16,12 +16,14 @@ public class MoveState : MonoBehaviour
 
     private bool moving = false;
 
+    UnitController unit;
     AgentMovement agent;
     UnitState state;
 
     // Start is called before the first frame update
     void Awake()
     {
+        unit = GetComponent<UnitController>();
         agent = GetComponent<AgentMovement>();
         path = new NavMeshPath();
         body = GetComponent<Rigidbody>();
@@ -59,7 +61,7 @@ public class MoveState : MonoBehaviour
         Vector3 direction = (waypoint - transform.position).normalized;
 
         transform.forward = direction; // face moving direction
-        body.velocity = direction * agent.MaxSpeed * Time.deltaTime; // moves the rigid body
+        body.velocity = direction * agent.MaxSpeed * unit.Speed * Time.deltaTime; // moves the rigid body
 
         highlight.transform.transform.position = transform.position;
 
