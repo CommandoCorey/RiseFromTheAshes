@@ -4,25 +4,25 @@ using UnityEngine;
 
 public class IdleState : MonoBehaviour
 {
-    StateManager behaviours;
-    //Agent agent;
+    UnitController unit;
 
     // Start is called before the first frame update
     void Awake()
     {
-        behaviours = GetComponent<StateManager>();
-        //agent = GetComponent<Agent>();
+        
+        unit = GetComponent<UnitController>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        var unitsInRange = Physics.OverlapSphere(transform.position, behaviours.DetectionRadius, behaviours.DetectionLayer);
+        var enemiesInRange = Physics.OverlapSphere(transform.position, unit.DetectionRadius, unit.DetectionLayer);
 
-        if (unitsInRange.Length > 0)
+        // if there are any enemies in range change to the combat state
+        if (enemiesInRange.Length > 0)
         {
-            behaviours.AttackTarget = unitsInRange[0].gameObject;
-            behaviours.ChangeState(UnitState.Attack);
+            unit.AttackTarget = enemiesInRange[0].gameObject;
+            unit.ChangeState(UnitState.Attack);
         }
     }
 

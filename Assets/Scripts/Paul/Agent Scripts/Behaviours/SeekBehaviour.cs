@@ -6,7 +6,7 @@ public class SeekBehaviour : AgentBehaviour
 {
     private void Awake()
     {
-        agent = GetComponent<Agent>();
+        agent = GetComponent<AgentMovement>();
     }
 
     /// <summary>

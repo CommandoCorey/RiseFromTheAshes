@@ -4,18 +4,19 @@ using UnityEngine;
 
 public class FormationState : State
 {
-    Agent agent;
-    StateManager states;
+    AgentMovement agent;
+    UnitController unit;
 
     SeekBehaviour seek;
 
     private float distanceFromTarget;
 
+
     // Start is called before the first frame update
     void Start()
     {
-        agent = GetComponent<Agent>();
-        states = GetComponent<StateManager>();
+        agent = GetComponent<AgentMovement>();
+        unit = GetComponent<UnitController>();
 
         seek = gameObject.AddComponent<SeekBehaviour>();
         seek.target = target;
@@ -32,7 +33,7 @@ public class FormationState : State
         distanceFromTarget = Vector3.Distance(target, transform.position);
 
         if (distanceFromTarget <= agent.MinDistanceFromTarget)
-            states.ChangeState(UnitState.Idle);
+            unit.ChangeState(UnitState.Idle);
     }
 
     private void OnDestroy()

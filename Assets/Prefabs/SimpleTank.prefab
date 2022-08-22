@@ -123,12 +123,12 @@ GameObject:
   - component: {fileID: 7490394118831632737}
   - component: {fileID: 7490394118831632736}
   - component: {fileID: 7490394118831632739}
-  - component: {fileID: 7490394118831632740}
+  - component: {fileID: 3293154623228528567}
   - component: {fileID: 6442939534348259523}
-  - component: {fileID: 1608555301507571338}
-  - component: {fileID: 8203223622361363122}
+  - component: {fileID: 9219424224137918855}
+  - component: {fileID: -7163838618464999725}
   m_Layer: 6
-  m_Name: Tank
+  m_Name: SimpleTank
   m_TagString: PlayerUnit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -212,22 +212,27 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 0.96039903, z: 1}
   m_Center: {x: 0, y: 0.015631376, z: 0}
---- !u!54 &7490394118831632740
-Rigidbody:
+--- !u!114 &3293154623228528567
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7490394118831632749}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d337556d8371dc349a90c78320b2f3fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selectionHighlight: {fileID: 7490394118869249958}
+  maxHealth: 100
+  movmentSpeed: 1
+  damagePerAttack: 1
+  attackRate: 1
+  detectionRadius: 1
+  detectionLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!114 &6442939534348259523
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -240,9 +245,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c448d9b6244c7b49a08a9cfc39a4bcc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  highlight: {fileID: 7490394118869249958}
-  maxHealth: 100
-  health: 0
   maxSpeed: 500
   trueMaxSpeed: 0
   acceleration: 3
@@ -256,7 +258,7 @@ MonoBehaviour:
   maxDistanceFromTarget: 3
   distanceFromNeighbour: 1
   minSpeedWhenStopping: 1.6
---- !u!114 &1608555301507571338
+--- !u!114 &9219424224137918855
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -265,26 +267,29 @@ MonoBehaviour:
   m_GameObject: {fileID: 7490394118831632749}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7fa04341dc6b54841b1f7ead5cfe4445, type: 3}
+  m_Script: {fileID: 11500000, guid: e383d1645c138194bb4268780918ef0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  team: 0
-  detectionRadius: 3
-  detectionLayer:
-    serializedVersion: 2
-    m_Bits: 640
---- !u!114 &8203223622361363122
+  seek: 1
+  cohesion: 0.4
+  alignment: 100
+  separation: 10
+  cohesionDistance: 15
+  desiredSeparation: 6
+  aheadDistance: 10
+--- !u!114 &-7163838618464999725
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7490394118831632749}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65c81c12c96e7264d88709d8b451b5d3, type: 3}
+  m_Script: {fileID: 11500000, guid: 62c0e9bedd811934ba1b67fab761f762, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  radius: 5
 --- !u!1 &7490394118869249958
 GameObject:
   m_ObjectHideFlags: 0

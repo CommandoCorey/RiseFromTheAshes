@@ -7,6 +7,7 @@ using UnityEngine.AI;
 public class GameManager : MonoBehaviour
 {
     public Transform marker;
+    public GameObject minimap;
 
     RaycastHit hitInfo;
 
@@ -50,7 +51,7 @@ public class GameManager : MonoBehaviour
 
         foreach(var unit in units)
         {
-            UnitState state = unit.GetComponent<StateManager>().State;
+            UnitState state = unit.GetComponent<UnitController>().State;
 
             if(state == UnitState.Moving || state == UnitState.Flock)
                 movingUnits.Add(unit);
@@ -70,7 +71,7 @@ public class GameManager : MonoBehaviour
 
         foreach(GameObject unit in squad)
         {
-            unit.GetComponent<StateManager>().ChangeState(UnitState.Idle);
+            unit.GetComponent<UnitController>().ChangeState(UnitState.Idle);
         }
 
     }
@@ -78,8 +79,8 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Creates a path for a group based on the center of mass
     /// </summary>
-    /// <param name="destination"></param>
-    /// <returns></returns>
+    /// <param name="destination">the desintation to move the group to</param>
+    /// <returns>A list of waypoints for the group to move towards</returns>
     public Vector3[] GetPath(Vector3 destination)
     {
         NavMeshPath path = new NavMeshPath();
@@ -107,6 +108,8 @@ public class GameManager : MonoBehaviour
 
         squads = new List<List<GameObject>>();
         positions = new List<Vector3>();
+
+        minimap.active = true;
     }
 
     // Update is called once per frame
@@ -148,7 +151,7 @@ public class GameManager : MonoBehaviour
                 // move all units to their designated target
                 for(int i=0; i < selection.Units.Count; i++)
                 {
-                    var unit = selection.Units[i].GetComponent<StateManager>();
+                    var unit = selection.Units[i].GetComponent<UnitController>();
                     unit.ChangeState(UnitState.Moving, positions[i]);
                 }
 
@@ -156,10 +159,9 @@ public class GameManager : MonoBehaviour
             else
             {
                 GameObject unit = selection.Units[0];
-                var states = unit.GetComponent<StateManager>();                
+                var controller = unit.GetComponent<UnitController>();
 
-                //states.target = hit.point;
-                states.ChangeState(UnitState.Moving, hit.point);
+                controller.ChangeState(UnitState.Moving, hit.point);
 
                 //unit.GetComponent<SeekState>().MoveTo(hitInfo.point);
             }
@@ -211,7 +213,7 @@ public class GameManager : MonoBehaviour
     {
         foreach(GameObject unit in units)
         {
-            if (unit.GetComponent<StateManager>().State == UnitState.Flock)
+            if (unit.GetComponent<UnitController>().State == UnitState.Flock)
                 return false;
         }
 
@@ -224,7 +226,7 @@ public class GameManager : MonoBehaviour
 
         foreach (GameObject unit in squads[squadNum])
         {
-            if (unit.GetComponent<StateManager>().State == UnitState.Flock)
+            if (unit.GetComponent<UnitController>().State == UnitState.Flock)
                 unitsStillMoving = true;
         }
 
@@ -246,7 +248,8 @@ public class GameManager : MonoBehaviour
         {
             foreach (Vector3 position in positions)
             {
-                Gizmos.DrawSphere(position, 1);
+                Gizmos.color = Color.green;
+                Gizmos.DrawWireSphere(position, 1);
             }
         }
     }

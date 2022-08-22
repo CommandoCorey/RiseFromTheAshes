@@ -5,10 +5,10 @@ using UnityEngine;
 public class SimpleCameraMovement : MonoBehaviour
 {
     public float panSpeed = 10.0f;
-    public float zoomSpeed = 5.0f;
+    public float zoomSpeed = 10.0f;
 
     private Vector3 velocity;
-    Vector3 xVelocity, zVelocity;
+    Vector3 xVelocity, yVelocity,zVelocity;
 
     // Start is called before the first frame update
     void Start()
@@ -20,10 +20,12 @@ public class SimpleCameraMovement : MonoBehaviour
     void Update()
     {
         xVelocity = Vector3.right * Input.GetAxisRaw("Horizontal") * panSpeed;
+        yVelocity = Vector3.down * Input.mouseScrollDelta.y * zoomSpeed;
         zVelocity = Vector3.forward * Input.GetAxisRaw("Vertical") * panSpeed;
 
-        velocity = xVelocity + zVelocity;
+        velocity = xVelocity + yVelocity + zVelocity;
 
         transform.position += velocity * Time.deltaTime;
+
     }
 }
