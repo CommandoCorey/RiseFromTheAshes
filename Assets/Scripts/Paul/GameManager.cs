@@ -7,6 +7,7 @@ using UnityEngine.AI;
 public class GameManager : MonoBehaviour
 {
     public Transform marker;
+    public GameObject minimap;
 
     RaycastHit hitInfo;
 
@@ -107,6 +108,8 @@ public class GameManager : MonoBehaviour
 
         squads = new List<List<GameObject>>();
         positions = new List<Vector3>();
+
+        minimap.active = true;
     }
 
     // Update is called once per frame
