@@ -178,11 +178,21 @@ public class GameManager : MonoBehaviour
                 //states.target = hit.point;
                 states.ChangeState(UnitState.Flock, hit.point);                    
             }*/
+
+            if(positions.Count < selection.Units.Count)
+            {
+                Debug.LogError("Not enough formations positions were created for the selected units");
+                return;
+            }
                 
             // move all units to their designated targets
             for(int i=0; i < selection.Units.Count; i++)
             {
                 var unit = selection.Units[i].GetComponent<UnitController>();
+
+                //if(unit.State == UnitState.Moving)
+                    //unit.ChangeState(UnitState.Idle);
+                
                 unit.ChangeState(UnitState.Moving, positions[i]);
             }
 
@@ -225,6 +235,13 @@ public class GameManager : MonoBehaviour
         int unitsOnRight = 0;
         int unitsPlaced = 0;
 
+        // make sure an object with the ground tag exists
+        if (!GameObject.FindWithTag("Ground"))
+        {
+            Debug.LogError("The ground object has not been tagged");
+            return positions;
+        }
+
         for (int row = 0; unitsPlaced < selection.Units.Count; row++)
         {            
             // create the formation positions
@@ -245,37 +262,27 @@ public class GameManager : MonoBehaviour
                 position -= moveDirection * spaceBetweenUnits * row;
                 //Debug.Log("New position: " + position);
 
-                //bool positionIsValid = false;
-
                 // check that the position is not out of bounds
-                if (Physics.Raycast(position + Vector3.up * 10, Vector3.down, out rayHit, 10))
+                if (Physics.Raycast(position + Vector3.up, Vector3.down, out rayHit))
                 {
-                    // check if the position is on the navigation mesh
-                    if (rayHit.transform.gameObject.layer == groundLayer)
+                    // check if the position is on the ground
+                    if (rayHit.transform.gameObject.layer == groundLayer || 
+                        rayHit.transform.tag == "Ground")
                     {
-                        positions.Add(position);
-                        unitsPlaced++;
-                    }
-                    else
-                    {
-                        // get a new position
-                        if (NavMesh.SamplePosition(position, out navHit, 5, NavMesh.AllAreas))
+                        // Make sure point is on navmesh
+                        // Note: maxDistance must be abov zero else program will get stuck in loop forever
+                        if (NavMesh.SamplePosition(rayHit.point, out navHit, 0.1f, NavMesh.AllAreas))
                         {
-                            //This position is valid
-                            //positionIsValid = true;
-
                             positions.Add(navHit.position);
                             unitsPlaced++;
                         }
                     }
 
                 }
-                else if(NavMesh.SamplePosition(position, out navHit, 5, NavMesh.AllAreas))
-                {
-                    //This position is valid
-                    positions.Add(navHit.position);
-                    unitsPlaced++; 
-                }
+
+                // exit loop if all units are placed
+                if (unitsPlaced == selection.Units.Count)
+                    break;
 
             }
 
@@ -386,74 +393,6 @@ public class GameManager : MonoBehaviour
             squads.RemoveAt(squadNum);
     }
 
-    // Redirects the unit to another position near and obstacle that was clicked on
-    // Not currently being used
-    /*private Vector3 GetNewPosition(Vector3 clickedPos)
-    {
-        Vector2[] searchDirections = { new Vector2(-1, 1), Vector2.up, new Vector2(1, 1), Vector2.right,
-                                       new Vector2(1, -1), Vector2.down, new Vector2(-1, -1), Vector2.left};
-
-        Vector3 direction;// = (selection.CenterPoint - clickedPos).normalized;
-        float offset = 1;
-        float maxIterations = 10;
-        Vector3 castPosition;
-
-        Ray ray;
-        RaycastHit hitInfo;
-        NavMeshHit navHit;
-
-        //Debug.DrawRay(clickedPos, direction, Color.red, 2.0f);        
-
-        bool foundPos = false;
-
-        searchedPositions.Clear();
-
-        for (int i = 0; i < maxIterations; i++)
-        {
-            foreach (Vector3 searchDirection in searchDirections)
-            {
-                // converts 2D space into 3D
-                direction = new Vector3(searchDirection.x, 0, searchDirection.y);
-
-                castPosition = clickedPos + (direction * i);
-                castPosition.y = 0;
-
-                ray = new Ray(castPosition, direction);
-
-                searchedPositions.Add(castPosition);
-
-                if (Physics.BoxCast(castPosition, Vector3.one, direction, out hitInfo, Quaternion.identity, 10))
-                {
-                    Debug.Log("Hit Object: " + hitInfo.transform.name);
-                    continue;
-                }
-                else
-                {
-                    Debug.DrawLine(castPosition + Vector3.up * 10, castPosition, Color.blue, 3.0f);
-
-                    // fire a raycast downward to see if it hits the ground
-                    if (Physics.Raycast(castPosition + Vector3.up * 2, Vector3.down, out hitInfo, 3))
-                    {
-                        Debug.Log("Hit plane");
-
-                        // check the the position that the raycast hit is part of the navigation mesh
-                        if (NavMesh.SamplePosition(hitInfo.point, out navHit, 1f, NavMesh.AllAreas))
-                        {
-                            Debug.Log("Hit Navigation Mesh");
-
-                            return navHit.position;
-                        }
-                    }
-
-                }
-            }
-
-        }     
-
-        return Vector3.zero;
-
-    }*/
-
     private void OnDrawGizmos()
     {
         if (groupPath != null)
@@ -473,6 +412,7 @@ public class GameManager : MonoBehaviour
             }
         }
 
+        /*
         if (searchedPositions != null)
         {
             Gizmos.color = Color.green;
@@ -484,7 +424,7 @@ public class GameManager : MonoBehaviour
                 Gizmos.DrawWireCube(position, Vector3.one);
             }
                
-        }
+        }*/
 
     }
 

@@ -27,9 +27,7 @@ public class MoveState : MonoBehaviour
         agent = GetComponent<AgentMovement>();
         path = new NavMeshPath();
         body = GetComponent<Rigidbody>();
-        highlight = GetComponent<UnitController>().selectionHighlight;
-
-        waypointNum = 1;
+        highlight = GetComponent<UnitController>().selectionHighlight;        
     }
 
     // Update is called once per frame
@@ -49,6 +47,10 @@ public class MoveState : MonoBehaviour
 
     public void MoveTo(Vector3 position)
     {
+        body.velocity = Vector3.zero;
+        path.ClearCorners();
+        waypointNum = 1;
+
         NavMesh.CalculatePath(transform.position, position, NavMesh.AllAreas, path);
         waypoint = path.corners[waypointNum];
 
@@ -81,6 +83,11 @@ public class MoveState : MonoBehaviour
             }
         }
 
+    }
+
+    private void OnDestroy()
+    {
+        body.velocity = Vector3.zero;
     }
 
 }
