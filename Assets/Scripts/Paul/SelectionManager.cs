@@ -46,6 +46,25 @@ public class SelectionManager : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Get the centerpoint of all selected units
+    /// </summary>
+    public Vector3 CenterPoint
+    {
+        get
+        {
+            Vector3 unitCenter = new Vector3();
+
+            foreach (KeyValuePair<int, GameObject> unit in selectedTable)
+            {
+                unitCenter += unit.Value.transform.position;
+            }
+            unitCenter /= selectedTable.Count;
+
+            return unitCenter;
+        }
+    }
+
 
     // Start is called before the first frame update
     void Start()

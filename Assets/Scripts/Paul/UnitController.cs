@@ -22,7 +22,7 @@ public class UnitController : MonoBehaviour
     [SerializeField]
     float maxHealth = 100;
     [SerializeField]
-    float movmentSpeed = 1.0f;
+    float movementSpeed = 1.0f;
     [SerializeField]
     float damagePerAttack = 1.0f;
     [SerializeField]
@@ -34,11 +34,11 @@ public class UnitController : MonoBehaviour
 
     // private variables
     private float health;
-    private Vector3[] waypoints;    
+    private Vector3[] waypoints;
 
     // state classed
     private IdleState idleState;
-    private SeekState moveState;
+    private MoveState moveState;
     private FlockState flockState;
     private CombatState attackState;
     private FormationState formationState;
@@ -52,7 +52,8 @@ public class UnitController : MonoBehaviour
     public GameObject AttackTarget { get; set; }
     public float DetectionRadius { get => detectionRadius; }
     public LayerMask DetectionLayer { get => detectionLayer; }
-    
+
+    public float Speed { get => movementSpeed; }
 
     public void SetPath(Vector3[] waypoints)
     {
@@ -116,16 +117,17 @@ public class UnitController : MonoBehaviour
 
             case UnitState.Moving:
 
-                if (GetComponent<SeekState>() == null)
+                if (GetComponent<MoveState>() == null)
                 {
-                    moveState = gameObject.AddComponent<SeekState>();
+                    moveState = gameObject.AddComponent<MoveState>();
                 }
 
                 Destroy(idleState);
                 Destroy(flockState);
                 Destroy(attackState);
 
-                moveState.Target = target;
+                //moveState.Target = target;
+                moveState.MoveTo(target);
 
                 drawColor = Color.red;
                 break;
@@ -175,7 +177,7 @@ public class UnitController : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.DrawWireSphere(transform.position, detectionRadius);
+        //Gizmos.DrawWireSphere(transform.position, detectionRadius);
     }
 
 }
