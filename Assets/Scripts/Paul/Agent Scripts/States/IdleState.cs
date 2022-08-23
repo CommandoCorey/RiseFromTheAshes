@@ -30,4 +30,9 @@ public class IdleState : MonoBehaviour
         }
     }
 
+    private void OnDrawGizmos()
+    {
+        UnityEditor.Handles.Label(transform.position + Vector3.up * 1, "Idle");
+    }
+
 }

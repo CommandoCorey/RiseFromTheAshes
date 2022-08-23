@@ -4,26 +4,44 @@ using UnityEngine;
 
 public class BehaviourManager : MonoBehaviour
 {
-    [Header("Steering Behaviour Weights")]
+    [Tooltip("The distance from the final waypoint before changing the weight values")]
+    [SerializeField] float distanceBeforeReduction = 6.0f;
+
+    [Header("Initial Steering Behaviour Weights")]
     [SerializeField] float seek = 1.0f;
     [SerializeField] float cohesion = 0.4f;
     [SerializeField] float alignment = 100.0f;
     [SerializeField] float separation = 10.0f;
 
-    [Header("Boid Distances")]
+    [Header("Weight Changes when slowing")]
+    [SerializeField] float cohesionReduction = 0.001f;
+    [SerializeField] float alignmentReduction = 1f;
+    [SerializeField] float separationReduction = 0.1f;
+
+    [Header("Initial Boid Distances")]
     [SerializeField] float cohesionDistance = 15.0f;
     [SerializeField] float desiredSeparation = 6.0f;
 
-    [Header("Obstacle Avoidance")]
-    [SerializeField] float aheadDistance = 10;
+    [Header("Boid distance changes")]
+    [SerializeField] float cohesionDistanceChange = 0;
+    [SerializeField] float separationDistanceChange = 0;
 
-    // other properties
+    //[Header("Obstacle Avoidance")]
+    //[SerializeField] float aheadDistance = 10;
+
+    // properties
+    public float MaxDistanceFromTarget { get => distanceBeforeReduction;}
     public float SeekWeight { get => seek; }
     public float CohesionWeight { get => cohesion; }
     public float SeparationWeight { get => separation; }   
     public float AlignmentWeight { get => alignment; }  
     public float CohesionDistance {  get => cohesionDistance; }
     public float DesiredSeparation { get=> desiredSeparation; }
+    public float CohesionReduction { get => cohesionReduction; }
+    public float AlignmentReduction { get => alignmentReduction; }
+    public float SeparationReduction { get => separationReduction; }
+    public float CohesionDistanceChange { get => cohesionDistanceChange; }
+    public float SeparationDistanceChange { get => separationDistanceChange; }
 
     private void OnDrawGizmos()
     {
@@ -33,12 +51,13 @@ public class BehaviourManager : MonoBehaviour
         else if (GetComponent<SeekDecelerateBehaviour>() != null && GetComponent<SeekDecelerateBehaviour>().enabled)
             UnityEditor.Handles.Label(transform.position + Vector3.up * 5, "Decelerating");
         
+        /*
         if (GetComponent<BoidCohesion>() != null && GetComponent<BoidAlignment>() != null && 
             GetComponent<BoidSeparation>() != null)
         {
             Gizmos.color = Color.blue;
             UnityEditor.Handles.Label(transform.position + Vector3.up * 3, "Flocking");
-        }
+        }*/
 
         /*
         if (GetComponent<BoidCohesion>() != null)
@@ -51,6 +70,9 @@ public class BehaviourManager : MonoBehaviour
             UnityEditor.Handles.Label(transform.position + Vector3.up * 1, "Separation");
         */
 
+        // check state
+        if(GetComponent<FormationState>() != null && GetComponent<FormationState>().enabled)
+            UnityEditor.Handles.Label(transform.position + Vector3.up * 3, "Entering Formation");
     }
 
 }

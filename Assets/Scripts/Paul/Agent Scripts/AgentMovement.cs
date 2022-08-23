@@ -30,9 +30,11 @@ public class AgentMovement : MonoBehaviour
 
     private Steering steer;
     private NavMeshPath path;
+    private GameManager gameManager;
     #endregion
 
     #region properties
+    public int SquadNum { get; set; }
     public float MaxSpeed { get => maxSpeed; }
     public float CurrentSpeed { get => velocity.magnitude; }
     public float Acceleration { get => acceleration; }
@@ -45,6 +47,14 @@ public class AgentMovement : MonoBehaviour
     public float MinDistanceFromNeighbour { get => distanceFromNeighbour; }
     public float MinSpeedWhenStopping { get => minSpeedWhenStopping; }
     public Vector3[] Path { get => path.corners; } // returns all waypoints in the path
+
+    /// <summary>
+    /// get a list of squad neighbours form the game manager
+    /// </summary>
+    public List<GameObject> Neighbours
+    {
+        get => gameManager.GetNeighbourUnits(gameObject, SquadNum);
+    }
     #endregion
 
     #region Start And Update
@@ -55,6 +65,8 @@ public class AgentMovement : MonoBehaviour
         trueMaxSpeed = maxSpeed;
 
         path = new NavMeshPath();
+
+        gameManager = GameObject.FindObjectOfType<GameManager>();
     }
 
     // change the transform based off the last frame's steering
@@ -143,10 +155,10 @@ public class AgentMovement : MonoBehaviour
     /// <summary>
     /// Sets path along navigation mesh from current position to the destination
     /// </summary>
-    public void SetPath(Vector3 targetPos)
+    public void CreatePath(Vector3 targetPos)
     {
+        path.ClearCorners();
         NavMesh.CalculatePath(transform.position, targetPos, NavMesh.AllAreas, path);
     }
-
     #endregion
 }

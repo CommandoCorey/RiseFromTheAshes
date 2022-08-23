@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class FlockState : State
 {
@@ -19,11 +21,17 @@ public class FlockState : State
     SeekDecelerateBehaviour seekDecel;
     BoidCohesion cohesion;
     BoidAlignment alignment;
-    BoidSeparation sepearation;
-
+    BoidSeparation separation;
+    
     private float decelerationDistance;
 
-    Transform leader;
+    private List<GameObject> neighbours;
+    private Transform leader;    
+
+    // pathfinding
+    private Vector3[] path;
+    private Vector3 waypoint;
+    private int waypointNum;
 
     // Start is called before the first frame update
     void Start()
@@ -33,6 +41,8 @@ public class FlockState : State
         behaviours = GetComponent<BehaviourManager>();
 
         gameManager = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
+
+        neighbours = gameManager.GetNeighbourUnits(this.gameObject, agent.SquadNum);
 
         // add seek acceleration
         seekAccel = gameObject.AddComponent<SeekBehaviour>();
@@ -51,8 +61,7 @@ public class FlockState : State
 
         // Add the boid cohesion behaviour
         cohesion = gameObject.AddComponent<BoidCohesion>();
-        cohesion.targets = //gameManager.GetNeighbourUnits(this.gameObject);
-            gameManager.GetUnitsInSquad(0);
+        cohesion.targets = neighbours;
         cohesion.weight = behaviours.CohesionWeight;
         cohesion.enabled = true;
 
@@ -61,8 +70,7 @@ public class FlockState : State
 
         // add alignment behaviour
         alignment = gameObject.AddComponent<BoidAlignment>();
-        alignment.targets = //gameManager.GetNeighbourUnits(this.gameObject);
-            gameManager.GetUnitsInSquad(0);
+        alignment.targets = gameManager.GetUnitsInSquad(agent.SquadNum);
         alignment.weight = behaviours.AlignmentWeight;
         alignment.enabled = true;
 
@@ -70,20 +78,21 @@ public class FlockState : State
         agent.AddSteering(steer, cohesion.weight);
 
         // Add the boid seperation behaviour
-        sepearation = gameObject.AddComponent<BoidSeparation>();
-        sepearation.targets = //gameManager.GetNeighbourUnits(this.gameObject);
-            gameManager.GetUnitsInSquad(0);
-        sepearation.weight = behaviours.SeparationWeight;
-        sepearation.enabled = true;
+        separation = gameObject.AddComponent<BoidSeparation>();
+        separation.targets = neighbours;
+        separation.weight = behaviours.SeparationWeight;
+        separation.enabled = true;
 
-        steer = sepearation.GetSteering();
-        agent.AddSteering(steer, sepearation.weight);       
-
+        steer = separation.GetSteering();
+        agent.AddSteering(steer, separation.weight);
     }
-
-    public void Init()
+    public void SetPath(Vector3 endpoint)
     {
-
+        // clear last path and calculate path to target
+        agent.CreatePath(Target);        
+        path = agent.Path;
+        waypointNum = 0;
+        waypoint = path[waypointNum];        
     }
 
     // Update is called once per frame
@@ -93,46 +102,68 @@ public class FlockState : State
 
         distanceFromTarget = Vector3.Distance(target, transform.position);
 
+        //cohesion.weight -= 0.1f;
+        //sepearation.weight -= 0.1f;
+        
+        if (distanceFromTarget <= agent.MaxDistanceFromTarget)
+        {
+            if (cohesion.weight > 0)
+                cohesion.weight -= behaviours.CohesionReduction;
+
+            if (separation.weight > 0)
+                separation.weight -= behaviours.SeparationReduction;
+
+            if (alignment.weight > 0)
+                alignment.weight -= behaviours.AlignmentReduction;
+        }
+
+        /* Example:
+         * if (distance < 5) arriveWeight = 0;
+         * else if (distance > 6) arriveWeight = 1;
+         * else arriveWeight = distance - 5;
+         * */
+
         // if the distance to start deccelerating has bene reached then change behaviours
         if (distanceFromTarget <= agent.MinDistanceFromTarget)
         {
-            //states.ChangeState(UnitState.Idle);
-            seekDecel.enabled = true;
-            seekAccel.enabled = false;
+            unit.ChangeState(UnitState.Idle, target);
+            //seekDecel.enabled = true;
+            //seekAccel.enabled = false;
         }
 
         // if the distance from a stationary target has been reached and the unit
         // is close enough to the target then start decelearting
-        if (distanceFromTarget <= agent.MaxDistanceFromTarget && StationaryUnitInRange())
+        /*if (distanceFromTarget <= agent.MaxDistanceFromTarget && StationaryUnitInRange())
         {            
             seekDecel.enabled = true;
             seekAccel.enabled = false;
-        }
+        }*/
 
         // check if the agent has reached minimum speed
-        if (seekDecel.enabled && agent.Vecloity.magnitude <= agent.MinSpeedWhenStopping)
+        /*if (seekDecel.enabled && agent.Vecloity.magnitude <= agent.MinSpeedWhenStopping)
         {
             //agent.StopMoving();
 
             seekDecel.enabled = false;
             unit.ChangeState(UnitState.Idle);
-        }
+        }*/
     }
 
     private void OnDestroy()
     {
         agent.StopMoving();
+        gameManager.RemoveFromSquad(this.gameObject, agent.SquadNum);
 
         Destroy(seekAccel);
         Destroy(seekDecel);
         Destroy(cohesion);
         Destroy(alignment);
-        Destroy(sepearation);
+        Destroy(separation);
     }
 
     private bool StationaryUnitInRange()
     {
-        var neighbours = gameManager.GetNeighbourUnits(this.gameObject);
+        var neighbours = gameManager.GetNeighbourUnits(this.gameObject, agent.SquadNum);
 
         foreach (GameObject neighbour in neighbours)
         {
@@ -149,7 +180,33 @@ public class FlockState : State
         return (agent.CurrentSpeed * agent.CurrentSpeed) / (2 * agent.Deceleration);
     }
 
-    
+    private void OnDrawGizmos()
+    {       
+        float distance;
+        Vector3 direction;
 
+        neighbours = gameManager.GetNeighbourUnits(this.gameObject, agent.SquadNum);
+
+        UnityEditor.Handles.Label(transform.position + Vector3.up * 3, "Flocking");
+
+        foreach (GameObject neighbour in neighbours)
+        {
+            distance = Vector3.Distance(transform.position, neighbour.transform.position);
+            direction = (neighbour.transform.position - transform.position).normalized;
+
+            // sets line colour based on the range
+            if (distance > behaviours.CohesionDistance)
+                Gizmos.color = Color.yellow;
+            else if (distance < behaviours.DesiredSeparation)
+                Gizmos.color = Color.red;
+            else
+                Gizmos.color = Color.green;
+
+            Gizmos.DrawLine(transform.position, neighbour.transform.position);
+
+            if (neighbour != this.gameObject)
+                UnityEditor.Handles.Label(transform.position + direction * (distance / 2), Math.Round(distance, 2).ToString());
+        }
+    }
 
 }

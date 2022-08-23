@@ -54,7 +54,7 @@ public class SeekState : State
         steer = seek.GetSteering();
         agent.AddSteering(steer, seek.weight);
 
-        agent.SetPath(target);
+        agent.CreatePath(target);
     }
 
     // Update is called once per frame

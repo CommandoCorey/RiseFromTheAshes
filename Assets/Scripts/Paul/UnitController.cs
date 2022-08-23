@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-
 public enum UnitState
 {
     Idle,
@@ -52,8 +51,7 @@ public class UnitController : MonoBehaviour
     public GameObject AttackTarget { get; set; }
     public float DetectionRadius { get => detectionRadius; }
     public LayerMask DetectionLayer { get => detectionLayer; }
-
-    public float Speed { get => movementSpeed; }
+    public float Speed { get => movementSpeed; }   
 
     public void SetPath(Vector3[] waypoints)
     {
@@ -97,6 +95,7 @@ public class UnitController : MonoBehaviour
 
     public void ChangeState(UnitState newState, Vector3 target = new Vector3())
     {
+
         State = newState;
 
         switch (newState)
@@ -146,20 +145,6 @@ public class UnitController : MonoBehaviour
                 flockState.FormationTarget = formationTarget;
 
                 drawColor = Color.blue;
-                break;
-
-            case UnitState.Formation:
-                if (GetComponent<FormationState>() == null)
-                {
-                    formationState = gameObject.AddComponent<FormationState>();
-                }
-
-                Destroy(idleState);
-                Destroy(moveState);
-                Destroy(attackState);
-                Destroy(flockState);
-
-                drawColor = Color.yellow;
                 break;
 
             case UnitState.Attack:

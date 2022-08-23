@@ -6,6 +6,7 @@ using UnityEngine.AI;
 
 public class GameManager : MonoBehaviour
 {
+    #region variable declaration
     public Transform marker;
     public GameObject minimap;
     public bool showMinimap = false;
@@ -29,20 +30,52 @@ public class GameManager : MonoBehaviour
     Vector3[] groupPath;
 
     private List<Vector3> searchedPositions = new List<Vector3>();
+    #endregion
 
+    #region start and update
+    // Start is called before the first frame update
+    void Start()
+    {
+        selectedUnits = new List<GameObject>();
+        //selectedUnits = new Dictionary<int, GameObject>();
+        selection = GetComponent<SelectionManager>();
+
+        squads = new List<List<GameObject>>();
+        positions = new List<Vector3>();
+
+        if (showMinimap)
+            minimap.active = true;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        // move units when right mouse buttons is clicked
+        if (Input.GetMouseButtonDown(1) && Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo))
+        {
+            if (selection.Units.Count > 0)
+                MoveUnits(hitInfo);
+        }
+
+    }
+    #endregion
+
+    #region public functions
     public GameObject[] GetPlayerUnits()
     {
         return GameObject.FindGameObjectsWithTag("PlayerUnit");
     }
 
-    public List<GameObject> GetNeighbourUnits(GameObject current)
+    public List<GameObject> GetNeighbourUnits(GameObject current, int squad)
     {
         List<GameObject> neighbours = new List<GameObject> ();
-        var units = GameObject.FindGameObjectsWithTag("PlayerUnit");
+        //var units = GameObject.FindGameObjectsWithTag("PlayerUnit");
 
-        foreach (var unit in units)
+        foreach (var unit in squads[squad])
         {
-            if(unit != current)
+            UnitState state = unit.GetComponent<UnitController>().State;
+
+            if (unit != current && state == UnitState.Flock)
                 neighbours.Add(unit);
         }
 
@@ -103,33 +136,9 @@ public class GameManager : MonoBehaviour
 
         return path.corners;
     }
+    #endregion
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        selectedUnits = new List<GameObject>();
-        //selectedUnits = new Dictionary<int, GameObject>();
-        selection = GetComponent<SelectionManager>();
-
-        squads = new List<List<GameObject>>();
-        positions = new List<Vector3>();
-
-        if(showMinimap)
-            minimap.active = true;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        // move units when right mouse buttons is clicked
-        if(Input.GetMouseButtonDown(1) && Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo))
-        {
-            if(selection.Units.Count > 0)
-                MoveUnits(hitInfo);
-        }
-
-    }
-
+    #region private functions
     private void MoveUnits(RaycastHit hit)
     {
         positions.Clear();
@@ -157,27 +166,15 @@ public class GameManager : MonoBehaviour
                 return;
             }
 
-            //targetPos = GetNewPosition(hit.point);
-
-            //if (targetPos == Vector3.zero)
-            //return;
         }
 
-        if(selection.Units.Count > 1)
+        squads.Add(selection.Units);
+
+        if (selection.Units.Count > 1)
         {
             //groupPath = GetPath(hit.point);
                 
-            positions = GetFormationPositions(targetPos);  
-            //positions = GetBasicFormations(targetPos);
-            
-            /*
-            foreach (GameObject unit in selection.Units)
-            {
-                var states = unit.GetComponent<UnitController>();
-
-                //states.target = hit.point;
-                states.ChangeState(UnitState.Flock, hit.point);                    
-            }*/
+            positions = GetFormationPositions(targetPos);          
 
             if(positions.Count < selection.Units.Count)
             {
@@ -188,12 +185,11 @@ public class GameManager : MonoBehaviour
             // move all units to their designated targets
             for(int i=0; i < selection.Units.Count; i++)
             {
-                var unit = selection.Units[i].GetComponent<UnitController>();
+                var agent = selection.Units[i].GetComponent<AgentMovement>();
+                agent.SquadNum = squads.Count - 1;
 
-                //if(unit.State == UnitState.Moving)
-                    //unit.ChangeState(UnitState.Idle);
-                
-                unit.ChangeState(UnitState.Moving, positions[i]);
+                var unit = selection.Units[i].GetComponent<UnitController>();
+                unit.ChangeState(UnitState.Flock, positions[i]);
             }
 
         }
@@ -205,11 +201,18 @@ public class GameManager : MonoBehaviour
             controller.ChangeState(UnitState.Moving, targetPos);
 
             //unit.GetComponent<SeekState>().MoveTo(hitInfo.point);
-        }
-
-        squads.Add(selection.Units);
+        }        
     }
 
+    /// <summary>
+    /// Removes a specifed unit from a moving group
+    /// </summary>
+    /// <param name="unit">The unit to be removed</param>
+    /// <param name="squadNum">the index of the squad in the squads list</param>
+    public void RemoveFromSquad(GameObject unit, int squadNum)
+    {
+        squads[squadNum].Remove(unit);
+    }
     
     /// <summary>
     /// Create a formations for all the selected units based on the position the player clicked
@@ -392,6 +395,7 @@ public class GameManager : MonoBehaviour
         if (!unitsStillMoving)
             squads.RemoveAt(squadNum);
     }
+    #endregion
 
     private void OnDrawGizmos()
     {
