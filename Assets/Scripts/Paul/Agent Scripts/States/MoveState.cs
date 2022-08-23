@@ -16,18 +16,18 @@ public class MoveState : MonoBehaviour
 
     private bool moving = false;
 
+    UnitController unit;
     AgentMovement agent;
     UnitState state;
 
     // Start is called before the first frame update
     void Awake()
     {
+        unit = GetComponent<UnitController>();
         agent = GetComponent<AgentMovement>();
         path = new NavMeshPath();
         body = GetComponent<Rigidbody>();
-        highlight = GetComponent<UnitController>().selectionHighlight;
-
-        waypointNum = 1;
+        highlight = GetComponent<UnitController>().selectionHighlight;        
     }
 
     // Update is called once per frame
@@ -47,6 +47,10 @@ public class MoveState : MonoBehaviour
 
     public void MoveTo(Vector3 position)
     {
+        body.velocity = Vector3.zero;
+        path.ClearCorners();
+        waypointNum = 1;
+
         NavMesh.CalculatePath(transform.position, position, NavMesh.AllAreas, path);
         waypoint = path.corners[waypointNum];
 
@@ -59,7 +63,7 @@ public class MoveState : MonoBehaviour
         Vector3 direction = (waypoint - transform.position).normalized;
 
         transform.forward = direction; // face moving direction
-        body.velocity = direction * agent.MaxSpeed * Time.deltaTime; // moves the rigid body
+        body.velocity = direction * agent.MaxSpeed * unit.Speed * Time.deltaTime; // moves the rigid body
 
         highlight.transform.transform.position = transform.position;
 
@@ -79,6 +83,11 @@ public class MoveState : MonoBehaviour
             }
         }
 
+    }
+
+    private void OnDestroy()
+    {
+        body.velocity = Vector3.zero;
     }
 
 }

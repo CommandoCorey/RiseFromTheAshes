@@ -8,6 +8,8 @@ public class GameManager : MonoBehaviour
 {
     public Transform marker;
     public GameObject minimap;
+    public bool showMinimap = false;
+    public LayerMask groundLayer;
 
     RaycastHit hitInfo;
 
@@ -19,11 +21,14 @@ public class GameManager : MonoBehaviour
     List<List<GameObject>> squads;
 
     [Header("Unit formations")]
-    [SerializeField]float offsetLength = 1.0f;
+    [SerializeField] float spaceBetweenUnits = 1.5f;
+    [SerializeField] int maxUnitsPerRow = 5;
 
     List<Vector3> positions;
 
     Vector3[] groupPath;
+
+    private List<Vector3> searchedPositions = new List<Vector3>();
 
     public GameObject[] GetPlayerUnits()
     {
@@ -109,7 +114,8 @@ public class GameManager : MonoBehaviour
         squads = new List<List<GameObject>>();
         positions = new List<Vector3>();
 
-        minimap.active = true;
+        if(showMinimap)
+            minimap.active = true;
     }
 
     // Update is called once per frame
@@ -127,47 +133,81 @@ public class GameManager : MonoBehaviour
     private void MoveUnits(RaycastHit hit)
     {
         positions.Clear();
+        Vector3 targetPos;
 
-        if (hit.transform.gameObject.layer == 3) // Ground
+        marker.transform.position = new Vector3(hit.point.x, 1, hit.point.z);
+
+        // check that the player clicked on the ground.
+        // If they did not find a new position
+        if (hit.transform.gameObject.layer == groundLayer)
         {
-            marker.transform.position = new Vector3(hit.point.x, 1, hit.point.z);
+            targetPos = hit.point;
+        }
+        else
+        {
+            NavMeshHit hitInfo;
 
-            if(selection.Units.Count > 1)
-            {
-                //groupPath = GetPath(hit.point);
-                
-                positions = GetFormationPositions(hit.point);
-
-                /*
-                foreach (GameObject unit in selection.Units)
-                {
-                    var states = unit.GetComponent<StateManager>();
-
-                    //states.target = hit.point;
-                    states.ChangeState(UnitState.Flock, hit.point);                    
-                }*/
-
-                
-                // move all units to their designated target
-                for(int i=0; i < selection.Units.Count; i++)
-                {
-                    var unit = selection.Units[i].GetComponent<UnitController>();
-                    unit.ChangeState(UnitState.Moving, positions[i]);
-                }
-
+            if (NavMesh.SamplePosition(hit.point, out hitInfo, 10f, NavMesh.AllAreas))
+            {               
+                targetPos = hitInfo.position;
             }
             else
             {
-                GameObject unit = selection.Units[0];
-                var controller = unit.GetComponent<UnitController>();
-
-                controller.ChangeState(UnitState.Moving, hit.point);
-
-                //unit.GetComponent<SeekState>().MoveTo(hitInfo.point);
+                Debug.Log("No position in range could be found");
+                return;
             }
 
-            squads.Add(selection.Units);
+            //targetPos = GetNewPosition(hit.point);
+
+            //if (targetPos == Vector3.zero)
+            //return;
         }
+
+        if(selection.Units.Count > 1)
+        {
+            //groupPath = GetPath(hit.point);
+                
+            positions = GetFormationPositions(targetPos);  
+            //positions = GetBasicFormations(targetPos);
+            
+            /*
+            foreach (GameObject unit in selection.Units)
+            {
+                var states = unit.GetComponent<UnitController>();
+
+                //states.target = hit.point;
+                states.ChangeState(UnitState.Flock, hit.point);                    
+            }*/
+
+            if(positions.Count < selection.Units.Count)
+            {
+                Debug.LogError("Not enough formations positions were created for the selected units");
+                return;
+            }
+                
+            // move all units to their designated targets
+            for(int i=0; i < selection.Units.Count; i++)
+            {
+                var unit = selection.Units[i].GetComponent<UnitController>();
+
+                //if(unit.State == UnitState.Moving)
+                    //unit.ChangeState(UnitState.Idle);
+                
+                unit.ChangeState(UnitState.Moving, positions[i]);
+            }
+
+        }
+        else
+        {
+            GameObject unit = selection.Units[0];
+            var controller = unit.GetComponent<UnitController>();
+
+            controller.ChangeState(UnitState.Moving, targetPos);
+
+            //unit.GetComponent<SeekState>().MoveTo(hitInfo.point);
+        }
+
+        squads.Add(selection.Units);
     }
 
     
@@ -178,7 +218,9 @@ public class GameManager : MonoBehaviour
     /// <returns>A list of coordinates for all positions in the formation</returns>
     private List<Vector3> GetFormationPositions(Vector3 point)
     {        
-        Vector3 unitCenter = new Vector3();        
+        Vector3 unitCenter = new Vector3();    
+        RaycastHit rayHit;
+        NavMeshHit navHit;
 
         foreach (GameObject unit in selection.Units)
         {
@@ -188,12 +230,129 @@ public class GameManager : MonoBehaviour
 
         Vector3 moveDirection = (point - unitCenter).normalized;
         Vector3 offsetDirection = GetRightAngle(moveDirection);
+        Vector3 position;
+        int unitsOnLeft = 0;
+        int unitsOnRight = 0;
+        int unitsPlaced = 0;
+
+        // make sure an object with the ground tag exists
+        if (!GameObject.FindWithTag("Ground"))
+        {
+            Debug.LogError("The ground object has not been tagged");
+            return positions;
+        }
+
+        for (int row = 0; unitsPlaced < selection.Units.Count; row++)
+        {            
+            // create the formation positions
+            for (int column = 0; column < maxUnitsPerRow; column++)
+            {                
+                if (column <= maxUnitsPerRow / 2)
+                {  
+                    position = point + (offsetDirection * unitsOnRight * spaceBetweenUnits);
+                    unitsOnRight++;
+                }
+                else
+                {
+                    unitsOnLeft++;
+                    position = point - (offsetDirection * unitsOnLeft * spaceBetweenUnits);
+                }
+
+                //Debug.Log("Old position: " + position);
+                position -= moveDirection * spaceBetweenUnits * row;
+                //Debug.Log("New position: " + position);
+
+                // check that the position is not out of bounds
+                if (Physics.Raycast(position + Vector3.up, Vector3.down, out rayHit))
+                {
+                    // check if the position is on the ground
+                    if (rayHit.transform.gameObject.layer == groundLayer || 
+                        rayHit.transform.tag == "Ground")
+                    {
+                        // Make sure point is on navmesh
+                        // Note: maxDistance must be abov zero else program will get stuck in loop forever
+                        if (NavMesh.SamplePosition(rayHit.point, out navHit, 0.1f, NavMesh.AllAreas))
+                        {
+                            positions.Add(navHit.position);
+                            unitsPlaced++;
+                        }
+                    }
+
+                }
+
+                // exit loop if all units are placed
+                if (unitsPlaced == selection.Units.Count)
+                    break;
+
+            }
+
+            unitsOnLeft = 0;
+            unitsOnRight = 0;
+        }
+
+        return positions;
+    }
+
+    bool IsOutOfBounds(Vector3 position)
+    {
+        if(Physics.Raycast(position + Vector3.up * 10, Vector3.down, 10))
+            return false;
+        
+        return true;
+    }
+
+    private List<Vector3> GetBasicFormations(Vector3 point)
+    {
+        Vector3 unitCenter = new Vector3();
+        RaycastHit rayHit;
+        NavMeshHit navHit;
+
+        foreach (GameObject unit in selection.Units)
+        {
+            unitCenter += unit.transform.position;
+        }
+        unitCenter /= selection.Units.Count;
+
+        Vector3 moveDirection = (point - unitCenter).normalized;
+        Vector3 offset;
+        Vector3 position;
+        int xOffset;
+        int unitsInRow = 0;
+        int row = 0;
 
         // create the formation positions
-        for(int i = 0; i < selection.Units.Count; i++)
+        for (int i = 0; i < selection.Units.Count; i++)
         {
-            Vector3 position = point + (offsetDirection * i * offsetLength);
+            offset = new Vector3();
+
+            if (i <= selection.Units.Count / 2)            
+                xOffset = i;               
+            else            
+                xOffset = i - (selection.Units.Count / 2);            
+
+            position.x = point.x + xOffset * spaceBetweenUnits;
+            position.y = point.y;
+            position.z = point.z + row * spaceBetweenUnits;
+
+            // move units to next row
+            if (unitsInRow == maxUnitsPerRow)
+            {
+                row++;
+                unitsInRow = 0;
+            }
+
+            // check if the position is on the navigation mesh
+            if (!Physics.Raycast(position + Vector3.up * 10, Vector3.down, out rayHit, 10, groundLayer))
+            {
+                // get a new position
+                if (NavMesh.SamplePosition(position, out navHit, 5, NavMesh.AllAreas))
+                {
+                    position = navHit.position;
+                }
+            }
+
             positions.Add(position);
+            unitsInRow++;
         }
 
         return positions;
@@ -236,11 +395,11 @@ public class GameManager : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        if(groupPath != null)
+        if (groupPath != null)
         {
             Gizmos.color = Color.red;
 
-            for(int i=0; i < groupPath.Length - 1; i++)
+            for (int i = 0; i < groupPath.Length - 1; i++)
                 Gizmos.DrawLine(groupPath[i], groupPath[i + 1]);
         }
 
@@ -252,6 +411,21 @@ public class GameManager : MonoBehaviour
                 Gizmos.DrawWireSphere(position, 1);
             }
         }
+
+        /*
+        if (searchedPositions != null)
+        {
+            Gizmos.color = Color.green;
+            foreach (Vector3 position in searchedPositions)
+            {                   
+                if(position == searchedPositions.Last())
+                    Gizmos.color = Color.blue;
+
+                Gizmos.DrawWireCube(position, Vector3.one);
+            }
+               
+        }*/
+
     }
 
 }

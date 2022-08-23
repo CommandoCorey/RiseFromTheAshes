@@ -5,15 +5,19 @@ using UnityEngine;
 public class IdleState : MonoBehaviour
 {
     UnitController unit;
-
-    // Start is called before the first frame update
+    AgentMovement agent;
+    
     void Awake()
-    {
-        
+    {        
         unit = GetComponent<UnitController>();
+        agent = GetComponent<AgentMovement>();
     }
 
-    // Update is called once per frame
+    private void Start()
+    {
+        //agent.StopMoving();
+    }
+
     void Update()
     {
         var enemiesInRange = Physics.OverlapSphere(transform.position, unit.DetectionRadius, unit.DetectionLayer);

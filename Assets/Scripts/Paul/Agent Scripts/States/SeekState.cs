@@ -63,6 +63,9 @@ public class SeekState : State
         if (target == null)
             return;
 
+        if(path!= null)
+            DrawPath();
+
         distanceFromTarget = Vector3.Distance(seek.target, transform.position);
         decelerateDistance = GetDecelerateDistance();      
 
@@ -150,5 +153,14 @@ public class SeekState : State
         }
 
     }
+
+    private void DrawPath()
+    {
+        for (int i = 0; i < path.corners.Length - 1; i++)
+        {
+            Debug.DrawLine(path.corners[i], path.corners[i + 1]);
+        }
+    }
+
 
 }
