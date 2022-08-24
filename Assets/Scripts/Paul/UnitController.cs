@@ -8,7 +8,6 @@ public enum UnitState
     Idle,
     Moving,
     Flock,
-    Formation,
     Attack
 }
 
@@ -37,10 +36,9 @@ public class UnitController : MonoBehaviour
 
     // state classed
     private IdleState idleState;
-    private MoveState moveState;
+    private SeekState moveState;
     private FlockState flockState;
     private CombatState attackState;
-    private FormationState formationState;
 
     private Color drawColor = Color.white;
     private Vector3 formationTarget;
@@ -109,16 +107,15 @@ public class UnitController : MonoBehaviour
                 Destroy(flockState);
                 Destroy(moveState);
                 Destroy(attackState);
-                Destroy(formationState);
 
                 drawColor = Color.white;
                 break;
 
             case UnitState.Moving:
 
-                if (GetComponent<MoveState>() == null)
+                if (GetComponent<SeekState>() == null)
                 {
-                    moveState = gameObject.AddComponent<MoveState>();
+                    moveState = gameObject.AddComponent<SeekState>();
                 }
 
                 Destroy(idleState);
@@ -129,7 +126,7 @@ public class UnitController : MonoBehaviour
                 moveState.MoveTo(target);
 
                 drawColor = Color.red;
-                break;
+            break;
 
             case UnitState.Flock:
                 if (GetComponent<FlockState>() == null)
@@ -142,7 +139,7 @@ public class UnitController : MonoBehaviour
                 Destroy(attackState);
 
                 flockState.Target = target;
-                flockState.FormationTarget = formationTarget;
+                //flockState.FormationTarget = formationTarget;
 
                 drawColor = Color.blue;
                 break;

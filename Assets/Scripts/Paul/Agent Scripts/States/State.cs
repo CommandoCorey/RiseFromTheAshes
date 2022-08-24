@@ -4,7 +4,8 @@ using UnityEngine;
 
 public abstract class State : MonoBehaviour
 {
-    protected Vector3 target; 
+    protected Vector3 target;
+    protected Vector3 finalTarget;
     protected Vector3 formationTarget;
 
     public Vector3 Target { get => target; set => target = value; }

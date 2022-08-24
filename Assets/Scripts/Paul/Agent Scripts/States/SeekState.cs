@@ -19,12 +19,12 @@ public class SeekState : State
     // Behaviour classes
     SeekBehaviour seek;
     SeekDecelerateBehaviour decelerate;
-
-    private NavMeshPath path;
+    
     private float distanceFromTarget;
     private float decelerateDistance;
-    private Vector3 initialWaypoint;
-    private Vector3 finalWaypoint;
+
+    private NavMeshPath path;
+    private float distanceFromWaypoint;
 
     private int waypointNum;
 
@@ -39,22 +39,21 @@ public class SeekState : State
 
         gameManager = GameObject.FindObjectOfType<GameManager>();
 
-        MoveTo(target);
-
         seek = gameObject.AddComponent<SeekBehaviour>();
-        seek.target = initialWaypoint;
+        seek.target = target;
         seek.weight = behaviours.SeekWeight;
         seek.enabled = true;
 
+        /*
         decelerate = gameObject.AddComponent<SeekDecelerateBehaviour>();
         decelerate.target = target;
         decelerate.weight = behaviours.SeekWeight;
-        decelerate.enabled = false;
+        decelerate.enabled = false;*/
 
         steer = seek.GetSteering();
         agent.AddSteering(steer, seek.weight);
 
-        agent.CreatePath(target);
+        //agent.CreatePath(target);
     }
 
     // Update is called once per frame
@@ -66,15 +65,34 @@ public class SeekState : State
         if(path!= null)
             DrawPath();
 
-        distanceFromTarget = Vector3.Distance(seek.target, transform.position);
-        decelerateDistance = GetDecelerateDistance();      
+        distanceFromWaypoint = Vector3.Distance(target, transform.position);
+        distanceFromTarget = Vector3.Distance(finalTarget, transform.position);
+        decelerateDistance = GetDecelerateDistance();
+
+        if(distanceFromTarget < agent.MinDistanceFromTarget)
+        {
+            unit.ChangeState(UnitState.Idle);
+            return;
+        }
+        
+        if(distanceFromWaypoint < agent.MinDistanceFromWaypoint)
+        {
+            if (target != finalTarget)
+            {
+                waypointNum++;
+                target = path.corners[waypointNum];
+                seek.target = target;
+            }
+            
+        }
 
         // begin deccelerating towards final position
-        if (seek.enabled && distanceFromTarget <= decelerateDistance)
+        /*if (seek.enabled && distanceFromTarget <= decelerateDistance)
         {
-            decelerate.enabled = true;
-            seek.enabled = false;
-        }
+            unit.ChangeState(UnitState.Idle);
+            //decelerate.enabled = true;
+            //seek.enabled = false;
+        }*/
 
         /*else if (distanceFromTarget <= agent.MinDistanceFromTarget && seek.target != finalWaypoint)
         {
@@ -83,7 +101,7 @@ public class SeekState : State
         }*/
 
         // check if the agent has reached minimum speed
-        if (decelerate.enabled && (agent.Vecloity.magnitude <= minSpeedWhenStopping || distanceFromTarget <= agent.MinDistanceFromTarget))
+        /*if (decelerate.enabled && (agent.Vecloity.magnitude <= minSpeedWhenStopping || distanceFromWaypoint <= agent.MinDistanceFromTarget))
         {     
             if (waypointNum < path.corners.Length-1)
             {
@@ -102,7 +120,7 @@ public class SeekState : State
                 unit.ChangeState(UnitState.Idle);                
             }
 
-        }
+        }*/
 
         //Debug.Log("Veclocity = " + agent.Vecloity.magnitude);            
     }
@@ -115,18 +133,14 @@ public class SeekState : State
         if (!pathFound)
             return;
 
-        waypointNum = 1;
-        initialWaypoint = path.corners[waypointNum];
-        finalWaypoint = path.corners[path.corners.Length - 1];
-    }
-
-    public void EndState()
-    {
-        seek.enabled = false;
+        waypointNum = 0;
+        target = path.corners[waypointNum];
+        finalTarget = path.corners[path.corners.Length - 1];
     }
 
     private void OnDestroy()
-    {        
+    {
+        agent.StopMoving();
         Destroy(seek);
     }    
 

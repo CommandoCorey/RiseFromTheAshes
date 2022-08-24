@@ -22,9 +22,10 @@ public class AgentMovement : MonoBehaviour
     [SerializeField] float maxRotation = 45.0f; // maximum angularVelocity per frame
     [SerializeField] float maxAnagulerAccel = 45.0f; // maximum angular acceleration per frame
 
-    [Header("Stopping")]
+    [Header("Slowing and Stopping")]
     [SerializeField] float minDistanceFromTarget = 1.0f; // distance from target before stopping
     [SerializeField] float maxDistanceFromTarget = 3.0f; // distance from target before stopping
+    [SerializeField] float minDistanceFromWaypoint = 3.0f; // minimum distance from a waypoint before changing to the next one
     [SerializeField] float distanceFromNeighbour = 1.0f; // distance from stationary unit before stopping
     [SerializeField] float minSpeedWhenStopping = 1.6f;
 
@@ -44,6 +45,7 @@ public class AgentMovement : MonoBehaviour
     public Vector3 Vecloity { get => velocity; }
     public float MinDistanceFromTarget { get => minDistanceFromTarget; }
     public float MaxDistanceFromTarget { get => maxDistanceFromTarget; }
+    public float MinDistanceFromWaypoint {  get => minDistanceFromWaypoint; }
     public float MinDistanceFromNeighbour { get => distanceFromNeighbour; }
     public float MinSpeedWhenStopping { get => minSpeedWhenStopping; }
     public Vector3[] Path { get => path.corners; } // returns all waypoints in the path

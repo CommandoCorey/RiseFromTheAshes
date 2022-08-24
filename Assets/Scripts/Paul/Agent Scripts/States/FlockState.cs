@@ -32,6 +32,7 @@ public class FlockState : State
     private Vector3[] path;
     private Vector3 waypoint;
     private int waypointNum;
+    private float distanceFromWaypoint;
 
     // Start is called before the first frame update
     void Start()
@@ -43,6 +44,8 @@ public class FlockState : State
         gameManager = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
 
         neighbours = gameManager.GetNeighbourUnits(this.gameObject, agent.SquadNum);
+
+        SetPath(target); // calcuates path to poisition
 
         // add seek acceleration
         seekAccel = gameObject.AddComponent<SeekBehaviour>();
@@ -89,10 +92,11 @@ public class FlockState : State
     public void SetPath(Vector3 endpoint)
     {
         // clear last path and calculate path to target
-        agent.CreatePath(Target);        
+        agent.CreatePath(endpoint);        
         path = agent.Path;
         waypointNum = 0;
-        waypoint = path[waypointNum];        
+        finalTarget = endpoint;
+        target = path[waypointNum];        
     }
 
     // Update is called once per frame
@@ -100,11 +104,18 @@ public class FlockState : State
     {
         //decelerationDistance = GetDecelerateDistance();
 
-        distanceFromTarget = Vector3.Distance(target, transform.position);
+        distanceFromWaypoint = Vector3.Distance(target, transform.position);
+        distanceFromTarget = Vector3.Distance(finalTarget, transform.position);
 
-        //cohesion.weight -= 0.1f;
-        //sepearation.weight -= 0.1f;
-        
+        // change waypoint upon reaching it
+        if (target != finalTarget && distanceFromWaypoint < agent.MinDistanceFromWaypoint)
+        {
+            waypointNum++;
+            target = path[waypointNum];
+            seekAccel.target = target;
+        }
+
+        // check the distance from the final waypoint where formations are formed
         if (distanceFromTarget <= agent.MaxDistanceFromTarget)
         {
             if (cohesion.weight > 0)
@@ -189,6 +200,17 @@ public class FlockState : State
 
         UnityEditor.Handles.Label(transform.position + Vector3.up * 3, "Flocking");
 
+        // Draw the generated path
+        if (path != null)
+        {
+            // Draws the path
+            for (int i = 0; i < path.Length - 1; i++)
+            {
+                Gizmos.DrawLine(path[i], path[i + 1]);
+            }
+        }
+
+        // draw connection to each neighbour
         foreach (GameObject neighbour in neighbours)
         {
             distance = Vector3.Distance(transform.position, neighbour.transform.position);

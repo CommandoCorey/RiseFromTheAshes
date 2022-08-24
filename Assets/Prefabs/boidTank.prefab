@@ -73,7 +73,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 1
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 84
   m_CollisionDetection: 0
 --- !u!114 &1338965320307225585
 MonoBehaviour:
@@ -119,6 +119,7 @@ MonoBehaviour:
   maxAnagulerAccel: 45
   minDistanceFromTarget: 6
   maxDistanceFromTarget: 10
+  minDistanceFromWaypoint: 3
   distanceFromNeighbour: 5
   minSpeedWhenStopping: 1.6
 --- !u!114 &1727009965
@@ -133,13 +134,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e383d1645c138194bb4268780918ef0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  distanceBeforeReduction: 6
   seek: 1
   cohesion: 0.4
   alignment: 100
   separation: 10
-  cohesionDistance: 15
-  desiredSeparation: 6
-  aheadDistance: 10
+  cohesionReduction: 0.001
+  alignmentReduction: 1
+  separationReduction: 0.1
+  cohesionDistance: 3
+  desiredSeparation: 1
+  cohesionDistanceChange: 0
+  separationDistanceChange: 0
 --- !u!114 &-8268247658432732276
 MonoBehaviour:
   m_ObjectHideFlags: 0
