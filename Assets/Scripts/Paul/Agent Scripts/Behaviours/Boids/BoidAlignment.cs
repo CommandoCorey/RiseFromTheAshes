@@ -33,7 +33,7 @@ public class BoidAlignment : AgentBehaviour
 
             if ((distance > 0) && (distance < neighbourDistance))
             {
-                averageVelocity += other.GetComponent<AgentMovement>().Vecloity;
+                averageVelocity += other.GetComponent<AgentMovement>().Velocity;
                 count++;
             }
         }

@@ -31,7 +31,7 @@ public class AgentMovement : MonoBehaviour
 
     private Steering steer;
     private NavMeshPath path;
-    private GameManager gameManager;
+    private UnitManager unitManager;
     #endregion
 
     #region properties
@@ -42,7 +42,7 @@ public class AgentMovement : MonoBehaviour
     public float Deceleration { get => deceleration; }
     public float MaxRotation { get => maxRotation; }
     public float MaxAnagulerAccel { get => maxAnagulerAccel; }
-    public Vector3 Vecloity { get => velocity; }
+    public Vector3 Velocity { get => velocity; }
     public float MinDistanceFromTarget { get => minDistanceFromTarget; }
     public float MaxDistanceFromTarget { get => maxDistanceFromTarget; }
     public float MinDistanceFromWaypoint {  get => minDistanceFromWaypoint; }
@@ -55,7 +55,7 @@ public class AgentMovement : MonoBehaviour
     /// </summary>
     public List<GameObject> Neighbours
     {
-        get => gameManager.GetNeighbourUnits(gameObject, SquadNum);
+        get => unitManager.GetNeighbourUnits(gameObject, SquadNum);
     }
     #endregion
 
@@ -68,7 +68,7 @@ public class AgentMovement : MonoBehaviour
 
         path = new NavMeshPath();
 
-        gameManager = GameObject.FindObjectOfType<GameManager>();
+        unitManager = GameObject.FindObjectOfType<UnitManager>();
     }
 
     // change the transform based off the last frame's steering
@@ -141,6 +141,8 @@ public class AgentMovement : MonoBehaviour
     public void StopMoving()
     {
         velocity = Vector3.zero;
+        GetComponent<Rigidbody>().velocity = velocity;
+        GetComponent<Rigidbody>().angularVelocity = velocity;
         steer.linearVelocity = Vector3.zero;
         steer.angularVelocity = 0;
     }

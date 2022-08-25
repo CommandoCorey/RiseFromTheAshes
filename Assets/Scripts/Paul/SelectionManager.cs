@@ -7,12 +7,12 @@ public class SelectionManager : MonoBehaviour
     public LayerMask selectionLayer;
     [SerializeField][Range(1, 100)]
     float minBoxSize = 40;
+    [SerializeField][Range(4, 50)]
+    int maxSelectionSize = 30;
+    public bool drawDebugBox = true;
 
     // contains all of the selected units
     private Dictionary<int, GameObject> selectedTable = new Dictionary<int, GameObject>();
-
-    //id_dictionary idTable;
-    //SelectedDictionary selectedTable; // contains the dictionary of selected units
     RaycastHit hit;
 
     bool dragSelect; // defines whether or not to show a box on screen
@@ -150,7 +150,9 @@ public class SelectionManager : MonoBehaviour
                 Vector3 centerPoint = GetBoxCenter();
                 Vector3 halfExtents = GetHalfExtents();
 
-                DrawOverlapBox(centerPoint, halfExtents);
+                // shows the overlap box on the scene view
+                if(drawDebugBox)
+                    DrawOverlapBox(centerPoint, halfExtents);
 
                 var collisions = Physics.OverlapBox(centerPoint, halfExtents, Quaternion.identity, selectionLayer);
 

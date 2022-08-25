@@ -12,6 +12,7 @@ public class BehaviourManager : MonoBehaviour
     [SerializeField] float cohesion = 0.4f;
     [SerializeField] float alignment = 100.0f;
     [SerializeField] float separation = 10.0f;
+    [SerializeField] float obstacleAvoidance = 200.0f;
 
     [Header("Weight Changes when slowing")]
     [SerializeField] float cohesionReduction = 0.001f;
@@ -26,8 +27,17 @@ public class BehaviourManager : MonoBehaviour
     [SerializeField] float cohesionDistanceChange = 0;
     [SerializeField] float separationDistanceChange = 0;
 
-    //[Header("Obstacle Avoidance")]
-    //[SerializeField] float aheadDistance = 10;
+    [Header("Obstacle Avoidance")]
+    public Transform frontPoint;
+    [SerializeField] float aheadDistance = 1;    
+    
+    [SerializeField] LayerMask obstacleLayers = 10;
+
+    [Header("Gizmos Enabled")]
+    public bool flockPath = false;
+    public bool neighbourDistance = false;
+    public bool obstacleDetection = false;
+    public bool behaviourText = false;
 
     // properties
     public float MaxDistanceFromTarget { get => distanceBeforeReduction;}
@@ -43,36 +53,77 @@ public class BehaviourManager : MonoBehaviour
     public float CohesionDistanceChange { get => cohesionDistanceChange; }
     public float SeparationDistanceChange { get => separationDistanceChange; }
 
+    // obstacle avoidance
+    public Vector3 FrontPoint { get => frontPoint.position; }
+    public float AheadDistance { get => aheadDistance; }
+    public LayerMask ObstacleLayers { get => obstacleLayers; }
+    public float AvoidWeight { get => obstacleAvoidance; }
+
+    // properties with setters
+    public bool FrontObstacle { get; set; } = false;
+    public bool UpLeftObstacle { get; set; } = false;
+    public bool UpRightObstacle { get; set; } = false;
+
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.white;
-        if (GetComponent<SeekBehaviour>() != null && GetComponent<SeekBehaviour>().enabled)
-            UnityEditor.Handles.Label(transform.position + Vector3.up * 5, "Seeking");
-        else if (GetComponent<SeekDecelerateBehaviour>() != null && GetComponent<SeekDecelerateBehaviour>().enabled)
-            UnityEditor.Handles.Label(transform.position + Vector3.up * 5, "Decelerating");
-        
-        /*
-        if (GetComponent<BoidCohesion>() != null && GetComponent<BoidAlignment>() != null && 
-            GetComponent<BoidSeparation>() != null)
+        if (behaviourText)
         {
-            Gizmos.color = Color.blue;
-            UnityEditor.Handles.Label(transform.position + Vector3.up * 3, "Flocking");
-        }*/
 
-        /*
-        if (GetComponent<BoidCohesion>() != null)
-            UnityEditor.Handles.Label(transform.position + Vector3.up * 3, "Cohesion");
+            Gizmos.color = Color.white;
+            if (GetComponent<SeekBehaviour>() != null && GetComponent<SeekBehaviour>().enabled)
+                UnityEditor.Handles.Label(transform.position + Vector3.up * 5, "Seeking");
+            else if (GetComponent<SeekDecelerateBehaviour>() != null && GetComponent<SeekDecelerateBehaviour>().enabled)
+                UnityEditor.Handles.Label(transform.position + Vector3.up * 5, "Decelerating");
 
-        if (GetComponent<BoidAlignment>() != null)
-            UnityEditor.Handles.Label(transform.position + Vector3.up * 2, "Cohesion");
+            /*
+            if (GetComponent<BoidCohesion>() != null && GetComponent<BoidAlignment>() != null && 
+                GetComponent<BoidSeparation>() != null)
+            {
+                Gizmos.color = Color.blue;
+                UnityEditor.Handles.Label(transform.position + Vector3.up * 3, "Flocking");
+            }*/
 
-        if (GetComponent<BoidSeparation>() != null)
-            UnityEditor.Handles.Label(transform.position + Vector3.up * 1, "Separation");
-        */
+            /*
+            if (GetComponent<BoidCohesion>() != null)
+                UnityEditor.Handles.Label(transform.position + Vector3.up * 3, "Cohesion");
 
-        // check state
-        if(GetComponent<FormationState>() != null && GetComponent<FormationState>().enabled)
-            UnityEditor.Handles.Label(transform.position + Vector3.up * 3, "Entering Formation");
+            if (GetComponent<BoidAlignment>() != null)
+                UnityEditor.Handles.Label(transform.position + Vector3.up * 2, "Cohesion");
+
+            if (GetComponent<BoidSeparation>() != null)
+                UnityEditor.Handles.Label(transform.position + Vector3.up * 1, "Separation");
+            */
+
+            // check state
+            if (GetComponent<FormationState>() != null && GetComponent<FormationState>().enabled)
+                UnityEditor.Handles.Label(transform.position + Vector3.up * 3, "Entering Formation");
+
+        }
+        // obstacle avoidance lines
+        if (obstacleDetection && frontPoint != null)
+        {
+            Vector3 upLeft = (transform.forward - transform.right).normalized;
+            Vector3 upRight = (transform.forward + transform.right).normalized;
+            //float aheadLength = (frontPoint.position - (frontPoint.position + transform.forward * aheadDistance)).magnitude;            
+
+            if (FrontObstacle)
+                Gizmos.color = Color.red;
+            else
+                Gizmos.color = Color.green;
+            Gizmos.DrawLine(frontPoint.position, frontPoint.position + transform.forward * aheadDistance);
+
+            if (UpLeftObstacle)
+                Gizmos.color = Color.red;
+            else
+                Gizmos.color = Color.green;
+            Gizmos.DrawLine(frontPoint.position, frontPoint.position + upLeft * aheadDistance);
+
+            if (UpRightObstacle)
+                Gizmos.color = Color.red;
+            else
+                Gizmos.color = Color.green;
+            Gizmos.DrawLine(frontPoint.position, frontPoint.position + upRight * aheadDistance);
+        }
     }
 
 }

@@ -10,7 +10,7 @@ public class SeekState : State
     float minSpeedWhenStopping = 1.6f;
 
     // external scripts
-    GameManager gameManager;
+    UnitManager unitManager;
     UnitController unit;
     AgentMovement agent;
     Steering steer;
@@ -35,9 +35,7 @@ public class SeekState : State
         agent = GetComponent<AgentMovement>();
         behaviours = GetComponent<BehaviourManager>();
 
-        //gameManager = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
-
-        gameManager = GameObject.FindObjectOfType<GameManager>();
+        unitManager = GameObject.FindObjectOfType<UnitManager>();
 
         seek = gameObject.AddComponent<SeekBehaviour>();
         seek.target = target;

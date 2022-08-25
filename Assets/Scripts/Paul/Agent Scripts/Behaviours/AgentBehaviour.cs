@@ -11,10 +11,12 @@ public class AgentBehaviour : MonoBehaviour
     protected float angularVelocity = 0;
     protected float angularAccel = 0;
     protected AgentMovement agent;
+    protected BehaviourManager behaviours;
 
     protected virtual void Awake()
     {
         agent = GetComponent<AgentMovement>();
+        behaviours = GetComponent<BehaviourManager>();
     }
 
     public void SetWeight(float weight)

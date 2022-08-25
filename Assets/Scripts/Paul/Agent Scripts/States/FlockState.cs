@@ -6,7 +6,7 @@ using UnityEngine.AI;
 
 public class FlockState : State
 {
-    GameManager gameManager;
+    UnitManager unitManager;
 
     UnitController unit;
     AgentMovement agent;
@@ -22,6 +22,7 @@ public class FlockState : State
     BoidCohesion cohesion;
     BoidAlignment alignment;
     BoidSeparation separation;
+    AvoidBehaviour avoid;
     
     private float decelerationDistance;
 
@@ -41,9 +42,9 @@ public class FlockState : State
         agent = GetComponent<AgentMovement>();
         behaviours = GetComponent<BehaviourManager>();
 
-        gameManager = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
+        unitManager = GameObject.FindObjectOfType<UnitManager>();
 
-        neighbours = gameManager.GetNeighbourUnits(this.gameObject, agent.SquadNum);
+        neighbours = unitManager.GetNeighbourUnits(this.gameObject, agent.SquadNum);
 
         SetPath(target); // calcuates path to poisition
 
@@ -73,7 +74,7 @@ public class FlockState : State
 
         // add alignment behaviour
         alignment = gameObject.AddComponent<BoidAlignment>();
-        alignment.targets = gameManager.GetUnitsInSquad(agent.SquadNum);
+        alignment.targets = unitManager.GetUnitsInSquad(agent.SquadNum);
         alignment.weight = behaviours.AlignmentWeight;
         alignment.enabled = true;
 
@@ -88,7 +89,13 @@ public class FlockState : State
 
         steer = separation.GetSteering();
         agent.AddSteering(steer, separation.weight);
+
+        // Add obstacle avoidance
+        avoid = gameObject.AddComponent<AvoidBehaviour>();
+        avoid.weight = behaviours.AvoidWeight;
+        avoid.enabled = true;
     }
+
     public void SetPath(Vector3 endpoint)
     {
         // clear last path and calculate path to target
@@ -163,7 +170,7 @@ public class FlockState : State
     private void OnDestroy()
     {
         agent.StopMoving();
-        gameManager.RemoveFromSquad(this.gameObject, agent.SquadNum);
+        unitManager.RemoveFromSquad(this.gameObject, agent.SquadNum);
 
         Destroy(seekAccel);
         Destroy(seekDecel);
@@ -174,7 +181,7 @@ public class FlockState : State
 
     private bool StationaryUnitInRange()
     {
-        var neighbours = gameManager.GetNeighbourUnits(this.gameObject, agent.SquadNum);
+        var neighbours = unitManager.GetNeighbourUnits(this.gameObject, agent.SquadNum);
 
         foreach (GameObject neighbour in neighbours)
         {
@@ -196,12 +203,12 @@ public class FlockState : State
         float distance;
         Vector3 direction;
 
-        neighbours = gameManager.GetNeighbourUnits(this.gameObject, agent.SquadNum);
+        neighbours = unitManager.GetNeighbourUnits(this.gameObject, agent.SquadNum);
 
         UnityEditor.Handles.Label(transform.position + Vector3.up * 3, "Flocking");
 
         // Draw the generated path
-        if (path != null)
+        if (behaviours.flockPath && path != null)
         {
             // Draws the path
             for (int i = 0; i < path.Length - 1; i++)
@@ -210,24 +217,27 @@ public class FlockState : State
             }
         }
 
-        // draw connection to each neighbour
-        foreach (GameObject neighbour in neighbours)
+        if (behaviours.neighbourDistance)
         {
-            distance = Vector3.Distance(transform.position, neighbour.transform.position);
-            direction = (neighbour.transform.position - transform.position).normalized;
+            // draw connection to each neighbour
+            foreach (GameObject neighbour in neighbours)
+            {
+                distance = Vector3.Distance(transform.position, neighbour.transform.position);
+                direction = (neighbour.transform.position - transform.position).normalized;
 
-            // sets line colour based on the range
-            if (distance > behaviours.CohesionDistance)
-                Gizmos.color = Color.yellow;
-            else if (distance < behaviours.DesiredSeparation)
-                Gizmos.color = Color.red;
-            else
-                Gizmos.color = Color.green;
+                // sets line colour based on the range
+                if (distance > behaviours.CohesionDistance)
+                    Gizmos.color = Color.yellow;
+                else if (distance < behaviours.DesiredSeparation)
+                    Gizmos.color = Color.red;
+                else
+                    Gizmos.color = Color.green;
 
-            Gizmos.DrawLine(transform.position, neighbour.transform.position);
+                Gizmos.DrawLine(transform.position, neighbour.transform.position);
 
-            if (neighbour != this.gameObject)
-                UnityEditor.Handles.Label(transform.position + direction * (distance / 2), Math.Round(distance, 2).ToString());
+                if (neighbour != this.gameObject)
+                    UnityEditor.Handles.Label(transform.position + direction * (distance / 2), Math.Round(distance, 2).ToString());
+            }
         }
     }
 
