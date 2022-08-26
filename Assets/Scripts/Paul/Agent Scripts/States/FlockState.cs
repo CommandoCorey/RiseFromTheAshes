@@ -22,7 +22,7 @@ public class FlockState : State
     BoidCohesion cohesion;
     BoidAlignment alignment;
     BoidSeparation separation;
-    AvoidBehaviour avoid;
+    ObstacleAvoidanceBehaviour avoid;
     
     private float decelerationDistance;
 
@@ -91,9 +91,12 @@ public class FlockState : State
         agent.AddSteering(steer, separation.weight);
 
         // Add obstacle avoidance
-        avoid = gameObject.AddComponent<AvoidBehaviour>();
+        avoid = gameObject.AddComponent<ObstacleAvoidanceBehaviour>();
         avoid.weight = behaviours.AvoidWeight;
         avoid.enabled = true;
+
+        steer = avoid.GetSteering();
+        agent.AddSteering(steer, avoid.weight);
     }
 
     public void SetPath(Vector3 endpoint)

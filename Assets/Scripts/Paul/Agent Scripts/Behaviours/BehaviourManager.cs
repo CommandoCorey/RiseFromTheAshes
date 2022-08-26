@@ -5,32 +5,46 @@ using UnityEngine;
 public class BehaviourManager : MonoBehaviour
 {
     [Tooltip("The distance from the final waypoint before changing the weight values")]
-    [SerializeField] float distanceBeforeReduction = 6.0f;
+    [SerializeField][Range(0, 10)]
+    float distanceBeforeReduction = 6.0f;
 
     [Header("Initial Steering Behaviour Weights")]
-    [SerializeField] float seek = 1.0f;
-    [SerializeField] float cohesion = 0.4f;
-    [SerializeField] float alignment = 100.0f;
-    [SerializeField] float separation = 10.0f;
-    [SerializeField] float obstacleAvoidance = 200.0f;
+    [SerializeField]
+    float seek = 1.0f;
+    [SerializeField]
+    float cohesion = 0.4f;
+    [SerializeField]
+    float alignment = 100.0f;
+    [SerializeField]
+    float separation = 10.0f;
+    [SerializeField]
+    float obstacleAvoidance = 200.0f;
 
     [Header("Weight Changes when slowing")]
-    [SerializeField] float cohesionReduction = 0.001f;
-    [SerializeField] float alignmentReduction = 1f;
-    [SerializeField] float separationReduction = 0.1f;
+    [SerializeField]
+    float cohesionReduction = 0.001f;
+    [SerializeField]
+    float alignmentReduction = 1f;
+    [SerializeField]
+    float separationReduction = 0.1f;
 
     [Header("Initial Boid Distances")]
-    [SerializeField] float cohesionDistance = 15.0f;
-    [SerializeField] float desiredSeparation = 6.0f;
+    [SerializeField]
+    float cohesionDistance = 15.0f;
+    [SerializeField]
+    float desiredSeparation = 6.0f;
 
     [Header("Boid distance changes")]
-    [SerializeField] float cohesionDistanceChange = 0;
-    [SerializeField] float separationDistanceChange = 0;
+    [SerializeField]
+    float cohesionDistanceChange = 0;
+    [SerializeField]
+    float separationDistanceChange = 0;
 
     [Header("Obstacle Avoidance")]
     public Transform frontPoint;
-    [SerializeField] float aheadDistance = 1;    
-    
+    [SerializeField] float aheadDistance = 1;
+    [SerializeField] Vector3 boxSize = Vector3.one;
+    [SerializeField] Vector3 boxOffset = Vector3.forward;
     [SerializeField] LayerMask obstacleLayers = 10;
 
     [Header("Gizmos Enabled")]
@@ -58,6 +72,9 @@ public class BehaviourManager : MonoBehaviour
     public float AheadDistance { get => aheadDistance; }
     public LayerMask ObstacleLayers { get => obstacleLayers; }
     public float AvoidWeight { get => obstacleAvoidance; }
+    public Vector3 BoxSize { get => boxSize; }
+    public Vector3 BoxOffset { get => boxOffset; }
+
 
     // properties with setters
     public bool FrontObstacle { get; set; } = false;
@@ -68,7 +85,6 @@ public class BehaviourManager : MonoBehaviour
     {
         if (behaviourText)
         {
-
             Gizmos.color = Color.white;
             if (GetComponent<SeekBehaviour>() != null && GetComponent<SeekBehaviour>().enabled)
                 UnityEditor.Handles.Label(transform.position + Vector3.up * 5, "Seeking");
@@ -102,6 +118,7 @@ public class BehaviourManager : MonoBehaviour
         // obstacle avoidance lines
         if (obstacleDetection && frontPoint != null)
         {
+            /*
             Vector3 upLeft = (transform.forward - transform.right).normalized;
             Vector3 upRight = (transform.forward + transform.right).normalized;
             //float aheadLength = (frontPoint.position - (frontPoint.position + transform.forward * aheadDistance)).magnitude;            
@@ -123,6 +140,9 @@ public class BehaviourManager : MonoBehaviour
             else
                 Gizmos.color = Color.green;
             Gizmos.DrawLine(frontPoint.position, frontPoint.position + upRight * aheadDistance);
+            */
+
+            Gizmos.DrawWireCube(transform.position + transform.TransformDirection(boxOffset), boxSize);            
         }
     }
 

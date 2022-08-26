@@ -3,20 +3,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ObstacleAvoidance : AgentBehaviour
+public class ObstacleAvoidanceBehaviour : AgentBehaviour
 {
     float maxAvoidForce = 10.0f;
-    float boxSize = 10;
     float radius = 3;
 
+    Collider[] obstacles;
+
     public override Steering GetSteering()
-    {
+    {       
         Steering steer = new Steering();
         steer.linearVelocity = CollisionAvoidance();
 
         return steer;
     }
 
+    // 
     private Vector3 CollisionAvoidance()
     {
         // calculate the ahead and ahead2 vectors
@@ -42,12 +44,14 @@ public class ObstacleAvoidance : AgentBehaviour
         return avoidance;
     }
 
+    // 
     private Transform FindMostThreateningObstacle(Vector3 ahead1, Vector3 ahead2)
     {
         Transform mostThreatening = null;
         Vector3 position = transform.position;
 
-        var obstacles = Physics.OverlapBox(transform.position, new Vector3(boxSize / 2, 1, boxSize / 2));
+        obstacles = Physics.OverlapBox(transform.position + transform.TransformDirection(behaviours.BoxOffset),
+                                           behaviours.BoxSize / 2, transform.rotation);
 
         for (int i = 0; i < obstacles.Length; i++)
         {
@@ -65,11 +69,31 @@ public class ObstacleAvoidance : AgentBehaviour
         return mostThreatening;
     }
 
+    // 
     private bool LineIntersectsCircle(Vector3 ahead1, Vector3 ahead2, Transform obstacle)
     {
         float ahead1Distance = Vector3.Distance(obstacle.position, ahead1);
-        float ahead2Distance = Vector3.Distance(obstacle.position, ahead2);        
+        float ahead2Distance = Vector3.Distance(obstacle.position, ahead2);
+
+        if (ahead1Distance <= radius)
+            Debug.DrawLine(obstacle.position, ahead1, Color.blue, 0.2f);
+
+        if(ahead2Distance < radius)
+            Debug.DrawLine(obstacle.position, ahead2, Color.blue, 0.2f);
 
         return (ahead1Distance <= radius || ahead2Distance <= radius);
     }
+
+    private void OnDrawGizmos()
+    {
+        if (obstacles == null)
+            return;
+
+        Gizmos.color = Color.red;
+        foreach(var obstacle in obstacles)
+        {
+            Gizmos.DrawWireSphere(obstacle.transform.position, radius);
+        }
+    }
+
 }

@@ -140,14 +140,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxSpeed: 10
-  trueMaxSpeed: 0
   acceleration: 3
   deceleration: 3
-  orientation: 0
-  rotation: 0
   velocity: {x: 0, y: 0, z: 0}
   maxRotation: 45
-  maxAnagulerAccel: 45
   minDistanceFromTarget: 0.2
   maxDistanceFromTarget: 6
   minDistanceFromWaypoint: 3
@@ -180,6 +176,8 @@ MonoBehaviour:
   separationDistanceChange: 0
   frontPoint: {fileID: 6302425531426630124}
   aheadDistance: 1
+  boxSize: {x: 1, y: 0.5, z: 1}
+  boxOffset: {x: 0, y: 0.1, z: 1}
   obstacleLayers:
     serializedVersion: 2
     m_Bits: 4196096

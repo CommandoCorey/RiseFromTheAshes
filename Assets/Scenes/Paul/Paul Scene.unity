@@ -1622,12 +1622,16 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1727009965, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
+      propertyPath: boxOffset.z
+      value: 1.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 1727009965, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
       propertyPath: aheadDistance
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1727009965, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
       propertyPath: obstacleDetection
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1950773433, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
       propertyPath: m_Constraints
@@ -1636,6 +1640,14 @@ PrefabInstance:
     - target: {fileID: 1950773433, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
       propertyPath: m_IsKinematic
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 829398744485436827, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 829398744485436827, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3235123660149911136, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
       propertyPath: m_RootOrder
@@ -1873,7 +1885,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5798167006062429957, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1101342345677354878, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
@@ -1911,14 +1923,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxSpeed: 10
-  trueMaxSpeed: 0
   acceleration: 3
   deceleration: 3
-  orientation: 0
-  rotation: 0
-  velocity: {x: 0, y: 0, z: 0}
   maxRotation: 45
-  maxAnagulerAccel: 45
   minDistanceFromTarget: 1
   maxDistanceFromTarget: 3
   minDistanceFromWaypoint: 3
@@ -2042,7 +2049,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3235123660149911136, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
       propertyPath: m_RootOrder
-      value: 24
+      value: 23
       objectReference: {fileID: 0}
     - target: {fileID: 3235123660149911136, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2090,7 +2097,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5798167006062429957, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
@@ -2343,7 +2350,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3235123660149911136, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
       propertyPath: m_RootOrder
-      value: 21
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 3235123660149911136, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2391,7 +2398,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5798167006062429957, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
@@ -2505,14 +2512,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxSpeed: 10
-  trueMaxSpeed: 0
   acceleration: 3
   deceleration: 3
-  orientation: 0
-  rotation: 0
-  velocity: {x: 0, y: 0, z: 0}
   maxRotation: 45
-  maxAnagulerAccel: 45
   minDistanceFromTarget: 1
   maxDistanceFromTarget: 3
   minDistanceFromWaypoint: 3
@@ -2551,14 +2553,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxSpeed: 10
-  trueMaxSpeed: 0
   acceleration: 3
   deceleration: 3
-  orientation: 0
-  rotation: 0
-  velocity: {x: 0, y: 0, z: 0}
   maxRotation: 45
-  maxAnagulerAccel: 45
   minDistanceFromTarget: 1
   maxDistanceFromTarget: 3
   minDistanceFromWaypoint: 3
@@ -2976,7 +2973,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3235123660149911136, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
       propertyPath: m_RootOrder
-      value: 25
+      value: 21
       objectReference: {fileID: 0}
     - target: {fileID: 3235123660149911136, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3024,7 +3021,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5798167006062429957, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
@@ -3158,7 +3155,7 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
-  flockWhileMoving: 0
+  flockWhileMoving: 1
   spaceBetweenUnits: 3
   maxUnitsPerRow: 5
 --- !u!4 &1273043326
@@ -3449,12 +3446,16 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1727009965, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
+      propertyPath: boxOffset.z
+      value: 1.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 1727009965, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
       propertyPath: aheadDistance
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1727009965, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
       propertyPath: obstacleDetection
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1950773433, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
       propertyPath: m_Constraints
@@ -3564,7 +3565,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3235123660149911136, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
       propertyPath: m_RootOrder
-      value: 23
+      value: 24
       objectReference: {fileID: 0}
     - target: {fileID: 3235123660149911136, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3612,7 +3613,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5798167006062429957, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
@@ -3640,12 +3641,16 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1727009965, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
+      propertyPath: boxOffset.z
+      value: 1.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 1727009965, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
       propertyPath: aheadDistance
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1727009965, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
       propertyPath: obstacleDetection
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1950773433, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
       propertyPath: m_UseGravity
@@ -3797,6 +3802,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -8268247658432732276, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: -5914012348275633291, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
       propertyPath: maxSpeed
       value: 5
@@ -3814,12 +3823,20 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1727009965, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
+      propertyPath: boxOffset.z
+      value: 1.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 1727009965, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
       propertyPath: aheadDistance
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1727009965, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
       propertyPath: obstacleDetection
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1727009965, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
+      propertyPath: obstacleLayers.m_Bits
+      value: 4196288
       objectReference: {fileID: 0}
     - target: {fileID: 1950773433, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
       propertyPath: m_Constraints
@@ -4080,8 +4097,20 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1727009965, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
+      propertyPath: boxSize.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1727009965, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
       propertyPath: flockPath
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1727009965, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
+      propertyPath: boxOffset.y
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1727009965, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
+      propertyPath: boxOffset.z
+      value: 1.05
       objectReference: {fileID: 0}
     - target: {fileID: 1727009965, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
       propertyPath: aheadDistance
@@ -4089,7 +4118,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1727009965, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
       propertyPath: obstacleDetection
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1727009965, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
       propertyPath: obstacleLayers.m_Bits
@@ -4194,14 +4223,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxSpeed: 10
-  trueMaxSpeed: 0
   acceleration: 3
   deceleration: 3
-  orientation: 0
-  rotation: 0
-  velocity: {x: 0, y: 0, z: 0}
   maxRotation: 45
-  maxAnagulerAccel: 45
   minDistanceFromTarget: 1
   maxDistanceFromTarget: 3
   minDistanceFromWaypoint: 3

@@ -93,7 +93,6 @@ public class UnitController : MonoBehaviour
 
     public void ChangeState(UnitState newState, Vector3 target = new Vector3())
     {
-
         State = newState;
 
         switch (newState)
