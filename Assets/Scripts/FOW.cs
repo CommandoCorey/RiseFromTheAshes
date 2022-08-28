@@ -13,10 +13,13 @@ using System.Collections.Generic;
  * Maybe the mesh regeneration code should be implemented
  * in C++ and loaded from a DLL? We shall see if the C#
  * version performs well enough, and maybe run tests to
- * see if that's actually worth the extra effort. */
+ * see if that's actually worth the extra effort.
+ * 
+ * It might be more worth trying to do the mesh generation
+ * in a compute shader, now that I think about it. */
 
 [RequireComponent(typeof(MeshFilter))]
-class FOW : MonoBehaviour {
+public class FOW : MonoBehaviour {
 	struct MaskRect {
 		Vector2Int position;
 		Vector2Int extent;
@@ -30,9 +33,12 @@ class FOW : MonoBehaviour {
 
 	[SerializeField] bool permanent;
 
+	Texture2D genMaskTexture;
+
 	Mesh mesh;
 
 	byte[] FOWMask;
+	byte[] blurredMask;
 
 	bool wantMaskUpdate = true;
 
@@ -41,6 +47,7 @@ class FOW : MonoBehaviour {
 
 	void Start() {
 		FOWMask = new byte[maskExtent.x * maskExtent.y];
+		blurredMask = new byte[maskExtent.x * maskExtent.y];
 
 		SetMaskFromTexture(maskTexture);
 
@@ -50,6 +57,8 @@ class FOW : MonoBehaviour {
 
 		vertices = new List<Vector3>();
 		tris = new List<int>();
+
+		genMaskTexture = new Texture2D(maskExtent.x, maskExtent.y, TextureFormat.R8, false);
 	}
 
 	private void Update()
@@ -59,12 +68,27 @@ class FOW : MonoBehaviour {
 			wantMaskUpdate = false;
 		}
 
-		if (permanent) { ClearMask(); }
+		if (!permanent) { ClearMask(); }
 	}
 
 	public void RequestMaskUpdate(byte value, Vector2Int position) {
 		wantMaskUpdate = true;
 		FOWMask[position.x + position.y * maskExtent.x] = value;
+	}
+
+	public Texture2D MaskToTexture()
+	{
+		/* TODO (George): Actually blur the mask. Maybe. It
+		 * might not be necessary. */
+
+		for (int i = 0; i < maskExtent.x * maskExtent.y; i++) {
+			blurredMask[i] = (byte)(FOWMask[i] == 0 ? 0x0 : 255);
+		}
+
+		genMaskTexture.LoadRawTextureData(blurredMask);
+		genMaskTexture.Apply();
+
+		return genMaskTexture;
 	}
 
 	public void SetMaskFromTexture(Texture2D texture) {
