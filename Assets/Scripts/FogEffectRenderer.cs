@@ -50,7 +50,7 @@ class FogEffectPass : ScriptableRenderPass
 
 	public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
 	{
-		if (!(Application.isPlaying && Application.isEditor)) {
+		if (!(Application.isPlaying && Application.isEditor) || !FOWManager.Instance || !FOWManager.Instance.imperm || !FOWManager.Instance.perm) {
 				return;
 		}
 

@@ -48,7 +48,8 @@ Shader "Hidden/Fog"
 				float maskVal = tex2D(_MaskTex, i.uv).r;
 				float4 col = tex2D(_MainTex, i.uv);
 
-				return col - float4(maskVal, maskVal, maskVal, 1.0);
+				//return col - float4(maskVal, maskVal, maskVal, 1.0);
+				return col;
 			}
 			ENDCG
 		}

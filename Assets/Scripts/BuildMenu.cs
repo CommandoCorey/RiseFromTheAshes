@@ -50,6 +50,26 @@ public class BuildMenu : MonoBehaviour
 			cursorY -= bt.rect.height + spacing;
 		}
 
+		Button cancelButton = Instantiate(buildButtonPrefab, canvas.transform);
+		RectTransform cancelButtonTransform = cancelButton.GetComponent<RectTransform>();
+		cancelButtonTransform.localPosition = new Vector3(0.0f, cursorY, 0.0f);
+
+		cancelButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Cancel";
+
+		cancelButton.onClick.AddListener(() => {
+			gameObject.SetActive(false);
+		});
+
+		{
+			RectTransform rt = canvas.GetComponent<RectTransform>();
+
+			Rect r = rt.rect;
+			rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical,
+					r.height +
+					cancelButtonTransform.rect.height +
+					spacing);
+		}
+
 		gameObject.SetActive(false);
 	}
 }
