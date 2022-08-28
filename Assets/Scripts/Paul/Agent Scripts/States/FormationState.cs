@@ -11,7 +11,6 @@ public class FormationState : State
 
     private float distanceFromTarget;
 
-
     // Start is called before the first frame update
     void Start()
     {

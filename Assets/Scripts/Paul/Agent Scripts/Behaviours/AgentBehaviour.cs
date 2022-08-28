@@ -5,16 +5,23 @@ using UnityEngine;
 
 public class AgentBehaviour : MonoBehaviour
 {    
-    public float weight { get; set; } = 1.0f;
+    public float weight = 1.0f;
     public Vector3 target { get; set; }
 
     protected float angularVelocity = 0;
     protected float angularAccel = 0;
     protected AgentMovement agent;
+    protected BehaviourManager behaviours;
 
-    protected virtual void Start()
+    protected virtual void Awake()
     {
         agent = GetComponent<AgentMovement>();
+        behaviours = GetComponent<BehaviourManager>();
+    }
+
+    public void SetWeight(float weight)
+    {
+        this.weight = weight;
     }
 
     public virtual void Update()

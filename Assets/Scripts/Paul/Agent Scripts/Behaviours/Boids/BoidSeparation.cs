@@ -8,8 +8,9 @@ public class BoidSeparation : FleeBehaviour
     public List<GameObject> targets;
     private int count = 0;
 
-    protected override void Start()
+    protected override void Awake()
     {
+        base.Awake();
         desiredSepearation = GetComponent<BehaviourManager>().DesiredSeparation;
     }
 
@@ -19,9 +20,9 @@ public class BoidSeparation : FleeBehaviour
         count = 0;
 
         // for each boid in the system, check if it is too close
-        foreach(GameObject other in targets)
+        foreach(GameObject other in agent.Neighbours)
         {
-            if(other != null)
+            if (other != null && other != this.gameObject)
             {
                 // repulsion force
                 float distance = (transform.position - other.transform.position).magnitude;
@@ -47,7 +48,6 @@ public class BoidSeparation : FleeBehaviour
         }
 
         return steer;
-
     }
 
     private void OnDrawGizmos()

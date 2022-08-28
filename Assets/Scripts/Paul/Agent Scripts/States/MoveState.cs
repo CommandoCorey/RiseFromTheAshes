@@ -65,6 +65,7 @@ public class MoveState : MonoBehaviour
         transform.forward = direction; // face moving direction
         body.velocity = direction * agent.MaxSpeed * unit.Speed * Time.deltaTime; // moves the rigid body
 
+
         highlight.transform.transform.position = transform.position;
 
         // check if at waypoint

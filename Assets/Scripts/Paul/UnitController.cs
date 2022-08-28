@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-
 public enum UnitState
 {
     Idle,
     Moving,
     Flock,
-    Formation,
     Attack
 }
 
@@ -38,10 +36,9 @@ public class UnitController : MonoBehaviour
 
     // state classed
     private IdleState idleState;
-    private MoveState moveState;
+    private SeekState moveState;
     private FlockState flockState;
     private CombatState attackState;
-    private FormationState formationState;
 
     private Color drawColor = Color.white;
     private Vector3 formationTarget;
@@ -52,8 +49,7 @@ public class UnitController : MonoBehaviour
     public GameObject AttackTarget { get; set; }
     public float DetectionRadius { get => detectionRadius; }
     public LayerMask DetectionLayer { get => detectionLayer; }
-
-    public float Speed { get => movementSpeed; }
+    public float Speed { get => movementSpeed; }   
 
     public void SetPath(Vector3[] waypoints)
     {
@@ -110,16 +106,15 @@ public class UnitController : MonoBehaviour
                 Destroy(flockState);
                 Destroy(moveState);
                 Destroy(attackState);
-                Destroy(formationState);
 
                 drawColor = Color.white;
                 break;
 
             case UnitState.Moving:
 
-                if (GetComponent<MoveState>() == null)
+                if (GetComponent<SeekState>() == null)
                 {
-                    moveState = gameObject.AddComponent<MoveState>();
+                    moveState = gameObject.AddComponent<SeekState>();
                 }
 
                 Destroy(idleState);
@@ -130,7 +125,7 @@ public class UnitController : MonoBehaviour
                 moveState.MoveTo(target);
 
                 drawColor = Color.red;
-                break;
+            break;
 
             case UnitState.Flock:
                 if (GetComponent<FlockState>() == null)
@@ -143,23 +138,9 @@ public class UnitController : MonoBehaviour
                 Destroy(attackState);
 
                 flockState.Target = target;
-                flockState.FormationTarget = formationTarget;
+                //flockState.FormationTarget = formationTarget;
 
                 drawColor = Color.blue;
-                break;
-
-            case UnitState.Formation:
-                if (GetComponent<FormationState>() == null)
-                {
-                    formationState = gameObject.AddComponent<FormationState>();
-                }
-
-                Destroy(idleState);
-                Destroy(moveState);
-                Destroy(attackState);
-                Destroy(flockState);
-
-                drawColor = Color.yellow;
                 break;
 
             case UnitState.Attack:
