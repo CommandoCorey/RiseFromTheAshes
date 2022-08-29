@@ -14,6 +14,9 @@ public enum UnitState
 public class UnitController : MonoBehaviour
 {
     public GameObject selectionHighlight;
+    public Transform turret;
+    public Transform firingPoint;
+    public RectTransform healthBar;
 
     #region variable declartion
     [Header("Unit Stats")]
@@ -22,15 +25,21 @@ public class UnitController : MonoBehaviour
     [SerializeField]
     float movementSpeed = 1.0f;
     [SerializeField]
-    float damagePerAttack = 1.0f;
+    float damagePerHit = 1.0f;
     [SerializeField]
     float attackRate = 1.0f;
+    [SerializeField] 
+    float turretRotationSpeed = 1.0f;
 
     [Header("Enemy Detection")]
     [SerializeField] float detectionRadius = 1.0f;
     [SerializeField] LayerMask detectionLayer;
 
+    [Header("Gizmos")]
+    [SerializeField] bool showDetectionRadius = true;
+
     // private variables
+    [SerializeField]
     private float health;
     private Vector3[] waypoints;
 
@@ -42,6 +51,8 @@ public class UnitController : MonoBehaviour
 
     private Color drawColor = Color.white;
     private Vector3 formationTarget;
+
+    private float widthPerHealth;
     #endregion
 
     // properties
@@ -49,7 +60,10 @@ public class UnitController : MonoBehaviour
     public GameObject AttackTarget { get; set; }
     public float DetectionRadius { get => detectionRadius; }
     public LayerMask DetectionLayer { get => detectionLayer; }
-    public float Speed { get => movementSpeed; }   
+    public float Speed { get => movementSpeed; }  
+    public float TurretRotationSpeed { get => turretRotationSpeed; }
+    public float DamagePerHit { get => damagePerHit; }
+    public float AttackRate { get => attackRate; }
 
     public void SetPath(Vector3[] waypoints)
     {
@@ -61,12 +75,16 @@ public class UnitController : MonoBehaviour
     {
         health = maxHealth;
 
+        widthPerHealth = healthBar.rect.width / health;
+
         ChangeState(UnitState.Idle);
     }
 
     // Update is called once per frame
     void Update()
-    {
+    {      
+        healthBar.sizeDelta = new Vector2(widthPerHealth * health, healthBar.rect.height);
+
         if (health <= 0)
         {
             GameObject.Destroy(this.gameObject);
@@ -158,7 +176,8 @@ public class UnitController : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        //Gizmos.DrawWireSphere(transform.position, detectionRadius);
+        if(showDetectionRadius)
+            Gizmos.DrawWireSphere(transform.position, detectionRadius);
     }
 
 }
