@@ -28,15 +28,18 @@ public class UnitController : MonoBehaviour
     float damagePerHit = 1.0f;
     [SerializeField]
     float attackRate = 1.0f;
+    [SerializeField]
+    float attackRange = 20.0f;
     [SerializeField] 
     float turretRotationSpeed = 1.0f;
 
     [Header("Enemy Detection")]
-    [SerializeField] float detectionRadius = 1.0f;
+    [SerializeField] float detectionRadius = 30.0f;
     [SerializeField] LayerMask detectionLayer;
 
     [Header("Gizmos")]
     [SerializeField] bool showDetectionRadius = true;
+    [SerializeField] bool showAttackRange = true;
 
     // private variables
     [SerializeField]
@@ -64,6 +67,7 @@ public class UnitController : MonoBehaviour
     public float TurretRotationSpeed { get => turretRotationSpeed; }
     public float DamagePerHit { get => damagePerHit; }
     public float AttackRate { get => attackRate; }
+    public float AttackRange {  get => attackRange; }
 
     public void SetPath(Vector3[] waypoints)
     {
@@ -176,8 +180,17 @@ public class UnitController : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        if(showDetectionRadius)
+        if (showDetectionRadius)
+        {
+            Gizmos.color = Color.yellow;
             Gizmos.DrawWireSphere(transform.position, detectionRadius);
+        }
+
+        if (showAttackRange)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(transform.position, attackRange);
+        }
     }
 
 }

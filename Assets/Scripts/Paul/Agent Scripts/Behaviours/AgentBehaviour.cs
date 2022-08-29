@@ -17,6 +17,8 @@ public class AgentBehaviour : MonoBehaviour
     {
         agent = GetComponent<AgentMovement>();
         behaviours = GetComponent<BehaviourManager>();
+
+        agent.StopMoving();
     }
 
     public void SetWeight(float weight)
@@ -26,17 +28,17 @@ public class AgentBehaviour : MonoBehaviour
 
     public virtual void Update()
     {
-        try
-        {
+       // try
+       // {
             if(agent == null)
                 agent = GetComponent<AgentMovement>();
 
             agent.AddSteering(GetSteering(), weight);
-        }
-        catch(NullReferenceException e)
-        {
-            Debug.LogError(e.Message);
-        }
+        ///}
+        //catch(NullReferenceException e)
+        //{
+        //    Debug.LogError(e.Message);
+        //}
         
     }
 

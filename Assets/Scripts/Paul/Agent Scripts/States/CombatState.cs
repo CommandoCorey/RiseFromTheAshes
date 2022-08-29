@@ -3,6 +3,11 @@ using UnityEngine;
 
 public class CombatState : MonoBehaviour
 {
+    enum CombatBehaviour
+    {
+        Search, Aim, Fire, Follow
+    }
+
     UnitController unit;
 
     public LayerMask detectionLayer;
@@ -12,11 +17,14 @@ public class CombatState : MonoBehaviour
     private Vector3 direction;
     private Vector3 offsetRotation;
 
-    private bool attacking = false;
+    private AgentMovement agent;
+    private SeekBehaviour seek;
+    private CombatBehaviour state = CombatBehaviour.Search;
 
     void Awake()
     {
         unit = GetComponent<UnitController>();
+        agent = GetComponent<AgentMovement>();
         offsetRotation.x = unit.turret.localRotation.eulerAngles.x;
         offsetRotation.y = unit.turret.localRotation.eulerAngles.y;
         offsetRotation.z = unit.turret.localRotation.eulerAngles.z;
@@ -28,54 +36,42 @@ public class CombatState : MonoBehaviour
 
         direction = (target.position - unit.turret.position).normalized;
         lookRotation = Quaternion.LookRotation(direction);
+
+        // set the initial state
+        if (target == null)
+            state = CombatBehaviour.Search;
+        else if (Vector3.Distance(transform.position, target.transform.position) <= unit.AttackRange)
+        {
+            state = CombatBehaviour.Aim;
+        }
+        else
+        {
+            state = CombatBehaviour.Follow;
+        }
     }
 
     // Update is called once per frame
     void Update()
-    {
-        var unitsInRange = Physics.OverlapSphere(transform.position, unit.DetectionRadius, unit.DetectionLayer);
-
-        //rotate us over time according to speed until we are in the required rotation
-        unit.turret.rotation = Quaternion.Slerp(unit.turret.rotation, lookRotation, Time.deltaTime * unit.TurretRotationSpeed);
-
-        if (unitsInRange.Length > 0)
+    {      
+        switch(state)
         {
-            //Debug.Log("Enemy target detected");
-            target = unitsInRange[0].transform;
-            RaycastHit hit;
+            case CombatBehaviour.Search:
+                LookForTargets();
+                break;
 
-            Debug.DrawLine(unit.firingPoint.position, unit.firingPoint.position + (unit.turret.forward * 5), Color.red);
+            case CombatBehaviour.Follow:
+                FollowTarget();
+                break;
 
-            // check if turret is pointing at target
-            if (Physics.Raycast(unit.firingPoint.position, unit.turret.forward, out hit) && hit.transform == target)            
-            {
-                //Debug.DrawLine(unit.turret.position, target.position, Color.yellow);
-                if (!attacking)
-                {
-                    Invoke("DealDamage", unit.AttackRate);
-                    attacking = true;
-                }
-            }
-            else
-            {
-                // find the vector pointing from our position to the target
-                direction = (target.position - unit.turret.position).normalized;                
-            }
-        }
-        else
-        {
-            target = null;
-            //direction = Quaternion.identity.eulerAngles;
-            lookRotation = Quaternion.identity;
+            case CombatBehaviour.Aim:
+                Aim();
+                break;
 
-            if (unit.turret.rotation == Quaternion.identity)
-                unit.ChangeState(UnitState.Idle);
-        }
+            case CombatBehaviour.Fire:
+                break;
+        }       
 
-        //create the rotation we need to be in to look at the target
-        if(lookRotation != Quaternion.identity)
-            lookRotation = Quaternion.LookRotation(direction);
-
+        
     }
 
     private void DealDamage()
@@ -87,14 +83,126 @@ public class CombatState : MonoBehaviour
         }
         else
         {
-            attacking = false;
+            state = CombatBehaviour.Search;
         }
+    }
+
+    private void LookForTargets()
+    {
+        // check for other units in vision radius
+        var unitsInRange = Physics.OverlapSphere(transform.position, unit.DetectionRadius, unit.DetectionLayer);
+
+        if (unitsInRange.Length > 0)
+        {
+            foreach (var enemy in unitsInRange)
+            {
+                if (Vector3.Distance(transform.position, enemy.transform.position) <= unit.AttackRange)
+                {
+                    target = enemy.transform;
+                    state = CombatBehaviour.Aim;
+                    return;
+                }
+
+            }
+
+            // no units were in attack range so follow the first one
+            target = unitsInRange[0].transform;
+            state = CombatBehaviour.Follow;
+        }
+        else
+        {
+            // rotates turret back to statrting position
+            target = null;
+            lookRotation = Quaternion.identity;
+
+            if (lookRotation != Quaternion.identity)
+                lookRotation = Quaternion.LookRotation(transform.forward);
+
+            unit.turret.rotation = Quaternion.Slerp(unit.turret.rotation, lookRotation, Time.deltaTime * unit.TurretRotationSpeed);
+
+            if (unit.turret.rotation.y <= transform.rotation.y)
+            {
+                unit.turret.rotation = transform.rotation;
+                unit.ChangeState(UnitState.Idle);
+            }
+        }
+    }
+
+    private void Aim()
+    {
+        if (target == null)
+        {
+            state = CombatBehaviour.Search;
+            return;
+        }
+
+        //rotate us over time according to speed until we are in the required rotation  
+        unit.turret.rotation = Quaternion.Slerp(unit.turret.rotation, lookRotation, Time.deltaTime * unit.TurretRotationSpeed);
+
+        //Debug.Log("Enemy target detected");
+        RaycastHit hit;
+
+        Debug.DrawLine(unit.firingPoint.position, unit.firingPoint.position + (unit.turret.forward * 5), Color.red);
+
+        // check if turret is pointing at target
+        if (Physics.Raycast(unit.firingPoint.position, unit.turret.forward, out hit) && hit.transform == target)
+        {
+            //Debug.DrawLine(unit.turret.position, target.position, Color.yellow);
+
+            Invoke("DealDamage", unit.AttackRate);
+            state = CombatBehaviour.Fire;
+            
+        }
+        else
+        {
+            // find the vector pointing from our position to the target
+            direction = (target.position - unit.turret.position).normalized;
+        }
+
+        //create the rotation we need to be in to look at the target
+        if (lookRotation != Quaternion.identity)
+            lookRotation = Quaternion.LookRotation(direction);
+    }
+
+    private void FollowTarget()
+    {
+        if(target == null)
+        {
+            state = CombatBehaviour.Search;
+            return;
+        }
+
+        if (Vector3.Distance(transform.position, target.transform.position) <= unit.AttackRange)
+        {
+            state = CombatBehaviour.Aim;
+
+            if(seek != null)
+                Destroy(seek);
+        }
+        // if the target is not in range follow it
+        else if (seek == null)
+        {
+            seek = gameObject.AddComponent<SeekBehaviour>();
+
+            seek.target = target.position;
+            seek.weight = 1;
+
+            Steering steer = seek.GetSteering();
+            agent.AddSteering(steer, seek.weight);
+        }
+
     }
 
     private void OnDrawGizmos()
     {
-        if(target != null)
+        if (target != null)
             Gizmos.DrawLine(unit.firingPoint.position, target.position);
+    }
+
+    private void OnDestroy()
+    {
+        if (seek != null)
+            Destroy(seek);
     }
 
 }
