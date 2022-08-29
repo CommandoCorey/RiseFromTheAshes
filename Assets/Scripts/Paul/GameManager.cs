@@ -14,6 +14,8 @@ public class GameManager : MonoBehaviour
     {
         if (showMinimap)
             minimap.active = true;
+
+        marker.GetComponent<MeshRenderer>().enabled = false;
     }
 
     // Update is called once per frame

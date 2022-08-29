@@ -25,6 +25,8 @@ public class IdleState : MonoBehaviour
         // if there are any enemies in range change to the combat state
         if (enemiesInRange.Length > 0)
         {
+            //Debug.Log("Detected Enemy: " + enemiesInRange[0].gameObject.name);
+
             unit.AttackTarget = enemiesInRange[0].gameObject;
             unit.ChangeState(UnitState.Attack);
         }
