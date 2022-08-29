@@ -27,6 +27,8 @@ public class BehaviourManager : MonoBehaviour
     float alignmentReduction = 1f;
     [SerializeField]
     float separationReduction = 0.1f;
+    [SerializeField]
+    float obstacleAvoidanceReeduction = 1f;
 
     [Header("Initial Boid Distances")]
     [SerializeField]
@@ -66,6 +68,7 @@ public class BehaviourManager : MonoBehaviour
     public float SeparationReduction { get => separationReduction; }
     public float CohesionDistanceChange { get => cohesionDistanceChange; }
     public float SeparationDistanceChange { get => separationDistanceChange; }
+    public float ObstacleAvoidanceReduction { get => obstacleAvoidanceReeduction; }
 
     // obstacle avoidance
     public Vector3 FrontPoint { get => frontPoint.position; }
