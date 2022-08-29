@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,20 +9,19 @@ public class BoidCohesion : AgentBehaviour
     public List<GameObject> targets;
     private int count = 0;
 
-    public void start()
+    protected override void Awake()
     {
+        base.Awake();
         neighbourDistance = GetComponent<BehaviourManager>().CohesionDistance;
     }
-
-
     public override Steering GetSteering()
     {
         Steering steer = new Steering();
         count = 0;
 
-        foreach(GameObject other in targets)
+        foreach(GameObject other in agent.Neighbours)
         {
-            if(other != null)
+            if(other != null && other != this.gameObject)
             {
                 // look at all of the neighbours and find the aggregate center of them
                 float distance = (transform.position - other.transform.position).magnitude;
@@ -43,11 +43,6 @@ public class BoidCohesion : AgentBehaviour
         }
 
         return steer;
-    }
-
-    private void OnDrawGizmos()
-    {
-        //UnityEditor.Handles.Label(transform.position + new Vector3(0, 3, 1), "Cohesion: " + count.ToString());
-    }
+    }   
 
 }

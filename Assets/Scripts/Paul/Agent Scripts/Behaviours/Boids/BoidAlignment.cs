@@ -9,9 +9,9 @@ public class BoidAlignment : AgentBehaviour
 
     private Vector3 averageVelocity;
 
-    protected override void Start()
+    protected override void Awake()
     {
-        base.Start();
+        base.Awake();
         neighbourDistance = GetComponent<BehaviourManager>().CohesionDistance;
     }
 
@@ -22,6 +22,9 @@ public class BoidAlignment : AgentBehaviour
 
         int count = 0;
 
+        targets = agent.Neighbours;
+        targets.Add(this.gameObject);
+
         // add all velocities together
         foreach (GameObject other in targets)
         {
@@ -30,7 +33,7 @@ public class BoidAlignment : AgentBehaviour
 
             if ((distance > 0) && (distance < neighbourDistance))
             {
-                averageVelocity += other.GetComponent<AgentMovement>().Vecloity;
+                averageVelocity += other.GetComponent<AgentMovement>().Velocity;
                 count++;
             }
         }
@@ -44,6 +47,16 @@ public class BoidAlignment : AgentBehaviour
         }
 
         return steer;
+    }
+
+    private void OnDrawGizmos()
+    {
+        /*
+        foreach (GameObject neighbour in targets)
+        {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawLine(transform.position, neighbour.transform.position);
+        }*/
     }
 
 }
