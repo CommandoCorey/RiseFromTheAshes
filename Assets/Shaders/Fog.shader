@@ -57,6 +57,7 @@ Shader "Hidden/Fog"
 			uniform float4 _FogColour;
 
 			uniform float4 _FogTopCorner;
+			uniform float2 _FogMaskSize;
 
 			#define MAX_RAY_STEPS 256
 			#define MAX_RAY_DIST  256.0
@@ -141,7 +142,7 @@ Shader "Hidden/Fog"
 				}
 
 				float2 hitPointMaskSpace = worldPosToFogMaskPos(hitPoint);
-				hitPointMaskSpace /= 64; /* 64 is the size of the mask texture. TODO: Pass this in from C#. */
+				hitPointMaskSpace /= _FogMaskSize;
 
 				hitPointMaskSpace = clamp(hitPointMaskSpace, 0.0, 1.0);
 
