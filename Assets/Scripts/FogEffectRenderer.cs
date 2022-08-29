@@ -13,10 +13,12 @@ public class FogEffectRenderer : ScriptableRendererFeature
 	public float threshold = 0.1f;
 	public float stepSize = 0.1f;
 	public Vector3 scrollDirection = Vector3.right;
+	public float height = 5.0f;
+	public Color colour;
 
 	public override void Create()
 	{
-		pass = new FogEffectPass(sampleCount, fogDepth, threshold, stepSize, scrollDirection);
+		pass = new FogEffectPass(sampleCount, fogDepth, threshold, stepSize, scrollDirection, height, colour);
 	}
 
 	public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
@@ -40,8 +42,10 @@ class FogEffectPass : ScriptableRenderPass
 	float threshold;
 	float stepSize;
 	Vector3 scrollDirection;
+	float height;
+	Color colour;
 
-	public FogEffectPass(int _sampleCount, float _fogDepth, float _threshold, float _stepSize, Vector3 _scrollDirection)
+	public FogEffectPass(int _sampleCount, float _fogDepth, float _threshold, float _stepSize, Vector3 _scrollDirection, float _height, Color _colour)
 	{
 		renderPassEvent = RenderPassEvent.BeforeRenderingPostProcessing;
 
@@ -52,6 +56,8 @@ class FogEffectPass : ScriptableRenderPass
 		threshold = _threshold;
 		stepSize = _stepSize;
 		scrollDirection = _scrollDirection;
+		height = _height;
+		colour = _colour;
 	}
 
 	public override void OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData)
@@ -68,7 +74,6 @@ class FogEffectPass : ScriptableRenderPass
 
 	public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
 	{
-		return; /* <-- Remove this */
 		if (!(Application.isPlaying && Application.isEditor) || !FOWManager.Instance || !FOWManager.Instance.imperm || !FOWManager.Instance.perm) {
 				return;
 		}
@@ -80,6 +85,8 @@ class FogEffectPass : ScriptableRenderPass
 		postMaterial.SetInt("_Samples", sampleCount);
 		postMaterial.SetFloat("_StepSize", stepSize);
 		postMaterial.SetVector("_ScrollDirection", scrollDirection);
+		postMaterial.SetFloat("_Height", height);
+		postMaterial.SetColor("_FogColour", colour);
 
 		CommandBuffer cmd = CommandBufferPool.Get("fogEffectCmdBuffer");
 		cmd.Clear();
