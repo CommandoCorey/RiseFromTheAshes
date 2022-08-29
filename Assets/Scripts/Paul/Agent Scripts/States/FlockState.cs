@@ -136,6 +136,9 @@ public class FlockState : State
 
             if (alignment.weight > 0)
                 alignment.weight -= behaviours.AlignmentReduction;
+
+            if (avoid.weight > 0)
+                avoid.weight -= behaviours.ObstacleAvoidanceReduction;
         }
 
         /* Example:
