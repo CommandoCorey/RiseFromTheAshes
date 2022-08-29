@@ -242,8 +242,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectionHighlight: {fileID: 7490394118869249958}
+  turret: {fileID: 0}
+  firingPoint: {fileID: 0}
   maxHealth: 100
-  movmentSpeed: 1
+  movementSpeed: 1
   damagePerAttack: 1
   attackRate: 1
   detectionRadius: 1
@@ -263,16 +265,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxSpeed: 500
-  trueMaxSpeed: 0
   acceleration: 3
   deceleration: 3
-  orientation: 0
-  rotation: 0
-  velocity: {x: 0, y: 0, z: 0}
   maxRotation: 45
-  maxAnagulerAccel: 45
   minDistanceFromTarget: 1
   maxDistanceFromTarget: 3
+  minDistanceFromWaypoint: 3
   distanceFromNeighbour: 1
   minSpeedWhenStopping: 1.6
 --- !u!114 &9219424224137918855
@@ -287,13 +285,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e383d1645c138194bb4268780918ef0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  distanceBeforeReduction: 6
   seek: 1
   cohesion: 0.4
   alignment: 100
   separation: 10
+  obstacleAvoidance: 200
+  cohesionReduction: 0.001
+  alignmentReduction: 1
+  separationReduction: 0.1
+  obstacleAvoidanceReeduction: 1
   cohesionDistance: 15
   desiredSeparation: 6
+  cohesionDistanceChange: 0
+  separationDistanceChange: 0
+  frontPoint: {fileID: 0}
   aheadDistance: 10
+  boxSize: {x: 1, y: 1, z: 1}
+  boxOffset: {x: 0, y: 0, z: 1}
+  obstacleLayers:
+    serializedVersion: 2
+    m_Bits: 10
+  flockPath: 0
+  neighbourDistance: 0
+  obstacleDetection: 0
+  behaviourText: 0
 --- !u!114 &-7163838618464999725
 MonoBehaviour:
   m_ObjectHideFlags: 0
