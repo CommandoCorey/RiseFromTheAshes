@@ -56,7 +56,7 @@ Shader "Hidden/Fog"
 			uniform float _Height;
 			uniform float4 _FogColour;
 
-			uniform float4x4 _FogTransform;
+			uniform float4 _FogTopCorner;
 
 			#define MAX_RAY_STEPS 256
 			#define MAX_RAY_DIST  256.0
@@ -106,6 +106,11 @@ Shader "Hidden/Fog"
 				return dist;
 			}
 
+			float2 worldPosToFogMaskPos(float3 worldPos) {
+				float3 p = worldPos - _FogTopCorner;
+				return p.xz;
+			}
+
 			float4 frag(v2f i) : SV_Target
 			{
 				float3 rayOrigin = _WorldSpaceCameraPos;
@@ -116,15 +121,15 @@ Shader "Hidden/Fog"
 				float4 col = tex2D(_MainTex, i.uv);
 
 				float depth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, i.uv);
-				//return float4(dist, dist, dist, 1.0);
 
 				float density = 0.0;
-				if (dist > 0.0 && dist > depth && dist < MAX_RAY_DIST) {
+				float3 hitPoint = float3(0.0, 0.0, 0.0);
+				if (dist > 0.0 && dist < MAX_RAY_DIST) {
 					/* Ray trace from the hit point returned by the raymarch and
 					 * take samples from the 3-D noise to determine the density of the
 					 * fog at this pixel. */
 
-					float3 hitPoint = rayOrigin + rayDirection * dist;
+					hitPoint = rayOrigin + rayDirection * dist;
 
 					for (int i = 0; i < _Samples; i++) {
 						float3 p = hitPoint + rayDirection * (float(i) * _StepSize);
@@ -134,6 +139,14 @@ Shader "Hidden/Fog"
 						density += max(0.0, n - _Threshold);
 					}
 				}
+
+				float2 hitPointMaskSpace = worldPosToFogMaskPos(hitPoint);
+				hitPointMaskSpace /= 64; /* 64 is the size of the mask texture. TODO: Pass this in from C#. */
+
+				hitPointMaskSpace = clamp(hitPointMaskSpace, 0.0, 1.0);
+
+				float maskVal = tex2D(_MaskTex, hitPointMaskSpace).r;
+				density *= maskVal;
 
 				density = exp(-density);
 				float4 fogColour = (1.0 - density) * _FogColour;

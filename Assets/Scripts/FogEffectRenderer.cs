@@ -79,7 +79,7 @@ class FogEffectPass : ScriptableRenderPass
 		}
 
 		postMaterial.SetTexture("_MaskTex", FOWManager.Instance.perm.MaskToTexture());
-		postMaterial.SetMatrix("_FogTransform", FOWManager.Instance.perm.transform.localToWorldMatrix);
+		postMaterial.SetVector("_FogTopCorner", FOWManager.Instance.perm.transform.position);
 		postMaterial.SetFloat("_Threshold", threshold);
 		postMaterial.SetFloat("_FogDepth", fogDepth);
 		postMaterial.SetInt("_Samples", sampleCount);
