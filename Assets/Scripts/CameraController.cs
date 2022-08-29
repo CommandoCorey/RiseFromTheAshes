@@ -43,6 +43,14 @@ public class CameraController : MonoBehaviour {
 
 		zoomedIn .gameObject.SetActive(false);
 		zoomedOut.gameObject.SetActive(false);
+
+		zoomRange = new Vector2(zoomLevel, zoomLevels[zoomLevelIndex].interp);
+
+		transform.position = QuadBezierCurve(
+			zoomedInTransform.position,
+			zoomCurveHandle.position,
+			zoomedOutTransform.position,
+			zoomLevels[zoomLevelIndex].interp);
 	}
 
 	void Update() {
