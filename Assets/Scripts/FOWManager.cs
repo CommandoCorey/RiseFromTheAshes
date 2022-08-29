@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class FOWManager : MonoBehaviour
 {
-	static FOWManager Instance { get; set; }
+	static public FOWManager Instance { get; set; }
 
-	[SerializeField] FOW perm;
-	[SerializeField] FOW imperm;
+	[SerializeField] public FOW perm;
+	[SerializeField] public FOW imperm;
 
 	void Awake() {
 		if (Instance != null && Instance != this) {
