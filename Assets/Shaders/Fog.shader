@@ -7,7 +7,6 @@ Shader "Hidden/Fog"
 	}
 	SubShader
 	{
-		// No culling or depth
 		Cull Off
 		ZWrite Off
 		ZTest Always
@@ -46,6 +45,7 @@ Shader "Hidden/Fog"
 			}
 
 			sampler2D _MainTex;
+			sampler2D _CameraDepthTexture;
 			sampler2D _MaskTex;
 
 			uniform float _Threshold;
@@ -53,8 +53,11 @@ Shader "Hidden/Fog"
 			uniform float _StepSize;
 			uniform int _Samples;
 			uniform float3 _ScrollDirection;
+			uniform float _Height;
+			uniform float4 _FogColour;
 
-			uniform float4x4 _FogTransform;
+			uniform float4 _FogTopCorner;
+			uniform float2 _FogMaskSize;
 
 			#define MAX_RAY_STEPS 256
 			#define MAX_RAY_DIST  256.0
@@ -90,7 +93,7 @@ Shader "Hidden/Fog"
 
 			float map(float3 p) {
 				/* Infinite plane: dot(p, n) + h */
-				return dot(p, float3(0.0, 1.0, 0.0));
+				return dot(p, float3(0.0, 1.0, 0.0)) - _Height;
 			}
 
 			float rayMarch(float3 origin, float3 direction) {
@@ -104,6 +107,11 @@ Shader "Hidden/Fog"
 				return dist;
 			}
 
+			float2 worldPosToFogMaskPos(float3 worldPos) {
+				float3 p = worldPos - _FogTopCorner;
+				return p.xz;
+			}
+
 			float4 frag(v2f i) : SV_Target
 			{
 				float3 rayOrigin = _WorldSpaceCameraPos;
@@ -113,14 +121,17 @@ Shader "Hidden/Fog"
 
 				float4 col = tex2D(_MainTex, i.uv);
 
+				float depth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, i.uv);
+
+				float density = 0.0;
+				float3 hitPoint = float3(0.0, 0.0, 0.0);
 				if (dist > 0.0 && dist < MAX_RAY_DIST) {
 					/* Ray trace from the hit point returned by the raymarch and
 					 * take samples from the 3-D noise to determine the density of the
 					 * fog at this pixel. */
 
-					float3 hitPoint = rayOrigin + rayDirection * dist;
+					hitPoint = rayOrigin + rayDirection * dist;
 
-					float density = 0.0;
 					for (int i = 0; i < _Samples; i++) {
 						float3 p = hitPoint + rayDirection * (float(i) * _StepSize);
 
@@ -128,11 +139,20 @@ Shader "Hidden/Fog"
 
 						density += max(0.0, n - _Threshold);
 					}
-
-					col = float4(density, density, density, 1.0);
 				}
 
-				return col;
+				float2 hitPointMaskSpace = worldPosToFogMaskPos(hitPoint);
+				hitPointMaskSpace /= _FogMaskSize;
+
+				hitPointMaskSpace = clamp(hitPointMaskSpace, 0.0, 1.0);
+
+				float maskVal = tex2D(_MaskTex, hitPointMaskSpace).r;
+				density *= maskVal;
+
+				density = exp(-density);
+				float4 fogColour = (1.0 - density) * _FogColour;
+
+				return col * density + fogColour;
 			}
 			ENDCG
 		}

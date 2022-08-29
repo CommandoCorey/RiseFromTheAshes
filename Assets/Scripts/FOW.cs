@@ -406,4 +406,14 @@ public class FOW : MonoBehaviour {
 		pos = new Vector3(pos.x, pos.y, pos.z);
 		return new Vector2Int((int)pos.x, (int)pos.z);
 	}
+
+	public Vector2 GetMaskExtentf()
+	{
+		return new Vector2((float)maskExtent.x, (float)maskExtent.y);
+	}
+
+	public Vector2Int GetMaskExtent()
+	{
+		return maskExtent;
+	}
 }
