@@ -35,6 +35,13 @@ public class FOW : MonoBehaviour {
 
 	Texture2D genMaskTexture;
 
+	[SerializeField] ComputeShader noiseGenShader;
+	[SerializeField]
+	[Tooltip("Don't go crazy with this. Video memory is not infinite and 3D textures such as this use incredible amounts of it.")]
+	Vector3Int noiseResolution = new Vector3Int(256, 256, 256);
+	[HideInInspector] public RenderTexture noiseTexture;
+	[SerializeField] int noisePointCount = 32;
+
 	Mesh mesh;
 
 	byte[] FOWMask;
@@ -44,6 +51,19 @@ public class FOW : MonoBehaviour {
 
 	List<Vector3> vertices;
 	List<int> tris;
+
+	static float[] ShiftedPoints(float[] points, Vector3 amount)
+	{
+		float[] r = new float[points.Length];
+
+		for (int i = 0; i < points.Length; i += 3) {
+			r[i + 0] = points[i + 0] + amount.x;
+			r[i + 1] = points[i + 1] + amount.y;
+			r[i + 2] = points[i + 2] + amount.z;
+		}
+
+		return r;
+	}
 
 	void Start() {
 		FOWMask = new byte[maskExtent.x * maskExtent.y];
@@ -59,6 +79,43 @@ public class FOW : MonoBehaviour {
 		tris = new List<int>();
 
 		genMaskTexture = new Texture2D(maskExtent.x, maskExtent.y, TextureFormat.R8, false);
+
+		noiseTexture = new RenderTexture(noiseResolution.x, noiseResolution.y, 0, RenderTextureFormat.RFloat);
+		noiseTexture.enableRandomWrite = true;
+		noiseTexture.dimension = UnityEngine.Rendering.TextureDimension.Tex3D;
+		noiseTexture.volumeDepth = noiseResolution.z;
+		noiseTexture.wrapModeU = TextureWrapMode.Repeat;
+		noiseTexture.wrapModeV = TextureWrapMode.Repeat;
+		noiseTexture.wrapModeW = TextureWrapMode.Repeat;
+		noiseTexture.Create();
+
+		int computePointCount = noisePointCount * 7;
+
+		ComputeBuffer points = new ComputeBuffer(computePointCount, sizeof(float) * 3);
+		float[] CPUPoints = new float[noisePointCount * 3];
+		for (int i = 0; i < noisePointCount * 3; i += 3)
+		{
+			CPUPoints[i + 0] = Random.Range(0, noiseResolution.x - 1);
+			CPUPoints[i + 1] = Random.Range(0, noiseResolution.y - 1);
+			CPUPoints[i + 2] = Random.Range(0, noiseResolution.z - 1);
+		}
+
+		/* Tile the noise by copying the points to each of the faces of the boundry. */
+		points.SetData(CPUPoints, 0, 0, noisePointCount * 3);
+		points.SetData(ShiftedPoints(CPUPoints, new Vector3( noiseResolution.x, 0.0f, 0.0f)), 0, noisePointCount * 3 * 1, noisePointCount * 3);
+		points.SetData(ShiftedPoints(CPUPoints, new Vector3(-noiseResolution.x, 0.0f, 0.0f)), 0, noisePointCount * 3 * 2, noisePointCount * 3);
+		points.SetData(ShiftedPoints(CPUPoints, new Vector3(0.0f,  noiseResolution.y, 0.0f)), 0, noisePointCount * 3 * 3, noisePointCount * 3);
+		points.SetData(ShiftedPoints(CPUPoints, new Vector3(0.0f, -noiseResolution.y, 0.0f)), 0, noisePointCount * 3 * 4, noisePointCount * 3);
+		points.SetData(ShiftedPoints(CPUPoints, new Vector3(0.0f, 0.0f,  noiseResolution.z)), 0, noisePointCount * 3 * 5, noisePointCount * 3);
+		points.SetData(ShiftedPoints(CPUPoints, new Vector3(0.0f, 0.0f, -noiseResolution.z)), 0, noisePointCount * 3 * 6, noisePointCount * 3);
+
+		noiseGenShader.SetTexture(0, "Result", noiseTexture);
+		noiseGenShader.SetBuffer(0, "Points", points);
+		noiseGenShader.SetInt("PointCount", computePointCount);
+		noiseGenShader.SetFloat("ValueDivisor", Vector3Int.Distance(Vector3Int.zero, noiseResolution));
+		noiseGenShader.Dispatch(0, noiseResolution.x / 8, noiseResolution.y / 8, noiseResolution.z / 8);
+
+		points.Release();
 	}
 
 	private void Update()
