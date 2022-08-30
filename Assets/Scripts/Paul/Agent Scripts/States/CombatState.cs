@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class CombatState : MonoBehaviour
 {
-    enum CombatBehaviour
+    enum CombatMode
     {
-        Search, MoveTowards, Aim, Fire, Follow
+        Search, MoveTowards, Aim, Fire, Follow, Halt
     }
 
     private UnitController unit;
@@ -17,7 +17,7 @@ public class CombatState : MonoBehaviour
 
     private AgentMovement agent;
     private SeekBehaviour seek;
-    private CombatBehaviour state = CombatBehaviour.Search;
+    private CombatMode state = CombatMode.Search;
 
     private Vector3[] pathToTarget;
     private int waypointNum = 1;
@@ -42,15 +42,14 @@ public class CombatState : MonoBehaviour
 
         // set the initial state
         if (target == null)
-            state = CombatBehaviour.Search;
-        else if (Vector3.Distance(transform.position, target.transform.position) <= unit.AttackRange)
         {
-            state = CombatBehaviour.Aim;
+            state = CombatMode.Search;
         }
         else
         {
-            state = CombatBehaviour.Follow;
+            HandleEnemyInRange();
         }
+
     }
 
     // Update is called once per frame
@@ -58,19 +57,19 @@ public class CombatState : MonoBehaviour
     {      
         switch(state)
         {
-            case CombatBehaviour.Search: LookForTargets();
+            case CombatMode.Search: LookForTargets();
                 break;
 
-            case CombatBehaviour.MoveTowards: MoveTowardsTarget();
+            case CombatMode.MoveTowards: MoveTowardsTarget();
                 break;
 
-            case CombatBehaviour.Follow: FollowTarget();
+            case CombatMode.Follow: FollowTarget();
                 break;
 
-            case CombatBehaviour.Aim: Aim();
+            case CombatMode.Aim: Aim();
                 break;
 
-            case CombatBehaviour.Fire:
+            case CombatMode.Fire:
                 break;
         }
         
@@ -85,7 +84,7 @@ public class CombatState : MonoBehaviour
         }
         else
         {
-            state = CombatBehaviour.Search;
+            state = CombatMode.Search;
         }
     }
 
@@ -96,30 +95,9 @@ public class CombatState : MonoBehaviour
 
         if (unitsInRange.Length > 0)
         {
-            foreach (var enemy in unitsInRange)
-            {
-                if (Vector3.Distance(transform.position, enemy.transform.position) <= unit.AttackRange)
-                {
-                    target = enemy.transform;
-                    state = CombatBehaviour.Aim;
-                    return;
-                }
+            target = GetClosestEnemy(unitsInRange);
 
-            }
-
-            // no units were in attack range so follow the first one
-            target = unitsInRange[0].transform;
-
-            if (ObstacleInWay())
-            {
-                //Vector3 offset = (target.position - transform.position).normalized * unit.AttackRange;
-                pathToTarget = agent.CreatePath(target.position);
-                state = CombatBehaviour.MoveTowards;
-            }
-            else
-            {
-                state = CombatBehaviour.Follow;
-            }    
+            HandleEnemyInRange();
         }
         else
         {
@@ -132,7 +110,8 @@ public class CombatState : MonoBehaviour
 
             unit.turret.rotation = Quaternion.Slerp(unit.turret.rotation, lookRotation, Time.deltaTime * unit.TurretRotationSpeed);
 
-            if (unit.turret.rotation.y <= transform.rotation.y)
+            if ((unit.turret.rotation.y <= (transform.rotation.y + 1)) ||
+                (unit.turret.rotation.y >= (transform.rotation.y - 1)))
             {
                 unit.turret.rotation = transform.rotation;
                 unit.ChangeState(UnitState.Idle);
@@ -140,12 +119,67 @@ public class CombatState : MonoBehaviour
         }
     }
 
+    // Switches state base on enemy position from current unit
+    private void HandleEnemyInRange()
+    {
+        Vector3 directionToTarget = (target.position - transform.position).normalized;
+
+        if (ObstacleInWay(directionToTarget))
+        {
+            pathToTarget = agent.CreatePath(target.position);
+            state = CombatMode.MoveTowards;
+        }        
+        else if (Vector3.Distance(transform.position, target.transform.position) <= unit.AttackRange)
+        {
+
+            state = CombatMode.Aim;
+            pathToTarget = null;
+
+            if (seek != null)
+                Destroy(seek);
+        }
+        else
+        {
+            state = CombatMode.Follow;
+        }
+    }
+   
+    // Searches through all detected enemies in the overlap sphere and returns the transform
+    // of the one that is the closest
+    private Transform GetClosestEnemy(Collider[] enemies, Transform current = null)
+    {
+        Transform closest;
+        float shortestDistance;
+
+        if (current != null)
+        {
+            closest = current;
+            shortestDistance = Vector3.Distance(transform.position, current.position);
+        }
+        else
+        {
+            closest = enemies[0].transform;
+            shortestDistance = Vector3.Distance(transform.position, enemies[0].transform.position);
+        }
+
+        foreach(Collider enemy in enemies)
+        {
+            float distance = Vector3.Distance(transform.position, enemy.transform.position);
+            if (distance < shortestDistance)
+            {
+                shortestDistance = distance;
+                closest = enemy.transform;                
+            }
+        }
+
+        return closest;
+    }
 
     private void MoveTowardsTarget()
     {       
         if(target == null)
         {
-            state = CombatBehaviour.Search;
+            state = CombatMode.Search;
             return;
         }
 
@@ -155,20 +189,39 @@ public class CombatState : MonoBehaviour
             seek.weight = 1;
 
             Steering steer = seek.GetSteering();
-            agent.AddSteering(steer, seek.weight);            
+            agent.AddSteering(steer, seek.weight);
+
+            waypointNum = 1;
+            seek.target = pathToTarget[waypointNum];
         }
 
+        // check if there is a closer target
+        var unitsInRange = Physics.OverlapSphere(transform.position, unit.DetectionRadius, unit.DetectionLayer);
+        var closest = GetClosestEnemy(unitsInRange, target);
+
+        if (closest != target) // closer enemy was found
+        {
+            target = closest;
+
+            // update path
+            agent.CreatePath(target.position);
+
+            HandleEnemyInRange();
+        }
+
+        Vector3 directionToTarget = (target.position - transform.position).normalized;
         // check that the line of sight is vacant and we are in attack range
-        if (!ObstacleInWay() &&
+        if (!ObstacleInWay(directionToTarget) &&
             Vector3.Distance(transform.position, target.transform.position) <= unit.AttackRange)
         {
-            state = CombatBehaviour.Aim;
+            state = CombatMode.Aim;
+            pathToTarget = null;
 
             if (seek != null)
                 Destroy(seek);
-        }
-        
-        if (Vector3.Distance(transform.position, pathToTarget[waypointNum]) <= distanceFromWaypoint)
+        }        
+        // check if the next waypoint has been reached
+        else if (Vector3.Distance(transform.position, pathToTarget[waypointNum]) <= distanceFromWaypoint)
         {
             agent.StopMoving();
             waypointNum++;
@@ -179,26 +232,28 @@ public class CombatState : MonoBehaviour
                 pathToTarget = agent.CreatePath(target.position);
                 waypointNum = 1;
             }
-        }
 
-        seek.target = pathToTarget[waypointNum];
+            seek.target = pathToTarget[waypointNum];
+        }
+        
     }
 
     private void Aim()
     {
         if (target == null)
         {
-            state = CombatBehaviour.Follow;
+            state = CombatMode.Follow;
             return;
         }
-
-        if (ObstacleInWay())
+        
+        if (ObstacleInWay(unit.turret.forward))
         {
             //Debug.Log("Obstacle is in way");
             pathToTarget = agent.CreatePath(target.position);
-            state = CombatBehaviour.MoveTowards;
+            seek.target = pathToTarget[waypointNum];
+            state = CombatMode.MoveTowards;
             return;
-        }        
+        }
 
         //rotate us over time according to speed until we are in the required rotation  
         unit.turret.rotation = Quaternion.Slerp(unit.turret.rotation, lookRotation, Time.deltaTime * unit.TurretRotationSpeed);
@@ -206,15 +261,13 @@ public class CombatState : MonoBehaviour
         //Debug.Log("Enemy target detected");
         RaycastHit hit;
 
-        Debug.DrawLine(unit.firingPoint.position, unit.firingPoint.position + (unit.turret.forward * 5), Color.red);
-
         // check if turret is pointing at target
         if (Physics.Raycast(unit.firingPoint.position, unit.turret.forward, out hit) && hit.transform == target)
         {
             //Debug.DrawLine(unit.turret.position, target.position, Color.yellow);
 
             Invoke("DealDamage", unit.AttackRate);
-            state = CombatBehaviour.Fire;
+            state = CombatMode.Fire;
             
         }
         else
@@ -232,16 +285,17 @@ public class CombatState : MonoBehaviour
     {
         if(target == null)
         {
-            state = CombatBehaviour.Search;
+            state = CombatMode.Search;
             return;
         }
 
         // check we are in attack range
         if (Vector3.Distance(transform.position, target.transform.position) <= unit.AttackRange)
         {
-            state = CombatBehaviour.Aim;
+            state = CombatMode.Aim;
+            pathToTarget = null;
 
-            if(seek != null)
+            if (seek != null)
                 Destroy(seek);
         }
         // if the target is not in range follow it
@@ -258,15 +312,19 @@ public class CombatState : MonoBehaviour
 
     }
 
-    private bool ObstacleInWay()
-    {
-        Vector3 directionToTarget = (target.position - transform.position).normalized;
+    private bool ObstacleInWay(Vector3 direction)
+    {       
+        //Debug.DrawLine(transform.position, transform.position + directionToTarget * unit.DetectionRadius, Color.red);
 
-        if (Physics.Raycast(transform.position, directionToTarget, out RaycastHit hit, unit.DetectionRadius, unit.EnvironmentLayer))
-            return true;
-        else
-            return false;
-
+        if (Physics.Raycast(unit.firingPoint.position, direction, out RaycastHit hit, unit.DetectionRadius))//, unit.EnvironmentLayer))
+        {
+            if(hit.transform.gameObject.layer == 10)
+            {
+                return true;
+            }
+        }
+        
+        return false;
     }
 
     private void OnDestroy()
@@ -277,17 +335,40 @@ public class CombatState : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        /*
-        if (target != null)
+        Debug.DrawLine(unit.firingPoint.position, unit.firingPoint.position + (unit.turret.forward * 5), Color.red);
+
+        string combatMode = "";
+        switch(state)
+        {
+            case CombatMode.Search: combatMode = "Searching";        
+                break;
+
+            case CombatMode.MoveTowards: combatMode = "Following Path";          
+                break;;
+
+            case CombatMode.Follow: combatMode = "Following Enemy";
+                break;
+
+            case CombatMode.Aim: combatMode = "Aiming";            
+                break;
+
+            case CombatMode.Fire: combatMode = "Firing";
+                break;
+        }
+
+        UnityEditor.Handles.Label(transform.position + Vector3.up * 5, combatMode);
+
+        if (target != null && state != CombatMode.Fire)
         {
             Gizmos.color = Color.yellow;
             Gizmos.DrawLine(unit.firingPoint.position, target.position);
-        }*/
+        }
 
         if(pathToTarget != null && pathToTarget.Length > 0)
         {
             for(int i = 0; i< pathToTarget.Length-1; i++)
             {
+                Gizmos.color = Color.white;
                 Gizmos.DrawLine(pathToTarget[i], pathToTarget[i+1]);
                 Gizmos.color = Color.magenta;
                 Gizmos.DrawWireSphere(pathToTarget[i + 1], distanceFromWaypoint);
