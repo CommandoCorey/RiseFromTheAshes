@@ -80,7 +80,7 @@ public class FOW : MonoBehaviour {
 
 		genMaskTexture = new Texture2D(maskExtent.x, maskExtent.y, TextureFormat.R8, false);
 
-		noiseTexture = new RenderTexture(noiseResolution.x, noiseResolution.y, 0, RenderTextureFormat.RFloat);
+		noiseTexture = new RenderTexture(noiseResolution.x, noiseResolution.y, 0, RenderTextureFormat.RG16);
 		noiseTexture.enableRandomWrite = true;
 		noiseTexture.dimension = UnityEngine.Rendering.TextureDimension.Tex3D;
 		noiseTexture.volumeDepth = noiseResolution.z;
