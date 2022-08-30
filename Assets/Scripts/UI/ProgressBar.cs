@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEditor;
 
+[ExecuteAlways]
 public class ProgressBar : MonoBehaviour
 {
 	public float progress = 0.5f;
