@@ -172,10 +172,12 @@ public class AgentMovement : MonoBehaviour
     /// <summary>
     /// Sets path along navigation mesh from current position to the destination
     /// </summary>
-    public void CreatePath(Vector3 targetPos)
+    public Vector3[] CreatePath(Vector3 targetPos)
     {
         path.ClearCorners();
         NavMesh.CalculatePath(transform.position, targetPos, NavMesh.AllAreas, path);
+
+        return path.corners;
     }
     #endregion
 }

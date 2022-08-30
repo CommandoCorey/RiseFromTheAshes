@@ -286,7 +286,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8017703112987029787}
   m_Layer: 6
-  m_Name: Turret
+  m_Name: Turret_Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -299,7 +299,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3062916953682552344}
-  m_LocalRotation: {x: -0.03447943, y: 0.008047966, z: -0.0047722524, w: 0.9993617}
+  m_LocalRotation: {x: -0.034458563, y: -0.00000003461146, z: -0.0047693644, w: 0.9993948}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -592,21 +592,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectionHighlight: {fileID: 8874097332367213349}
-  turret: {fileID: 1258908309101000248}
+  turret: {fileID: 8017703112987029787}
   firingPoint: {fileID: 6480449029226143287}
-  healthBar: {fileID: 0}
+  healthBar: {fileID: 1219084796297139098}
   maxHealth: 100
   movementSpeed: 1
   damagePerHit: 10
-  attackRate: 1
+  attackRate: 0.5
   attackRange: 20
-  turretRotationSpeed: 1
-  detectionRadius: 20
+  turretRotationSpeed: 2
+  detectionRadius: 40
   detectionLayer:
     serializedVersion: 2
     m_Bits: 640
+  environmentLayer:
+    serializedVersion: 2
+    m_Bits: 1024
   showDetectionRadius: 0
-  showAttackRange: 1
+  showAttackRange: 0
   health: 0
 --- !u!114 &-5914012348275633291
 MonoBehaviour:
@@ -846,7 +849,6 @@ GameObject:
   - component: {fileID: 7808547167295131349}
   - component: {fileID: 3810990507791794814}
   - component: {fileID: 7192101178142844832}
-  - component: {fileID: 2976724100496033449}
   m_Layer: 6
   m_Name: Plane
   m_TagString: Untagged
@@ -917,20 +919,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &2976724100496033449
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8874097332367213349}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &9183977247814294274
 GameObject:
   m_ObjectHideFlags: 0
@@ -969,6 +957,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3235123660149911136}
     m_Modifications:
+    - target: {fileID: 908716299280777974, guid: 0f580c44bf3349d4ab6dacc6f4d13645, type: 3}
+      propertyPath: m_Name
+      value: bar
+      objectReference: {fileID: 0}
     - target: {fileID: 992855466604158824, guid: 0f580c44bf3349d4ab6dacc6f4d13645, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -999,11 +991,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 992855466604158824, guid: 0f580c44bf3349d4ab6dacc6f4d13645, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 923
+      value: 2.95
       objectReference: {fileID: 0}
     - target: {fileID: 992855466604158824, guid: 0f580c44bf3349d4ab6dacc6f4d13645, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 519
+      value: 0.31
       objectReference: {fileID: 0}
     - target: {fileID: 992855466604158824, guid: 0f580c44bf3349d4ab6dacc6f4d13645, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1015,7 +1007,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 992855466604158824, guid: 0f580c44bf3349d4ab6dacc6f4d13645, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 992855466604158824, guid: 0f580c44bf3349d4ab6dacc6f4d13645, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1039,7 +1031,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 992855466604158824, guid: 0f580c44bf3349d4ab6dacc6f4d13645, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: 1.97
       objectReference: {fileID: 0}
     - target: {fileID: 992855466604158824, guid: 0f580c44bf3349d4ab6dacc6f4d13645, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -1057,10 +1049,23 @@ PrefabInstance:
       propertyPath: m_Name
       value: Health Bar
       objectReference: {fileID: 0}
+    - target: {fileID: 8336667581928093053, guid: 0f580c44bf3349d4ab6dacc6f4d13645, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8336667581928093053, guid: 0f580c44bf3349d4ab6dacc6f4d13645, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -1.5000002
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0f580c44bf3349d4ab6dacc6f4d13645, type: 3}
 --- !u!224 &7970686480349051279 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 992855466604158824, guid: 0f580c44bf3349d4ab6dacc6f4d13645, type: 3}
+  m_PrefabInstance: {fileID: 7159252084012377831}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &1219084796297139098 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 8336667581928093053, guid: 0f580c44bf3349d4ab6dacc6f4d13645, type: 3}
   m_PrefabInstance: {fileID: 7159252084012377831}
   m_PrefabAsset: {fileID: 0}

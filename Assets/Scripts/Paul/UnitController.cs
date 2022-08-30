@@ -36,6 +36,7 @@ public class UnitController : MonoBehaviour
     [Header("Enemy Detection")]
     [SerializeField] float detectionRadius = 30.0f;
     [SerializeField] LayerMask detectionLayer;
+    [SerializeField] LayerMask environmentLayer;
 
     [Header("Gizmos")]
     [SerializeField] bool showDetectionRadius = true;
@@ -63,6 +64,7 @@ public class UnitController : MonoBehaviour
     public GameObject AttackTarget { get; set; }
     public float DetectionRadius { get => detectionRadius; }
     public LayerMask DetectionLayer { get => detectionLayer; }
+    public LayerMask EnvironmentLayer { get => environmentLayer; }
     public float Speed { get => movementSpeed; }  
     public float TurretRotationSpeed { get => turretRotationSpeed; }
     public float DamagePerHit { get => damagePerHit; }
