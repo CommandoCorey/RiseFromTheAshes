@@ -610,14 +610,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectionHighlight: {fileID: 7837421470914312877}
+  turret: {fileID: 6757246782312934960}
+  firingPoint: {fileID: 0}
+  healthBar: {fileID: 0}
   maxHealth: 100
   movementSpeed: 1
-  damagePerAttack: 1
+  damagePerHit: 1
   attackRate: 1
+  attackRange: 20
+  turretRotationSpeed: 1
   detectionRadius: 1
   detectionLayer:
     serializedVersion: 2
     m_Bits: 0
+  showDetectionRadius: 1
+  showAttackRange: 1
+  health: 0
 --- !u!114 &3331310790724641201
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -630,6 +638,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c448d9b6244c7b49a08a9cfc39a4bcc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unitBody: {fileID: 2872210464654604433}
   maxSpeed: 10
   acceleration: 3
   deceleration: 3
