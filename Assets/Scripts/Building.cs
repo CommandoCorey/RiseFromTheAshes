@@ -28,6 +28,12 @@ public class Building : MonoBehaviour
 		}
 	}
 
+	public float HPPerc {
+		get {
+			return HP / maxHP;
+		}
+	}
+
 	private void OnEnable()
 	{
 		childMeshRenderers = GetComponentsInChildren<MeshRenderer>();
