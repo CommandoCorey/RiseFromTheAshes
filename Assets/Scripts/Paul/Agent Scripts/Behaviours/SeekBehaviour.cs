@@ -27,4 +27,9 @@ public class SeekBehaviour : AgentBehaviour
         return steer;
     }
 
+    private void OnDestroy()
+    {
+        agent.StopMoving();
+    }
+
 }
