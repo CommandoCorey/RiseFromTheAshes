@@ -9,7 +9,6 @@ public class ProgressBar : MonoBehaviour
 	[SerializeField] Image background;
 	[SerializeField] Image foreground;
 
-	[Space] [Space]
 	[Header("Text")]
 	[SerializeField] bool showText;
 	[SerializeField] TMPro.TMP_Text text;
