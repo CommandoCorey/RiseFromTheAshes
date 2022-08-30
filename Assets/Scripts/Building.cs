@@ -4,7 +4,7 @@ using System.Collections.Generic;
 public class Building : MonoBehaviour
 {
 	[SerializeField] float timeToBuild = 1.0f;
-	[SerializeField] float maxHP = 100.0f;
+	public float maxHP = 100.0f;
 
 	bool isBuilding;
 

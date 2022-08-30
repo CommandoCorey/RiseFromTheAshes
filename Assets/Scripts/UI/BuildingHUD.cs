@@ -14,6 +14,8 @@ public class BuildingHUD : MonoBehaviour
 		{
 			Debug.LogError("BuildingHUD must have a parent that has a Building script attached to it.");
 		}
+
+		healthBar.maxValue = building.maxHP;
 	}
 
 	private void Update()
