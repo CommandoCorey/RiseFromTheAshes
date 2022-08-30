@@ -7,6 +7,8 @@ using UnityEngine.AI;
 public class AgentMovement : MonoBehaviour
 {
     #region variable declaration
+    public Transform unitBody;
+
     [Header("Physics & Steering Behaviours")]
     
     [SerializeField][Range(1, 60)] 
@@ -106,7 +108,7 @@ public class AgentMovement : MonoBehaviour
         //transform.rotation = new Quaternion();
         //transform.Rotate(Vector3.up, orientation);
 
-        transform.LookAt(transform.position + displacement.normalized, Vector3.up);        
+        unitBody.LookAt(unitBody.position + displacement.normalized, Vector3.up);    
     }
 
     // update movement for the next frame
@@ -170,10 +172,12 @@ public class AgentMovement : MonoBehaviour
     /// <summary>
     /// Sets path along navigation mesh from current position to the destination
     /// </summary>
-    public void CreatePath(Vector3 targetPos)
+    public Vector3[] CreatePath(Vector3 targetPos)
     {
         path.ClearCorners();
         NavMesh.CalculatePath(transform.position, targetPos, NavMesh.AllAreas, path);
+
+        return path.corners;
     }
     #endregion
 }
