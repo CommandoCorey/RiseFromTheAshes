@@ -47,6 +47,9 @@ Shader "Hidden/Fog"
 			sampler2D _MainTex;
 			sampler2D _CameraDepthTexture;
 			sampler2D _MaskTex;
+			Texture3D<float> _NoiseTexture;
+
+			SamplerState sampler_NoiseTexture;
 
 			uniform float _Threshold;
 			uniform float _FogDepth;
@@ -55,6 +58,7 @@ Shader "Hidden/Fog"
 			uniform float3 _ScrollDirection;
 			uniform float _Height;
 			uniform float4 _FogColour;
+			uniform float _CloudScale;
 
 			uniform float4 _FogTopCorner;
 			uniform float2 _FogMaskSize;
@@ -62,34 +66,6 @@ Shader "Hidden/Fog"
 			#define MAX_RAY_STEPS 256
 			#define MAX_RAY_DIST  256.0
 			#define MIN_RAY_DIST  0.001
-
-			/* TODO: Better noise function.
-			 * This one is from: https://gist.github.com/patriciogonzalezvivo/670c22f3966e662d2f83 */
-			float mod289(float x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
-			float4 mod289(float4 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
-			float4 perm(float4 x) { return mod289(((x * 34.0) + 1.0) * x); }
-
-			float noise(float3 p) {
-				float3 a = floor(p);
-				float3 d = p - a;
-				d = d * d * (3.0 - 2.0 * d);
-
-				float4 b = a.xxyy + float4(0.0, 1.0, 0.0, 1.0);
-				float4 k1 = perm(b.xyxy);
-				float4 k2 = perm(k1.xyxy + b.zzww);
-				
-				float4 c = k2 + a.zzzz;
-				float4 k3 = perm(c);
-				float4 k4 = perm(c + 1.0);
-				
-				float4 o1 = 1.0 - floor(k3 * (1.0 / 41.0));
-				float4 o2 = 1.0 - floor(k4 * (1.0 / 41.0));
-			
-				float4 o3 = o2 * d.z + o1 * (1.0 - d.z);
-				float2 o4 = o3.yw * d.x + o3.xz * (1.0 - d.x);
-
-				return o4.y * d.y + o4.x * (1.0 - d.y);
-			}
 
 			float map(float3 p) {
 				/* Infinite plane: dot(p, n) + h */
@@ -123,6 +99,8 @@ Shader "Hidden/Fog"
 
 				float depth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, i.uv);
 
+				int maxSamples = min(_Samples, 32);
+
 				float density = 0.0;
 				float3 hitPoint = float3(0.0, 0.0, 0.0);
 				if (dist > 0.0 && dist < MAX_RAY_DIST) {
@@ -132,12 +110,19 @@ Shader "Hidden/Fog"
 
 					hitPoint = rayOrigin + rayDirection * dist;
 
-					for (int i = 0; i < _Samples; i++) {
+					for (int i = 0; i < maxSamples; i++) {
 						float3 p = hitPoint + rayDirection * (float(i) * _StepSize);
 
-						float n = noise(p + _ScrollDirection * _Time.y);
+						float2 n = _NoiseTexture.SampleLevel(sampler_NoiseTexture, (p * _CloudScale) + _ScrollDirection * _Time.y, 0);
 
-						density += max(0.0, n - _Threshold);
+						float mainNoise = n.r;
+						float detailNoise = n.g;
+
+						float noise = mainNoise + detailNoise;
+
+						/* TODO (George): Lighting. */
+
+						density += max(0.0, noise - _Threshold);
 					}
 				}
 

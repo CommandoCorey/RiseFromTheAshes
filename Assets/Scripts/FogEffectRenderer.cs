@@ -14,10 +14,11 @@ public class FogEffectRenderer : ScriptableRendererFeature
 	public float stepSize = 0.1f;
 	public Vector3 scrollDirection = Vector3.right;
 	public Color colour;
+	public float scale = 0.5f;
 
 	public override void Create()
 	{
-		pass = new FogEffectPass(sampleCount, fogDepth, threshold, stepSize, scrollDirection, colour);
+		pass = new FogEffectPass(sampleCount, fogDepth, threshold, stepSize, scrollDirection, colour, scale);
 	}
 
 	public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
@@ -42,8 +43,9 @@ class FogEffectPass : ScriptableRenderPass
 	float stepSize;
 	Vector3 scrollDirection;
 	Color colour;
+	float scale;
 
-	public FogEffectPass(int _sampleCount, float _fogDepth, float _threshold, float _stepSize, Vector3 _scrollDirection, Color _colour)
+	public FogEffectPass(int _sampleCount, float _fogDepth, float _threshold, float _stepSize, Vector3 _scrollDirection, Color _colour, float _scale)
 	{
 		renderPassEvent = RenderPassEvent.BeforeRenderingPostProcessing;
 
@@ -55,6 +57,7 @@ class FogEffectPass : ScriptableRenderPass
 		stepSize = _stepSize;
 		scrollDirection = _scrollDirection;
 		colour = _colour;
+		scale = _scale;
 	}
 
 	public override void OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData)
@@ -85,6 +88,8 @@ class FogEffectPass : ScriptableRenderPass
 		postMaterial.SetFloat("_Height", FOWManager.Instance.perm.transform.position.y);
 		postMaterial.SetColor("_FogColour", colour);
 		postMaterial.SetVector("_FogMaskSize", FOWManager.Instance.perm.GetMaskExtentf());
+		postMaterial.SetTexture("_NoiseTexture", FOWManager.Instance.perm.noiseTexture);
+		postMaterial.SetFloat("_CloudScale", scale);
 
 		CommandBuffer cmd = CommandBufferPool.Get("fogEffectCmdBuffer");
 		cmd.Clear();
