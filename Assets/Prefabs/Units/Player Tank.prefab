@@ -77,7 +77,7 @@ GameObject:
   m_Layer: 6
   m_Name: Firing Point
   m_TagString: Untagged
-  m_Icon: {fileID: 7250588514170254948, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: -5442936267250999957, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -89,7 +89,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 709150369885673816}
   m_LocalRotation: {x: 0, y: -0.66261995, z: 0, w: 0.7489558}
-  m_LocalPosition: {x: 1.745, y: 0.08, z: -0.042}
+  m_LocalPosition: {x: 1.745, y: 0.08, z: 0.04}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1665903544140802224}
@@ -210,11 +210,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 954216754099151616}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 1.71}
+  m_LocalPosition: {x: 0, y: 0, z: 1.75}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 3235123660149911136}
-  m_RootOrder: 0
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &982458895917272272
 GameObject:
@@ -369,7 +369,7 @@ Transform:
   - {fileID: 3355491771809755943}
   - {fileID: 6056781534108029637}
   m_Father: {fileID: 3235123660149911136}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4508966194920615997
 GameObject:
@@ -535,10 +535,11 @@ Transform:
   m_LocalPosition: {x: 0, y: 0.45, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 6302425531426630124}
   - {fileID: 3674728053516493823}
   - {fileID: 7808547167295131349}
   - {fileID: 7970686480349051279}
+  - {fileID: 5239282258534996132}
+  - {fileID: 6302425531426630124}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -593,6 +594,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selectionHighlight: {fileID: 8874097332367213349}
   turret: {fileID: 8017703112987029787}
+  castingPoint: {fileID: 5239282258534996132}
   firingPoint: {fileID: 6480449029226143287}
   healthBar: {fileID: 1219084796297139098}
   maxHealth: 100
@@ -743,6 +745,36 @@ Transform:
   m_Father: {fileID: 6980307847497138462}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &6272953123680627418
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5239282258534996132}
+  m_Layer: 0
+  m_Name: Casting Point
+  m_TagString: Untagged
+  m_Icon: {fileID: 7866945982896999795, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5239282258534996132
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6272953123680627418}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 3235123660149911136}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6339490711282419156
 GameObject:
   m_ObjectHideFlags: 0
@@ -868,7 +900,7 @@ Transform:
   m_LocalScale: {x: 0.27043504, y: 1, z: 0.41528657}
   m_Children: []
   m_Father: {fileID: 3235123660149911136}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &3810990507791794814
 MeshFilter:
@@ -957,6 +989,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3235123660149911136}
     m_Modifications:
+    - target: {fileID: 56096692647219113, guid: 0f580c44bf3349d4ab6dacc6f4d13645, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 908716299280777974, guid: 0f580c44bf3349d4ab6dacc6f4d13645, type: 3}
       propertyPath: m_Name
       value: bar
@@ -971,7 +1007,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 992855466604158824, guid: 0f580c44bf3349d4ab6dacc6f4d13645, type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 992855466604158824, guid: 0f580c44bf3349d4ab6dacc6f4d13645, type: 3}
       propertyPath: m_AnchorMax.x
