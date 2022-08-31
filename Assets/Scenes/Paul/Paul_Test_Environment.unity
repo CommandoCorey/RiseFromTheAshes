@@ -439,6 +439,10 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1570870972}
+    - target: {fileID: 1338965320307225585, guid: b743c3357c8502f489abcbd37a3580fa, type: 3}
+      propertyPath: showDetectionRadius
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3235123660149911136, guid: b743c3357c8502f489abcbd37a3580fa, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -486,6 +490,10 @@ PrefabInstance:
     - target: {fileID: 5798167006062429957, guid: b743c3357c8502f489abcbd37a3580fa, type: 3}
       propertyPath: m_Name
       value: Player Tank (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5798167006062429957, guid: b743c3357c8502f489abcbd37a3580fa, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b743c3357c8502f489abcbd37a3580fa, type: 3}
@@ -1059,23 +1067,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3280850917285978550, guid: ae82c9f9e1b05bf4f8fcc13de6ac9f78, type: 3}
       propertyPath: m_LocalScale.x
-      value: 16.821917
+      value: 21.344387
       objectReference: {fileID: 0}
     - target: {fileID: 3280850917285978550, guid: ae82c9f9e1b05bf4f8fcc13de6ac9f78, type: 3}
       propertyPath: m_LocalScale.y
-      value: 4.3682733
+      value: 3.756715
       objectReference: {fileID: 0}
     - target: {fileID: 3280850917285978550, guid: ae82c9f9e1b05bf4f8fcc13de6ac9f78, type: 3}
       propertyPath: m_LocalScale.z
-      value: 3.6681888
+      value: 3.1546423
       objectReference: {fileID: 0}
     - target: {fileID: 3280850917285978550, guid: ae82c9f9e1b05bf4f8fcc13de6ac9f78, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3280850917285978550, guid: ae82c9f9e1b05bf4f8fcc13de6ac9f78, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.1067
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3280850917285978550, guid: ae82c9f9e1b05bf4f8fcc13de6ac9f78, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1167,6 +1175,10 @@ PrefabInstance:
     - target: {fileID: 98736084552861839, guid: bb6112954cfd08440b633be1670b0230, type: 3}
       propertyPath: detectionLayer.m_Bits
       value: 320
+      objectReference: {fileID: 0}
+    - target: {fileID: 98736084552861839, guid: bb6112954cfd08440b633be1670b0230, type: 3}
+      propertyPath: environmentLayer.m_Bits
+      value: 1024
       objectReference: {fileID: 0}
     - target: {fileID: 1426007410290822087, guid: bb6112954cfd08440b633be1670b0230, type: 3}
       propertyPath: m_Constraints
@@ -1636,6 +1648,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1927238670637003333, guid: bb6112954cfd08440b633be1670b0230, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2200987672814196978, guid: bb6112954cfd08440b633be1670b0230, type: 3}
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2392945902432065665, guid: bb6112954cfd08440b633be1670b0230, type: 3}
@@ -2649,6 +2665,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 98736084552861839, guid: bb6112954cfd08440b633be1670b0230, type: 3}
+      propertyPath: environmentLayer.m_Bits
+      value: 1024
+      objectReference: {fileID: 0}
     - target: {fileID: 1426007410290822087, guid: bb6112954cfd08440b633be1670b0230, type: 3}
       propertyPath: m_Constraints
       value: 116
