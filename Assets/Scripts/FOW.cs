@@ -71,9 +71,9 @@ public class FOW : MonoBehaviour {
 
 		SetMaskFromTexture(maskTexture);
 
-		mesh = new Mesh();
-		mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
-		GetComponent<MeshFilter>().mesh = mesh;
+		//mesh = new Mesh();
+		//mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
+		//GetComponent<MeshFilter>().mesh = mesh;
 
 		vertices = new List<Vector3>();
 		tris = new List<int>();
@@ -121,7 +121,7 @@ public class FOW : MonoBehaviour {
 	private void Update()
 	{
 		if (wantMaskUpdate) {
-			GenerateMesh();
+			//GenerateMesh();
 			wantMaskUpdate = false;
 		}
 

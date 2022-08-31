@@ -35,7 +35,8 @@ class FogEffectPass : ScriptableRenderPass
 
 	readonly int temporaryRTId = Shader.PropertyToID("_TempRT");
 
-	Material postMaterial;
+	Material fogMaterial;
+	Material impermMaterial;
 
 	int sampleCount;
 	float fogDepth;
@@ -49,7 +50,8 @@ class FogEffectPass : ScriptableRenderPass
 	{
 		renderPassEvent = RenderPassEvent.BeforeRenderingPostProcessing;
 
-		postMaterial = new Material(Shader.Find("Hidden/Fog"));
+		fogMaterial = new Material(Shader.Find("Hidden/Fog"));
+		impermMaterial = new Material(Shader.Find("Hidden/FogImperm"));
 
 		sampleCount = _sampleCount;
 		fogDepth = _fogDepth;
@@ -78,23 +80,38 @@ class FogEffectPass : ScriptableRenderPass
 				return;
 		}
 
-		postMaterial.SetTexture("_MaskTex", FOWManager.Instance.perm.MaskToTexture());
-		postMaterial.SetVector("_FogTopCorner", FOWManager.Instance.perm.transform.position);
-		postMaterial.SetFloat("_Threshold", threshold);
-		postMaterial.SetFloat("_FogDepth", fogDepth);
-		postMaterial.SetInt("_Samples", sampleCount);
-		postMaterial.SetFloat("_StepSize", stepSize);
-		postMaterial.SetVector("_ScrollDirection", scrollDirection);
-		postMaterial.SetFloat("_Height", FOWManager.Instance.perm.transform.position.y);
-		postMaterial.SetColor("_FogColour", colour);
-		postMaterial.SetVector("_FogMaskSize", FOWManager.Instance.perm.GetMaskExtentf());
-		postMaterial.SetTexture("_NoiseTexture", FOWManager.Instance.perm.noiseTexture);
-		postMaterial.SetFloat("_CloudScale", scale);
+		FOWCamera FOWCamera = Camera.main.GetComponent<FOWCamera>();
+		if (!FOWCamera) {
+			Debug.LogWarning("There isn't a FOWCamera attached to the main camera. Fix this.");
+			return;
+		}
+
+		fogMaterial.SetTexture("_MaskTex", FOWManager.Instance.perm.MaskToTexture());
+		fogMaterial.SetVector("_FogTopCorner", FOWManager.Instance.perm.transform.position);
+		fogMaterial.SetFloat("_Threshold", threshold);
+		fogMaterial.SetFloat("_FogDepth", fogDepth);
+		fogMaterial.SetInt("_Samples", sampleCount);
+		fogMaterial.SetFloat("_StepSize", stepSize);
+		fogMaterial.SetVector("_ScrollDirection", scrollDirection);
+		fogMaterial.SetFloat("_Height", FOWManager.Instance.perm.transform.position.y);
+		fogMaterial.SetColor("_FogColour", colour);
+		fogMaterial.SetVector("_FogMaskSize", FOWManager.Instance.perm.GetMaskExtentf());
+		fogMaterial.SetTexture("_NoiseTexture", FOWManager.Instance.perm.noiseTexture);
+		fogMaterial.SetFloat("_CloudScale", scale);
+
+		impermMaterial.SetTexture("_MaskTex", FOWManager.Instance.imperm.MaskToTexture());
+		impermMaterial.SetVector("_FogTopCorner", FOWManager.Instance.imperm.transform.position);
+		impermMaterial.SetFloat("_Height", FOWManager.Instance.imperm.transform.position.y);
+		impermMaterial.SetVector("_FogMaskSize", FOWManager.Instance.imperm.GetMaskExtentf());
+		impermMaterial.SetTexture("_AffectedObjects", FOWCamera.FOWAffectedRenderTexture);
 
 		CommandBuffer cmd = CommandBufferPool.Get("fogEffectCmdBuffer");
 		cmd.Clear();
 
-		Blit(cmd, src, dst, postMaterial);
+		Blit(cmd, src, dst, impermMaterial);
+		Blit(cmd, dst, src);
+
+		Blit(cmd, src, dst, fogMaterial);
 		Blit(cmd, dst, src);
 
 		context.ExecuteCommandBuffer(cmd);

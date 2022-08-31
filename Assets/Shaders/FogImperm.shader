@@ -1,4 +1,5 @@
-Shader "Hidden/Fog"
+
+Shader "Hidden/FogImperm"
 {
 	Properties
 	{
@@ -47,18 +48,9 @@ Shader "Hidden/Fog"
 			sampler2D _MainTex;
 			sampler2D _CameraDepthTexture;
 			sampler2D _MaskTex;
-			Texture3D<float> _NoiseTexture;
+			sampler2D _AffectedObjects;
 
-			SamplerState sampler_NoiseTexture;
-
-			uniform float _Threshold;
-			uniform float _FogDepth;
-			uniform float _StepSize;
-			uniform int _Samples;
-			uniform float3 _ScrollDirection;
 			uniform float _Height;
-			uniform float4 _FogColour;
-			uniform float _CloudScale;
 
 			uniform float4 _FogTopCorner;
 			uniform float2 _FogMaskSize;
@@ -95,35 +87,10 @@ Shader "Hidden/Fog"
 
 				float dist = rayMarch(rayOrigin, rayDirection);
 
-				float4 col = tex2D(_MainTex, i.uv);
-
-				float depth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, i.uv);
-
-				int maxSamples = min(_Samples, 32);
-
 				float density = 0.0;
 				float3 hitPoint = float3(0.0, 0.0, 0.0);
 				if (dist > 0.0 && dist < MAX_RAY_DIST) {
-					/* Ray trace from the hit point returned by the raymarch and
-					 * take samples from the 3-D noise to determine the density of the
-					 * fog at this pixel. */
-
 					hitPoint = rayOrigin + rayDirection * dist;
-
-					for (int i = 0; i < maxSamples; i++) {
-						float3 p = hitPoint + rayDirection * (float(i) * _StepSize);
-
-						float2 n = _NoiseTexture.SampleLevel(sampler_NoiseTexture, (p * _CloudScale) + _ScrollDirection * _Time.y, 0);
-
-						float mainNoise = n.r;
-						float detailNoise = n.g;
-
-						float noise = mainNoise + detailNoise;
-
-						/* TODO (George): Lighting. */
-
-						density += max(0.0, noise - _Threshold);
-					}
 				}
 
 				float2 hitPointMaskSpace = worldPosToFogMaskPos(hitPoint);
@@ -133,14 +100,21 @@ Shader "Hidden/Fog"
 
 				float maskVal = tex2D(_MaskTex, hitPointMaskSpace).r;
 
-				density *= maskVal;
+				float4 affectedObjectsColour = tex2D(_AffectedObjects, i.uv);
 
-				density = exp(-density);
-				float4 fogColour = (1.0 - density) * _FogColour;
+				affectedObjectsColour.a *= 1.0 - maskVal;
 
-				return col * density + fogColour;
+				float4 col = tex2D(_MainTex, i.uv);
+
+				col.rgb *= 1.0 - (float3(0.5, 0.5, 0.5) * (maskVal - 0.5));
+
+				/* TODO (George): Depth test the affected objects */
+				float3 sceneColour = affectedObjectsColour.rgb * affectedObjectsColour.a + col.rgb * (1.0 - affectedObjectsColour.a);
+
+				return float4(sceneColour, 1.0);
 			}
 			ENDCG
 		}
 	}
 }
+
