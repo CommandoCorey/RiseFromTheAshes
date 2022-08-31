@@ -34,8 +34,9 @@ public class BuildMenu : MonoBehaviour
 			b.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = buildItem.name;
 
 			b.onClick.AddListener(() => {
-				Instantiate(buildItem.buildingPrefab, ghostBuilding.transform.position, ghostBuilding.transform.rotation);
+				Building b = Instantiate(buildItem.buildingPrefab, ghostBuilding.transform.position, ghostBuilding.transform.rotation);
 				ghostBuilding.gameObject.SetActive(false);
+				b.Build();
 				gameObject.SetActive(false);
 			});
 

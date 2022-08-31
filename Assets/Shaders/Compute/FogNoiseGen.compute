@@ -1,0 +1,54 @@
+#pragma kernel CSMain
+
+RWTexture3D<float2> Result;
+
+RWStructuredBuffer<float3> Points;
+int PointCount;
+float ValueDivisor;
+
+/* TODO: Better noise function.
+ * This one is from: https://gist.github.com/patriciogonzalezvivo/670c22f3966e662d2f83 */
+float mod289(float x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+float4 mod289(float4 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+float4 perm(float4 x) { return mod289(((x * 34.0) + 1.0) * x); }
+
+float detailNoise(float3 p) {
+	float3 a = floor(p);
+	float3 d = p - a;
+	d = d * d * (3.0 - 2.0 * d);
+
+	float4 b = a.xxyy + float4(0.0, 1.0, 0.0, 1.0);
+	float4 k1 = perm(b.xyxy);
+	float4 k2 = perm(k1.xyxy + b.zzww);
+
+	float4 c = k2 + a.zzzz;
+	float4 k3 = perm(c);
+	float4 k4 = perm(c + 1.0);
+
+	float4 o1 = 1.0 - floor(k3 * (1.0 / 41.0));
+	float4 o2 = 1.0 - floor(k4 * (1.0 / 41.0));
+
+	float4 o3 = o2 * d.z + o1 * (1.0 - d.z);
+	float2 o4 = o3.yw * d.x + o3.xz * (1.0 - d.x);
+
+	return o4.y * d.y + o4.x * (1.0 - d.y);
+}
+
+[numthreads(8, 8, 8)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+	float3 pos = float3(id.x, id.y, id.z);
+
+	float dist = 9999999999999999999.0;
+
+	for (int i = 0; i < PointCount; i++) {
+		float d = length(pos - Points[i]);
+		if (d < dist) {
+			dist = d;
+		}
+	}
+
+	/* We layer a detail noise in the green channel. This allows both
+	 * the main noise and the detail noise to be sampled at once. */
+	Result[id.xyz] = float2((dist / ValueDivisor), detailNoise(pos));
+}
