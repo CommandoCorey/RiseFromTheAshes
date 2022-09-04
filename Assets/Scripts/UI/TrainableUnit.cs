@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class TrainableUnit : ScriptableObject
 {
     public Image buttonIcon;
-    public string name;
+    public new string name;
     public GameObject unitToTrain;
     public int steelCost = 0;
     [Range(0, 300)]
