@@ -132,6 +132,7 @@ Shader "Hidden/Fog"
 				hitPointMaskSpace = clamp(hitPointMaskSpace, 0.0, 1.0);
 
 				float maskVal = tex2D(_MaskTex, hitPointMaskSpace).r;
+
 				density *= maskVal;
 
 				density = exp(-density);

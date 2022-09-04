@@ -134,7 +134,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7490394118831632742
 Transform:
   m_ObjectHideFlags: 0
@@ -244,16 +244,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selectionHighlight: {fileID: 7490394118869249958}
   turret: {fileID: 7490394118974306319}
+  castingPoint: {fileID: 0}
   firingPoint: {fileID: 7490394117755671002}
-  healthBar: {fileID: 760928509602127807}
+  healthBar: {fileID: 3835776570400292650}
   maxHealth: 100
-  movementSpeed: 1
+  movementSpeed: 2
   damagePerHit: 1
   attackRate: 1
   attackRange: 20
   turretRotationSpeed: 1
   detectionRadius: 1
   detectionLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  environmentLayer:
     serializedVersion: 2
     m_Bits: 0
   showDetectionRadius: 1
@@ -569,3 +573,14 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 992855466604158824, guid: 0f580c44bf3349d4ab6dacc6f4d13645, type: 3}
   m_PrefabInstance: {fileID: 524678959908225239}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &3835776570400292650 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3635357953571831805, guid: 0f580c44bf3349d4ab6dacc6f4d13645, type: 3}
+  m_PrefabInstance: {fileID: 524678959908225239}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 564c469fd87df924aa8f204acbc11710, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
