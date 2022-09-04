@@ -158,6 +158,10 @@ public class AgentMovement : MonoBehaviour
         GetComponent<Rigidbody>().angularVelocity = velocity;
         steer.linearVelocity = Vector3.zero;
         steer.angularVelocity = 0;
+
+        var rigidBody = GetComponent<Rigidbody>();
+        if (rigidBody != null)
+            rigidBody.velocity = Vector3.zero;
     }
 
     /// <summary>

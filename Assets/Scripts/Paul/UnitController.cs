@@ -15,6 +15,7 @@ public class UnitController : MonoBehaviour
 {
     public GameObject selectionHighlight;
     public Transform turret;
+    public Transform castingPoint;
     public Transform firingPoint;
     public RectTransform healthBar;
 
