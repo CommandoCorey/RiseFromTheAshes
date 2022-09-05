@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class GUIManager : MonoBehaviour
 {
-    public Transform buttonPanel;
+    public GameObject buttonPanel;
     public Transform unitPanal;
     public Transform statsPanel;
 
@@ -14,6 +15,9 @@ public class GUIManager : MonoBehaviour
 
     private List<UnitController> selectedUnits;
     private List<GameObject> unitIcons;
+
+    private bool moveMode = false;
+    private bool attackMode = false;
 
     // Start is called before the first frame update
     void Start()
@@ -26,8 +30,21 @@ public class GUIManager : MonoBehaviour
     void Update()
     {
         UpdateUnitHealth();
+
+        if(Input.GetMouseButton(0))
+        {
+            if(moveMode)
+            {
+
+            }
+            else if(attackMode)
+            {
+
+            }
+        }
     }
 
+    #region private functions
     private void UpdateUnitHealth()
     {
         if (selectedUnits != null)
@@ -53,6 +70,15 @@ public class GUIManager : MonoBehaviour
         }
     }
 
+    // Switches to a single selection of a unit after an icon is clicked on
+
+    #endregion
+
+    #region public functions
+    public void SetMoveMode()  {  moveMode = true;  }
+
+    public void SetAttackMode()  {   attackMode = true; }
+
     /// <summary>
     /// populates the unit panel with unit icons alongs with their health
     /// </summary>
@@ -66,9 +92,7 @@ public class GUIManager : MonoBehaviour
         {
             unitIcons.Add(Instantiate(unitIconPrefab, unitPanal));
             selectedUnits.Add(selection[i].GetComponent<UnitController>());
-
-            //var maxHalth = unitIcons[unitIcons.Count - 1].transform.Find("Max Health").GetComponent<TextMeshProUGUI>();
-            //var currentHealth = unitIcons[unitIcons.Count - 1].transform.Find("Current Health").GetComponent<TextMeshProUGUI>();
+            
             TextMeshProUGUI[] healthText = unitIcons[i].GetComponentsInChildren<TextMeshProUGUI>();
 
             healthText[2].text = selectedUnits[i].MaxHealth.ToString();
@@ -78,8 +102,51 @@ public class GUIManager : MonoBehaviour
 
             var healthBar = unitIcons[i].GetComponentInChildren<ProgressBar>();
             healthBar.progress = selectedUnits[i].CurrentHealth / selectedUnits[i].MaxHealth;
+
+            unitIcons[i].GetComponent<UnitIconButton>().IconIndex = i;
         }
+
+        buttonPanel.SetActive(true);
     }
+
+    /// <summary>
+    /// Updates the GUI to only show one selected unit
+    /// </summary>
+    /// <param name="index">The number of the unit button being clicked on</param>
+    public void SelectSingleUnit(int index)
+    {
+        var unit = selectedUnits[index];
+
+        ClearUnitSelection();
+
+        // select the matching unit
+        selectedUnits.Add(unit);
+        unit.SetSelected(true);
+
+        // intantiate a new unit icon
+        var unitIcon = Instantiate(unitIconPrefab, unitPanal);
+        unitIcons.Add(unitIcon);
+
+        // set the icon and health
+        unitIcon.GetComponentInChildren<Image>().sprite = unit.GuiIcon;
+
+        TextMeshProUGUI[] healthText = unitIcon.GetComponentsInChildren<TextMeshProUGUI>();
+        healthText[2].text = unit.MaxHealth.ToString();
+        healthText[0].text = unit.CurrentHealth.ToString();
+        
+        var healthBar = unit.GetComponentInChildren<ProgressBar>();
+        healthBar.progress = unit.CurrentHealth / unit.MaxHealth;
+
+        // update the unit manager
+        var unitManager = GameObject.FindObjectOfType<UnitManager>();
+        unitManager.SetSelectedUnit(unit.gameObject);
+    }
+
+    public void DisplayUnitStats()
+    {
+
+    }
+
 
     /// <summary>
     /// Removes all unit information from the GUI and clears the lists
@@ -95,7 +162,9 @@ public class GUIManager : MonoBehaviour
         // clear the lists
         unitIcons.Clear();
         selectedUnits.Clear();
-    }
 
+        buttonPanel.SetActive(true);
+    }
+    #endregion
 
 }

@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class SelectionManager : MonoBehaviour
 {
     public LayerMask selectionLayer;
     [SerializeField][Range(4, 50)]
     public bool drawDebugBox = true;
+    public GUIManager gui; // used to update unit icons
 
     // contains all of the selected units
     private Dictionary<int, GameObject> selectedTable = new Dictionary<int, GameObject>();    
@@ -29,7 +31,7 @@ public class SelectionManager : MonoBehaviour
 
     private float boxHeight = 10;
 
-    public GUIManager gui; // used to update unit icons
+    private UnitManager unitManager;
 
     // properties
     public List<GameObject> Units
@@ -70,6 +72,7 @@ public class SelectionManager : MonoBehaviour
     {
         //selectedTable = GetComponent<SelectedDictionary>();
         dragSelect = false;
+        unitManager = GetComponent<UnitManager>();
     }
 
     // Update is called once per frame
@@ -96,6 +99,13 @@ public class SelectionManager : MonoBehaviour
             if (dragSelect == false) //single select
             {
                 Ray ray = Camera.main.ScreenPointToRay(p1);
+
+                // dont select anything if the GUI is clicked
+                if (EventSystem.current.IsPointerOverGameObject())
+                {
+                    Debug.Log("Clicked on GUI");
+                    return;
+                }
 
                 if (Physics.Raycast(ray, out hit, 50000.0f, selectionLayer))
                 {
@@ -170,6 +180,8 @@ public class SelectionManager : MonoBehaviour
             }//end marquee select
 
             dragSelect = false;
+
+            unitManager.SetSelectedUnits(Units);
         }
 
     }
