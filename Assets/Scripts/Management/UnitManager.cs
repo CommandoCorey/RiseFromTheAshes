@@ -32,7 +32,7 @@ public class UnitManager : MonoBehaviour
 
     private GameManager gameManager;
     #endregion
-
+    
     #region start and update
     // Start is called before the first frame update
     void Start()
@@ -61,6 +61,18 @@ public class UnitManager : MonoBehaviour
     #endregion
 
     #region public functions
+    public List<UnitController> GetSelectedUnits()
+    {
+        List<UnitController> selected = new List<UnitController>();
+
+        foreach(GameObject unit in selection.Units)
+        {
+            selected.Add(unit.GetComponent<UnitController>());
+        }
+
+        return selected;
+    }
+
     public GameObject[] GetPlayerUnits()
     {
         return GameObject.FindGameObjectsWithTag("PlayerUnit");
