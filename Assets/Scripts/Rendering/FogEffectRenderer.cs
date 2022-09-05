@@ -15,11 +15,12 @@ public class FogEffectRenderer : ScriptableRendererFeature
 	public float stepSize = 0.1f;
 	public Vector3 scrollDirection = Vector3.right;
 	public Color colour;
+	public Color exploredColour;
 	public float scale = 0.5f;
 
 	public override void Create()
 	{
-		pass = new FogEffectPass(sampleCount, fogDepth, threshold, stepSize, scrollDirection, colour, scale);
+		pass = new FogEffectPass(sampleCount, fogDepth, threshold, stepSize, scrollDirection, colour, exploredColour, scale);
 	}
 
 	public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
@@ -45,9 +46,10 @@ class FogEffectPass : ScriptableRenderPass
 	float stepSize;
 	Vector3 scrollDirection;
 	Color colour;
+	Color exploredColour;
 	float scale;
 
-	public FogEffectPass(int _sampleCount, float _fogDepth, float _threshold, float _stepSize, Vector3 _scrollDirection, Color _colour, float _scale)
+	public FogEffectPass(int _sampleCount, float _fogDepth, float _threshold, float _stepSize, Vector3 _scrollDirection, Color _colour, Color _exploredColour, float _scale)
 	{
 		renderPassEvent = RenderPassEvent.BeforeRenderingPostProcessing;
 
@@ -61,6 +63,7 @@ class FogEffectPass : ScriptableRenderPass
 		scrollDirection = _scrollDirection;
 		colour = _colour;
 		scale = _scale;
+		exploredColour = _exploredColour;
 	}
 
 	public override void OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData)
@@ -104,6 +107,7 @@ class FogEffectPass : ScriptableRenderPass
 		impermMaterial.SetVector("_FogTopCorner", FOWManager.Instance.imperm.transform.position);
 		impermMaterial.SetFloat("_Height", FOWManager.Instance.imperm.transform.position.y);
 		impermMaterial.SetVector("_FogMaskSize", FOWManager.Instance.imperm.GetMaskExtentf());
+		impermMaterial.SetVector("_FogColour", exploredColour);
 		impermMaterial.SetTexture("_AffectedObjects", FOWCamera.FOWAffectedRenderTexture, RenderTextureSubElement.Color);
 		impermMaterial.SetTexture("_AffectedDepth", FOWCamera.FOWAffectedRenderTexture, RenderTextureSubElement.Depth);
 

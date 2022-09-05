@@ -53,6 +53,8 @@ Shader "Hidden/FogImperm"
 
 			uniform float _Height;
 
+			uniform float4 _FogColour;
+
 			uniform float4 _FogTopCorner;
 			uniform float2 _FogMaskSize;
 
@@ -113,7 +115,7 @@ Shader "Hidden/FogImperm"
 
 				float4 col = tex2D(_MainTex, i.uv);
 
-				col.rgb *= 1.0 - (float3(0.5, 0.5, 0.5) * (maskVal - 0.5));
+				col.rgb *= (1.0 - (maskVal - _FogColour.rgb * _FogColour.a));
 
 				float3 sceneColour = affectedObjectsColour.rgb * affectedObjectsColour.a + col.rgb * (1.0 - affectedObjectsColour.a);
 
