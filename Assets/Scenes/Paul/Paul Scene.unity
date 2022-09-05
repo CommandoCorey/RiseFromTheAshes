@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18029143, g: 0.22572419, b: 0.30693057, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1152,18 +1152,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3293154623228528567, guid: ae0fbc8feaa078945887b82a2eead579, type: 3}
-      propertyPath: movementSpeed
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 6442939534348259523, guid: ae0fbc8feaa078945887b82a2eead579, type: 3}
-      propertyPath: maxSpeed
-      value: 500
-      objectReference: {fileID: 0}
-    - target: {fileID: 7490394117755670981, guid: ae0fbc8feaa078945887b82a2eead579, type: 3}
-      propertyPath: m_Icon
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 7490394118831632742, guid: ae0fbc8feaa078945887b82a2eead579, type: 3}
       propertyPath: m_RootOrder
       value: 8
@@ -1211,14 +1199,6 @@ PrefabInstance:
     - target: {fileID: 7490394118831632749, guid: ae0fbc8feaa078945887b82a2eead579, type: 3}
       propertyPath: m_Name
       value: Tank (3)
-      objectReference: {fileID: 0}
-    - target: {fileID: 7490394118831632749, guid: ae0fbc8feaa078945887b82a2eead579, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7490394118831632749, guid: ae0fbc8feaa078945887b82a2eead579, type: 3}
-      propertyPath: m_TagString
-      value: PlayerUnit
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ae0fbc8feaa078945887b82a2eead579, type: 3}
@@ -1922,6 +1902,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c448d9b6244c7b49a08a9cfc39a4bcc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unitBody: {fileID: 0}
   maxSpeed: 10
   acceleration: 3
   deceleration: 3
@@ -2511,6 +2492,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c448d9b6244c7b49a08a9cfc39a4bcc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unitBody: {fileID: 0}
   maxSpeed: 10
   acceleration: 3
   deceleration: 3
@@ -2552,6 +2534,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c448d9b6244c7b49a08a9cfc39a4bcc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unitBody: {fileID: 0}
   maxSpeed: 10
   acceleration: 3
   deceleration: 3
@@ -4006,58 +3989,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: -5914012348275633291, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
-      propertyPath: maxSpeed
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: -5914012348275633291, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
-      propertyPath: minDistanceFromTarget
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -5914012348275633291, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
-      propertyPath: minDistanceFromWaypoint
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1727009965, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
-      propertyPath: boxSize.y
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 1727009965, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
-      propertyPath: flockPath
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1727009965, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
-      propertyPath: boxOffset.y
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1727009965, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
-      propertyPath: boxOffset.z
-      value: 1.05
-      objectReference: {fileID: 0}
-    - target: {fileID: 1727009965, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
-      propertyPath: aheadDistance
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1727009965, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
-      propertyPath: obstacleDetection
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1727009965, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
-      propertyPath: obstacleLayers.m_Bits
-      value: 4196096
-      objectReference: {fileID: 0}
-    - target: {fileID: 1950773433, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
-      propertyPath: m_Constraints
-      value: 84
-      objectReference: {fileID: 0}
-    - target: {fileID: 1950773433, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
-      propertyPath: m_IsKinematic
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 829398744485436827, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 3235123660149911136, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
       propertyPath: m_RootOrder
       value: 15
@@ -4106,10 +4037,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: boid
       objectReference: {fileID: 0}
-    - target: {fileID: 5798167006062429957, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0c6c3ad4d092c2e44b7d602d929d663e, type: 3}
 --- !u!1 &2121923098
@@ -4144,6 +4071,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c448d9b6244c7b49a08a9cfc39a4bcc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unitBody: {fileID: 0}
   maxSpeed: 10
   acceleration: 3
   deceleration: 3
@@ -4668,14 +4596,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3293154623228528567, guid: ae0fbc8feaa078945887b82a2eead579, type: 3}
-      propertyPath: gameManager
-      value: 
-      objectReference: {fileID: 1273043325}
-    - target: {fileID: 3293154623228528567, guid: ae0fbc8feaa078945887b82a2eead579, type: 3}
-      propertyPath: movementSpeed
-      value: 2
-      objectReference: {fileID: 0}
     - target: {fileID: 7490394118831632742, guid: ae0fbc8feaa078945887b82a2eead579, type: 3}
       propertyPath: m_RootOrder
       value: 5
@@ -4723,10 +4643,6 @@ PrefabInstance:
     - target: {fileID: 7490394118831632749, guid: ae0fbc8feaa078945887b82a2eead579, type: 3}
       propertyPath: m_Name
       value: Tank
-      objectReference: {fileID: 0}
-    - target: {fileID: 7490394118831632749, guid: ae0fbc8feaa078945887b82a2eead579, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ae0fbc8feaa078945887b82a2eead579, type: 3}

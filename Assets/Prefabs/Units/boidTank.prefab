@@ -103,7 +103,7 @@ Rigidbody:
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 0
-  m_IsKinematic: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 84
   m_CollisionDetection: 0
@@ -121,8 +121,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selectionHighlight: {fileID: 8726823584126190087}
   turret: {fileID: 8726823584549623214}
+  castingPoint: {fileID: 0}
   firingPoint: {fileID: 8726823585231355003}
-  healthBar: {fileID: 7130693736371769524}
+  healthBar: {fileID: 2537769728950557236}
   maxHealth: 100
   movementSpeed: 1
   damagePerHit: 1
@@ -131,6 +132,9 @@ MonoBehaviour:
   turretRotationSpeed: 1
   detectionRadius: 1
   detectionLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  environmentLayer:
     serializedVersion: 2
     m_Bits: 0
   showDetectionRadius: 0
@@ -149,13 +153,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitBody: {fileID: 8726823584155425991}
-  maxSpeed: 10
+  maxSpeed: 5
   acceleration: 3
   deceleration: 3
   maxRotation: 45
-  minDistanceFromTarget: 0.2
+  minDistanceFromTarget: 1
   maxDistanceFromTarget: 6
-  minDistanceFromWaypoint: 3
+  minDistanceFromWaypoint: 1
   distanceFromNeighbour: 5
   minSpeedWhenStopping: 1.6
 --- !u!114 &1727009965
@@ -185,15 +189,15 @@ MonoBehaviour:
   cohesionDistanceChange: 0
   separationDistanceChange: 0
   frontPoint: {fileID: 6302425531426630124}
-  aheadDistance: 1
+  aheadDistance: 2
   boxSize: {x: 1, y: 0.5, z: 1}
-  boxOffset: {x: 0, y: 0.1, z: 1}
+  boxOffset: {x: 0, y: 0.1, z: 1.05}
   obstacleLayers:
     serializedVersion: 2
     m_Bits: 4196096
-  flockPath: 0
+  flockPath: 1
   neighbourDistance: 0
-  obstacleDetection: 0
+  obstacleDetection: 1
   behaviourText: 0
 --- !u!114 &-8268247658432732276
 MonoBehaviour:
@@ -640,8 +644,14 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 992855466604158824, guid: 0f580c44bf3349d4ab6dacc6f4d13645, type: 3}
   m_PrefabInstance: {fileID: 1244289629463274953}
   m_PrefabAsset: {fileID: 0}
---- !u!224 &7130693736371769524 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 8336667581928093053, guid: 0f580c44bf3349d4ab6dacc6f4d13645, type: 3}
+--- !u!114 &2537769728950557236 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3635357953571831805, guid: 0f580c44bf3349d4ab6dacc6f4d13645, type: 3}
   m_PrefabInstance: {fileID: 1244289629463274953}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 564c469fd87df924aa8f204acbc11710, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
