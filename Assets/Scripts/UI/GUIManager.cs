@@ -10,20 +10,28 @@ public class GUIManager : MonoBehaviour
     public GameObject buttonPanel;
     public Transform unitPanal;
     public Transform statsPanel;
-
     public GameObject unitIconPrefab;
+    public LayerMask enemyLayers;
+    public TextMeshProUGUI alertMessage;
 
     private List<UnitController> selectedUnits;
     private List<GameObject> unitIcons;
 
-    private bool moveMode = false;
-    private bool attackMode = false;
+    private UnitManager unitManager;
+    private SelectionManager selectionManager;
+
+    // properties
+    public bool MoveClicked { get; set; } = false;
+    public bool AttackClicked { get; set; } = false;
+    public bool HaltClicked { get; set; } = false;
 
     // Start is called before the first frame update
     void Start()
     {
         unitIcons = new List<GameObject>();
         selectedUnits = new List<UnitController>();
+        unitManager = GameObject.FindObjectOfType<UnitManager>();
+        selectionManager = GameObject.FindObjectOfType<SelectionManager>();
     }
 
     // Update is called once per frame
@@ -31,15 +39,36 @@ public class GUIManager : MonoBehaviour
     {
         UpdateUnitHealth();
 
-        if(Input.GetMouseButton(0))
+        if(Input.GetMouseButtonUp(0) && !EventSystem.current.IsPointerOverGameObject())
         {
-            if(moveMode)
-            {
+            RaycastHit hitInfo;
 
+            if(MoveClicked && Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo))
+            {
+                //Debug.Log("Clicked");
+                unitManager.MoveUnits(hitInfo);
+
+                MoveClicked = false;
             }
-            else if(attackMode)
+            else if(AttackClicked && Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo))
             {
+                // check if the layer is one of the layers in the layermask
+                if (enemyLayers == (enemyLayers | (1 << hitInfo.transform.gameObject.layer)))
+                {
+                    //Debug.Log("You chose to attack " + hitInfo.transform.name);
+                    StartCoroutine(ShowAlert("You chose to attack " + hitInfo.transform.name, 2));
+                }
+                else
+                {
+                    StartCoroutine(ShowAlert("That's not a valid attack target", 2));
+                    //Debug.Log("That's not a valid attack target");
+                }
 
+                AttackClicked = false;
+            }
+            else
+            {
+                selectionManager.enabled = true;
             }
         }
     }
@@ -70,14 +99,34 @@ public class GUIManager : MonoBehaviour
         }
     }
 
-    // Switches to a single selection of a unit after an icon is clicked on
+    private IEnumerator ShowAlert(string message, int seconds)
+    {
+        alertMessage.text = message;
+        alertMessage.gameObject.SetActive(true);
+
+        yield return new WaitForSeconds(seconds);
+
+        alertMessage.gameObject.SetActive(false);
+    }
 
     #endregion
 
     #region public functions
-    public void SetMoveMode()  {  moveMode = true;  }
+    public void SetMoveMode() 
+    { 
+        MoveClicked = true;
+        selectionManager.enabled = false;
+    }
 
-    public void SetAttackMode()  {   attackMode = true; }
+    public void SetAttackMode() { 
+        AttackClicked = true;
+        selectionManager.enabled = false;
+    }
+
+    public void SetHaltClicked()
+    {
+        HaltClicked = true;
+    }
 
     /// <summary>
     /// populates the unit panel with unit icons alongs with their health
@@ -137,6 +186,8 @@ public class GUIManager : MonoBehaviour
         var healthBar = unit.GetComponentInChildren<ProgressBar>();
         healthBar.progress = unit.CurrentHealth / unit.MaxHealth;
 
+        buttonPanel.SetActive(true);
+
         // update the unit manager
         var unitManager = GameObject.FindObjectOfType<UnitManager>();
         unitManager.SetSelectedUnit(unit.gameObject);
@@ -163,7 +214,7 @@ public class GUIManager : MonoBehaviour
         unitIcons.Clear();
         selectedUnits.Clear();
 
-        buttonPanel.SetActive(true);
+        buttonPanel.SetActive(false);
     }
     #endregion
 

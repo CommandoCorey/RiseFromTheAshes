@@ -163,11 +163,14 @@ public class UnitManager : MonoBehaviour
         return squads[squadNum];
     }
 
-    public void StopGroupMoving()
+    /// <summary>
+    /// Stops all units in a selection form moving
+    /// </summary>
+    public void HaltUnitSelection()
     {
-        var squad = GameObject.FindGameObjectsWithTag("PlayerUnit");
+        Debug.Log("Halt button clicked");
 
-        foreach(GameObject unit in squad)
+        foreach(GameObject unit in selectedUnits)
         {
             unit.GetComponent<UnitController>().ChangeState(UnitState.Idle);
         }
@@ -196,15 +199,17 @@ public class UnitManager : MonoBehaviour
 
         return path.corners;
     }
-    #endregion
 
-    #region private functions
-    private void MoveUnits(RaycastHit hit)
+    /// <summary>
+    /// Moves all units in the selection to a location and changes their state
+    /// </summary>
+    /// <param name="hit">The raycast hit object</param>
+    public void MoveUnits(RaycastHit hit)
     {
         formationPositions.Clear();
         Vector3 targetPos;
 
-        gameManager.SetMarkerLocation(new Vector3(hit.point.x, 1, hit.point.z));        
+        gameManager.SetMarkerLocation(new Vector3(hit.point.x, 1, hit.point.z));
 
         // check that the player clicked on the ground.
         // If they did not find a new position
@@ -217,7 +222,7 @@ public class UnitManager : MonoBehaviour
             NavMeshHit hitInfo;
 
             if (NavMesh.SamplePosition(hit.point, out hitInfo, 10f, NavMesh.AllAreas))
-            {               
+            {
                 targetPos = hitInfo.position;
             }
             else
@@ -231,24 +236,24 @@ public class UnitManager : MonoBehaviour
         squads.Add(selectedUnits);
 
         if (selectedUnits.Count > 1)
-        {                
-            formationPositions = GetFormationPositions(targetPos);          
+        {
+            formationPositions = GetFormationPositions(targetPos);
 
-            if(formationPositions.Count < selectedUnits.Count)
+            if (formationPositions.Count < selectedUnits.Count)
             {
                 Debug.LogError("Not enough formations positions were created for the selected units");
                 return;
             }
-                
+
             // move all units to their designated targets
-            for(int i=0; i < selectedUnits.Count; i++)
+            for (int i = 0; i < selectedUnits.Count; i++)
             {
                 var agent = selectedUnits[i].GetComponent<AgentMovement>();
                 agent.SquadNum = squads.Count - 1;
 
                 var unit = selectedUnits[i].GetComponent<UnitController>();
 
-                if(flockWhileMoving)
+                if (flockWhileMoving)
                     unit.ChangeState(UnitState.Flock, formationPositions[i]);
                 else
                     unit.ChangeState(UnitState.Moving, formationPositions[i]);
@@ -263,8 +268,11 @@ public class UnitManager : MonoBehaviour
             controller.ChangeState(UnitState.Moving, targetPos);
 
             //unit.GetComponent<SeekState>().MoveTo(hitInfo.point);
-        }        
+        }
     }
+    #endregion
+
+    #region private functions    
 
     /// <summary>
     /// Removes a specifed unit from a moving group

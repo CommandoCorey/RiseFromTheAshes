@@ -78,6 +78,9 @@ public class SelectionManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (gui.MoveClicked || gui.AttackClicked)
+            return;
+
         //1. when left mouse button clicked (but not released)
         if (Input.GetMouseButtonDown(0))
         {
@@ -103,7 +106,7 @@ public class SelectionManager : MonoBehaviour
                 // dont select anything if the GUI is clicked
                 if (EventSystem.current.IsPointerOverGameObject())
                 {
-                    Debug.Log("Clicked on GUI");
+                    //Debug.Log("Clicked on GUI");
                     return;
                 }
 
@@ -153,7 +156,7 @@ public class SelectionManager : MonoBehaviour
                     i++;
                 }
 
-                if (!Input.GetKey(KeyCode.LeftShift))
+                if (!Input.GetKey(KeyCode.LeftShift) && !gui.MoveClicked && !gui.AttackClicked)
                 {
                     DeselectAll();
                 }
