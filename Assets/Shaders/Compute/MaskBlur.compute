@@ -5,11 +5,9 @@ Texture2D<float> Original;
 
 float2 TextureSize;
 
-int kernel_size = 9;
-
 [numthreads(8,8,1)]
 void CSMain (uint3 id : SV_DispatchThreadID) {
-	if (id.x >= TextureSize.x || id.y >= TextureSize.y) {
+	if (id.x >= (uint)TextureSize.x || id.y >= (uint)TextureSize.y) {
 		return;
 	}
 
