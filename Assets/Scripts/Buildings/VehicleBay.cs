@@ -28,9 +28,12 @@ public class VehicleBay : MonoBehaviour {
 	int buildingIndex;
 	bool isBuilding;
 
-	private void Start()
+	private void OnEnable()
 	{
 		building = GetComponent<Building>();
+		if (building == null) {
+			Debug.LogError("Game objects with the VehicleBay component must  also have a Building component.");
+		}
 
 		buildTimer = 100.0f;
 		buildProgress.progress = 0.0f;
@@ -59,7 +62,9 @@ public class VehicleBay : MonoBehaviour {
 
 	public void Interact()
 	{
-		buildMenu.SetActive(true);
+		if (building != null && building.IsBuilt) {
+			buildMenu.SetActive(true);
+		}
 	}
 
 	public void Update()

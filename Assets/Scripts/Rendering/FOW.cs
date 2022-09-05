@@ -13,8 +13,10 @@ public class FOW : MonoBehaviour {
 	[SerializeField] bool permanent;
 
 	Texture2D genMaskTexture;
+	RenderTexture genBlurredMaskTexture;
 
 	[SerializeField] ComputeShader noiseGenShader;
+	[SerializeField] ComputeShader maskBlurShader;
 	[SerializeField]
 	[Tooltip("Don't go crazy with this. Video memory is not infinite and 3D textures such as this use incredible amounts of it.")]
 	Vector3Int noiseResolution = new Vector3Int(256, 256, 256);
@@ -22,7 +24,7 @@ public class FOW : MonoBehaviour {
 	[SerializeField] int noisePointCount = 32;
 
 	byte[] FOWMask;
-	byte[] blurredMask;
+	byte[] maskTextureData;
 
 	bool wantMaskUpdate = true;
 
@@ -41,9 +43,17 @@ public class FOW : MonoBehaviour {
 
 	void Start() {
 		FOWMask = new byte[maskExtent.x * maskExtent.y];
-		blurredMask = new byte[maskExtent.x * maskExtent.y];
+		maskTextureData = new byte[maskExtent.x * maskExtent.y];
 
-		genMaskTexture = new Texture2D(maskExtent.x, maskExtent.y, TextureFormat.R8, false);
+		genMaskTexture        = new Texture2D(maskExtent.x, maskExtent.y, TextureFormat.R8, false);
+
+		genBlurredMaskTexture = new RenderTexture(maskExtent.x, maskExtent.y, 0, RenderTextureFormat.RG16);
+		genBlurredMaskTexture.enableRandomWrite = true;
+		genBlurredMaskTexture.dimension = UnityEngine.Rendering.TextureDimension.Tex2D;
+		genBlurredMaskTexture.wrapModeU = TextureWrapMode.Repeat;
+		genBlurredMaskTexture.wrapModeV = TextureWrapMode.Repeat;
+		genBlurredMaskTexture.Create();
+
 		if (permanent) {
 			ClearMask();
 
@@ -101,19 +111,24 @@ public class FOW : MonoBehaviour {
 		FOWMask[position.x + position.y * maskExtent.x] = value;
 	}
 
-	public Texture2D MaskToTexture()
+	/* Returns a blurred version of the texture suitable for rendering */
+	public RenderTexture MaskToTexture()
 	{
-		/* TODO (George): Actually blur the mask. Maybe. It
-		 * might not be necessary. */
-
 		for (int i = 0; i < maskExtent.x * maskExtent.y; i++) {
-			blurredMask[i] = (byte)(FOWMask[i] == 0 ? 0x0 : 255);
+			maskTextureData[i] = (byte)(FOWMask[i] == 0 ? 0x0 : 255);
 		}
 
-		genMaskTexture.LoadRawTextureData(blurredMask);
+		genMaskTexture.LoadRawTextureData(maskTextureData);
 		genMaskTexture.Apply();
 
-		return genMaskTexture;
+		maskBlurShader.SetTexture(0, "Result",   genBlurredMaskTexture);
+		maskBlurShader.SetTexture(0, "Original", genMaskTexture);
+		maskBlurShader.SetVector("TextureSize", GetMaskExtentf());
+		maskBlurShader.Dispatch(0,
+			(int)((float)maskExtent.x / 8.0f + 1.0f),
+			(int)((float)maskExtent.y / 8.0f + 1.0f), 1);
+
+		return genBlurredMaskTexture;
 	}
 
 	bool GetMask(int x, int y)

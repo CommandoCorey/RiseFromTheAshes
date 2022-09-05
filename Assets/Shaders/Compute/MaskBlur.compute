@@ -1,0 +1,23 @@
+#pragma kernel CSMain
+
+RWTexture2D<float> Result;
+Texture2D<float> Original;
+
+float2 TextureSize;
+
+[numthreads(8,8,1)]
+void CSMain (uint3 id : SV_DispatchThreadID) {
+	if (id.x >= (uint)TextureSize.x || id.y >= (uint)TextureSize.y) {
+		return;
+	}
+
+	float sum = 0.0;
+	int incr = 0;
+	for (int x = -4; x < 4; x++) {
+		for (int y = -4; y < 4; y++) {
+			sum += Original[int2(id.x + x, id.y + y)];
+			incr++;
+		}
+	}
+	Result[id.xy] = sum / float(incr);
+}

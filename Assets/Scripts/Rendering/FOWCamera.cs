@@ -32,10 +32,10 @@ public class FOWCamera : MonoBehaviour {
 		uacd.renderPostProcessing = false;
 		uacd.SetRenderer(1);
 
-		FOWAffectedRenderTexture = new RenderTexture(Screen.width, Screen.height, 0, RenderTextureFormat.Default);
+		FOWAffectedRenderTexture = new RenderTexture(Screen.width, Screen.height, 32, RenderTextureFormat.Default);
 
-		//affectedCamera.SetTargetBuffers(FOWAffectedRenderTexture.colorBuffer, FOWAffectedRenderTexture.depthBuffer);
 		affectedCamera.targetTexture = FOWAffectedRenderTexture;
+		affectedCamera.depthTextureMode = DepthTextureMode.Depth;
 		affectedCamera.clearFlags = CameraClearFlags.SolidColor;
 		affectedCamera.backgroundColor = new Color(0, 0, 0, 0);
 	}
