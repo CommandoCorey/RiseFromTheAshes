@@ -104,7 +104,8 @@ class FogEffectPass : ScriptableRenderPass
 		impermMaterial.SetVector("_FogTopCorner", FOWManager.Instance.imperm.transform.position);
 		impermMaterial.SetFloat("_Height", FOWManager.Instance.imperm.transform.position.y);
 		impermMaterial.SetVector("_FogMaskSize", FOWManager.Instance.imperm.GetMaskExtentf());
-		impermMaterial.SetTexture("_AffectedObjects", FOWCamera.FOWAffectedRenderTexture);
+		impermMaterial.SetTexture("_AffectedObjects", FOWCamera.FOWAffectedRenderTexture, RenderTextureSubElement.Color);
+		impermMaterial.SetTexture("_AffectedDepth", FOWCamera.FOWAffectedRenderTexture, RenderTextureSubElement.Depth);
 
 		CommandBuffer cmd = CommandBufferPool.Get("fogEffectCmdBuffer");
 		cmd.Clear();
