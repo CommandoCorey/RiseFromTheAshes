@@ -18,13 +18,13 @@ public class Building : MonoBehaviour
 
 	public bool IsBuilt {
 		get {
-			return buildTimer >= timeToBuild;
+			return buildTimer >= 1.0f;
 		}
 	}
 
 	public float BuiltPerc {
 		get {
-			return buildTimer / timeToBuild;
+			return buildTimer / 1.0f;
 		}
 	}
 
@@ -85,13 +85,9 @@ public class Building : MonoBehaviour
 	void Update()
 	{
 		if (isBuilding) {
-			buildTimer += Time.deltaTime;
-
-			/* NOTE: This won't work if the building is attacked
-			 * while it is in the process of being built.
-			 * 
-			 * TODO (George): Fix this. */
-			HP = Mathf.Lerp(0.0f, maxHP, BuiltPerc);
+			buildTimer += Time.deltaTime / timeToBuild;
+			HP += Time.deltaTime * maxHP / timeToBuild;
+			HP = Mathf.Clamp(HP, 0.0f, maxHP);
 
 			foreach (Material material in materials)
 			{
@@ -111,5 +107,20 @@ public class Building : MonoBehaviour
 		HP = 0.0f;
 
 		EnableRendering(true);
+	}
+
+	void TryVehicleBayInteract()
+	{
+		VehicleBay vehicleBay;
+		if (!TryGetComponent<VehicleBay>(out vehicleBay)) { return; }
+
+		if (vehicleBay == null) { return; }
+
+		vehicleBay.Interact();
+	}
+
+	public void Interact()
+	{
+		TryVehicleBayInteract();
 	}
 }
