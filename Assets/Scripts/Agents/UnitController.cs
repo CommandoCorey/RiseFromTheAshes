@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum UnitState
 {
@@ -13,10 +14,14 @@ public enum UnitState
 
 public class UnitController : MonoBehaviour
 {
+    [Header("Game Objects and transforms")]
     public GameObject selectionHighlight;
     public Transform turret;
     public Transform castingPoint;
-    public Transform firingPoint;
+    public Transform firingPoint;    
+    public Sprite guiIcon;
+
+    [Header("External Scripts")]
     public ProgressBar healthBar;
 
     #region variable declartion
@@ -65,6 +70,10 @@ public class UnitController : MonoBehaviour
     public float DetectionRadius { get => detectionRadius; }
     public LayerMask DetectionLayer { get => detectionLayer; }
     public LayerMask EnvironmentLayer { get => environmentLayer; }
+    public Sprite GuiIcon { get => guiIcon; }
+
+    public float MaxHealth { get => maxHealth; }
+    public float CurrentHealth {  get=> health; }
     public float Speed { get => movementSpeed; }  
     public float TurretRotationSpeed { get => turretRotationSpeed; }
     public float DamagePerHit { get => damagePerHit; }
@@ -96,12 +105,13 @@ public class UnitController : MonoBehaviour
     }    
 
     /// <summary>
-    /// 
+    /// Toggles the visibility of the unit selection highlight and health bar
     /// </summary>
-    /// <param name="selected"></param>
+    /// <param name="selected">true or false value</param>
     public void SetSelected(bool selected)
     {
         selectionHighlight.SetActive(selected);
+        healthBar.gameObject.SetActive(selected);
     }
 
     /// <summary>

@@ -9,7 +9,7 @@ public class SelectionManager : MonoBehaviour
     public bool drawDebugBox = true;
 
     // contains all of the selected units
-    private Dictionary<int, GameObject> selectedTable = new Dictionary<int, GameObject>();
+    private Dictionary<int, GameObject> selectedTable = new Dictionary<int, GameObject>();    
     RaycastHit hit;
 
     bool dragSelect; // defines whether or not to show a box on screen
@@ -28,6 +28,8 @@ public class SelectionManager : MonoBehaviour
     Vector3[] verts;
 
     private float boxHeight = 10;
+
+    public GUIManager gui; // used to update unit icons
 
     // properties
     public List<GameObject> Units
@@ -105,6 +107,8 @@ public class SelectionManager : MonoBehaviour
                     {
                         DeselectAll();
                         AddSelected(hit.transform.gameObject);
+
+                        gui.GenerateUnitIcons(Units);
                     }
                 }
                 else //if we didnt hit something
@@ -157,7 +161,9 @@ public class SelectionManager : MonoBehaviour
                 {
                     //Debug.Log("Selected: " + collision.gameObject.name);
                     AddSelected(collision.gameObject);
-                }                
+                }
+
+                gui.GenerateUnitIcons(Units);
 
                 Destroy(selectionBox, 0.02f);
 
@@ -227,6 +233,8 @@ public class SelectionManager : MonoBehaviour
             }
         }
         selectedTable.Clear(); // clears the whole dictionary
+
+        gui.ClearUnitSelection();
     }
 
     // create a bounding vox (4 corners in order) from the start and end mouse position
