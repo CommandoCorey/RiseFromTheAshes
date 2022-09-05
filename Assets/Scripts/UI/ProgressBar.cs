@@ -2,6 +2,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEditor;
 
+[System.Serializable]
+enum ProgressBarTextType {
+	Value,
+	Text
+}
+
 [ExecuteAlways]
 public class ProgressBar : MonoBehaviour
 {
@@ -11,6 +17,8 @@ public class ProgressBar : MonoBehaviour
 	[SerializeField] Image foreground;
 
 	[Header("Text")]
+	[SerializeField] ProgressBarTextType textType = ProgressBarTextType.Value;
+	[SerializeField] string textString;
 	[SerializeField] bool showText;
 	[SerializeField] TMPro.TMP_Text text;
 	[SerializeField] public float maxValue;
@@ -26,8 +34,15 @@ public class ProgressBar : MonoBehaviour
 
 		if (showText)
 		{
-			text.gameObject.SetActive(true);
-			text.text = Mathf.Round((progress * maxValue)).ToString() + "/" + maxValue.ToString();
+			if (textType == ProgressBarTextType.Value)
+			{
+				text.gameObject.SetActive(true);
+				text.text = Mathf.Round((progress * maxValue)).ToString() + "/" + maxValue.ToString();
+			} else
+			{
+				text.gameObject.SetActive(true);
+				text.text = textString;
+			}
 		} else
 		{
 			text.gameObject.SetActive(false);

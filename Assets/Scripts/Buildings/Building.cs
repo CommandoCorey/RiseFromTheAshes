@@ -108,4 +108,19 @@ public class Building : MonoBehaviour
 
 		EnableRendering(true);
 	}
+
+	void TryVehicleBayInteract()
+	{
+		VehicleBay vehicleBay;
+		if (!TryGetComponent<VehicleBay>(out vehicleBay)) { return; }
+
+		if (vehicleBay == null) { return; }
+
+		vehicleBay.Interact();
+	}
+
+	public void Interact()
+	{
+		TryVehicleBayInteract();
+	}
 }
