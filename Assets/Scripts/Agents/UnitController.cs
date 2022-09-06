@@ -74,6 +74,7 @@ public class UnitController : MonoBehaviour
 
     public float MaxHealth { get => maxHealth; }
     public float CurrentHealth {  get=> health; }
+    public float Heal { set=> health = Mathf.Clamp(health + value, 0.0f, maxHealth); }
     public float Speed { get => movementSpeed; }  
     public float TurretRotationSpeed { get => turretRotationSpeed; }
     public float DamagePerHit { get => damagePerHit; }
