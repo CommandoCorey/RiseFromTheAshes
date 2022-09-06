@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class SelectionManager : MonoBehaviour
 {
     public LayerMask selectionLayer;
     [SerializeField][Range(4, 50)]
     public bool drawDebugBox = true;
+    public UnitGui gui; // used to update unit icons
 
     // contains all of the selected units
     private Dictionary<int, GameObject> selectedTable = new Dictionary<int, GameObject>();    
@@ -29,7 +31,7 @@ public class SelectionManager : MonoBehaviour
 
     private float boxHeight = 10;
 
-    public GUIManager gui; // used to update unit icons
+    private UnitManager unitManager;
 
     // properties
     public List<GameObject> Units
@@ -70,11 +72,15 @@ public class SelectionManager : MonoBehaviour
     {
         //selectedTable = GetComponent<SelectedDictionary>();
         dragSelect = false;
+        unitManager = GetComponent<UnitManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (gui.ButtonClicked != UnitGui.ActionChosen.Null)
+            return;
+
         //1. when left mouse button clicked (but not released)
         if (Input.GetMouseButtonDown(0))
         {
@@ -96,6 +102,13 @@ public class SelectionManager : MonoBehaviour
             if (dragSelect == false) //single select
             {
                 Ray ray = Camera.main.ScreenPointToRay(p1);
+
+                // dont select anything if the GUI is clicked
+                if (EventSystem.current.IsPointerOverGameObject())
+                {
+                    //Debug.Log("Clicked on GUI");
+                    return;
+                }
 
                 if (Physics.Raycast(ray, out hit, 50000.0f, selectionLayer))
                 {
@@ -121,6 +134,8 @@ public class SelectionManager : MonoBehaviour
                     {
                         DeselectAll();
                     }
+
+                    gui.unitInfoPanel.SetActive(false);
                 }
             }
             else //marquee select
@@ -143,7 +158,7 @@ public class SelectionManager : MonoBehaviour
                     i++;
                 }
 
-                if (!Input.GetKey(KeyCode.LeftShift))
+                if (!Input.GetKey(KeyCode.LeftShift) && gui.ButtonClicked == UnitGui.ActionChosen.Null)
                 {
                     DeselectAll();
                 }
@@ -170,6 +185,12 @@ public class SelectionManager : MonoBehaviour
             }//end marquee select
 
             dragSelect = false;
+
+            unitManager.SetSelectedUnits(Units);
+
+            // if only one unit is selected then display the unit stats/info
+            //if (Units.Count == 1)
+                //gui.SelectSingleUnit(Units[0].GetComponent<>);
         }
 
     }

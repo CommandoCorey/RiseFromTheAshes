@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviour
     public void SetMarkerLocation(Vector3 position)
     {
         marker.transform.position = position;
+        marker.GetComponent<MeshRenderer>().enabled = true;
     }
 
 }

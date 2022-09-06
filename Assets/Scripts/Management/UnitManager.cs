@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.EventSystems;
 
 public class UnitManager : MonoBehaviour
 {
     #region variable declaration
+    [Header("Layer Masks")]
     public LayerMask groundLayer;
+    public LayerMask enemyLayers;
     RaycastHit hitInfo;
 
     //[SerializeField]
@@ -31,6 +34,8 @@ public class UnitManager : MonoBehaviour
     private List<Vector3> searchedPositions = new List<Vector3>();
 
     private GameManager gameManager;
+
+    private Vector3 point;
     #endregion
     
     #region start and update
@@ -40,7 +45,6 @@ public class UnitManager : MonoBehaviour
         gameManager = GetComponent<GameManager>();
 
         selectedUnits = new List<GameObject>();
-        //selectedUnits = new Dictionary<int, GameObject>();
         selection = GetComponent<SelectionManager>();
 
         squads = new List<List<GameObject>>();
@@ -50,10 +54,24 @@ public class UnitManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // move units when right mouse buttons is clicked
-        if (Input.GetMouseButtonDown(1) && Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo))
+        if (Input.GetMouseButtonDown(1)) 
         {
-            if (selection.Units.Count > 0)
+            point = Input.mousePosition;
+        }
+
+        // move units when right mouse buttons is clicked
+        if (Input.GetMouseButtonUp(1))
+        {          
+            // check if the cursor is over the a UI element
+            if (EventSystem.current.IsPointerOverGameObject())                
+            {
+                //Debug.Log("Clicked on GUI");
+                return;
+            }
+
+            Ray ray = Camera.main.ScreenPointToRay(point);
+
+            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo) && selection.Units.Count > 0)
                 MoveUnits(hitInfo);
         }
 
@@ -71,6 +89,38 @@ public class UnitManager : MonoBehaviour
         }
 
         return selected;
+    }
+
+    public void SetSelectedUnit(GameObject unit)
+    {
+        // turn off selection highlights
+        foreach(var selected in selectedUnits)
+        {
+            selected.GetComponent<UnitController>().SetSelected(false);
+        }
+
+        selectedUnits.Clear();
+        selectedUnits.Add(unit);
+
+        unit.GetComponent<UnitController>().SetSelected(true);
+    }
+
+    public void SetSelectedUnits(List<GameObject> units)
+    {
+        // turn off selection highlights and healthbars
+        foreach (var selectedUnit in selectedUnits)
+        {
+            selectedUnit.GetComponent<UnitController>().SetSelected(false);
+        }
+
+        selectedUnits.Clear();
+        selectedUnits = units;
+
+        // turns on new selection
+        foreach (var selectedUnit in selectedUnits)
+        {
+            selectedUnit.GetComponent<UnitController>().SetSelected(true);
+        }
     }
 
     public GameObject[] GetPlayerUnits()
@@ -115,13 +165,44 @@ public class UnitManager : MonoBehaviour
         return squads[squadNum];
     }
 
-    public void StopGroupMoving()
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="target"></param>
+    /// <returns></returns>
+    public bool AttackTarget(Transform target)
     {
-        var squad = GameObject.FindGameObjectsWithTag("PlayerUnit");
-
-        foreach(GameObject unit in squad)
+        // check if the target's layer is one of the enemy layers
+        if(enemyLayers == (enemyLayers | (1 << target.gameObject.layer)))
         {
-            unit.GetComponent<UnitController>().ChangeState(UnitState.Idle);
+            foreach(var unit in selectedUnits)
+            {
+                var controller = unit.GetComponent<UnitController>();
+                controller.AttackTarget = target;
+                controller.ChangeState(UnitState.Attack, target.position);
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Stops all units in a selection form moving
+    /// </summary>
+    public void HaltUnitSelection()
+    {
+        Debug.Log("Halt button clicked");
+
+        foreach(GameObject unit in selectedUnits)
+        {
+            var controller = unit.GetComponent<UnitController>();
+
+            if (controller.State == UnitState.Attack)
+                controller.ChangeState(UnitState.Halt);
+            else
+                controller.ChangeState(UnitState.Idle);
         }
 
     }
@@ -148,15 +229,17 @@ public class UnitManager : MonoBehaviour
 
         return path.corners;
     }
-    #endregion
 
-    #region private functions
-    private void MoveUnits(RaycastHit hit)
+    /// <summary>
+    /// Moves all units in the selection to a location and changes their state
+    /// </summary>
+    /// <param name="hit">The raycast hit object</param>
+    public void MoveUnits(RaycastHit hit)
     {
         formationPositions.Clear();
         Vector3 targetPos;
 
-        gameManager.SetMarkerLocation(new Vector3(hit.point.x, 1, hit.point.z));        
+        gameManager.SetMarkerLocation(new Vector3(hit.point.x, 1, hit.point.z));
 
         // check that the player clicked on the ground.
         // If they did not find a new position
@@ -169,7 +252,7 @@ public class UnitManager : MonoBehaviour
             NavMeshHit hitInfo;
 
             if (NavMesh.SamplePosition(hit.point, out hitInfo, 10f, NavMesh.AllAreas))
-            {               
+            {
                 targetPos = hitInfo.position;
             }
             else
@@ -180,27 +263,27 @@ public class UnitManager : MonoBehaviour
 
         }
 
-        squads.Add(selection.Units);
+        squads.Add(selectedUnits);
 
-        if (selection.Units.Count > 1)
-        {                
-            formationPositions = GetFormationPositions(targetPos);          
+        if (selectedUnits.Count > 1)
+        {
+            formationPositions = GetFormationPositions(targetPos);
 
-            if(formationPositions.Count < selection.Units.Count)
+            if (formationPositions.Count < selectedUnits.Count)
             {
                 Debug.LogError("Not enough formations positions were created for the selected units");
                 return;
             }
-                
+
             // move all units to their designated targets
-            for(int i=0; i < selection.Units.Count; i++)
+            for (int i = 0; i < selectedUnits.Count; i++)
             {
-                var agent = selection.Units[i].GetComponent<AgentMovement>();
+                var agent = selectedUnits[i].GetComponent<AgentMovement>();
                 agent.SquadNum = squads.Count - 1;
 
-                var unit = selection.Units[i].GetComponent<UnitController>();
+                var unit = selectedUnits[i].GetComponent<UnitController>();
 
-                if(flockWhileMoving)
+                if (flockWhileMoving)
                     unit.ChangeState(UnitState.Flock, formationPositions[i]);
                 else
                     unit.ChangeState(UnitState.Moving, formationPositions[i]);
@@ -215,8 +298,11 @@ public class UnitManager : MonoBehaviour
             controller.ChangeState(UnitState.Moving, targetPos);
 
             //unit.GetComponent<SeekState>().MoveTo(hitInfo.point);
-        }        
+        }
     }
+    #endregion
+
+    #region private functions    
 
     /// <summary>
     /// Removes a specifed unit from a moving group
@@ -382,6 +468,7 @@ public class UnitManager : MonoBehaviour
         return newVector;
     }
 
+    // Not currently be using
     private bool UnitsNotMoving(List<GameObject> units)
     {
         foreach(GameObject unit in units)
@@ -393,6 +480,7 @@ public class UnitManager : MonoBehaviour
         return true;
     } 
 
+    // Not 
     private void CheckNeigboursMoving(int squadNum)
     {
         bool unitsStillMoving = false;

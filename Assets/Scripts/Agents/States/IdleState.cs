@@ -27,7 +27,7 @@ public class IdleState : MonoBehaviour
         {
             //Debug.Log("Detected Enemy: " + enemiesInRange[0].gameObject.name);
 
-            unit.AttackTarget = enemiesInRange[0].gameObject;
+            unit.AttackTarget = enemiesInRange[0].gameObject.transform;
             unit.ChangeState(UnitState.Attack);
         }
     }
