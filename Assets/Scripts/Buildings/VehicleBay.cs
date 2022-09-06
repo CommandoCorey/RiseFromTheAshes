@@ -22,6 +22,12 @@ public class VehicleBay : MonoBehaviour {
 	[SerializeField] Button cancelButton;
 	Building building;
 
+	[Space]
+
+	[SerializeField] float healUnitRadius;
+	[SerializeField] float healUnitPerSecond;
+	[SerializeField] LayerMask unitLayer;
+
 	UnitDesc currentUnitDesc;
 
 	float buildTimer = 0.0f;
@@ -69,23 +75,39 @@ public class VehicleBay : MonoBehaviour {
 
 	public void Update()
 	{
-		if (isBuilding && building.IsBuilt)
+		if (building.IsBuilt)
 		{
-			UnitDesc desc = currentUnitDesc;
+			if (isBuilding) {
+				UnitDesc desc = currentUnitDesc;
 
-			float timeToBuild = desc.timeToBuild;
+				float timeToBuild = desc.timeToBuild;
 
-			buildTimer += Time.deltaTime / timeToBuild;
+				buildTimer += Time.deltaTime / timeToBuild;
 
-			buildProgress.progress = buildTimer;
+				buildProgress.progress = buildTimer;
 
-			if (buildTimer >= 1.0f)
+				if (buildTimer >= 1.0f)
+				{
+					Instantiate(desc.prefab, spawnLocation.position, Quaternion.identity);
+					buildProgress.gameObject.SetActive(false);
+
+					isBuilding = false;
+				}
+			}
+
+			Collider[] overlapping = Physics.OverlapSphere(transform.position, healUnitRadius, unitLayer);
+			foreach (Collider o in overlapping)
 			{
-				Instantiate(desc.prefab, spawnLocation.position, Quaternion.identity);
-				buildProgress.gameObject.SetActive(false);
+				UnitController uc;
+				if (!TryGetComponent(out uc)) { continue; }
 
-				isBuilding = false;
+				uc.Heal = Time.deltaTime * healUnitPerSecond;
 			}
 		}
+	}
+
+	private void OnDrawGizmosSelected()
+	{
+		Gizmos.DrawWireSphere(transform.position, healUnitRadius);
 	}
 }
