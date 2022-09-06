@@ -12,6 +12,8 @@ public class FOWCamera : MonoBehaviour {
 	void Start() {
 		myCamera = GetComponent<Camera>();
 
+		myCamera.cullingMask &= ~FOWManager.Instance.affectedLayer;
+
 		GameObject affectedCameraGO = new GameObject();
 		affectedCameraGO.transform.parent = this.gameObject.transform;
 
