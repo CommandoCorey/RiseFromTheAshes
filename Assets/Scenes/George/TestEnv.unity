@@ -1656,9 +1656,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e80a93d4f22fe0289d8c881a7e6226c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FOWAffectedLayerMask:
-    serializedVersion: 2
-    m_Bits: 1048576
   FOWAffectedRenderTexture: {fileID: 0}
 --- !u!1001 &1573640802
 PrefabInstance:
@@ -1714,6 +1711,10 @@ PrefabInstance:
     - target: {fileID: 5607677944496883611, guid: 960971efd72703248ab8114beaf2eeab, type: 3}
       propertyPath: m_Name
       value: FOW
+      objectReference: {fileID: 0}
+    - target: {fileID: 5607677945105453335, guid: 960971efd72703248ab8114beaf2eeab, type: 3}
+      propertyPath: affectedLayer.m_Bits
+      value: 128
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 960971efd72703248ab8114beaf2eeab, type: 3}
