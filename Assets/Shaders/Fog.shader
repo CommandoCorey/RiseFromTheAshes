@@ -102,7 +102,7 @@ Shader "Hidden/Fog"
 				int maxSamples = min(_Samples, 32);
 
 				float density = 0.0;
-				float light = 0.0;
+				float light = 1.0;
 				float3 hitPoint = float3(0.0, 0.0, 0.0);
 				if (dist > 0.0 && dist < MAX_RAY_DIST) {
 					/* Ray trace from the hit point returned by the raymarch and
@@ -115,14 +115,14 @@ Shader "Hidden/Fog"
 						float3 p = hitPoint + rayDirection * (float(i) * _StepSize);
 
 						float2 n1 = _NoiseTexture.SampleLevel(sampler_NoiseTexture, (p * _CloudScale) + _ScrollDirection * _Time.y, 0);
-						float2 n2 = _NoiseTexture.SampleLevel(sampler_NoiseTexture, (p * 2.0 * _CloudScale) + -_ScrollDirection * _Time.y * 5.0, 0);
+						float2 n2 = _NoiseTexture.SampleLevel(sampler_NoiseTexture, (p * 2.0 * _CloudScale) + float3(_ScrollDirection.z, -1.0, _ScrollDirection.x) * _Time.y * 0.3, 0);
 
 						float mainNoise = n1.r * 2.0;
 						float detailNoise = n2.r * 0.5;
 
 						float noise = mainNoise + detailNoise;
 
-						light -= noise * 0.005 * p.y;
+						light -= noise * 0.01 * (_Height - p.y);
 						light = max(0.0, light);
 
 						density += max(0.0, noise - _Threshold);

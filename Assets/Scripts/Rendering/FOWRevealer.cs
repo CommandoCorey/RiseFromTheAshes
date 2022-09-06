@@ -2,10 +2,12 @@ using UnityEngine;
 
 public class FOWRevealer : MonoBehaviour
 {
-	[SerializeField] int radius = 5;
+	[SerializeField] int permRadius = 10;
+	[SerializeField] int impermRadius = 5;
 
 	void Update()
 	{
-		FOWManager.DrawCircle(transform.position, radius);
+		FOWManager.Instance.perm.MaskDrawCircle(FOWManager.Instance.perm.WorldPosToMaskPos(transform.position), permRadius);
+		FOWManager.Instance.imperm.MaskDrawCircle(FOWManager.Instance.imperm.WorldPosToMaskPos(transform.position), impermRadius);
 	}
 }

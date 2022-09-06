@@ -7,12 +7,12 @@ public class FOWCamera : MonoBehaviour {
 
 	Camera affectedCamera;
 
-	public LayerMask FOWAffectedLayerMask;
-
 	[HideInInspector] public RenderTexture FOWAffectedRenderTexture;
 
 	void Start() {
 		myCamera = GetComponent<Camera>();
+
+		myCamera.cullingMask &= ~FOWManager.Instance.affectedLayer;
 
 		GameObject affectedCameraGO = new GameObject();
 		affectedCameraGO.transform.parent = this.gameObject.transform;
@@ -25,7 +25,7 @@ public class FOWCamera : MonoBehaviour {
 		affectedCameraGO.AddComponent<Camera>();
 
 		affectedCamera = affectedCameraGO.GetComponent<Camera>();
-		affectedCamera.cullingMask = FOWAffectedLayerMask;
+		affectedCamera.cullingMask = FOWManager.Instance.affectedLayer;
 		affectedCamera.fieldOfView = myCamera.fieldOfView;
 
 		UniversalAdditionalCameraData uacd = affectedCamera.GetUniversalAdditionalCameraData();
