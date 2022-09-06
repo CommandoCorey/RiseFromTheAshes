@@ -49,8 +49,11 @@ Shader "Hidden/FogImperm"
 			sampler2D _CameraDepthTexture;
 			sampler2D _MaskTex;
 			sampler2D _AffectedObjects;
+			sampler2D _AffectedDepth;
 
 			uniform float _Height;
+
+			uniform float4 _FogColour;
 
 			uniform float4 _FogTopCorner;
 			uniform float2 _FogMaskSize;
@@ -100,16 +103,26 @@ Shader "Hidden/FogImperm"
 
 				float maskVal = tex2D(_MaskTex, hitPointMaskSpace).r;
 
+				float affectedDepth = SAMPLE_DEPTH_TEXTURE(_AffectedDepth, i.uv);
+				affectedDepth = Linear01Depth(affectedDepth);
+
+				float sceneDepth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, i.uv);
+				sceneDepth = Linear01Depth(sceneDepth);
+
 				float4 affectedObjectsColour = tex2D(_AffectedObjects, i.uv);
 
 				affectedObjectsColour.a *= 1.0 - maskVal;
 
 				float4 col = tex2D(_MainTex, i.uv);
 
-				col.rgb *= 1.0 - (float3(0.5, 0.5, 0.5) * (maskVal - 0.5));
+				col.rgb *= (1.0 - (maskVal - _FogColour.rgb * _FogColour.a));
+
+				float3 sceneColour = affectedObjectsColour.rgb * affectedObjectsColour.a + col.rgb * (1.0 - affectedObjectsColour.a);
 
 				/* TODO (George): Depth test the affected objects */
-				float3 sceneColour = affectedObjectsColour.rgb * affectedObjectsColour.a + col.rgb * (1.0 - affectedObjectsColour.a);
+				/* if (affectedDepth < sceneDepth) {
+					return col;
+				} */
 
 				return float4(sceneColour, 1.0);
 			}
