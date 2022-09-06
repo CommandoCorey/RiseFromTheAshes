@@ -42,7 +42,7 @@ public class CombatState : MonoBehaviour
 
     void Start()
     {
-        target = unit.AttackTarget.transform;
+        target = unit.AttackTarget;
 
         direction = (target.position - unit.turret.position).normalized;
         lookRotation = Quaternion.LookRotation(direction);
@@ -85,12 +85,23 @@ public class CombatState : MonoBehaviour
         
     }
 
+    // deals damage to enemy once every x amount of seconds
     private void DealDamage()
     {
         if (target != null)
         {
-            target.GetComponent<UnitController>().TakeDamage(unit.DamagePerHit);
-            Invoke("DealDamage", unit.AttackRate);
+            if(target.gameObject.layer == 7)
+            {
+                target.GetComponent<UnitController>().TakeDamage(unit.DamagePerHit);
+                Invoke("DealDamage", unit.AttackRate);
+            }
+
+            if(target.gameObject.layer == 9)
+            {
+                Debug.Log("Dealing " + unit.DamagePerHit + " damage to " + target.name);
+                Invoke("DealDamage", unit.AttackRate);
+            }
+            
         }
         else
         {

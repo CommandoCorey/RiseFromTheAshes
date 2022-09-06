@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class IdleState : MonoBehaviour
+public class HaltState : MonoBehaviour
 {
     UnitController unit;
     AgentMovement agent;
@@ -16,11 +16,13 @@ public class IdleState : MonoBehaviour
     private void Start()
     {
         agent.StopMoving();
+
+        Invoke("SwitchToIdle", unit.HaltTime);
     }
 
     void Update()
     {
-        var enemiesInRange = Physics.OverlapSphere(transform.position, unit.DetectionRadius, unit.DetectionLayer);
+        var enemiesInRange = Physics.OverlapSphere(transform.position, unit.AttackRange, unit.DetectionLayer);
 
         // if there are any enemies in range change to the combat state
         if (enemiesInRange.Length > 0)
@@ -30,6 +32,11 @@ public class IdleState : MonoBehaviour
             unit.AttackTarget = enemiesInRange[0].gameObject.transform;
             unit.ChangeState(UnitState.Attack);
         }
+    }
+
+    private void SwitchToIdle()
+    {
+
     }
 
     private void OnDrawGizmos()

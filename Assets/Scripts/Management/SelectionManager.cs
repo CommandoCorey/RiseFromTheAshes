@@ -78,7 +78,7 @@ public class SelectionManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (gui.MoveClicked || gui.AttackClicked)
+        if (gui.ButtonClicked != GUIManager.ActionChosen.Null)
             return;
 
         //1. when left mouse button clicked (but not released)
@@ -156,7 +156,7 @@ public class SelectionManager : MonoBehaviour
                     i++;
                 }
 
-                if (!Input.GetKey(KeyCode.LeftShift) && !gui.MoveClicked && !gui.AttackClicked)
+                if (!Input.GetKey(KeyCode.LeftShift) && gui.ButtonClicked == GUIManager.ActionChosen.Null)
                 {
                     DeselectAll();
                 }

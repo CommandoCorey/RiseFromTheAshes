@@ -7,6 +7,11 @@ using UnityEngine.UI;
 
 public class GUIManager : MonoBehaviour
 {
+    public enum ActionChosen
+    {
+        Null, Move, Attack, Halt
+    }
+
     public GameObject buttonPanel;
     public Transform unitPanal;
     public Transform statsPanel;
@@ -21,9 +26,7 @@ public class GUIManager : MonoBehaviour
     private SelectionManager selectionManager;
 
     // properties
-    public bool MoveClicked { get; set; } = false;
-    public bool AttackClicked { get; set; } = false;
-    public bool HaltClicked { get; set; } = false;
+    public ActionChosen ButtonClicked { get; set; } = ActionChosen.Null;
 
     // Start is called before the first frame update
     void Start()
@@ -39,32 +42,32 @@ public class GUIManager : MonoBehaviour
     {
         UpdateUnitHealth();
 
-        if(Input.GetMouseButtonUp(0) && !EventSystem.current.IsPointerOverGameObject())
+        // check if mouse clicks on environment while an action is chosen
+        if(Input.GetMouseButtonUp(0) && ButtonClicked!= ActionChosen.Null && !EventSystem.current.IsPointerOverGameObject())
         {
             RaycastHit hitInfo;
 
-            if(MoveClicked && Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo))
+            if(ButtonClicked == ActionChosen.Move && Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo))
             {
                 //Debug.Log("Clicked");
                 unitManager.MoveUnits(hitInfo);
 
-                MoveClicked = false;
+                ButtonClicked = ActionChosen.Null;
             }
-            else if(AttackClicked && Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo))
+            else if(ButtonClicked == ActionChosen.Attack && Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo))
             {
-                // check if the layer is one of the layers in the layermask
-                if (enemyLayers == (enemyLayers | (1 << hitInfo.transform.gameObject.layer)))
-                {
-                    //Debug.Log("You chose to attack " + hitInfo.transform.name);
-                    StartCoroutine(ShowAlert("You chose to attack " + hitInfo.transform.name, 2));
-                }
-                else
+                bool attackSuccess = unitManager.AttackTarget(hitInfo.transform);
+
+                if(!attackSuccess)
                 {
                     StartCoroutine(ShowAlert("That's not a valid attack target", 2));
-                    //Debug.Log("That's not a valid attack target");
                 }
 
-                AttackClicked = false;
+                ButtonClicked = ActionChosen.Null;
+            }
+            else if(ButtonClicked == ActionChosen.Halt)
+            {
+                unitManager.HaltUnitSelection();
             }
             else
             {
@@ -74,6 +77,7 @@ public class GUIManager : MonoBehaviour
     }
 
     #region private functions
+
     private void UpdateUnitHealth()
     {
         if (selectedUnits != null)
@@ -113,19 +117,20 @@ public class GUIManager : MonoBehaviour
 
     #region public functions
     public void SetMoveMode() 
-    { 
-        MoveClicked = true;
+    {
+        ButtonClicked = ActionChosen.Move;
         selectionManager.enabled = false;
     }
 
-    public void SetAttackMode() { 
-        AttackClicked = true;
+    public void SetAttackMode() {
+        ButtonClicked = ActionChosen.Attack;
         selectionManager.enabled = false;
     }
 
     public void SetHaltClicked()
     {
-        HaltClicked = true;
+        ButtonClicked = ActionChosen.Halt;
+        selectionManager.enabled = false;
     }
 
     /// <summary>
@@ -197,7 +202,6 @@ public class GUIManager : MonoBehaviour
     {
 
     }
-
 
     /// <summary>
     /// Removes all unit information from the GUI and clears the lists

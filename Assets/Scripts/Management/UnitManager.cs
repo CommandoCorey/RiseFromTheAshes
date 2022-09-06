@@ -8,7 +8,9 @@ using UnityEngine.EventSystems;
 public class UnitManager : MonoBehaviour
 {
     #region variable declaration
+    [Header("Layer Masks")]
     public LayerMask groundLayer;
+    public LayerMask enemyLayers;
     RaycastHit hitInfo;
 
     //[SerializeField]
@@ -164,6 +166,29 @@ public class UnitManager : MonoBehaviour
     }
 
     /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="target"></param>
+    /// <returns></returns>
+    public bool AttackTarget(Transform target)
+    {
+        // check if the target's layer is one of the enemy layers
+        if(enemyLayers == (enemyLayers | (1 << target.gameObject.layer)))
+        {
+            foreach(var unit in selectedUnits)
+            {
+                var controller = unit.GetComponent<UnitController>();
+                controller.AttackTarget = target;
+                controller.ChangeState(UnitState.Attack, target.position);
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
     /// Stops all units in a selection form moving
     /// </summary>
     public void HaltUnitSelection()
@@ -172,7 +197,12 @@ public class UnitManager : MonoBehaviour
 
         foreach(GameObject unit in selectedUnits)
         {
-            unit.GetComponent<UnitController>().ChangeState(UnitState.Idle);
+            var controller = unit.GetComponent<UnitController>();
+
+            if (controller.State == UnitState.Attack)
+                controller.ChangeState(UnitState.Halt);
+            else
+                controller.ChangeState(UnitState.Idle);
         }
 
     }
@@ -438,6 +468,7 @@ public class UnitManager : MonoBehaviour
         return newVector;
     }
 
+    // Not currently be using
     private bool UnitsNotMoving(List<GameObject> units)
     {
         foreach(GameObject unit in units)
@@ -449,6 +480,7 @@ public class UnitManager : MonoBehaviour
         return true;
     } 
 
+    // Not 
     private void CheckNeigboursMoving(int squadNum)
     {
         bool unitsStillMoving = false;
