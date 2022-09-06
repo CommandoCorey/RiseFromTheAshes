@@ -153,10 +153,6 @@ public class UnitController : MonoBehaviour
                     idleState = gameObject.AddComponent<IdleState>();
                 }
 
-                //Destroy(flockState);
-                //Destroy(moveState);
-                //Destroy(attackState);
-
                 drawColor = Color.white;
                 break;
 
@@ -174,10 +170,6 @@ public class UnitController : MonoBehaviour
                     moveState = gameObject.AddComponent<SeekState>();
                 }
 
-                //Destroy(idleState);
-                //Destroy(flockState);
-                //Destroy(attackState);
-
                 //moveState.Target = target;
                 moveState.MoveTo(target);
 
@@ -190,10 +182,6 @@ public class UnitController : MonoBehaviour
                     flockState = gameObject.AddComponent<FlockState>();
                 }
 
-                //Destroy(idleState);
-                //Destroy(moveState);
-                //Destroy(attackState);
-
                 flockState.Target = target;
                 //flockState.FormationTarget = formationTarget;
 
@@ -205,12 +193,22 @@ public class UnitController : MonoBehaviour
                 {
                     attackState = gameObject.AddComponent<CombatState>();
                 }
-
-                //Destroy(idleState);
-                //Destroy(moveState);
-                //Destroy(flockState);
             break;
         }
+    }
+
+    // Removes unit from lists in unit manager and GUI once it is destroyed
+    private void OnDestroy()
+    {
+        var unitGui = GameObject.FindObjectOfType<UnitGui>();
+        var unitManager = GameObject.FindObjectOfType<UnitManager>();
+
+        if (unitManager != null)
+            unitManager.RemoveFromSelection(this.gameObject);
+
+        if (unitGui != null)        
+            unitGui.RemoveUnitFromSelection(this);
+        
     }
 
     private void OnDrawGizmos()

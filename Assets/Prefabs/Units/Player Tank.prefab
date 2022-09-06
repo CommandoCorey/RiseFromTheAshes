@@ -299,7 +299,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3062916953682552344}
-  m_LocalRotation: {x: -0.034458563, y: -0.00000003461146, z: -0.0047693644, w: 0.9993948}
+  m_LocalRotation: {x: -0.034454748, y: 0.00016571453, z: 0.000005713045, w: 0.9994063}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -307,7 +307,7 @@ Transform:
   - {fileID: 1665903544140802224}
   m_Father: {fileID: 7231514677526155655}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: -3.947, y: 0.943, z: -0.58}
+  m_LocalEulerAnglesHint: {x: -3.949, y: 0.019, z: 0}
 --- !u!1 &3658104961266186285
 GameObject:
   m_ObjectHideFlags: 0
@@ -592,6 +592,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d337556d8371dc349a90c78320b2f3fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unitName: 
   selectionHighlight: {fileID: 8874097332367213349}
   turret: {fileID: 8017703112987029787}
   castingPoint: {fileID: 5239282258534996132}
@@ -611,6 +612,7 @@ MonoBehaviour:
   environmentLayer:
     serializedVersion: 2
     m_Bits: 1024
+  haltTime: 5
   showDetectionRadius: 0
   showAttackRange: 0
   health: 0
@@ -685,7 +687,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62c0e9bedd811934ba1b67fab761f762, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  radius: 5
+  permRadius: 10
+  impermRadius: 5
 --- !u!1 &5854496748594030956
 GameObject:
   m_ObjectHideFlags: 0

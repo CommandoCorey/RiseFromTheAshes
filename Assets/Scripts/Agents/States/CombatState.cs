@@ -90,13 +90,15 @@ public class CombatState : MonoBehaviour
     {
         if (target != null)
         {
-            if(target.gameObject.layer == 7)
+            // check if the target is a unit
+            if(target.gameObject.layer == 6 || target.gameObject.layer == 7)
             {
                 target.GetComponent<UnitController>().TakeDamage(unit.DamagePerHit);
                 Invoke("DealDamage", unit.AttackRate);
             }
 
-            if(target.gameObject.layer == 9)
+            // check if the target is a building
+            if(target.gameObject.layer == 8 || target.gameObject.layer == 9)
             {
                 Debug.Log("Dealing " + unit.DamagePerHit + " damage to " + target.name);
                 Invoke("DealDamage", unit.AttackRate);
