@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public enum UnitState
 {
     Idle,
+    Halt,
     Moving,
     Flock,
     Attack
@@ -14,6 +15,7 @@ public enum UnitState
 
 public class UnitController : MonoBehaviour
 {
+    #region variable declartion
     [Header("Game Objects and transforms")]
     public GameObject selectionHighlight;
     public Transform turret;
@@ -23,8 +25,7 @@ public class UnitController : MonoBehaviour
 
     [Header("External Scripts")]
     public ProgressBar healthBar;
-
-    #region variable declartion
+    
     [Header("Unit Stats")]
     [SerializeField]
     float maxHealth = 100;
@@ -43,6 +44,7 @@ public class UnitController : MonoBehaviour
     [SerializeField] float detectionRadius = 30.0f;
     [SerializeField] LayerMask detectionLayer;
     [SerializeField] LayerMask environmentLayer;
+    [SerializeField] float haltTime = 5.0f;
 
     [Header("Gizmos")]
     [SerializeField] bool showDetectionRadius = true;
@@ -55,23 +57,25 @@ public class UnitController : MonoBehaviour
 
     // state classed
     private IdleState idleState;
+    private HaltState haltState;
     private SeekState moveState;
     private FlockState flockState;
     private CombatState attackState;
 
     private Color drawColor = Color.white;
     private Vector3 formationTarget;
-
     #endregion
 
-    // properties
+    # region properties
     public UnitState State { get; private set; }
-    public GameObject AttackTarget { get; set; }
+    public Transform AttackTarget { get; set; }
     public float DetectionRadius { get => detectionRadius; }
     public LayerMask DetectionLayer { get => detectionLayer; }
     public LayerMask EnvironmentLayer { get => environmentLayer; }
     public Sprite GuiIcon { get => guiIcon; }
+    public float HaltTime { get => haltTime; }
 
+    // unit stats
     public float MaxHealth { get => maxHealth; }
     public float CurrentHealth {  get=> health; }
     public float Speed { get => movementSpeed; }  
@@ -79,6 +83,7 @@ public class UnitController : MonoBehaviour
     public float DamagePerHit { get => damagePerHit; }
     public float AttackRate { get => attackRate; }
     public float AttackRange {  get => attackRange; }
+    #endregion
 
     public void SetPath(Vector3[] waypoints)
     {
@@ -125,6 +130,16 @@ public class UnitController : MonoBehaviour
 
     public void ChangeState(UnitState newState, Vector3 target = new Vector3())
     {
+        // Destroy script corrensponding to current state
+        switch (State)
+        {
+            case UnitState.Idle: Destroy(idleState); break;
+            case UnitState.Halt: Destroy(haltState); break;
+            case UnitState.Moving: Destroy(moveState); break;
+            case UnitState.Flock: Destroy(flockState); break;
+            case UnitState.Attack: Destroy(attackState); break;            
+        }
+
         State = newState;
 
         switch (newState)
@@ -135,12 +150,19 @@ public class UnitController : MonoBehaviour
                     idleState = gameObject.AddComponent<IdleState>();
                 }
 
-                Destroy(flockState);
-                Destroy(moveState);
-                Destroy(attackState);
+                //Destroy(flockState);
+                //Destroy(moveState);
+                //Destroy(attackState);
 
                 drawColor = Color.white;
                 break;
+
+            case UnitState.Halt:
+                if(GetComponent<HaltState>() == null)
+                {
+                    haltState = gameObject.AddComponent<HaltState>();
+                }
+            break;
 
             case UnitState.Moving:
 
@@ -149,9 +171,9 @@ public class UnitController : MonoBehaviour
                     moveState = gameObject.AddComponent<SeekState>();
                 }
 
-                Destroy(idleState);
-                Destroy(flockState);
-                Destroy(attackState);
+                //Destroy(idleState);
+                //Destroy(flockState);
+                //Destroy(attackState);
 
                 //moveState.Target = target;
                 moveState.MoveTo(target);
@@ -165,9 +187,9 @@ public class UnitController : MonoBehaviour
                     flockState = gameObject.AddComponent<FlockState>();
                 }
 
-                Destroy(idleState);
-                Destroy(moveState);
-                Destroy(attackState);
+                //Destroy(idleState);
+                //Destroy(moveState);
+                //Destroy(attackState);
 
                 flockState.Target = target;
                 //flockState.FormationTarget = formationTarget;
@@ -181,9 +203,9 @@ public class UnitController : MonoBehaviour
                     attackState = gameObject.AddComponent<CombatState>();
                 }
 
-                Destroy(idleState);
-                Destroy(moveState);
-                Destroy(flockState);
+                //Destroy(idleState);
+                //Destroy(moveState);
+                //Destroy(flockState);
             break;
         }
     }
