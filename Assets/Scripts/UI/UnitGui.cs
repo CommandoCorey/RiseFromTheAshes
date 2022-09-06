@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class GUIManager : MonoBehaviour
+public class UnitGui : MonoBehaviour
 {
     public enum ActionChosen
     {
@@ -14,11 +14,21 @@ public class GUIManager : MonoBehaviour
 
     public GameObject buttonPanel;
     public Transform unitPanal;
-    public Transform statsPanel;
+    public GameObject unitInfoPanel;
     public GameObject unitIconPrefab;
     public LayerMask enemyLayers;
     public TextMeshProUGUI alertMessage;
 
+    [Header("Unit Stats")]    
+    public Image thumbnail;
+    public TextMeshProUGUI unitName;
+    public TextMeshProUGUI currentHealth;
+    public TextMeshProUGUI maxHealth;
+    public TextMeshProUGUI range;
+    public TextMeshProUGUI damagePerSecond;
+    public TextMeshProUGUI movementSpeed;    
+
+    // private variables
     private List<UnitController> selectedUnits;
     private List<GameObject> unitIcons;
 
@@ -93,11 +103,14 @@ public class GUIManager : MonoBehaviour
                     return;
                 }
 
-                TextMeshProUGUI[] healthText = unitIcons[i].GetComponentsInChildren<TextMeshProUGUI>();
-                healthText[0].text = selectedUnits[i].CurrentHealth.ToString();
+                if (unitIcons.Count > 0)
+                {
+                    TextMeshProUGUI[] healthText = unitIcons[i].GetComponentsInChildren<TextMeshProUGUI>();
+                    healthText[0].text = selectedUnits[i].CurrentHealth.ToString();
 
-                var healthBar = unitIcons[i].GetComponentInChildren<ProgressBar>();
-                healthBar.progress = selectedUnits[i].CurrentHealth / selectedUnits[i].MaxHealth;
+                    var healthBar = unitIcons[i].GetComponentInChildren<ProgressBar>();
+                    healthBar.progress = selectedUnits[i].CurrentHealth / selectedUnits[i].MaxHealth;
+                }
             }
 
         }
@@ -141,6 +154,17 @@ public class GUIManager : MonoBehaviour
     {
         ClearUnitSelection();
 
+        // if only one unit is selcted display the unit stats/info instead
+        if(selection.Count == 1)
+        {
+            selectedUnits.Add(selection[0].GetComponent<UnitController>());
+            SelectSingleUnit(0);
+            return;
+        }
+
+        if(selection.Count > 0)
+            buttonPanel.SetActive(true);
+
         // generate new icons
         for (int i=0; i < selection.Count; i++)
         {
@@ -159,8 +183,7 @@ public class GUIManager : MonoBehaviour
 
             unitIcons[i].GetComponent<UnitIconButton>().IconIndex = i;
         }
-
-        buttonPanel.SetActive(true);
+        
     }
 
     /// <summary>
@@ -177,6 +200,7 @@ public class GUIManager : MonoBehaviour
         selectedUnits.Add(unit);
         unit.SetSelected(true);
 
+        /*
         // intantiate a new unit icon
         var unitIcon = Instantiate(unitIconPrefab, unitPanal);
         unitIcons.Add(unitIcon);
@@ -189,7 +213,9 @@ public class GUIManager : MonoBehaviour
         healthText[0].text = unit.CurrentHealth.ToString();
         
         var healthBar = unit.GetComponentInChildren<ProgressBar>();
-        healthBar.progress = unit.CurrentHealth / unit.MaxHealth;
+        healthBar.progress = unit.CurrentHealth / unit.MaxHealth;*/
+
+        DisplayUnitStats(unit);
 
         buttonPanel.SetActive(true);
 
@@ -198,9 +224,21 @@ public class GUIManager : MonoBehaviour
         unitManager.SetSelectedUnit(unit.gameObject);
     }
 
-    public void DisplayUnitStats()
+    /// <summary>
+    /// Displays the name and stats for one particular type of unit on the GUI
+    /// </summary>
+    /// <param name="unit">The UnitController Script on the slected unit</param>
+    public void DisplayUnitStats(UnitController unit)
     {
+        unitInfoPanel.SetActive(true);
 
+        thumbnail.sprite = unit.GuiIcon;
+        unitName.text = unit.Name;
+        currentHealth.text = unit.CurrentHealth.ToString();
+        maxHealth.text = unit.MaxHealth.ToString();
+        range.text = unit.AttackRange.ToString();
+        damagePerSecond.text = (unit.DamagePerHit / unit.AttackRate).ToString();
+        movementSpeed.text = unit.Speed.ToString();
     }
 
     /// <summary>

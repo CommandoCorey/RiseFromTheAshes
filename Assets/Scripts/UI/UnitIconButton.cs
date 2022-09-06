@@ -10,7 +10,7 @@ public class UnitIconButton : MonoBehaviour
     {
         //Debug.Log("You clicked on button " + IconIndex);
 
-        GetComponentInParent<GUIManager>().SelectSingleUnit(IconIndex);
+        GetComponentInParent<UnitGui>().SelectSingleUnit(IconIndex);
     }
 
 

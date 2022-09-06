@@ -15,6 +15,8 @@ public enum UnitState
 
 public class UnitController : MonoBehaviour
 {
+    [SerializeField] string unitName;
+
     #region variable declartion
     [Header("Game Objects and transforms")]
     public GameObject selectionHighlight;
@@ -76,6 +78,7 @@ public class UnitController : MonoBehaviour
     public float HaltTime { get => haltTime; }
 
     // unit stats
+    public string Name { get => unitName; }
     public float MaxHealth { get => maxHealth; }
     public float CurrentHealth {  get=> health; }
     public float Speed { get => movementSpeed; }  
