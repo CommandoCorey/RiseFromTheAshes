@@ -8,7 +8,7 @@ public class SelectionManager : MonoBehaviour
     public LayerMask selectionLayer;
     [SerializeField][Range(4, 50)]
     public bool drawDebugBox = true;
-    public GUIManager gui; // used to update unit icons
+    public UnitGui gui; // used to update unit icons
 
     // contains all of the selected units
     private Dictionary<int, GameObject> selectedTable = new Dictionary<int, GameObject>();    
@@ -78,7 +78,7 @@ public class SelectionManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (gui.ButtonClicked != GUIManager.ActionChosen.Null)
+        if (gui.ButtonClicked != UnitGui.ActionChosen.Null)
             return;
 
         //1. when left mouse button clicked (but not released)
@@ -134,6 +134,8 @@ public class SelectionManager : MonoBehaviour
                     {
                         DeselectAll();
                     }
+
+                    gui.unitInfoPanel.SetActive(false);
                 }
             }
             else //marquee select
@@ -156,7 +158,7 @@ public class SelectionManager : MonoBehaviour
                     i++;
                 }
 
-                if (!Input.GetKey(KeyCode.LeftShift) && gui.ButtonClicked == GUIManager.ActionChosen.Null)
+                if (!Input.GetKey(KeyCode.LeftShift) && gui.ButtonClicked == UnitGui.ActionChosen.Null)
                 {
                     DeselectAll();
                 }
@@ -185,6 +187,10 @@ public class SelectionManager : MonoBehaviour
             dragSelect = false;
 
             unitManager.SetSelectedUnits(Units);
+
+            // if only one unit is selected then display the unit stats/info
+            //if (Units.Count == 1)
+                //gui.SelectSingleUnit(Units[0].GetComponent<>);
         }
 
     }
