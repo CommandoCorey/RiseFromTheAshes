@@ -102,7 +102,7 @@ Shader "Hidden/Fog"
 				int maxSamples = min(_Samples, 32);
 
 				float density = 0.0;
-				float light = 0.0;
+				float light = 1.0;
 				float3 hitPoint = float3(0.0, 0.0, 0.0);
 				if (dist > 0.0 && dist < MAX_RAY_DIST) {
 					/* Ray trace from the hit point returned by the raymarch and
@@ -122,7 +122,7 @@ Shader "Hidden/Fog"
 
 						float noise = mainNoise + detailNoise;
 
-						light -= noise * 0.005 * p.y;
+						light -= noise * 0.01 * (_Height - p.y);
 						light = max(0.0, light);
 
 						density += max(0.0, noise - _Threshold);
