@@ -75,7 +75,8 @@ public class UnitController : MonoBehaviour
     public LayerMask DetectionLayer { get => detectionLayer; }
     public LayerMask EnvironmentLayer { get => environmentLayer; }
     public Sprite GuiIcon { get => guiIcon; }
-    public float HaltTime { get => haltTime; }
+    //public float HaltTime { get => haltTime; }
+    public bool UnitHalt { get; set; } = false;
 
     // unit stats
     public string Name { get => unitName; }
@@ -156,13 +157,6 @@ public class UnitController : MonoBehaviour
 
                 drawColor = Color.white;
                 break;
-
-            case UnitState.Halt:
-                if(GetComponent<HaltState>() == null)
-                {
-                    haltState = gameObject.AddComponent<HaltState>();
-                }
-            break;
 
             case UnitState.Moving:
 

@@ -215,16 +215,19 @@ public class UnitManager : MonoBehaviour
     /// </summary>
     public void HaltUnitSelection()
     {
-        Debug.Log("Halt button clicked");
+        //Debug.Log("Halt button clicked");
 
         foreach(GameObject unit in selectedUnits)
         {
             var controller = unit.GetComponent<UnitController>();
 
+            controller.UnitHalt = true;
+
+            /*
             if (controller.State == UnitState.Attack)
                 controller.ChangeState(UnitState.Halt);
             else
-                controller.ChangeState(UnitState.Idle);
+                controller.ChangeState(UnitState.Idle);*/
         }
 
     }

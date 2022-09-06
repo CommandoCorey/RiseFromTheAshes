@@ -17,7 +17,7 @@ public class HaltState : MonoBehaviour
     {
         agent.StopMoving();
 
-        Invoke("SwitchToIdle", unit.HaltTime);
+        //Invoke("SwitchToIdle", unit.HaltTime);
     }
 
     void Update()
