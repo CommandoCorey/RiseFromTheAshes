@@ -79,6 +79,11 @@ public class UnitManager : MonoBehaviour
     #endregion
 
     #region public functions
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     public List<UnitController> GetSelectedUnits()
     {
         List<UnitController> selected = new List<UnitController>();
@@ -91,6 +96,10 @@ public class UnitManager : MonoBehaviour
         return selected;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="unit"></param>
     public void SetSelectedUnit(GameObject unit)
     {
         // turn off selection highlights
@@ -105,6 +114,10 @@ public class UnitManager : MonoBehaviour
         unit.GetComponent<UnitController>().SetSelected(true);
     }
 
+    /// <summary>
+    /// Sets the selected units by passing in a list as a paramater
+    /// </summary>
+    /// <param name="units">List of gameobjects for the selected units</param>
     public void SetSelectedUnits(List<GameObject> units)
     {
         // turn off selection highlights and healthbars
@@ -123,6 +136,15 @@ public class UnitManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Removes an individual unit from the selected units list
+    /// </summary>
+    /// <param name="unit">the unit to be removed from the list</param>
+    public void RemoveFromSelection(GameObject unit)
+    {
+        selectedUnits.Remove(unit);
+    }
+    
     public GameObject[] GetPlayerUnits()
     {
         return GameObject.FindGameObjectsWithTag("PlayerUnit");
@@ -193,16 +215,19 @@ public class UnitManager : MonoBehaviour
     /// </summary>
     public void HaltUnitSelection()
     {
-        Debug.Log("Halt button clicked");
+        //Debug.Log("Halt button clicked");
 
         foreach(GameObject unit in selectedUnits)
         {
             var controller = unit.GetComponent<UnitController>();
 
+            controller.UnitHalt = true;
+
+            /*
             if (controller.State == UnitState.Attack)
                 controller.ChangeState(UnitState.Halt);
             else
-                controller.ChangeState(UnitState.Idle);
+                controller.ChangeState(UnitState.Idle);*/
         }
 
     }

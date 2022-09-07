@@ -70,8 +70,9 @@ public class CombatState : MonoBehaviour
             case CombatMode.Search: LookForTargets();
                 break;
 
-            case CombatMode.MoveTowards: MoveTowardsTarget();
-                break;
+            case CombatMode.MoveTowards: 
+                MoveTowardsTarget();
+            break;
 
             case CombatMode.Follow: FollowTarget();
                 break;
@@ -90,13 +91,23 @@ public class CombatState : MonoBehaviour
     {
         if (target != null)
         {
-            if(target.gameObject.layer == 7)
+            // check if target is still in attack range
+            if (Vector3.Distance(transform.position, target.position) > unit.AttackRange)
+            {
+                if (unit.UnitHalt)
+                    state = CombatMode.Search;
+                else
+                    state = CombatMode.Follow;
+            }
+
+            // check if the target is a unit
+            else if (target.gameObject.layer == 6 || target.gameObject.layer == 7)
             {
                 target.GetComponent<UnitController>().TakeDamage(unit.DamagePerHit);
                 Invoke("DealDamage", unit.AttackRate);
             }
-
-            if(target.gameObject.layer == 9)
+            // check if the target is a building
+            else if(target.gameObject.layer == 8 || target.gameObject.layer == 9)
             {
                 Debug.Log("Dealing " + unit.DamagePerHit + " damage to " + target.name);
                 Invoke("DealDamage", unit.AttackRate);
@@ -111,6 +122,9 @@ public class CombatState : MonoBehaviour
 
     private void LookForTargets()
     {
+        if(seek!= null)
+            Destroy(seek);
+
         // check for other units in vision radius
         var unitsInRange = Physics.OverlapSphere(transform.position, unit.DetectionRadius, unit.DetectionLayer);
 
@@ -143,21 +157,20 @@ public class CombatState : MonoBehaviour
     // Switches state base on enemy position from current unit
     private void HandleEnemyInRange()
     {
-        if (ObstacleInWay(directionToTarget))
+        if (ObstacleInWay(directionToTarget) && !unit.UnitHalt)
         {
             //pathToTarget = agent.CreatePath(target.position);
             state = CombatMode.MoveTowards;
         }        
         else if (Vector3.Distance(transform.position, target.transform.position) <= unit.AttackRange)
         {
-
             state = CombatMode.Aim;
             pathToTarget = null;
 
             if (seek != null)
                 Destroy(seek);
         }
-        else
+        else if(!unit.UnitHalt)
         {
             state = CombatMode.Follow;
         }
@@ -196,12 +209,11 @@ public class CombatState : MonoBehaviour
 
     private void MoveTowardsTarget()
     {       
-        if(target == null)
+        if(target == null || unit.UnitHalt)
         {
             state = CombatMode.Search;
             return;
         }
-
         if (seek == null)
         {
             seek = gameObject.AddComponent<SeekBehaviour>();
@@ -275,21 +287,34 @@ public class CombatState : MonoBehaviour
     {
         if (target == null)
         {
-            state = CombatMode.Follow;
+            if (unit.UnitHalt)
+                state = CombatMode.Search;
+            else
+                state = CombatMode.Follow;
             return;
         }
 
         if (ObstacleInWay(directionToTarget))
         {
             //Debug.Log("Obstacle is in way");
-            pathToTarget = agent.CreatePath(target.position);
-            seek.target = pathToTarget[waypointNum];
-            state = CombatMode.MoveTowards;
+
+            if (unit.UnitHalt)
+            {
+                state = CombatMode.Search;
+            }
+            else
+            {
+                pathToTarget = agent.CreatePath(target.position);
+                seek.target = pathToTarget[waypointNum];
+                state = CombatMode.MoveTowards;
+            }
+
             return;
         }
 
         //rotate us over time according to speed until we are in the required rotation  
-        unit.turret.rotation = Quaternion.Slerp(unit.turret.rotation, lookRotation, Time.deltaTime * unit.TurretRotationSpeed);
+        //unit.turret.rotation = Quaternion.Slerp(unit.turret.rotation, lookRotation, Time.deltaTime * unit.TurretRotationSpeed);
+        unit.turret.rotation = Quaternion.RotateTowards(unit.turret.rotation, lookRotation, Time.deltaTime * unit.TurretRotationSpeed);
 
         //Debug.Log("Enemy target detected");
         RaycastHit hit;
@@ -316,16 +341,14 @@ public class CombatState : MonoBehaviour
 
     private void FollowTarget()
     {
-        if(target == null)
+        if(target == null || unit.UnitHalt)
         {
-            state = CombatMode.Search;            
+            state = CombatMode.Search;         
         }
-
         else if(ObstacleInWay(directionToTarget))
         {
-            state = CombatMode.MoveTowards;            
+            state = CombatMode.MoveTowards;
         }
-
         // check we are in attack range
         else if (Vector3.Distance(transform.position, target.transform.position) <= unit.AttackRange)
         {

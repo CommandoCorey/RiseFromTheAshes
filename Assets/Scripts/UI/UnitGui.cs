@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -16,7 +17,6 @@ public class UnitGui : MonoBehaviour
     public Transform unitPanal;
     public GameObject unitInfoPanel;
     public GameObject unitIconPrefab;
-    public LayerMask enemyLayers;
     public TextMeshProUGUI alertMessage;
 
     [Header("Unit Stats")]    
@@ -34,6 +34,7 @@ public class UnitGui : MonoBehaviour
 
     private UnitManager unitManager;
     private SelectionManager selectionManager;
+    private UnitController unitOnPanel = null;
 
     // properties
     public ActionChosen ButtonClicked { get; set; } = ActionChosen.Null;
@@ -90,13 +91,14 @@ public class UnitGui : MonoBehaviour
 
     private void UpdateUnitHealth()
     {
-        if (selectedUnits != null)
+        if (selectedUnits != null && selectedUnits.Count > 0)
         {
             for (int i = 0; i < selectedUnits.Count; i++)
             {
                 if (selectedUnits[i] == null)
                 {
-                    GameObject.Destroy(unitIcons[i]);
+                    if(unitIcons[i] != null)
+                        GameObject.Destroy(unitIcons[i]);
 
                     selectedUnits.RemoveAt(i);
                     unitIcons.RemoveAt(i);
@@ -116,6 +118,23 @@ public class UnitGui : MonoBehaviour
         }
     }
 
+    private void RemoveUnitIcon(int index)
+    {
+        // check if the object has already been destroyed
+        if (index == -1)
+            return;
+
+        try
+        {
+            GameObject.Destroy(unitIcons[index]);
+            unitIcons.RemoveAt(index);
+        }
+        catch(Exception e)
+        {
+            Debug.LogError(e.StackTrace);
+        }
+    }
+
     private IEnumerator ShowAlert(string message, int seconds)
     {
         alertMessage.text = message;
@@ -129,17 +148,52 @@ public class UnitGui : MonoBehaviour
     #endregion
 
     #region public functions
+
+    /// <summary>
+    /// Removes all information form gui to do with one particular unit
+    /// </summary>
+    /// <param name="unit">The instance of the UnitController script on the object about to be destroyed</param>
+    public void RemoveUnitFromSelection(UnitController unit)
+    {
+        if (unitIcons.Count > 0)
+        {
+            RemoveUnitIcon(selectedUnits.IndexOf(unit));
+        }
+        else if (unitInfoPanel.activeInHierarchy && unit == unitOnPanel)
+        {
+            unitInfoPanel.SetActive(false);
+            buttonPanel.SetActive(false);
+        }
+
+        selectedUnits.Remove(unit);
+
+        // turn off the buttons panel is all selected untis are destroted
+        if (selectedUnits.Count < 1)
+        {
+            buttonPanel.SetActive(false);
+        }
+    }
+
+    /// <summary>
+    /// Handles the clicking of the move button
+    /// </summary>
     public void SetMoveMode() 
     {
         ButtonClicked = ActionChosen.Move;
         selectionManager.enabled = false;
     }
 
+    /// <summary>
+    /// Handles the clicking of the attack button
+    /// </summary>
     public void SetAttackMode() {
         ButtonClicked = ActionChosen.Attack;
         selectionManager.enabled = false;
     }
 
+    /// <summary>
+    /// Handles the clicking of the halt button
+    /// </summary>
     public void SetHaltClicked()
     {
         ButtonClicked = ActionChosen.Halt;
@@ -230,6 +284,8 @@ public class UnitGui : MonoBehaviour
     /// <param name="unit">The UnitController Script on the slected unit</param>
     public void DisplayUnitStats(UnitController unit)
     {
+        unitOnPanel = unit;
+
         unitInfoPanel.SetActive(true);
 
         thumbnail.sprite = unit.GuiIcon;
