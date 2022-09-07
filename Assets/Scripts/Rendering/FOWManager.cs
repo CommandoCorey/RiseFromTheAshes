@@ -5,12 +5,12 @@ public class FOWManager : MonoBehaviour
 	static public FOWManager Instance { get; set; }
 
 	[Tooltip("The cloudy part.")]
-	[SerializeField] public FOW perm;
+	public FOW perm;
 	[Tooltip("The cloudless part that doesn't occlude environment.")]
-	[SerializeField] public FOW imperm;
+	public FOW imperm;
 
 	[Tooltip("Objects on this layer will be occluded by the impermanent fog of war.")]
-	[SerializeField] public LayerMask affectedLayer;
+	public LayerMask affectedLayer;
 
 	void Awake() {
 		if (Instance != null && Instance != this) {

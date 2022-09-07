@@ -146,22 +146,27 @@ public class FOW : MonoBehaviour {
 		}
 	}
 
-	public void MaskDrawCircle(Vector2Int position, int radius)
+	public void MaskDrawCircle(Vector2 position, int radius)
 	{
 		int diametre = radius * 2;
+		int radius2 = radius * radius;
 
-		int start_x = Mathf.Min(Mathf.Max(position.x - radius, 0), maskExtent.x);
-		int start_y = Mathf.Min(Mathf.Max(position.y - radius, 0), maskExtent.y);
-		int end_x   = Mathf.Min(position.x + diametre, maskExtent.x);
-		int end_y   = Mathf.Min(position.y + diametre, maskExtent.y);
+		int start_x = Mathf.Min(Mathf.Max(Mathf.FloorToInt(position.x) - radius, 0), maskExtent.x);
+		int start_y = Mathf.Min(Mathf.Max(Mathf.FloorToInt(position.y) - radius, 0), maskExtent.y);
+		int end_x   = Mathf.Min(Mathf.CeilToInt(position.x) + diametre, maskExtent.x);
+		int end_y   = Mathf.Min(Mathf.CeilToInt(position.y) + diametre, maskExtent.y);
 
-		var centre = position;
+		Vector3 centre = position;
 
 		for (int y = start_y; y < end_y; y++)
 		{
 			for (int x = start_x; x < end_x; x++)
 			{
-				if (Vector2Int.Distance(new Vector2Int(x, y), centre) <= radius) {
+
+				float a = x - position.x;
+				float b = y - position.y;
+
+				if (a * a + b * b <= radius2) {
 					int pos = x + y * maskExtent.x;
 					if (FOWMask[pos] != 0x0) {
 						FOWMask[pos] = 0x0;
@@ -172,12 +177,12 @@ public class FOW : MonoBehaviour {
 		}
 	}
 
-	public Vector2Int WorldPosToMaskPos(Vector3 worldPos)
+	public Vector2 WorldPosToMaskPos(Vector3 worldPos)
 	{
 		Vector3 topCorner = transform.position;
 		Vector3 pos = worldPos - topCorner;
 		pos = new Vector3(pos.x, pos.y, pos.z);
-		return new Vector2Int((int)pos.x, (int)pos.z);
+		return new Vector2(pos.x, pos.z);
 	}
 
 	public Vector2 GetMaskExtentf()
