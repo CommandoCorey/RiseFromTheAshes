@@ -24,10 +24,19 @@ public class GameManager : MonoBehaviour
         
     }
 
+    /// <summary>
+    /// Moves the marker gameobject to a specified location
+    /// </summary>
+    /// <param name="position">The position on the map that the user clicked on</param>
     public void SetMarkerLocation(Vector3 position)
     {
         marker.transform.position = position;
         marker.GetComponent<MeshRenderer>().enabled = true;
+    }
+
+    public bool IsLayerInMask(int layer, LayerMask layerMask)
+    {
+        return layerMask == (layerMask | (1 << layer));
     }
 
 }

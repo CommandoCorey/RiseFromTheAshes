@@ -19,7 +19,7 @@ public class IdleState : MonoBehaviour
     }
 
     void Update()
-    {
+    {        
         var enemiesInRange = Physics.OverlapSphere(transform.position, unit.DetectionRadius, unit.DetectionLayer);
 
         // if there are any enemies in range change to the combat state
