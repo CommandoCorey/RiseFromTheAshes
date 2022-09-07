@@ -15,7 +15,8 @@ public class CombatState : MonoBehaviour
     private Transform target;
     private Quaternion lookRotation;    
     private Vector3 direction;
-    private Vector3 offsetRotation;
+    private Vector3 initialRotation;
+    //private Quaternion initialRotation;
 
     private AgentMovement agent;
     private SeekBehaviour seek;
@@ -26,6 +27,7 @@ public class CombatState : MonoBehaviour
 
     private float distanceFromWaypoint = 1;
     private Vector3 directionToTarget;
+    //private float initialX, initialY, initialZ;
 
     Vector3 castingOffset = Vector3.up;
 
@@ -35,14 +37,18 @@ public class CombatState : MonoBehaviour
     {
         unit = GetComponent<UnitController>();
         agent = GetComponent<AgentMovement>();
-        offsetRotation.x = unit.turret.localRotation.eulerAngles.x;
-        offsetRotation.y = unit.turret.localRotation.eulerAngles.y;
-        offsetRotation.z = unit.turret.localRotation.eulerAngles.z;
+        
     }
 
     void Start()
     {
         target = unit.AttackTarget;
+
+        initialRotation = unit.turret.localRotation.eulerAngles;
+
+        //initialX = unit.turret.localEulerAngles.x;
+        //initialY = unit.turret.localEulerAngles.y;
+        //initialZ = unit.turret.localEulerAngles.z;
 
         direction = (target.position - unit.turret.position).normalized;
         lookRotation = Quaternion.LookRotation(direction);
@@ -143,10 +149,10 @@ public class CombatState : MonoBehaviour
             if (lookRotation != Quaternion.identity)
                 lookRotation = Quaternion.LookRotation(transform.forward);
 
-            unit.turret.rotation = Quaternion.Slerp(unit.turret.rotation, lookRotation, Time.deltaTime * unit.TurretRotationSpeed);
+            unit.turret.rotation = Quaternion.RotateTowards(unit.turret.rotation, lookRotation, Time.deltaTime * unit.TurretRotationSpeed);
 
-            if ((unit.turret.rotation.y <= (transform.rotation.y + 1)) ||
-                (unit.turret.rotation.y >= (transform.rotation.y - 1)))
+            if ((unit.turret.eulerAngles.y <= (initialRotation.y + 1)) ||
+                (unit.turret.eulerAngles.y >= (initialRotation.y - 1)))
             {
                 unit.turret.rotation = transform.rotation;
                 unit.ChangeState(UnitState.Idle);
@@ -315,6 +321,8 @@ public class CombatState : MonoBehaviour
         //rotate us over time according to speed until we are in the required rotation  
         //unit.turret.rotation = Quaternion.Slerp(unit.turret.rotation, lookRotation, Time.deltaTime * unit.TurretRotationSpeed);
         unit.turret.rotation = Quaternion.RotateTowards(unit.turret.rotation, lookRotation, Time.deltaTime * unit.TurretRotationSpeed);
+        // revert x and z rotation back to there original value
+        unit.turret.localRotation = Quaternion.Euler(initialRotation.x, unit.turret.localRotation.eulerAngles.y, initialRotation.z);
 
         //Debug.Log("Enemy target detected");
         RaycastHit hit;
@@ -322,7 +330,7 @@ public class CombatState : MonoBehaviour
         // check if turret is pointing at target
         if (Physics.Raycast(unit.firingPoint.position, unit.turret.forward, out hit) && hit.transform == target)
         {
-            //Debug.DrawLine(unit.turret.position, target.position, Color.yellow);
+            Debug.DrawLine(unit.turret.position, target.position, Color.yellow);
 
             Invoke("DealDamage", unit.AttackRate);
             state = CombatMode.Fire;
@@ -414,6 +422,8 @@ public class CombatState : MonoBehaviour
     {
         Debug.DrawLine(transform.position + castingOffset, transform.position + castingOffset + 
             directionToTarget * unit.DetectionRadius, Color.red);
+
+        Debug.DrawLine(unit.firingPoint.position, unit.firingPoint.position + (unit.turret.forward * unit.AttackRange), Color.yellow);
         //Gizmos.DrawLine(transform.position, transform.position + (directionToTarget * unit.DetectionRadius));
 
         string combatMode = "";
