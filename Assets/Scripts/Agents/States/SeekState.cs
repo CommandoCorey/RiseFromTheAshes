@@ -16,6 +16,7 @@ public class SeekState : State
     // Behaviour classes
     SeekBehaviour seek;
     SeekDecelerateBehaviour decelerate;
+    ObstacleAvoidanceBehaviour avoidance;
     
     private float distanceFromTarget;
     private float decelerateDistance;

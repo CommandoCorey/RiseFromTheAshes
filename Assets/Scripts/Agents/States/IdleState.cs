@@ -15,7 +15,7 @@ public class IdleState : MonoBehaviour
 
     private void Start()
     {
-        agent.StopMoving();
+        //agent.StopMoving();
     }
 
     void Update()
