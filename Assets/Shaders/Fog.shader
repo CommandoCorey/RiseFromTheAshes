@@ -116,15 +116,15 @@ Shader "Hidden/Fog"
 
 						float n1 = _NoiseTexture.SampleLevel(sampler_NoiseTexture, (p * _CloudScale) + _ScrollDirection * _Time.y, 0).r;
 						float n2 = _NoiseTexture.SampleLevel(sampler_NoiseTexture,
-							(p * 2.0 * _CloudScale) + float3(_ScrollDirection.z, -1.0, _ScrollDirection.x) * _Time.y * 0.3, 0).r;
+							((p * 2.0 * _CloudScale) + p * _CloudScale) - _ScrollDirection * _Time.y, 0).r;
 
-						float mainNoise = n1 * 2.0;
-						float detailNoise = n2 * 0.5;
+						float mainNoise = n1 * 1.5;
+						float detailNoise = n2;
 
 						float noise = mainNoise + detailNoise;
 
 						light -= noise * 0.01 * (_Height - p.y);
-						light = max(0.0, light);
+						light = max(0.03, light);
 
 						density += max(0.0, noise - _Threshold);
 					}
