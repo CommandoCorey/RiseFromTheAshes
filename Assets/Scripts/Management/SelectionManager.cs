@@ -189,8 +189,8 @@ public class SelectionManager : MonoBehaviour
             unitManager.SetSelectedUnits(Units);
 
             // if only one unit is selected then display the unit stats/info
-            //if (Units.Count == 1)
-                //gui.SelectSingleUnit(Units[0].GetComponent<>);
+            if (Units.Count == 1)
+                gui.SelectSingleUnit(0);
         }
 
     }

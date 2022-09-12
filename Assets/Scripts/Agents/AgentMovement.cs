@@ -44,6 +44,7 @@ public class AgentMovement : MonoBehaviour
     private Steering steer;
     private NavMeshPath path;
     private UnitManager unitManager;
+    private UnitController unit;
     #endregion
 
     #region properties
@@ -81,13 +82,15 @@ public class AgentMovement : MonoBehaviour
         path = new NavMeshPath();
 
         unitManager = GameObject.FindObjectOfType<UnitManager>();
+
+        unit = GetComponent<UnitController>();
     }
 
     // change the transform based off the last frame's steering
     protected virtual void Update()
     {       
         // moves the agent on the x and z axis only
-        Vector3 displacement = velocity * Time.deltaTime;
+        Vector3 displacement = velocity * Time.deltaTime * unit.Speed;
         displacement.y = 0;
 
         /*

@@ -26,6 +26,9 @@ public class UnitManager : MonoBehaviour
     [SerializeField][Range(1, 20)]
     int maxUnitsPerRow = 5;
 
+    [Header("Gizmos")]
+    public bool showFormationPosition = false;
+
     List<List<GameObject>> squads;
 
     List<Vector3> formationPositions;
@@ -303,8 +306,8 @@ public class UnitManager : MonoBehaviour
             // move all units to their designated targets
             for (int i = 0; i < selectedUnits.Count; i++)
             {
-                var agent = selectedUnits[i].GetComponent<AgentMovement>();
-                agent.SquadNum = squads.Count - 1;
+                //var agent = selectedUnits[i].GetComponent<AgentMovement>();
+                //agent.SquadNum = squads.Count - 1;
 
                 var unit = selectedUnits[i].GetComponent<UnitController>();
 
@@ -533,7 +536,7 @@ public class UnitManager : MonoBehaviour
         }
 
         // draws the fromation positions that each unit will finish at
-        if (formationPositions != null)
+        if (formationPositions != null && showFormationPosition)
         {
             foreach (Vector3 position in formationPositions)
             {

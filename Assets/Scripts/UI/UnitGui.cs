@@ -223,8 +223,12 @@ public class UnitGui : MonoBehaviour
         for (int i=0; i < selection.Count; i++)
         {
             unitIcons.Add(Instantiate(unitIconPrefab, unitPanal));
-            selectedUnits.Add(selection[i].GetComponent<UnitController>());
-            
+
+            //if (selection[i].tag == "PlayerUnit")
+                selectedUnits.Add(selection[i].GetComponent<UnitController>());
+            //else if (selection[i].tag == "Navmesh Agent")
+               // selectedUnits.Add(selection[i].GetComponent<NavMeshUnitController>());
+
             TextMeshProUGUI[] healthText = unitIcons[i].GetComponentsInChildren<TextMeshProUGUI>();
 
             healthText[2].text = selectedUnits[i].MaxHealth.ToString();

@@ -46,7 +46,6 @@ public class UnitController : MonoBehaviour
     [SerializeField] float detectionRadius = 30.0f;
     [SerializeField] LayerMask detectionLayer;
     [SerializeField] LayerMask environmentLayer;
-    [SerializeField] float haltTime = 5.0f;
 
     [Header("Gizmos")]
     [SerializeField] bool showDetectionRadius = true;
@@ -61,6 +60,7 @@ public class UnitController : MonoBehaviour
     private IdleState idleState;
     private HaltState haltState;
     private SeekState moveState;
+    private AgentMoveState agentMoveState;
     private FlockState flockState;
     private CombatState attackState;
 
@@ -140,7 +140,12 @@ public class UnitController : MonoBehaviour
         {
             case UnitState.Idle: Destroy(idleState); break;
             case UnitState.Halt: Destroy(haltState); break;
-            case UnitState.Moving: Destroy(moveState); break;
+            case UnitState.Moving:
+                if(tag == "PlayerUnit")
+                    Destroy(moveState);
+                else if(tag == "NavMesh Agent")
+                    Destroy(agentMoveState);
+                break;
             case UnitState.Flock: Destroy(flockState); break;
             case UnitState.Attack: Destroy(attackState); break;            
         }
@@ -160,13 +165,22 @@ public class UnitController : MonoBehaviour
 
             case UnitState.Moving:
 
-                if (GetComponent<SeekState>() == null)
+                if (this.tag == "PlayerUnit")
                 {
-                    moveState = gameObject.AddComponent<SeekState>();
-                }
 
-                //moveState.Target = target;
-                moveState.MoveTo(target);
+                    if (GetComponent<SeekState>() == null)
+                    {
+                        moveState = gameObject.AddComponent<SeekState>();
+                    }               
+
+                    //moveState.Target = target;
+                    moveState.MoveTo(target);
+                }
+                else if (this.tag == "NavMesh Agent")
+                {
+                    agentMoveState = gameObject.AddComponent<AgentMoveState>();
+                    agentMoveState.MoveTo(target);
+                }
 
                 drawColor = Color.red;
             break;
@@ -219,6 +233,8 @@ public class UnitController : MonoBehaviour
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(transform.position, attackRange);
         }
+
+
     }
 
 }
