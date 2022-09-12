@@ -61,6 +61,7 @@ public class AgentMoveState : MonoBehaviour
     {
         targetPos = position;
         agent.SetDestination(targetPos);
+        agent.isStopped = false;
     }
 
     private void OnDrawGizmos()
