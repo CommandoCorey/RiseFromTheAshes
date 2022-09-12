@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.UI;
 
 public enum UnitState
@@ -175,9 +176,8 @@ public class UnitController : MonoBehaviour
 
                 if (this.tag == "PlayerUnit")
                 {
-
                     if (GetComponent<SeekState>() == null)
-                    {
+                    {                       
                         moveState = gameObject.AddComponent<SeekState>();
                     }               
 
@@ -186,7 +186,11 @@ public class UnitController : MonoBehaviour
                 }
                 else if (this.tag == "NavMesh Agent")
                 {
-                    agentMoveState = gameObject.AddComponent<AgentMoveState>();
+                    if(agentMoveState == null)
+                        agentMoveState = gameObject.AddComponent<AgentMoveState>();
+                    else                      
+                        GetComponent<NavMeshAgent>().isStopped = true;
+
                     agentMoveState.MoveTo(target);
                 }
 

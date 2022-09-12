@@ -311,11 +311,9 @@ public class AgentCombatState : MonoBehaviour
     private void OnDrawGizmos()
     {
 
-        if (gameObject.layer == 7)
-        {
-            Gizmos.color = Color.red;        
-            Gizmos.DrawLine(unit.castingPoint.position, unit.castingPoint.position + directionToTarget * unit.DetectionRadius);
-        }
+        Gizmos.color = Color.red;        
+        Gizmos.DrawLine(unit.castingPoint.position, unit.castingPoint.position + directionToTarget * unit.DetectionRadius);
+        
 
         Debug.DrawLine(unit.firingPoint.position, unit.firingPoint.position + (unit.turret.forward * unit.AttackRange), Color.yellow);
         //Gizmos.DrawLine(transform.position, transform.position + (directionToTarget * unit.DetectionRadius));
