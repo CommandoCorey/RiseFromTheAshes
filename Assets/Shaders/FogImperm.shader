@@ -4,7 +4,6 @@ Shader "Hidden/FogImperm"
 	Properties
 	{
 		_MainTex("Texture", 2D) = "white" {}
-		_MaskTex("Mask Texture", 2D) = "white" {}
 	}
 	SubShader
 	{
@@ -46,10 +45,12 @@ Shader "Hidden/FogImperm"
 			}
 
 			sampler2D _MainTex;
-			sampler2D _CameraDepthTexture;
+			sampler2D _LastCameraDepthTexture;
 			sampler2D _MaskTex;
 			sampler2D _AffectedObjects;
-			sampler2D _AffectedDepth;
+			Texture2D<float> _AffectedDepth;
+
+			SamplerState sampler_AffectedDepth;
 
 			uniform float _Height;
 
@@ -103,26 +104,27 @@ Shader "Hidden/FogImperm"
 
 				float maskVal = tex2D(_MaskTex, hitPointMaskSpace).r;
 
-				float affectedDepth = SAMPLE_DEPTH_TEXTURE(_AffectedDepth, i.uv);
-				affectedDepth = Linear01Depth(affectedDepth);
+				//float affectedDepth = _AffectedDepth.SampleLevel(sampler_AffectedDepth, i.uv, 0).r;
+				//affectedDepth = Linear01Depth(affectedDepth);
 
-				float sceneDepth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, i.uv);
-				sceneDepth = Linear01Depth(sceneDepth);
+				//float sceneDepth = SAMPLE_DEPTH_TEXTURE(_LastCameraDepthTexture, i.uv);
+				//sceneDepth = Linear01Depth(sceneDepth);
 
-				float4 affectedObjectsColour = tex2D(_AffectedObjects, i.uv);
+				//float4 affectedObjectsColour = tex2D(_AffectedObjects, i.uv);
 
-				affectedObjectsColour.a *= 1.0 - maskVal;
+				//affectedObjectsColour.a *= 1.0 - maskVal;
+
+				/* TODO (George): Depth test the affected objects */
+				//if (affectedDepth > sceneDepth) {
+				//	affectedObjectsColour = float4(0.0, 0.0, 0.0, 0.0);
+				//}
 
 				float4 col = tex2D(_MainTex, i.uv);
 
 				col.rgb *= (1.0 - (maskVal - _FogColour.rgb * _FogColour.a));
 
-				float3 sceneColour = affectedObjectsColour.rgb * affectedObjectsColour.a + col.rgb * (1.0 - affectedObjectsColour.a);
-
-				/* TODO (George): Depth test the affected objects */
-				/* if (affectedDepth < sceneDepth) {
-					return col;
-				} */
+				//float3 sceneColour = affectedObjectsColour.rgb * affectedObjectsColour.a + col.rgb * (1.0 - affectedObjectsColour.a);
+				float3 sceneColour = col.rgb;
 
 				return float4(sceneColour, 1.0);
 			}

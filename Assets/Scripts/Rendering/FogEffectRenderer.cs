@@ -103,13 +103,20 @@ class FogEffectPass : ScriptableRenderPass
 		fogMaterial.SetTexture("_NoiseTexture", FOWManager.Instance.perm.noiseTexture);
 		fogMaterial.SetFloat("_CloudScale", scale);
 
-		impermMaterial.SetTexture("_MaskTex", FOWManager.Instance.imperm.MaskToTexture());
+		Texture mask = FOWManager.Instance.imperm.MaskToTexture();
+
+		impermMaterial.SetTexture("_MaskTex", mask);
 		impermMaterial.SetVector("_FogTopCorner", FOWManager.Instance.imperm.transform.position);
 		impermMaterial.SetFloat("_Height", FOWManager.Instance.imperm.transform.position.y);
 		impermMaterial.SetVector("_FogMaskSize", FOWManager.Instance.imperm.GetMaskExtentf());
 		impermMaterial.SetVector("_FogColour", exploredColour);
 		impermMaterial.SetTexture("_AffectedObjects", FOWCamera.FOWAffectedRenderTexture, RenderTextureSubElement.Color);
 		impermMaterial.SetTexture("_AffectedDepth", FOWCamera.FOWAffectedRenderTexture, RenderTextureSubElement.Depth);
+		impermMaterial.SetTexture("_MainDepth", Camera.main.activeTexture, RenderTextureSubElement.Depth);
+
+		Shader.SetGlobalTexture("G_FOWOccludeMaskTexture", mask);
+		Shader.SetGlobalVector("G_FogTopCorner", FOWManager.Instance.imperm.transform.position);
+		Shader.SetGlobalVector("G_FogMaskSize", FOWManager.Instance.imperm.GetMaskExtentf());
 
 		CommandBuffer cmd = CommandBufferPool.Get("fogEffectCmdBuffer");
 		cmd.Clear();
