@@ -68,6 +68,7 @@ public class UnitController : MonoBehaviour
 
     private Color drawColor = Color.white;
     private Vector3 formationTarget;
+    private Vector3 healthBarOffset;
     #endregion
 
     # region properties
@@ -101,6 +102,7 @@ public class UnitController : MonoBehaviour
     void Start()
     {
     	health = maxHealth;
+        healthBarOffset = healthBar.transform.parent.localPosition;
 
         ChangeState(UnitState.Idle);
     }
@@ -113,7 +115,10 @@ public class UnitController : MonoBehaviour
         if (health <= 0)
         {
             GameObject.Destroy(this.gameObject);
+            GameObject.Destroy(this.gameObject.transform.parent.gameObject);
         }
+
+        healthBar.transform.parent.position = transform.position + healthBarOffset;
     }    
 
     /// <summary>
@@ -238,8 +243,7 @@ public class UnitController : MonoBehaviour
             unitManager.RemoveFromSelection(this.gameObject);
 
         if (unitGui != null)        
-            unitGui.RemoveUnitFromSelection(this);
-        
+            unitGui.RemoveUnitFromSelection(this);        
     }
 
     private void OnDrawGizmos()
@@ -256,6 +260,17 @@ public class UnitController : MonoBehaviour
             Gizmos.DrawWireSphere(transform.position, attackRange);
         }
 
+        /*
+        var stateString = "";
+
+        switch(State)
+        {
+            case UnitState.Idle: stateString = "Idle";
+            case State.Attack: stateString = "Combat"; break;
+
+        }
+
+        UnityEditor.Handles.Label(transform.position + Vector3.up * 5, stateString);*/
 
     }
 

@@ -50,7 +50,7 @@ public class AgentMoveState : MonoBehaviour
             agent.destination = targetPos;
 
             if (Vector3.Distance(transform.position, agent.destination) < 0.2f)
-            {                
+            {
                 agent.isStopped = true;
                 unit.ChangeState(UnitState.Idle);
             }

@@ -186,10 +186,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1337191234358540614}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.76, z: -0.127}
+  m_LocalPosition: {x: 0, y: 1.76, z: -0.12700081}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 7594720587372543484}
+  m_Father: {fileID: 5809136631094942226}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1582896361334903961
@@ -202,10 +202,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7594720587372543484}
   - component: {fileID: 4286645190023919177}
-  - component: {fileID: 5621112687873773063}
-  - component: {fileID: 1992304726895531413}
-  - component: {fileID: 5647858512007855413}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: NavMesh Enemy Tank
   m_TagString: NavMesh Agent
   m_Icon: {fileID: 0}
@@ -224,9 +221,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5809136631094942226}
-  - {fileID: 3016604366743248201}
   - {fileID: 3106701892276414995}
-  - {fileID: 951669654246509368}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -238,76 +233,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1582896361334903961}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!65 &5621112687873773063
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1582896361334903961}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1.9479188, y: 1.5500209, z: 3.3141575}
-  m_Center: {x: 0.003696978, y: 0.7533215, z: 0.03150606}
---- !u!195 &1992304726895531413
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1582896361334903961}
-  m_Enabled: 1
-  m_AgentTypeID: 0
-  m_Radius: 3
-  m_Speed: 3.5
-  m_Acceleration: 8
-  avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 1.31
-  m_BaseOffset: 0
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
---- !u!114 &5647858512007855413
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1582896361334903961}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d337556d8371dc349a90c78320b2f3fb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  unitName: Tank
-  selectionHighlight: {fileID: 4514728295939477689}
-  turret: {fileID: 4117741979562791558}
-  castingPoint: {fileID: 951669654246509368}
-  firingPoint: {fileID: 3738012624718030392}
-  guiIcon: {fileID: 21300000, guid: 8bca95f54096b70408c729ee59e590bd, type: 3}
-  healthBar: {fileID: 1488737560176855686}
-  maxHealth: 100
-  movementSpeed: 1
-  damagePerHit: 10
-  attackRate: 0.5
-  attackRange: 20
-  turretRotationSpeed: 20
-  detectionRadius: 40
-  detectionLayer:
-    serializedVersion: 2
-    m_Bits: 320
-  environmentLayer:
-    serializedVersion: 2
-    m_Bits: 1024
-  showDetectionRadius: 0
-  showAttackRange: 0
-  health: 0
 --- !u!1 &2627763908979242436
 GameObject:
   m_ObjectHideFlags: 0
@@ -444,12 +369,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4514728295939477689}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.081, y: 0.01, z: -0.0681}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.080999374, y: 0.01, z: -0.068100005}
   m_LocalScale: {x: 0.27043504, y: 1, z: 0.41528657}
   m_Children: []
-  m_Father: {fileID: 7594720587372543484}
-  m_RootOrder: 1
+  m_Father: {fileID: 5809136631094942226}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &8170640618654863842
 MeshFilter:
@@ -655,9 +580,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5809136631094942226}
+  - component: {fileID: 237420323649846435}
+  - component: {fileID: 8782060453167053335}
+  - component: {fileID: 2133700867880688349}
   m_Layer: 7
   m_Name: AFV_discenected
-  m_TagString: Untagged
+  m_TagString: NavMesh Agent
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -675,9 +603,81 @@ Transform:
   m_Children:
   - {fileID: 4479966719302098896}
   - {fileID: 4117741979562791558}
+  - {fileID: 3016604366743248201}
+  - {fileID: 951669654246509368}
   m_Father: {fileID: 7594720587372543484}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &237420323649846435
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6617444062841520296}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.9479188, y: 1.5500209, z: 3.3141575}
+  m_Center: {x: 0.003696978, y: 0.7533215, z: 0.03150606}
+--- !u!195 &8782060453167053335
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6617444062841520296}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 3
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 1.31
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
+--- !u!114 &2133700867880688349
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6617444062841520296}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d337556d8371dc349a90c78320b2f3fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unitName: Tank
+  selectionHighlight: {fileID: 4514728295939477689}
+  turret: {fileID: 4117741979562791558}
+  castingPoint: {fileID: 951669654246509368}
+  firingPoint: {fileID: 3738012624718030392}
+  guiIcon: {fileID: 21300000, guid: 8bca95f54096b70408c729ee59e590bd, type: 3}
+  healthBar: {fileID: 1488737560176855686}
+  maxHealth: 100
+  movementSpeed: 1
+  damagePerHit: 10
+  attackRate: 0.5
+  attackRange: 20
+  turretRotationSpeed: 20
+  detectionRadius: 40
+  detectionLayer:
+    serializedVersion: 2
+    m_Bits: 320
+  environmentLayer:
+    serializedVersion: 2
+    m_Bits: 1024
+  showDetectionRadius: 0
+  showAttackRange: 0
+  health: 0
 --- !u!1001 &2799669004670973307
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -695,7 +695,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 992855466604158824, guid: 0f580c44bf3349d4ab6dacc6f4d13645, type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 992855466604158824, guid: 0f580c44bf3349d4ab6dacc6f4d13645, type: 3}
       propertyPath: m_AnchorMax.x

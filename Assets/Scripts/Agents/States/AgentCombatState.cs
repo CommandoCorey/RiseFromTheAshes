@@ -28,7 +28,7 @@ public class AgentCombatState : MonoBehaviour
     void Awake()
     {
         unit = GetComponent<UnitController>();
-        agent = GetComponent<NavMeshAgent>();
+        agent = GetComponentInChildren<NavMeshAgent>();
     }
 
     void Start()
@@ -205,6 +205,10 @@ public class AgentCombatState : MonoBehaviour
             return;
         }
 
+        // start the navmesh agent again
+        if (agent.isStopped)
+            agent.isStopped = false;
+
         agent.SetDestination(target.position);
 
         // check if there is a closer target
@@ -222,10 +226,11 @@ public class AgentCombatState : MonoBehaviour
         }
 
         // check that the line of sight is vacant and we are in attack range
-        if (Vector3.Distance(transform.position, target.transform.position) <= unit.AttackRange)
+        if (!ObstacleInWay(directionToTarget) && 
+            Vector3.Distance(transform.position, target.transform.position) <= unit.AttackRange)
         {
             state = CombatMode.Aim;
-            pathToTarget = null;
+            agent.isStopped = true;
         }
 
     }
@@ -292,7 +297,7 @@ public class AgentCombatState : MonoBehaviour
     {
         //Debug.DrawLine(unit.firingPoint.position, transform.position + direction * unit.DetectionRadius, Color.red, 1.0f);
 
-        if (Physics.Raycast(unit.castingPoint.position, direction, out RaycastHit hit, unit.DetectionRadius))
+        if (Physics.Raycast(transform.position, direction, out RaycastHit hit, unit.DetectionRadius))
         {
             //Debug.Log("Raycast from " + transform.name + " hit " + hit.transform.name);
 
@@ -312,7 +317,7 @@ public class AgentCombatState : MonoBehaviour
     {
 
         Gizmos.color = Color.red;        
-        Gizmos.DrawLine(unit.castingPoint.position, unit.castingPoint.position + directionToTarget * unit.DetectionRadius);
+        Gizmos.DrawLine(transform.position, transform.position + directionToTarget * unit.DetectionRadius);
         
 
         Debug.DrawLine(unit.firingPoint.position, unit.firingPoint.position + (unit.turret.forward * unit.AttackRange), Color.yellow);
