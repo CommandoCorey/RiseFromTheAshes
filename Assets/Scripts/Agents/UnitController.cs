@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.UI;
 
 public enum UnitState
@@ -63,6 +64,7 @@ public class UnitController : MonoBehaviour
     private AgentMoveState agentMoveState;
     private FlockState flockState;
     private CombatState attackState;
+    private AgentCombatState agentAttackState;
 
     private Color drawColor = Color.white;
     private Vector3 formationTarget;
@@ -141,13 +143,20 @@ public class UnitController : MonoBehaviour
             case UnitState.Idle: Destroy(idleState); break;
             case UnitState.Halt: Destroy(haltState); break;
             case UnitState.Moving:
+
                 if(tag == "PlayerUnit")
                     Destroy(moveState);
                 else if(tag == "NavMesh Agent")
                     Destroy(agentMoveState);
-                break;
+           break;
+
             case UnitState.Flock: Destroy(flockState); break;
-            case UnitState.Attack: Destroy(attackState); break;            
+            case UnitState.Attack:                
+                if(tag == "PlayerUnit")
+                    Destroy(attackState);
+                else if (tag == "NavMesh Agent")
+                    Destroy(agentAttackState);                
+            break;            
         }
 
         State = newState;
@@ -167,9 +176,8 @@ public class UnitController : MonoBehaviour
 
                 if (this.tag == "PlayerUnit")
                 {
-
                     if (GetComponent<SeekState>() == null)
-                    {
+                    {                       
                         moveState = gameObject.AddComponent<SeekState>();
                     }               
 
@@ -178,7 +186,11 @@ public class UnitController : MonoBehaviour
                 }
                 else if (this.tag == "NavMesh Agent")
                 {
-                    agentMoveState = gameObject.AddComponent<AgentMoveState>();
+                    if(agentMoveState == null)
+                        agentMoveState = gameObject.AddComponent<AgentMoveState>();
+                    else                      
+                        GetComponent<NavMeshAgent>().isStopped = true;
+
                     agentMoveState.MoveTo(target);
                 }
 
@@ -198,11 +210,21 @@ public class UnitController : MonoBehaviour
                 break;
 
             case UnitState.Attack:
-                if (GetComponent<CombatState>() == null)
+
+                if (this.tag == "PlayerUnit")
                 {
-                    attackState = gameObject.AddComponent<CombatState>();
+                    if (GetComponent<CombatState>() == null)
+                    {
+                        attackState = gameObject.AddComponent<CombatState>();
+                    }
+
                 }
-            break;
+                else if (this.tag == "NavMesh Agent")
+                {
+                    agentAttackState = gameObject.AddComponent<AgentCombatState>();                    
+                }
+
+                break;
         }
     }
 

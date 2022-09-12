@@ -2,13 +2,13 @@ using System;
 using System.Collections;
 using UnityEngine;
 
+public enum CombatMode
+{
+    Search, MoveTowards, Aim, Fire, Follow, Halt
+}
+
 public class CombatState : MonoBehaviour
 {
-    enum CombatMode
-    {
-        Search, MoveTowards, Aim, Fire, Follow, Halt
-    }
-
     #region variables
     private UnitController unit;
 
@@ -213,6 +213,7 @@ public class CombatState : MonoBehaviour
         return closest;
     }
 
+
     private void MoveTowardsTarget()
     {       
         if(target == null || unit.UnitHalt)
@@ -318,7 +319,7 @@ public class CombatState : MonoBehaviour
             return;
         }
 
-        //rotate us over time according to speed until we are in the required rotation  
+        // rotate us over time according to speed until we are in the required rotation  
         //unit.turret.rotation = Quaternion.Slerp(unit.turret.rotation, lookRotation, Time.deltaTime * unit.TurretRotationSpeed);
         unit.turret.rotation = Quaternion.RotateTowards(unit.turret.rotation, lookRotation, Time.deltaTime * unit.TurretRotationSpeed);
         // revert x and z rotation back to there original value
@@ -346,6 +347,7 @@ public class CombatState : MonoBehaviour
         if (lookRotation != Quaternion.identity)
             lookRotation = Quaternion.LookRotation(direction);
     }
+
 
     private void FollowTarget()
     {
