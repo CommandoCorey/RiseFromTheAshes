@@ -11,6 +11,7 @@ public struct ZoomLevel
 
 	[Tooltip("How fast the camera will move with WASD at this zoom level index.")]
 	public float WASDMoveSpeed;
+	public bool mouseLook;
 };
 
 public class CameraController : MonoBehaviour {
@@ -20,6 +21,7 @@ public class CameraController : MonoBehaviour {
 	float zoomTime;
 	float zoomLevel;
 	[SerializeField] float zoomInterpSpeed = 2.0f;
+	[SerializeField] float mouseLookSensitivity = 0.3f;
 
 	Vector2 zoomRange;
 
@@ -37,6 +39,10 @@ public class CameraController : MonoBehaviour {
 		return p1 + Mathf.Pow((1.0f - t), 2.0f) * (p0 - p1) + Mathf.Pow(t, 2.0f) * (p2 - p1);
 	}
 
+	bool looking = false;
+	bool firstMouseMove;
+	Vector2 lastMousePos;
+
 	void Start() {
 		zoomedInTransform = zoomedIn.transform;
 		zoomedOutTransform = zoomedOut.transform;
@@ -51,6 +57,8 @@ public class CameraController : MonoBehaviour {
 			zoomCurveHandle.position,
 			zoomedOutTransform.position,
 			zoomLevels[zoomLevelIndex].interp);
+
+		firstMouseMove = true;
 	}
 
 	void Update() {
@@ -80,11 +88,39 @@ public class CameraController : MonoBehaviour {
 			Mathf.Clamp(zoomedInTransform.position.z, bounds.bounds.min.z, bounds.bounds.max.z)
 		);
 
+		if (Input.GetMouseButtonDown(2))
+		{
+			looking = true;
+			firstMouseMove = true;
+		}
+
+		if (Input.GetMouseButtonUp(2))
+		{
+			looking = false;
+		}
+
+		if (looking) {
+			Vector2 mousePos = Input.mousePosition;
+			Vector2 mouseDelta = lastMousePos - mousePos;
+
+			if (firstMouseMove)
+			{
+				lastMousePos = mousePos;
+				mouseDelta = new Vector2(0, 0);
+				firstMouseMove = false;
+			}
+
+			zoomedInTransform.Rotate(new Vector3(1, 0, 0), mouseDelta.y * mouseLookSensitivity);
+
+			lastMousePos = mousePos;
+		}
+
 		transform.position = QuadBezierCurve(
 			zoomedInTransform.position,
 			zoomCurveHandle.position,
 			zoomedOutTransform.position,
 			zoomLevel);
+		transform.rotation = Quaternion.Slerp(zoomedInTransform.rotation, zoomedOutTransform.rotation, zoomLevel);
 	}
 
 	void OnDrawGizmos() {
