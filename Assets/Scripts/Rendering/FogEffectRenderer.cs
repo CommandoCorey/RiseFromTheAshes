@@ -110,6 +110,7 @@ class FogEffectPass : ScriptableRenderPass
 		impermMaterial.SetVector("_FogColour", exploredColour);
 		impermMaterial.SetTexture("_AffectedObjects", FOWCamera.FOWAffectedRenderTexture, RenderTextureSubElement.Color);
 		impermMaterial.SetTexture("_AffectedDepth", FOWCamera.FOWAffectedRenderTexture, RenderTextureSubElement.Depth);
+		impermMaterial.SetTexture("_MainDepth", Camera.main.activeTexture, RenderTextureSubElement.Depth);
 
 		CommandBuffer cmd = CommandBufferPool.Get("fogEffectCmdBuffer");
 		cmd.Clear();
