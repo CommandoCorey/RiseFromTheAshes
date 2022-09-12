@@ -182,7 +182,7 @@ MeshCollider:
   m_GameObject: {fileID: 2903689473797420181}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   m_Convex: 0
   m_CookingOptions: 30
@@ -539,9 +539,9 @@ GameObject:
   - component: {fileID: 9192710097808548935}
   - component: {fileID: 7674863485043783604}
   - component: {fileID: 574219396663630067}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: '[Prefab] MBT Main Battle Tank (Red)'
-  m_TagString: PlayerUnit
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -628,7 +628,6 @@ MonoBehaviour:
   environmentLayer:
     serializedVersion: 2
     m_Bits: 1024
-  haltTime: 5
   showDetectionRadius: 0
   showAttackRange: 0
   health: 0
@@ -644,7 +643,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c448d9b6244c7b49a08a9cfc39a4bcc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitBody: {fileID: 0}
+  unitBody: {fileID: 8463371924314249468}
   maxSpeed: 10
   acceleration: 3
   deceleration: 3
@@ -1083,7 +1082,7 @@ PrefabInstance:
     - target: {fileID: 8526709059745094268, guid: 0f580c44bf3349d4ab6dacc6f4d13645, type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0f580c44bf3349d4ab6dacc6f4d13645, type: 3}
 --- !u!224 &5388843611545899626 stripped
