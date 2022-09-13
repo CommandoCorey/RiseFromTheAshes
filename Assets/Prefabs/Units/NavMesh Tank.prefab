@@ -93,6 +93,7 @@ GameObject:
   - component: {fileID: 5101405681693929279}
   - component: {fileID: 1524627945818438058}
   - component: {fileID: 6349165443028437313}
+  - component: {fileID: 5333664145809892032}
   m_Layer: 6
   m_Name: AFV_discenected
   m_TagString: NavMesh Agent
@@ -206,6 +207,20 @@ MonoBehaviour:
   showDetectionRadius: 0
   showAttackRange: 0
   health: 0
+--- !u!114 &5333664145809892032
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2185736374046561076}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62c0e9bedd811934ba1b67fab761f762, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  permRadius: 40
+  impermRadius: 5
 --- !u!1 &2279039663374699555
 GameObject:
   m_ObjectHideFlags: 0
@@ -891,7 +906,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2693547835145146380, guid: 0f580c44bf3349d4ab6dacc6f4d13645, type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 2693547835145146380, guid: 0f580c44bf3349d4ab6dacc6f4d13645, type: 3}
       propertyPath: m_IsActive
@@ -903,7 +918,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3635357953571831807, guid: 0f580c44bf3349d4ab6dacc6f4d13645, type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 3635357953571831807, guid: 0f580c44bf3349d4ab6dacc6f4d13645, type: 3}
       propertyPath: m_IsActive
@@ -911,15 +926,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3635357953798916560, guid: 0f580c44bf3349d4ab6dacc6f4d13645, type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 3635357954252401791, guid: 0f580c44bf3349d4ab6dacc6f4d13645, type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 6369842242753935729, guid: 0f580c44bf3349d4ab6dacc6f4d13645, type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0f580c44bf3349d4ab6dacc6f4d13645, type: 3}
