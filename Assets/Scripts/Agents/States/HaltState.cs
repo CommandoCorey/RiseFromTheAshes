@@ -41,7 +41,9 @@ public class HaltState : MonoBehaviour
 
     private void OnDrawGizmos()
     {
+#if UNITY_EDITOR
         UnityEditor.Handles.Label(transform.position + Vector3.up * 1, "Idle");
+#endif
     }
 
 }

@@ -84,9 +84,15 @@ class FogEffectPass : ScriptableRenderPass
 
 	public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
 	{
+#if UNITY_EDITOR
 		if (SceneView.currentDrawingSceneView != null || !FOWManager.Instance || !FOWManager.Instance.imperm || !FOWManager.Instance.perm) {
 				return;
 		}
+#else
+		if (!FOWManager.Instance || !FOWManager.Instance.imperm || !FOWManager.Instance.perm) {
+				return;
+		}
+#endif
 
 		fogMaterial.SetTexture("_MaskTex", FOWManager.Instance.perm.MaskToTexture());
 		fogMaterial.SetVector("_FogTopCorner", FOWManager.Instance.perm.transform.position);
