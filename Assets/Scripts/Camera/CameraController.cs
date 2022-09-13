@@ -110,7 +110,12 @@ public class CameraController : MonoBehaviour {
 				firstMouseMove = false;
 			}
 
-			zoomedInTransform.Rotate(new Vector3(1, 0, 0), mouseDelta.y * mouseLookSensitivity);
+			Vector3 euler = zoomedInTransform.eulerAngles;
+			euler.x += mouseDelta.y * mouseLookSensitivity;
+			//euler.x = Mathf.Clamp(euler.x, -89.0f, 89.0f);
+			if (euler.x > 89.0f) { euler.x = 89.0f; }
+			if (euler.x < 0.0f) { euler.x = 0.0f; }
+			zoomedInTransform.rotation = Quaternion.Euler(euler.x, euler.y, euler.z);
 
 			lastMousePos = mousePos;
 		}
