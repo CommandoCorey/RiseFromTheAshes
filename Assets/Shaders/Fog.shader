@@ -59,12 +59,12 @@ Shader "Hidden/Fog"
 			uniform float _Height;
 			uniform float4 _FogColour;
 			uniform float _CloudScale;
+			uniform float _RenderDistance;
 
 			uniform float4 _FogTopCorner;
 			uniform float2 _FogMaskSize;
 
 			#define MAX_RAY_STEPS 256
-			#define MAX_RAY_DIST  256.0
 			#define MIN_RAY_DIST  0.001
 
 			float map(float3 p) {
@@ -78,7 +78,7 @@ Shader "Hidden/Fog"
 					float3 p = origin + dist * direction;
 					float hit = map(p);
 					dist += hit;
-					if (abs(hit) < MIN_RAY_DIST || dist > MAX_RAY_DIST) { break; }
+					if (abs(hit) < MIN_RAY_DIST || dist > _RenderDistance) { break; }
 				}
 				return dist;
 			}
@@ -104,7 +104,7 @@ Shader "Hidden/Fog"
 				float density = 0.0;
 				float light = 1.0;
 				float3 hitPoint = float3(0.0, 0.0, 0.0);
-				if (dist > 0.0 && dist < MAX_RAY_DIST) {
+				if (dist > 0.0 && dist < _RenderDistance) {
 					/* Ray trace from the hit point returned by the raymarch and
 					 * take samples from the 3-D noise to determine the density of the
 					 * fog at this pixel. */
@@ -141,6 +141,7 @@ Shader "Hidden/Fog"
 
 				density = exp(-density);
 				float4 fogColour = (1.0 - density) * _FogColour * light;
+				fogColour.a = 1.0;
 
 				return col * density + fogColour;
 			}

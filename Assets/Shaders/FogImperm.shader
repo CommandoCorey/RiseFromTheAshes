@@ -103,10 +103,8 @@ Shader "Hidden/FogImperm"
 				float4 col = tex2D(_MainTex, i.uv);
 
 				col.rgb *= (1.0 - (maskVal - _FogColour.rgb * _FogColour.a));
-				
-				float3 sceneColour = col.rgb;
 
-				return float4(sceneColour, 1.0);
+				return float4(col.rgb, 1.0);
 			}
 			ENDCG
 		}
