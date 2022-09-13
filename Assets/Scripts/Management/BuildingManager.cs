@@ -4,7 +4,6 @@ public class BuildingManager : MonoBehaviour
 {
 	public LayerMask buildableLayer;
 	public LayerMask buildingLayer;
-	public Material ghostMaterial;
 	[SerializeField] Camera mainCamera;
 
 	static public BuildingManager Instance {  get; private set; }
