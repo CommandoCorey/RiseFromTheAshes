@@ -9,6 +9,8 @@ public class GameManager : MonoBehaviour
     public bool showMinimap = false;
     public Transform marker;
 
+    private AudioSource audio;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -16,6 +18,8 @@ public class GameManager : MonoBehaviour
             minimap.SetActive(true);
 
         marker.GetComponent<MeshRenderer>().enabled = false;
+
+        audio = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -37,6 +41,11 @@ public class GameManager : MonoBehaviour
     public bool IsLayerInMask(int layer, LayerMask layerMask)
     {
         return layerMask == (layerMask | (1 << layer));
+    }
+
+    public void PlaySound(AudioClip clip, float volumeScale)
+    {
+        audio.PlayOneShot(clip, volumeScale);
     }
 
 }

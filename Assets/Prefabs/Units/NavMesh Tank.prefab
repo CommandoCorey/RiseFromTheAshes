@@ -174,7 +174,7 @@ MonoBehaviour:
   maxHealth: 100
   movementSpeed: 1
   damagePerHit: 10
-  attackRate: 0.5
+  attackRate: 1
   attackRange: 20
   turretRotationSpeed: 20
   detectionRadius: 40
@@ -184,6 +184,25 @@ MonoBehaviour:
   environmentLayer:
     serializedVersion: 2
     m_Bits: 1024
+  unitSelectSound: {fileID: 8300000, guid: 13d7a2e409e0e0c4b8124eb88767c166, type: 3}
+  moveSounds:
+  - {fileID: 8300000, guid: 6e655f2d263c51143806a255a3a62089, type: 3}
+  - {fileID: 8300000, guid: 323e38a7614f9ed4b9a51bc8bd9f8d90, type: 3}
+  turretSounds:
+  - {fileID: 8300000, guid: 14f0085d34ab0ee4dbca30966464b20c, type: 3}
+  - {fileID: 8300000, guid: 434c2179ab766e34f9ebdd35498a96b1, type: 3}
+  fireSounds:
+  - {fileID: 8300000, guid: 7fd9ee4643a4ba047ab02cebe6a40856, type: 3}
+  - {fileID: 8300000, guid: bda24e7b1b86be64ba7be0bd651371e4, type: 3}
+  - {fileID: 8300000, guid: 43c06a5d180612a45beefdd85a313a44, type: 3}
+  hitSounds:
+  - {fileID: 8300000, guid: 5c2f7968f4c8298428503c0753be545c, type: 3}
+  - {fileID: 8300000, guid: 7651d9f65c249cd4699b703f7da4630f, type: 3}
+  - {fileID: 8300000, guid: 800c4c7b9b1da8640b9f291850a4c525, type: 3}
+  destroySounds:
+  - {fileID: 8300000, guid: 32b64650a4f502b4cafbcd342621b461, type: 3}
+  - {fileID: 8300000, guid: 4bb549534c370164584270f5514d91e3, type: 3}
+  - {fileID: 8300000, guid: 57da73a0a2b86f14dafcff35194b943c, type: 3}
   showDetectionRadius: 0
   showAttackRange: 0
   health: 0
@@ -311,6 +330,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3235123660149911136}
   - component: {fileID: 9150629310046856661}
+  - component: {fileID: 3191881788981067505}
   m_Layer: 0
   m_Name: NavMesh Tank
   m_TagString: NavMesh Agent
@@ -343,6 +363,102 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5798167006062429957}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!82 &3191881788981067505
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5798167006062429957}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &6120491522915323355
 GameObject:
   m_ObjectHideFlags: 0

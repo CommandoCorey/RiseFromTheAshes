@@ -48,6 +48,14 @@ public class UnitController : MonoBehaviour
     [SerializeField] LayerMask detectionLayer;
     [SerializeField] LayerMask environmentLayer;
 
+    [Header("Sound Effects")]
+    public AudioClip unitSelectSound;
+    public AudioClip[] moveSounds;
+    public AudioClip[] turretSounds;
+    public AudioClip[] fireSounds;
+    public AudioClip[] hitSounds;
+    public AudioClip[] destroySounds;
+
     [Header("Gizmos")]
     [SerializeField] bool showDetectionRadius = true;
     [SerializeField] bool showAttackRange = true;
@@ -69,6 +77,9 @@ public class UnitController : MonoBehaviour
     private Color drawColor = Color.white;
     private Vector3 formationTarget;
     private Vector3 healthBarOffset;
+
+    // audio
+    private AudioSource audio;
     #endregion
 
     # region properties
@@ -104,6 +115,8 @@ public class UnitController : MonoBehaviour
     	health = maxHealth;
         healthBarOffset = healthBar.transform.parent.localPosition;
 
+        audio = GetComponentInParent<AudioSource>();
+
         ChangeState(UnitState.Idle);
     }
 
@@ -116,6 +129,13 @@ public class UnitController : MonoBehaviour
         {
             GameObject.Destroy(this.gameObject);
             GameObject.Destroy(this.gameObject.transform.parent.gameObject);
+
+            // play destruction sound
+            if (destroySounds.Length > 0)
+            {
+                var gameManager = GameManager.FindObjectOfType<GameManager>();
+                gameManager.PlaySound(destroySounds[0], 1);
+            }
         }
 
         healthBar.transform.parent.position = transform.position + healthBarOffset;
@@ -138,6 +158,11 @@ public class UnitController : MonoBehaviour
     public void TakeDamage(float amount)
     {
         health -= amount;
+
+        if (hitSounds.Length > 0)
+        {
+            audio.PlayOneShot(hitSounds[0], 0.5f);
+        }
     }
 
     public void ChangeState(UnitState newState, Vector3 target = new Vector3())
@@ -243,7 +268,8 @@ public class UnitController : MonoBehaviour
             unitManager.RemoveFromSelection(this.gameObject);
 
         if (unitGui != null)        
-            unitGui.RemoveUnitFromSelection(this);        
+            unitGui.RemoveUnitFromSelection(this);
+        
     }
 
     private void OnDrawGizmos()
@@ -273,5 +299,7 @@ public class UnitController : MonoBehaviour
         UnityEditor.Handles.Label(transform.position + Vector3.up * 5, stateString);*/
 
     }
+
+
 
 }
