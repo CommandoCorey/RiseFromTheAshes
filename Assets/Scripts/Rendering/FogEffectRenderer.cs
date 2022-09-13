@@ -84,12 +84,6 @@ class FogEffectPass : ScriptableRenderPass
 				return;
 		}
 
-		FOWCamera FOWCamera = Camera.main.GetComponent<FOWCamera>();
-		if (!FOWCamera) {
-			Debug.LogWarning("There isn't a FOWCamera attached to the main camera. Fix this.");
-			return;
-		}
-
 		fogMaterial.SetTexture("_MaskTex", FOWManager.Instance.perm.MaskToTexture());
 		fogMaterial.SetVector("_FogTopCorner", FOWManager.Instance.perm.transform.position);
 		fogMaterial.SetFloat("_Threshold", threshold);
@@ -110,8 +104,6 @@ class FogEffectPass : ScriptableRenderPass
 		impermMaterial.SetFloat("_Height", FOWManager.Instance.imperm.transform.position.y);
 		impermMaterial.SetVector("_FogMaskSize", FOWManager.Instance.imperm.GetMaskExtentf());
 		impermMaterial.SetVector("_FogColour", exploredColour);
-		impermMaterial.SetTexture("_AffectedObjects", FOWCamera.FOWAffectedRenderTexture, RenderTextureSubElement.Color);
-		impermMaterial.SetTexture("_AffectedDepth", FOWCamera.FOWAffectedRenderTexture, RenderTextureSubElement.Depth);
 		impermMaterial.SetTexture("_MainDepth", Camera.main.activeTexture, RenderTextureSubElement.Depth);
 
 		Shader.SetGlobalTexture("G_FOWOccludeMaskTexture", mask);
