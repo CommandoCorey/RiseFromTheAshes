@@ -97,7 +97,7 @@ class FogEffectPass : ScriptableRenderPass
 		fogMaterial.SetTexture("_NoiseTexture", FOWManager.Instance.perm.noiseTexture);
 		fogMaterial.SetFloat("_CloudScale", scale);
 
-		Texture mask = FOWManager.Instance.imperm.MaskToTexture();
+		RenderTexture mask = FOWManager.Instance.imperm.MaskToTexture();
 
 		impermMaterial.SetTexture("_MaskTex", mask);
 		impermMaterial.SetVector("_FogTopCorner", FOWManager.Instance.imperm.transform.position);
