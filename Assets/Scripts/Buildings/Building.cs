@@ -11,6 +11,10 @@ public class Building : MonoBehaviour
 	float buildTimer;
 	float HP;
 
+    [SerializeField] AudioClip[] hitSounds;
+
+    AudioSource audio;
+
 	MeshRenderer[] childMeshRenderers;
 	MeshRenderer myMeshRenderer;
 
@@ -36,6 +40,8 @@ public class Building : MonoBehaviour
 
 	private void OnEnable()
 	{
+        audio = GetComponent<AudioSource>();
+
 		childMeshRenderers = GetComponentsInChildren<MeshRenderer>();
 		myMeshRenderer = GetComponent<MeshRenderer>();
 
@@ -122,5 +128,17 @@ public class Building : MonoBehaviour
 	public void Interact()
 	{
 		TryVehicleBayInteract();
+	}
+
+	public void TakeDamage(float amount) {
+		HP -= amount;
+
+        if (hitSounds.Length > 0) {
+            audio.PlayOneShot(hitSounds[0], 0.5f);
+        }
+
+        if (HP <= 0.0f) {
+			Destroy(gameObject);
+        }
 	}
 }
