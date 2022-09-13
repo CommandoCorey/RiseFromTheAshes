@@ -26,8 +26,6 @@ public class FOW : MonoBehaviour {
 	byte[] FOWMask;
 	byte[] maskTextureData;
 
-	bool wantMaskUpdate = true;
-
 	static float[] ShiftedPoints(float[] points, Vector3 amount)
 	{
 		float[] r = new float[points.Length];
@@ -47,7 +45,7 @@ public class FOW : MonoBehaviour {
 
 		genMaskTexture        = new Texture2D(maskExtent.x, maskExtent.y, TextureFormat.R8, false);
 
-		genBlurredMaskTexture = new RenderTexture(maskExtent.x, maskExtent.y, 0, RenderTextureFormat.RG16);
+		genBlurredMaskTexture = new RenderTexture(maskExtent.x, maskExtent.y, 0, RenderTextureFormat.R16);
 		genBlurredMaskTexture.enableRandomWrite = true;
 		genBlurredMaskTexture.dimension = UnityEngine.Rendering.TextureDimension.Tex2D;
 		genBlurredMaskTexture.wrapModeU = TextureWrapMode.Repeat;
@@ -98,16 +96,10 @@ public class FOW : MonoBehaviour {
 
 	private void Update()
 	{
-		if (wantMaskUpdate) {
-			//GenerateMesh();
-			wantMaskUpdate = false;
-		}
-
 		if (!permanent) { ClearMask(); }
 	}
 
 	public void RequestMaskUpdate(byte value, Vector2Int position) {
-		wantMaskUpdate = true;
 		FOWMask[position.x + position.y * maskExtent.x] = value;
 	}
 
@@ -115,7 +107,7 @@ public class FOW : MonoBehaviour {
 	public RenderTexture MaskToTexture()
 	{
 		for (int i = 0; i < maskExtent.x * maskExtent.y; i++) {
-			maskTextureData[i] = (byte)(FOWMask[i] == 0 ? 0x0 : 255);
+			maskTextureData[i] = (byte)(FOWMask[i] == 0 ? 0 : 255);
 		}
 
 		genMaskTexture.LoadRawTextureData(maskTextureData);
@@ -138,40 +130,32 @@ public class FOW : MonoBehaviour {
 
 	public void ClearMask()
 	{
-		wantMaskUpdate = true;
-
 		for (int i = 0; i < maskExtent.x * maskExtent.y; i++)
 		{
-			FOWMask[i] = 0x1;
+			FOWMask[i] = 1;
 		}
 	}
 
 	public void MaskDrawCircle(Vector2 position, int radius)
 	{
-		int diametre = radius * 2;
 		int radius2 = radius * radius;
 
 		int start_x = Mathf.Min(Mathf.Max(Mathf.FloorToInt(position.x) - radius, 0), maskExtent.x);
 		int start_y = Mathf.Min(Mathf.Max(Mathf.FloorToInt(position.y) - radius, 0), maskExtent.y);
-		int end_x   = Mathf.Min(Mathf.CeilToInt(position.x) + diametre, maskExtent.x);
-		int end_y   = Mathf.Min(Mathf.CeilToInt(position.y) + diametre, maskExtent.y);
-
-		Vector3 centre = position;
+		int end_x = Mathf.Min(Mathf.CeilToInt(position.x) + radius, maskExtent.x);
+		int end_y = Mathf.Min(Mathf.CeilToInt(position.y) + radius, maskExtent.y);
 
 		for (int y = start_y; y < end_y; y++)
 		{
 			for (int x = start_x; x < end_x; x++)
 			{
-
 				float a = x - position.x;
 				float b = y - position.y;
 
-				if (a * a + b * b <= radius2) {
+				if (a * a + b * b <= radius2)
+				{
 					int pos = x + y * maskExtent.x;
-					if (FOWMask[pos] != 0x0) {
-						FOWMask[pos] = 0x0;
-						wantMaskUpdate = true;
-					}
+					FOWMask[pos] = 0;
 				}
 			}
 		}
