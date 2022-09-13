@@ -91,31 +91,40 @@ public class UnitGui : MonoBehaviour
 
     private void UpdateUnitHealth()
     {
-        if (selectedUnits != null && selectedUnits.Count > 0)
-        {
-            for (int i = 0; i < selectedUnits.Count; i++)
+        try { 
+
+            if (selectedUnits != null && selectedUnits.Count > 0)
             {
-                if (selectedUnits[i] == null)
+                for (int i = 0; i < selectedUnits.Count; i++)
                 {
-                    if(unitIcons[i] != null)
-                        GameObject.Destroy(unitIcons[i]);
+                    if (selectedUnits[i] == null)
+                    { 
+                        if(unitIcons[i] != null)
+                            GameObject.Destroy(unitIcons[i]);
 
-                    selectedUnits.RemoveAt(i);
-                    unitIcons.RemoveAt(i);
-                    return;
+                        selectedUnits.RemoveAt(i);
+                        unitIcons.RemoveAt(i);
+                        return;
+                    }
+
+                    if (unitIcons.Count > 0)
+                    {
+                        TextMeshProUGUI[] healthText = unitIcons[i].GetComponentsInChildren<TextMeshProUGUI>();
+                        healthText[0].text = selectedUnits[i].CurrentHealth.ToString();
+
+                        var healthBar = unitIcons[i].GetComponentInChildren<ProgressBar>();
+                        healthBar.progress = selectedUnits[i].CurrentHealth / selectedUnits[i].MaxHealth;
+                    }
                 }
 
-                if (unitIcons.Count > 0)
-                {
-                    TextMeshProUGUI[] healthText = unitIcons[i].GetComponentsInChildren<TextMeshProUGUI>();
-                    healthText[0].text = selectedUnits[i].CurrentHealth.ToString();
-
-                    var healthBar = unitIcons[i].GetComponentInChildren<ProgressBar>();
-                    healthBar.progress = selectedUnits[i].CurrentHealth / selectedUnits[i].MaxHealth;
-                }
             }
 
+        } 
+        catch(Exception ex)
+        {
+            Debug.LogError(ex.StackTrace);
         }
+
     }
 
     private void RemoveUnitIcon(int index)
@@ -213,7 +222,7 @@ public class UnitGui : MonoBehaviour
         {
             selectedUnits.Add(selection[0].GetComponent<UnitController>());
             SelectSingleUnit(0);
-            return;
+            //return;
         }
 
         if(selection.Count > 0)
