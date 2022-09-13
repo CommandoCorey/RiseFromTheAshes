@@ -141,6 +141,7 @@ Shader "Hidden/Fog"
 
 				density = exp(-density);
 				float4 fogColour = (1.0 - density) * _FogColour * light;
+				fogColour.a = 1.0;
 
 				return col * density + fogColour;
 			}
