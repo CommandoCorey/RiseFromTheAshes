@@ -276,7 +276,7 @@ public class UnitManager : MonoBehaviour
 
         // check that the player clicked on the ground.
         // If they did not find a new position
-        if (hit.transform.gameObject.layer == groundLayer)
+        if (hit.transform.gameObject.layer == 3)
         {
             targetPos = hit.point;
         }

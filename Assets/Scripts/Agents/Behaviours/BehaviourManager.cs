@@ -89,10 +89,12 @@ public class BehaviourManager : MonoBehaviour
         if (behaviourText)
         {
             Gizmos.color = Color.white;
+#if UNITY_EDITOR
             if (GetComponent<SeekBehaviour>() != null && GetComponent<SeekBehaviour>().enabled)
                 UnityEditor.Handles.Label(transform.position + Vector3.up * 5, "Seeking");
             else if (GetComponent<SeekDecelerateBehaviour>() != null && GetComponent<SeekDecelerateBehaviour>().enabled)
                 UnityEditor.Handles.Label(transform.position + Vector3.up * 5, "Decelerating");
+#endif
 
             /*
             if (GetComponent<BoidCohesion>() != null && GetComponent<BoidAlignment>() != null && 
@@ -114,8 +116,11 @@ public class BehaviourManager : MonoBehaviour
             */
 
             // check state
+#if UNITY_EDITOR
             if (GetComponent<FormationState>() != null && GetComponent<FormationState>().enabled)
                 UnityEditor.Handles.Label(transform.position + Vector3.up * 3, "Entering Formation");
+#endif
+
 
         }
         // obstacle avoidance lines
