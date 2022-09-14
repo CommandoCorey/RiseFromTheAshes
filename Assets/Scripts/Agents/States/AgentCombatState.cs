@@ -108,7 +108,9 @@ public class AgentCombatState : MonoBehaviour
             // check if the target is a building
             else if (target.gameObject.layer == 8 || target.gameObject.layer == 9)
             {
-                Debug.Log("Dealing " + unit.DamagePerHit + " damage to " + target.name);
+                //Debug.Log("Dealing " + unit.DamagePerHit + " damage to " + target.name);
+                target.GetComponent<Building>().TakeDamage(unit.DamagePerHit);
+
                 Invoke("DealDamage", unit.AttackRate);
             }
 
