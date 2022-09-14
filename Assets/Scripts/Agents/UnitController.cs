@@ -22,7 +22,6 @@ public class UnitController : MonoBehaviour
     [Header("Game Objects and transforms")]
     public GameObject selectionHighlight;
     public Transform turret;
-    public Transform castingPoint;
     public Transform firingPoint;    
     public Sprite guiIcon;
 

@@ -128,7 +128,7 @@ public class AttackState : State
         Gizmos.DrawLine(unit.firingPoint.position, unit.firingPoint.position + (unit.turret.forward * unit.AttackRange));
 
 #if UNITY_EDITOR
-        if(pointingAtTarget)
+        if(!pointingAtTarget)
             UnityEditor.Handles.Label(transform.position + Vector3.up * 5, "Aiming");
         else
             UnityEditor.Handles.Label(transform.position + Vector3.up * 5, "Firing");
