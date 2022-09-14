@@ -47,7 +47,7 @@ Shader "Hidden/Fog"
 			sampler2D _MainTex;
 			sampler2D _CameraDepthTexture;
 			sampler2D _MaskTex;
-			Texture3D<float> _NoiseTexture;
+			Texture3D<float2> _NoiseTexture;
 
 			SamplerState sampler_NoiseTexture;
 
@@ -67,25 +67,17 @@ Shader "Hidden/Fog"
 			#define MAX_RAY_STEPS 256
 			#define MIN_RAY_DIST  0.001
 
-			float map(float3 p) {
-				/* Infinite plane: dot(p, n) + h */
-				return dot(p, float3(0.0, 1.0, 0.0)) - _Height;
-			}
-
-			float rayMarch(float3 origin, float3 direction) {
-				float dist = 0.0;
-				for (int i = 0; i < MAX_RAY_STEPS; i++) {
-					float3 p = origin + dist * direction;
-					float hit = map(p);
-					dist += hit;
-					if (abs(hit) < MIN_RAY_DIST || dist > _RenderDistance) { break; }
-				}
-				return dist;
-			}
-
 			float2 worldPosToFogMaskPos(float3 worldPos) {
 				float3 p = worldPos - _FogTopCorner;
 				return p.xz;
+			}
+
+			float rayVSPlane(float3 centre, float3 normal, float3 origin, float3 dir) {
+				float denom = dot(normal, dir);
+				if (abs(denom) > 0.0001) {
+    				return dot((centre - origin), normal) / denom;
+				}
+				return 0.0;
 			}
 
 			float4 frag(v2f i) : SV_Target
@@ -93,7 +85,7 @@ Shader "Hidden/Fog"
 				float3 rayOrigin = _WorldSpaceCameraPos;
 				float3 rayDirection = normalize(i.viewVector);
 
-				float dist = rayMarch(rayOrigin, rayDirection);
+				float dist = rayVSPlane(float3(0.0, 0.0, 0.0), float3(0.0, 1.0, 0.0), rayOrigin, rayDirection);
 
 				float4 col = tex2D(_MainTex, i.uv);
 
@@ -114,19 +106,20 @@ Shader "Hidden/Fog"
 					for (int i = 0; i < maxSamples; i++) {
 						float3 p = hitPoint + rayDirection * (float(i) * _StepSize);
 
-						float n1 = _NoiseTexture.SampleLevel(sampler_NoiseTexture, (p * _CloudScale) + _ScrollDirection * _Time.y, 0).r;
-						float n2 = _NoiseTexture.SampleLevel(sampler_NoiseTexture,
-							((p * 2.0 * _CloudScale) + p * _CloudScale) - _ScrollDirection * _Time.y, 0).r;
-
-						float mainNoise = n1 * 1.5;
-						float detailNoise = n2;
+						float3 samplePosMain   = (p * _CloudScale) + _ScrollDirection * _Time.y;
+						float3 samplePosDetail = (p * _CloudScale) - _ScrollDirection * _Time.y;
+						float mainNoise   = _NoiseTexture.SampleLevel(sampler_NoiseTexture, samplePosMain,   0).r * 1.5;
+						float detailNoise = 0.0;
+						if (dist < 100.0) {
+							detailNoise = _NoiseTexture.SampleLevel(sampler_NoiseTexture, samplePosDetail, 0).g;
+						}
 
 						float noise = mainNoise + detailNoise;
 
 						light -= noise * 0.01 * (_Height - p.y);
-						light = max(0.03, light);
+						light = max(0.04, light);
 
-						density += max(0.0, noise - _Threshold);
+						density += max(0.1, noise - _Threshold);
 					}
 				}
 
