@@ -39,6 +39,9 @@ public class UnitManager : MonoBehaviour
     private GameManager gameManager;
 
     private Vector3 point;
+
+    AudioSource audio;
+
     #endregion
     
     #region start and update
@@ -136,6 +139,8 @@ public class UnitManager : MonoBehaviour
         foreach (var selectedUnit in selectedUnits)
         {
             selectedUnit.GetComponent<UnitController>().SetSelected(true);
+
+
         }
     }
 
@@ -271,7 +276,7 @@ public class UnitManager : MonoBehaviour
 
         // check that the player clicked on the ground.
         // If they did not find a new position
-        if (hit.transform.gameObject.layer == groundLayer)
+        if (hit.transform.gameObject.layer == 3)
         {
             targetPos = hit.point;
         }

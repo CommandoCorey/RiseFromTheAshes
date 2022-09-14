@@ -8,13 +8,7 @@ public class AgentMoveState : MonoBehaviour
 {
     //[SerializeField] float movementSpeed = 100;
 
-    private GameObject highlight;
-
     private NavMeshAgent agent;
-    private NavMeshPath path;
-    private Rigidbody body;
-    private int waypointNum;
-    //private Vector3 waypoint;
     private Vector3 targetPos;
 
     private UnitController unit;
@@ -24,26 +18,13 @@ public class AgentMoveState : MonoBehaviour
     void Awake()
     {
         unit = GetComponent<UnitController>();
-        path = new NavMeshPath();
         agent = GetComponent<NavMeshAgent>();
-        highlight = GetComponent<UnitController>().selectionHighlight;
         targetPos = transform.position;
     }
 
     // Update is called once per frame
     void Update()
     {
-
-        //state = GetComponent<UnitController>().State;
-
-        /*
-        if (state == UnitState.Moving)
-        {
-            for (int i = 0; i < path.corners.Length - 1; i++)
-                Debug.DrawLine(path.corners[i], path.corners[i + 1], Color.red);
-
-            MoveTank();
-        }*/
 
         if (unit.State == UnitState.Moving)
         {
@@ -62,14 +43,20 @@ public class AgentMoveState : MonoBehaviour
         targetPos = position;
         agent.SetDestination(targetPos);
         agent.isStopped = false;
+
+        // plays random move sound
+        AudioSource audio = GetComponentInParent<AudioSource>();
+        int randomPick = Random.Range(0, unit.moveSounds.Length - 1);
+        audio.PlayOneShot(unit.moveSounds[randomPick], 0.5f);
     }
 
     private void OnDrawGizmos()
     {        
         Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(targetPos, 1);        
-
+        Gizmos.DrawWireSphere(targetPos, 1);
+#if UNITY_EDITOR
         UnityEditor.Handles.Label(transform.position + Vector3.up * 1, "Moving");
+#endif
     }
 
 }

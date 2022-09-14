@@ -16,19 +16,18 @@ public class AgentCombatState : MonoBehaviour
     private NavMeshAgent agent;
     private CombatMode state = CombatMode.Search;
 
-    private Vector3[] pathToTarget;
-    private int waypointNum = 1;
-
-    private float distanceFromWaypoint = 1;
     private Vector3 directionToTarget;
+    private Vector3 castingOffset = Vector3.up;
 
-    Vector3 castingOffset = Vector3.up;    
+    private AudioSource audio;
     #endregion
 
     void Awake()
     {
         unit = GetComponent<UnitController>();
-        agent = GetComponentInChildren<NavMeshAgent>();
+        agent = GetComponent<NavMeshAgent>();
+
+        audio = GetComponentInParent<AudioSource>();
     }
 
     void Start()
@@ -86,13 +85,18 @@ public class AgentCombatState : MonoBehaviour
     {
         if (target != null)
         {
+            PlayFireSound();
+
             // check if target is still in attack range
             if (Vector3.Distance(transform.position, target.position) > unit.AttackRange)
             {
                 if (unit.UnitHalt)
                     state = CombatMode.Search;
                 else
+                {
                     state = CombatMode.MoveTowards;
+                    PlayMoveSound();
+                }
             }
 
             // check if the target is a unit
@@ -153,15 +157,19 @@ public class AgentCombatState : MonoBehaviour
         {
             //pathToTarget = agent.CreatePath(target.position);
             state = CombatMode.MoveTowards;
+            PlayMoveSound();
         }
         else if (Vector3.Distance(transform.position, target.transform.position) <= unit.AttackRange)
         {
             state = CombatMode.Aim;
-            pathToTarget = null;
+
+            // play random turrent sound
+            PlayTurrentRotationSound();
         }
         else if (!unit.UnitHalt)
         {
             state = CombatMode.MoveTowards;
+            PlayMoveSound();
         }
     }
 
@@ -231,6 +239,9 @@ public class AgentCombatState : MonoBehaviour
         {
             state = CombatMode.Aim;
             agent.isStopped = true;
+
+            // play random turrent sound
+            PlayTurrentRotationSound();
         }
 
     }
@@ -243,7 +254,10 @@ public class AgentCombatState : MonoBehaviour
             if (unit.UnitHalt)
                 state = CombatMode.Search;
             else
+            {
                 state = CombatMode.MoveTowards;
+                PlayMoveSound();
+            }
             return;
         }
 
@@ -259,6 +273,7 @@ public class AgentCombatState : MonoBehaviour
             {
                 agent.SetDestination(target.position);
                 state = CombatMode.MoveTowards;
+                PlayMoveSound();
             }
 
             return;
@@ -313,6 +328,33 @@ public class AgentCombatState : MonoBehaviour
         return false;
     }
 
+    private void PlayMoveSound()
+    {
+        if(unit.moveSounds.Length > 0)
+        {
+            var randomPick = UnityEngine.Random.Range(0, unit.moveSounds.Length - 1);
+            audio.PlayOneShot(unit.moveSounds[randomPick], 0.5f);
+        }
+    }
+
+    private void PlayTurrentRotationSound()
+    {
+        if (unit.turretSounds.Length > 0)
+        {
+            var randomPick = UnityEngine.Random.Range(0, unit.turretSounds.Length - 1);
+            audio.PlayOneShot(unit.turretSounds[1], 0.5f);
+        }
+    }
+
+    private void PlayFireSound()
+    {
+        if (unit.fireSounds.Length > 0)
+        {
+            var randomPick = UnityEngine.Random.Range(0, unit.fireSounds.Length - 1);
+            audio.PlayOneShot(unit.fireSounds[1], 0.25f);
+        }
+    }
+
     private void OnDrawGizmos()
     {
 
@@ -347,18 +389,9 @@ public class AgentCombatState : MonoBehaviour
                 break;
         }
 
+#if UNITY_EDITOR
         UnityEditor.Handles.Label(transform.position + Vector3.up * 5, combatMode);
-
-        if (pathToTarget != null && pathToTarget.Length > 0)
-        {
-            for (int i = 0; i < pathToTarget.Length - 1; i++)
-            {
-                Gizmos.color = Color.white;
-                Gizmos.DrawLine(pathToTarget[i], pathToTarget[i + 1]);
-                Gizmos.color = Color.magenta;
-                Gizmos.DrawWireSphere(pathToTarget[i + 1], distanceFromWaypoint);
-            }
-        }
+#endif
     }
 
 }

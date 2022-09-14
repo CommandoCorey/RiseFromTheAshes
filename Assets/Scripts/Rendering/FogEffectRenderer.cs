@@ -17,10 +17,11 @@ public class FogEffectRenderer : ScriptableRendererFeature
 	public Color colour;
 	public Color exploredColour;
 	public float scale = 0.5f;
+	public float renderDistance = 500f;
 
 	public override void Create()
 	{
-		pass = new FogEffectPass(sampleCount, fogDepth, threshold, stepSize, scrollDirection, colour, exploredColour, scale);
+		pass = new FogEffectPass(sampleCount, fogDepth, threshold, stepSize, scrollDirection, colour, exploredColour, scale, renderDistance);
 	}
 
 	public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
@@ -47,9 +48,11 @@ class FogEffectPass : ScriptableRenderPass
 	Vector3 scrollDirection;
 	Color colour;
 	Color exploredColour;
-	float scale;
 
-	public FogEffectPass(int _sampleCount, float _fogDepth, float _threshold, float _stepSize, Vector3 _scrollDirection, Color _colour, Color _exploredColour, float _scale)
+	float scale;
+	float renderDistance;
+
+	public FogEffectPass(int _sampleCount, float _fogDepth, float _threshold, float _stepSize, Vector3 _scrollDirection, Color _colour, Color _exploredColour, float _scale, float _renderDistance)
 	{
 		renderPassEvent = RenderPassEvent.BeforeRenderingPostProcessing;
 
@@ -64,6 +67,7 @@ class FogEffectPass : ScriptableRenderPass
 		colour = _colour;
 		scale = _scale;
 		exploredColour = _exploredColour;
+		renderDistance = _renderDistance;
 	}
 
 	public override void OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData)
@@ -80,15 +84,15 @@ class FogEffectPass : ScriptableRenderPass
 
 	public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
 	{
+#if UNITY_EDITOR
 		if (SceneView.currentDrawingSceneView != null || !FOWManager.Instance || !FOWManager.Instance.imperm || !FOWManager.Instance.perm) {
 				return;
 		}
-
-		FOWCamera FOWCamera = Camera.main.GetComponent<FOWCamera>();
-		if (!FOWCamera) {
-			Debug.LogWarning("There isn't a FOWCamera attached to the main camera. Fix this.");
-			return;
+#else
+		if (!FOWManager.Instance || !FOWManager.Instance.imperm || !FOWManager.Instance.perm) {
+				return;
 		}
+#endif
 
 		fogMaterial.SetTexture("_MaskTex", FOWManager.Instance.perm.MaskToTexture());
 		fogMaterial.SetVector("_FogTopCorner", FOWManager.Instance.perm.transform.position);
@@ -102,16 +106,15 @@ class FogEffectPass : ScriptableRenderPass
 		fogMaterial.SetVector("_FogMaskSize", FOWManager.Instance.perm.GetMaskExtentf());
 		fogMaterial.SetTexture("_NoiseTexture", FOWManager.Instance.perm.noiseTexture);
 		fogMaterial.SetFloat("_CloudScale", scale);
+		fogMaterial.SetFloat("_RenderDistance", renderDistance);
 
-		Texture mask = FOWManager.Instance.imperm.MaskToTexture();
+		RenderTexture mask = FOWManager.Instance.imperm.MaskToTexture();
 
 		impermMaterial.SetTexture("_MaskTex", mask);
 		impermMaterial.SetVector("_FogTopCorner", FOWManager.Instance.imperm.transform.position);
 		impermMaterial.SetFloat("_Height", FOWManager.Instance.imperm.transform.position.y);
 		impermMaterial.SetVector("_FogMaskSize", FOWManager.Instance.imperm.GetMaskExtentf());
 		impermMaterial.SetVector("_FogColour", exploredColour);
-		impermMaterial.SetTexture("_AffectedObjects", FOWCamera.FOWAffectedRenderTexture, RenderTextureSubElement.Color);
-		impermMaterial.SetTexture("_AffectedDepth", FOWCamera.FOWAffectedRenderTexture, RenderTextureSubElement.Depth);
 		impermMaterial.SetTexture("_MainDepth", Camera.main.activeTexture, RenderTextureSubElement.Depth);
 
 		Shader.SetGlobalTexture("G_FOWOccludeMaskTexture", mask);

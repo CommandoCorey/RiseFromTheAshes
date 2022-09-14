@@ -447,7 +447,9 @@ public class CombatState : MonoBehaviour
                 break;
         }
 
+#if UNITY_EDITOR
         UnityEditor.Handles.Label(transform.position + Vector3.up * 5, combatMode);
+#endif
 
         /*
         if (target != null && state != CombatMode.Fire)

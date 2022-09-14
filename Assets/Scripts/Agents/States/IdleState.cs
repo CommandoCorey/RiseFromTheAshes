@@ -16,6 +16,11 @@ public class IdleState : MonoBehaviour
     private void Start()
     {
         //agent.StopMoving();
+
+        AudioSource audio = GetComponentInParent<AudioSource>();
+
+        if (audio != null && audio.isPlaying)
+            audio.Stop();
     }
 
     void Update()
@@ -34,7 +39,9 @@ public class IdleState : MonoBehaviour
 
     private void OnDrawGizmos()
     {
+#if UNITY_EDITOR
         UnityEditor.Handles.Label(transform.position + Vector3.up * 1, "Idle");
+#endif
     }
 
 }

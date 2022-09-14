@@ -210,9 +210,9 @@ public class FlockState : State
         Vector3 direction;
 
         neighbours = unitManager.GetNeighbourUnits(this.gameObject, agent.SquadNum);
-
+#if UNITY_EDITOR
         UnityEditor.Handles.Label(transform.position + Vector3.up * 3, "Flocking");
-
+#endif
         // Draw the generated path
         if (behaviours.flockPath && path != null)
         {
@@ -241,8 +241,10 @@ public class FlockState : State
 
                 Gizmos.DrawLine(transform.position, neighbour.transform.position);
 
+#if UNITY_EDITOR
                 if (neighbour != this.gameObject)
                     UnityEditor.Handles.Label(transform.position + direction * (distance / 2), Math.Round(distance, 2).ToString());
+#endif
             }
         }
     }
