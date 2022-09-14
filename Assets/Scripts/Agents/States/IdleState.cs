@@ -2,15 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class IdleState : MonoBehaviour
+public class IdleState : State
 {
-    UnitController unit;
     AgentMovement agent;
     
-    void Awake()
-    {        
-        unit = GetComponent<UnitController>();
-        agent = GetComponent<AgentMovement>();
+    protected override void Awake()
+    {
+        base.Awake();
+
+        if(gameObject.tag == "PlayerUnit")
+            agent = GetComponent<AgentMovement>();
     }
 
     private void Start()
@@ -33,7 +34,11 @@ public class IdleState : MonoBehaviour
             //Debug.Log("Detected Enemy: " + enemiesInRange[0].gameObject.name);
 
             unit.AttackTarget = enemiesInRange[0].gameObject.transform;
-            unit.ChangeState(UnitState.Attack);
+
+            if (gameObject.tag == "PlayerUnit")
+                unit.ChangeState(UnitState.Attack);
+            else if (gameObject.tag == "NavMesh Agent")
+                unit.ChangeState(UnitState.Follow);
         }
     }
 

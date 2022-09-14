@@ -113,10 +113,6 @@ public class BehaviourManager : MonoBehaviour
                 UnityEditor.Handles.Label(transform.position + Vector3.up * 1, "Separation");
             */
 
-            // check state
-            if (GetComponent<FormationState>() != null && GetComponent<FormationState>().enabled)
-                UnityEditor.Handles.Label(transform.position + Vector3.up * 3, "Entering Formation");
-
         }
         // obstacle avoidance lines
         if (obstacleDetection && frontPoint != null)

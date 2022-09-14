@@ -7,10 +7,10 @@ using UnityEngine.UI;
 
 public enum UnitState
 {
-    Idle,
-    Halt,
+    Idle,    
     Moving,
     Flock,
+    Follow,
     Attack
 }
 
@@ -63,19 +63,18 @@ public class UnitController : MonoBehaviour
     // private variables
     [SerializeField]
     private float health;
-    private Vector3[] waypoints;
+    //private Vector3[] waypoints;
 
-    // state classed
+    // state classes
     private IdleState idleState;
-    private HaltState haltState;
     private SeekState moveState;
     private AgentMoveState agentMoveState;
     private FlockState flockState;
     private CombatState attackState;
-    private AgentCombatState agentAttackState;
+    private FollowEnemyState followState;
+    private AttackState agentAttackState;
 
-    private Color drawColor = Color.white;
-    private Vector3 formationTarget;
+    //private Vector3 formationTarget;
     private Vector3 healthBarOffset;
 
     // audio
@@ -104,10 +103,11 @@ public class UnitController : MonoBehaviour
     public float AttackRange {  get => attackRange; }
     #endregion
 
+    /*
     public void SetPath(Vector3[] waypoints)
     {
         this.waypoints = waypoints;
-    }
+    }*/
 
     // Start is called before the first frame update
     void Start()
@@ -165,20 +165,33 @@ public class UnitController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="newState"></param>
+    /// <param name="target"></param>
     public void ChangeState(UnitState newState, Vector3 target = new Vector3())
     {
         // Destroy script corrensponding to current state
         switch (State)
         {
             case UnitState.Idle: Destroy(idleState); break;
-            case UnitState.Halt: Destroy(haltState); break;
             case UnitState.Moving:
 
                 if(tag == "PlayerUnit")
                     Destroy(moveState);
                 else if(tag == "NavMesh Agent")
                     Destroy(agentMoveState);
-           break;
+            break;
+
+            case UnitState.Follow:
+
+                if (tag == "NavMesh Agent")
+                    Destroy(followState);
+                else if (tag == "PlayerUnit")
+                    Destroy(attackState);
+
+            break;
 
             case UnitState.Flock: Destroy(flockState); break;
             case UnitState.Attack:                
@@ -199,7 +212,6 @@ public class UnitController : MonoBehaviour
                     idleState = gameObject.AddComponent<IdleState>();
                 }
 
-                drawColor = Color.white;
                 break;
 
             case UnitState.Moving:
@@ -223,8 +235,6 @@ public class UnitController : MonoBehaviour
 
                     agentMoveState.MoveTo(target);
                 }
-
-                drawColor = Color.red;
             break;
 
             case UnitState.Flock:
@@ -235,9 +245,24 @@ public class UnitController : MonoBehaviour
 
                 flockState.Target = target;
                 //flockState.FormationTarget = formationTarget;
+            break;
 
-                drawColor = Color.blue;
-                break;
+            case UnitState.Follow:
+
+                if (this.tag == "NavMesh Agent")
+                {
+                    followState = gameObject.AddComponent<FollowEnemyState>();
+                }
+                else if (this.tag == "PlayerUnit")
+                {
+                    if (GetComponent<CombatState>() == null)
+                    {
+                        attackState = gameObject.AddComponent<CombatState>();
+                    }
+
+                }
+
+            break;
 
             case UnitState.Attack:
 
@@ -251,10 +276,10 @@ public class UnitController : MonoBehaviour
                 }
                 else if (this.tag == "NavMesh Agent")
                 {
-                    agentAttackState = gameObject.AddComponent<AgentCombatState>();                    
+                    agentAttackState = gameObject.AddComponent<AttackState>();                    
                 }
 
-                break;
+           break;
         }
     }
 
