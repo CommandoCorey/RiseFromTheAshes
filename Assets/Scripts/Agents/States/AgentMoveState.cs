@@ -53,9 +53,10 @@ public class AgentMoveState : MonoBehaviour
     private void OnDrawGizmos()
     {        
         Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(targetPos, 1);        
-
+        Gizmos.DrawWireSphere(targetPos, 1);
+#if UNITY_EDITOR
         UnityEditor.Handles.Label(transform.position + Vector3.up * 1, "Moving");
+#endif
     }
 
 }
