@@ -26,7 +26,7 @@ public class FollowEnemyState : State
 
         directionToTarget = (unit.AttackTarget.position - transform.position).normalized;
 
-        agent.SetDestination(target);
+        agent.SetDestination(unit.AttackTarget.position);
 
         // check if there is a closer target
         var unitsInRange = Physics.OverlapSphere(transform.position, unit.DetectionRadius, unit.DetectionLayer);

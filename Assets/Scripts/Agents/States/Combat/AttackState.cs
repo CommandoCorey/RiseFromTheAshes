@@ -20,7 +20,6 @@ public class AttackState : State
     // Update is called once per frame
     void Update()
     {
-
         if(!pointingAtTarget)
             Aim();
     }
@@ -87,6 +86,8 @@ public class AttackState : State
     {
         if (unit.AttackTarget != null)
         {
+            unit.PlayParticles(unit.fireEffect);
+
             try
             {
                 // check if target is still in attack range
@@ -104,7 +105,7 @@ public class AttackState : State
                 // check if the target is a building
                 else if (unit.AttackTarget.gameObject.layer == 8 || unit.AttackTarget.gameObject.layer == 9)
                 {
-                    Debug.Log("Dealing " + unit.DamagePerHit + " damage to " + unit.AttackTarget.name);
+                    //Debug.Log("Dealing " + unit.DamagePerHit + " damage to " + unit.AttackTarget.name);
                     Invoke("DealDamage", unit.AttackRate);
                 }
 
@@ -118,8 +119,8 @@ public class AttackState : State
         else
         {
             unit.ChangeState(UnitState.Idle);
-
         }
+
     }
 
     private void OnDrawGizmos()
