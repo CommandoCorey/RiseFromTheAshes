@@ -447,7 +447,7 @@ public class CombatState : MonoBehaviour
                 break;
         }
 
-#if UNITY_EDITOR
+#if UnityEditor
         UnityEditor.Handles.Label(transform.position + Vector3.up * 5, combatMode);
 #endif
 
