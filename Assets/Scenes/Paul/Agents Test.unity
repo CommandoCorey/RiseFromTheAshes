@@ -926,6 +926,16 @@ MonoBehaviour:
   minimap: {fileID: 0}
   showMinimap: 0
   marker: {fileID: 864720292}
+  enableCursorChanges: 1
+  defaultCursor:
+    image: {fileID: 2800000, guid: 47a25573e4cf6594c8deb164367d846e, type: 3}
+    hotspot: {x: 8, y: 0}
+  moveCursor:
+    image: {fileID: 2800000, guid: 3c008f2e01527824ab553a9cccbb70fd, type: 3}
+    hotspot: {x: 0, y: 0}
+  attackCursor:
+    image: {fileID: 2800000, guid: 3261c26d8cf87ba45986fd1ded841962, type: 3}
+    hotspot: {x: 3, y: 2}
 --- !u!114 &835784515 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5307310220468627915, guid: 9b673fd8828422c4f8e24690a83ba7b1, type: 3}
@@ -2944,6 +2954,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timeToBuild: 1
   maxHP: 100
+  hitSounds: []
 --- !u!208 &1856939127
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -3743,6 +3754,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5307310220468627915, guid: 9b673fd8828422c4f8e24690a83ba7b1, type: 3}
+      propertyPath: gameManager
+      value: 
+      objectReference: {fileID: 570835999}
     - target: {fileID: 6396343841564803853, guid: 9b673fd8828422c4f8e24690a83ba7b1, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 

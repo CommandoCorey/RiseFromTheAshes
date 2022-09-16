@@ -1646,6 +1646,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 5307310220468627915}
+        m_TargetAssemblyTypeName: UnitGui, Assembly-CSharp
+        m_MethodName: SetHaltClicked
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &4923802760326928934
 GameObject:
   m_ObjectHideFlags: 0
@@ -1896,11 +1908,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 876799da492fe0a4e8f89c398729f500, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameManager: {fileID: 0}
   buttonPanel: {fileID: 2440345671499239623}
   unitPanal: {fileID: 5307310221154996102}
   unitInfoPanel: {fileID: 8347986948153304020}
   unitIconPrefab: {fileID: 1784479049408504711, guid: 36f194fa28352c542893de2f38034ec2, type: 3}
   alertMessage: {fileID: 1439913896}
+  moveButton: {fileID: 2267441408249811475}
+  attackButton: {fileID: 1478007388426249063}
+  haltButton: {fileID: 6396343841564803853}
   thumbnail: {fileID: 504221799230794064}
   unitName: {fileID: 8891171308878265804}
   currentHealth: {fileID: 8523457356965994860}

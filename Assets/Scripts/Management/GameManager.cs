@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,6 +9,12 @@ public class GameManager : MonoBehaviour
     public GameObject minimap;
     public bool showMinimap = false;
     public Transform marker;
+
+    [Header("Cursors")]
+    public bool enableCursorChanges;
+    public CursorSprite defaultCursor;
+    public CursorSprite moveCursor;
+    public CursorSprite attackCursor;
 
     private AudioSource audio;
 
@@ -20,6 +27,12 @@ public class GameManager : MonoBehaviour
         marker.GetComponent<MeshRenderer>().enabled = false;
 
         audio = GetComponent<AudioSource>();
+
+        // set cursor sizes
+        //defaultCursor.Resize(32, 32);
+
+        if(enableCursorChanges)
+            Cursor.SetCursor(defaultCursor.image, defaultCursor.hotspot, CursorMode.ForceSoftware);
     }
 
     // Update is called once per frame
@@ -52,14 +65,31 @@ public class GameManager : MonoBehaviour
     public void InstantiateParticles(ParticleSystem prefab, Vector3 position)
     {
         var particles = Instantiate(prefab.gameObject, position, Quaternion.identity);
+    }
 
-        /*
-        var mainPartciles = particles.GetComponent<ParticleSystem>();
+    public void SetCursor(CursorSprite sprite)
+    {
+        if(enableCursorChanges)
+            Cursor.SetCursor(sprite.image, sprite.hotspot, CursorMode.ForceSoftware);
+    }
 
-        var childParticles = mainPartciles.GetComponentsInChildren<ParticleSystem>();
-
-        foreach (ParticleSystem child in childParticles)
-            child.Play();*/
+    public void ResetCursor()
+    {
+        if (enableCursorChanges)
+            Cursor.SetCursor(defaultCursor.image, defaultCursor.hotspot, CursorMode.ForceSoftware);
     }
 
 }
+
+[System.Serializable]
+public struct CursorSprite
+{
+    public Texture2D image;
+    public Vector2 hotspot;
+}
+
+/*
+public enum CursorMode
+{
+    Normal, Move, Attack
+}*/
