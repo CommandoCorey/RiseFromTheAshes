@@ -4,6 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
+using static UnityEngine.Rendering.DebugUI;
 
 public enum UnitState
 {
@@ -24,6 +25,11 @@ public class UnitController : MonoBehaviour
     public Transform turret;
     public Transform firingPoint;    
     public Sprite guiIcon;
+
+    [Header("Particle System")]
+    public ParticleSystem fireEffect;
+    public ParticleSystem hitEffect;
+    public ParticleSystem destroyEffect;
 
     [Header("External Scripts")]
     public ProgressBar healthBar;
@@ -73,11 +79,10 @@ public class UnitController : MonoBehaviour
     private FollowEnemyState followState;
     private AttackState agentAttackState;
 
-    //private Vector3 formationTarget;
+    // other variables
     private Vector3 healthBarOffset;
-
-    // audio
     private AudioSource audio;
+    private GameManager gameManager;
     #endregion
 
     # region properties
@@ -94,7 +99,7 @@ public class UnitController : MonoBehaviour
     public string Name { get => unitName; }
     public float MaxHealth { get => maxHealth; }
     public float CurrentHealth {  get=> health; }
-    public float Heal { set=> health = Mathf.Clamp(health + value, 0.0f, maxHealth); }
+    //public float Heal { set=> health = Mathf.Clamp(health + value, 0.0f, maxHealth); }
     public float Speed { get => movementSpeed; }  
     public float TurretRotationSpeed { get => turretRotationSpeed; }
     public float DamagePerHit { get => damagePerHit; }
@@ -115,6 +120,7 @@ public class UnitController : MonoBehaviour
         healthBarOffset = healthBar.transform.parent.localPosition;
 
         audio = GetComponentInParent<AudioSource>();
+        gameManager = GameObject.FindObjectOfType<GameManager>();
 
         ChangeState(UnitState.Idle);
     }
@@ -130,11 +136,10 @@ public class UnitController : MonoBehaviour
             GameObject.Destroy(this.gameObject.transform.parent.gameObject);
 
             // play destruction sound
-            if (destroySounds.Length > 0)
-            {
-                var gameManager = GameManager.FindObjectOfType<GameManager>();
-                gameManager.PlaySound(destroySounds[0], 1);
-            }
+            if (destroySounds.Length > 0)            
+                gameManager.PlaySound(destroySounds[0], 1);            
+
+            gameManager.InstantiateParticles(destroyEffect, transform.position);
         }
 
         healthBar.transform.parent.position = transform.position + healthBarOffset;
@@ -158,10 +163,41 @@ public class UnitController : MonoBehaviour
     {
         health -= amount;
 
+        PlayParticles(hitEffect);
+
         if (hitSounds.Length > 0)
         {
             audio.PlayOneShot(hitSounds[0], 0.5f);
         }
+    }
+
+    /// <summary>
+    /// Increease the units health by a specified amount
+    /// </summary>
+    /// <param name="amount">the amount of HP to increase the health by</param>
+    public void Heal(float amount)
+    {
+        health += amount;
+
+        // prevent health from going above maximum
+        Mathf.Clamp(health, 0.0f, maxHealth);
+    }
+
+    /// <summary>
+    /// Plays a particle system attached to the UnitControlelr script
+    /// </summary>
+    /// <param name="particles">The particle system to start playing</param>
+    public void PlayParticles(ParticleSystem particles)
+    {
+        if (particles == null)
+            return;
+
+        var childParticles = particles.gameObject.GetComponentsInChildren<ParticleSystem>();
+
+        particles.Play();
+
+        foreach (ParticleSystem child in childParticles)
+            child.Play();
     }
 
     /// <summary>
@@ -293,7 +329,6 @@ public class UnitController : MonoBehaviour
 
         if (unitGui != null)        
             unitGui.RemoveUnitFromSelection(this);
-        
     }
 
     private void OnDrawGizmos()

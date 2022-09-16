@@ -101,7 +101,7 @@ public class VehicleBay : MonoBehaviour {
 				UnitController uc;
 				if (!TryGetComponent(out uc)) { continue; }
 
-				uc.Heal = Time.deltaTime * healUnitPerSecond;
+				uc.Heal(Time.deltaTime * healUnitPerSecond);
 			}
 		}
 	}
