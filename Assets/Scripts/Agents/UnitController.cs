@@ -4,13 +4,14 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
+using static UnityEngine.Rendering.DebugUI;
 
 public enum UnitState
 {
-    Idle,
-    Halt,
+    Idle,    
     Moving,
     Flock,
+    Follow,
     Attack
 }
 
@@ -22,9 +23,13 @@ public class UnitController : MonoBehaviour
     [Header("Game Objects and transforms")]
     public GameObject selectionHighlight;
     public Transform turret;
-    public Transform castingPoint;
     public Transform firingPoint;    
     public Sprite guiIcon;
+
+    [Header("Particle System")]
+    public ParticleSystem fireEffect;
+    public ParticleSystem hitEffect;
+    public ParticleSystem destroyEffect;
 
     [Header("External Scripts")]
     public ProgressBar healthBar;
@@ -63,23 +68,21 @@ public class UnitController : MonoBehaviour
     // private variables
     [SerializeField]
     private float health;
-    private Vector3[] waypoints;
+    //private Vector3[] waypoints;
 
-    // state classed
+    // state classes
     private IdleState idleState;
-    private HaltState haltState;
     private SeekState moveState;
     private AgentMoveState agentMoveState;
     private FlockState flockState;
     private CombatState attackState;
-    private AgentCombatState agentAttackState;
+    private FollowEnemyState followState;
+    private AttackState agentAttackState;
 
-    private Color drawColor = Color.white;
-    private Vector3 formationTarget;
+    // other variables
     private Vector3 healthBarOffset;
-
-    // audio
     private AudioSource audio;
+    private GameManager gameManager;
     #endregion
 
     # region properties
@@ -96,7 +99,7 @@ public class UnitController : MonoBehaviour
     public string Name { get => unitName; }
     public float MaxHealth { get => maxHealth; }
     public float CurrentHealth {  get=> health; }
-    public float Heal { set=> health = Mathf.Clamp(health + value, 0.0f, maxHealth); }
+    //public float Heal { set=> health = Mathf.Clamp(health + value, 0.0f, maxHealth); }
     public float Speed { get => movementSpeed; }  
     public float TurretRotationSpeed { get => turretRotationSpeed; }
     public float DamagePerHit { get => damagePerHit; }
@@ -104,10 +107,11 @@ public class UnitController : MonoBehaviour
     public float AttackRange {  get => attackRange; }
     #endregion
 
+    /*
     public void SetPath(Vector3[] waypoints)
     {
         this.waypoints = waypoints;
-    }
+    }*/
 
     // Start is called before the first frame update
     void Start()
@@ -116,6 +120,7 @@ public class UnitController : MonoBehaviour
         healthBarOffset = healthBar.transform.parent.localPosition;
 
         audio = GetComponentInParent<AudioSource>();
+        gameManager = GameObject.FindObjectOfType<GameManager>();
 
         ChangeState(UnitState.Idle);
     }
@@ -131,11 +136,10 @@ public class UnitController : MonoBehaviour
             GameObject.Destroy(this.gameObject.transform.parent.gameObject);
 
             // play destruction sound
-            if (destroySounds.Length > 0)
-            {
-                var gameManager = GameManager.FindObjectOfType<GameManager>();
-                gameManager.PlaySound(destroySounds[0], 1);
-            }
+            if (destroySounds.Length > 0)            
+                gameManager.PlaySound(destroySounds[0], 1);            
+
+            gameManager.InstantiateParticles(destroyEffect, transform.position);
         }
 
         healthBar.transform.parent.position = transform.position + healthBarOffset;
@@ -159,26 +163,70 @@ public class UnitController : MonoBehaviour
     {
         health -= amount;
 
+        PlayParticles(hitEffect);
+
         if (hitSounds.Length > 0)
         {
             audio.PlayOneShot(hitSounds[0], 0.5f);
         }
     }
 
+    /// <summary>
+    /// Increease the units health by a specified amount
+    /// </summary>
+    /// <param name="amount">the amount of HP to increase the health by</param>
+    public void Heal(float amount)
+    {
+        health += amount;
+
+        // prevent health from going above maximum
+        Mathf.Clamp(health, 0.0f, maxHealth);
+    }
+
+    /// <summary>
+    /// Plays a particle system attached to the UnitControlelr script
+    /// </summary>
+    /// <param name="particles">The particle system to start playing</param>
+    public void PlayParticles(ParticleSystem particles)
+    {
+        if (particles == null)
+            return;
+
+        var childParticles = particles.gameObject.GetComponentsInChildren<ParticleSystem>();
+
+        particles.Play();
+
+        foreach (ParticleSystem child in childParticles)
+            child.Play();
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="newState"></param>
+    /// <param name="target"></param>
     public void ChangeState(UnitState newState, Vector3 target = new Vector3())
     {
         // Destroy script corrensponding to current state
         switch (State)
         {
             case UnitState.Idle: Destroy(idleState); break;
-            case UnitState.Halt: Destroy(haltState); break;
             case UnitState.Moving:
 
                 if(tag == "PlayerUnit")
                     Destroy(moveState);
                 else if(tag == "NavMesh Agent")
                     Destroy(agentMoveState);
-           break;
+            break;
+
+            case UnitState.Follow:
+
+                if (tag == "NavMesh Agent")
+                    Destroy(followState);
+                else if (tag == "PlayerUnit")
+                    Destroy(attackState);
+
+            break;
 
             case UnitState.Flock: Destroy(flockState); break;
             case UnitState.Attack:                
@@ -199,7 +247,6 @@ public class UnitController : MonoBehaviour
                     idleState = gameObject.AddComponent<IdleState>();
                 }
 
-                drawColor = Color.white;
                 break;
 
             case UnitState.Moving:
@@ -223,8 +270,6 @@ public class UnitController : MonoBehaviour
 
                     agentMoveState.MoveTo(target);
                 }
-
-                drawColor = Color.red;
             break;
 
             case UnitState.Flock:
@@ -235,9 +280,24 @@ public class UnitController : MonoBehaviour
 
                 flockState.Target = target;
                 //flockState.FormationTarget = formationTarget;
+            break;
 
-                drawColor = Color.blue;
-                break;
+            case UnitState.Follow:
+
+                if (this.tag == "NavMesh Agent")
+                {
+                    followState = gameObject.AddComponent<FollowEnemyState>();
+                }
+                else if (this.tag == "PlayerUnit")
+                {
+                    if (GetComponent<CombatState>() == null)
+                    {
+                        attackState = gameObject.AddComponent<CombatState>();
+                    }
+
+                }
+
+            break;
 
             case UnitState.Attack:
 
@@ -251,10 +311,10 @@ public class UnitController : MonoBehaviour
                 }
                 else if (this.tag == "NavMesh Agent")
                 {
-                    agentAttackState = gameObject.AddComponent<AgentCombatState>();                    
+                    agentAttackState = gameObject.AddComponent<AttackState>();                    
                 }
 
-                break;
+           break;
         }
     }
 
@@ -269,7 +329,6 @@ public class UnitController : MonoBehaviour
 
         if (unitGui != null)        
             unitGui.RemoveUnitFromSelection(this);
-        
     }
 
     private void OnDrawGizmos()

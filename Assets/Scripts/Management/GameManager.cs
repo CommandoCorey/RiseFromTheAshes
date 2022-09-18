@@ -48,4 +48,18 @@ public class GameManager : MonoBehaviour
         audio.PlayOneShot(clip, volumeScale);
     }
 
+
+    public void InstantiateParticles(ParticleSystem prefab, Vector3 position)
+    {
+        var particles = Instantiate(prefab.gameObject, position, Quaternion.identity);
+
+        /*
+        var mainPartciles = particles.GetComponent<ParticleSystem>();
+
+        var childParticles = mainPartciles.GetComponentsInChildren<ParticleSystem>();
+
+        foreach (ParticleSystem child in childParticles)
+            child.Play();*/
+    }
+
 }

@@ -272,7 +272,7 @@ public class UnitManager : MonoBehaviour
         formationPositions.Clear();
         Vector3 targetPos;
 
-        gameManager.SetMarkerLocation(new Vector3(hit.point.x, 1, hit.point.z));
+        gameManager.SetMarkerLocation(new Vector3(hit.point.x, hit.point.y + 0.5f, hit.point.z));
 
         // check that the player clicked on the ground.
         // If they did not find a new position
