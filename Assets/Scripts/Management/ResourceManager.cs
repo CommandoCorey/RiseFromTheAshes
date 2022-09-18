@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,6 +19,9 @@ public class ResourceManager : MonoBehaviour
 {
     public Resource[] resources;
 
+    [Header("GUI Text")]
+    public TextMeshProUGUI steelAmount;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -26,10 +30,10 @@ public class ResourceManager : MonoBehaviour
     }
 
     // Update is called once per frame
-    /*void Update()
+    void Update()
     {
-        
-    }*/
+        steelAmount.text = resources[0].currentAmount.ToString();
+    }
 
     /// <summary>
     /// Gets the amount of resources from a specified resource type
