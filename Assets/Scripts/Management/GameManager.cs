@@ -64,6 +64,7 @@ public class GameManager : MonoBehaviour
 
     public void InstantiateParticles(ParticleSystem prefab, Vector3 position)
     {
+
         var particles = Instantiate(prefab.gameObject, position, Quaternion.identity);
     }
 

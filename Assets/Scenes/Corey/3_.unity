@@ -2537,9 +2537,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1229573216261637845, guid: 06dd12c7152c2ce4ea99b6b26abd46e6, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
     - target: {fileID: 2459500769794059726, guid: 06dd12c7152c2ce4ea99b6b26abd46e6, type: 3}
       propertyPath: m_Name
       value: AFV - Armored Fighting Vehicle Variant Green
+      objectReference: {fileID: 0}
+    - target: {fileID: 2459500769794059726, guid: 06dd12c7152c2ce4ea99b6b26abd46e6, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2459500769794059726, guid: 06dd12c7152c2ce4ea99b6b26abd46e6, type: 3}
+      propertyPath: m_TagString
+      value: NavMesh Agent
       objectReference: {fileID: 0}
     - target: {fileID: 2984257385262987124, guid: 06dd12c7152c2ce4ea99b6b26abd46e6, type: 3}
       propertyPath: m_RootOrder
@@ -5203,25 +5215,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9eb3505f3d5f6ac46b09d35adfcde591, type: 3}
---- !u!1 &413703481 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 56c1649f5a9fecd4891e1564beb76205, type: 3}
-  m_PrefabInstance: {fileID: 72494144}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &413703482
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 413703481}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62c0e9bedd811934ba1b67fab761f762, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  permRadius: 30
-  impermRadius: 10
 --- !u!4 &413990631 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7613544568778599897, guid: 2bab33fd481f8ca439e89a5486114d29, type: 3}
@@ -7114,6 +7107,10 @@ PrefabInstance:
     - target: {fileID: 323541986095530627, guid: 3fcfb217e62862548a7430d63f97e618, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 835486160671293135, guid: 3fcfb217e62862548a7430d63f97e618, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1096242866773448761, guid: 3fcfb217e62862548a7430d63f97e618, type: 3}
       propertyPath: m_Name
@@ -13586,6 +13583,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5498000894255412512, guid: 98c01c677f05c9d46862e1115de99f37, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8436934513957633233, guid: 98c01c677f05c9d46862e1115de99f37, type: 3}
       propertyPath: m_RootOrder
       value: 58
@@ -13633,6 +13634,10 @@ PrefabInstance:
     - target: {fileID: 9105666644610197099, guid: 98c01c677f05c9d46862e1115de99f37, type: 3}
       propertyPath: m_Name
       value: AFV - Armored Fighting Vehicle Variant Red
+      objectReference: {fileID: 0}
+    - target: {fileID: 9105666644610197099, guid: 98c01c677f05c9d46862e1115de99f37, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 98c01c677f05c9d46862e1115de99f37, type: 3}
@@ -18264,6 +18269,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7613544568778599897, guid: 2bab33fd481f8ca439e89a5486114d29, type: 3}
   m_PrefabInstance: {fileID: 1211171815}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1409673039 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2748015600337103721, guid: 9b673fd8828422c4f8e24690a83ba7b1, type: 3}
+  m_PrefabInstance: {fileID: 1794358223}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1412258122
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -22625,6 +22641,10 @@ PrefabInstance:
       propertyPath: enableCursorChanges
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3005125415144582022, guid: a8235eec3e429fe4e9af279028c17a7c, type: 3}
+      propertyPath: steelAmount
+      value: 
+      objectReference: {fileID: 1409673039}
     - target: {fileID: 5620373894487887830, guid: a8235eec3e429fe4e9af279028c17a7c, type: 3}
       propertyPath: mainCamera
       value: 
@@ -26457,6 +26477,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: AFV - Armored Fighting Vehicle
       objectReference: {fileID: 0}
+    - target: {fileID: 8679329102041598510, guid: ebe50dbf528cd0e48ad2814f238f8f29, type: 3}
+      propertyPath: m_TagString
+      value: NavMesh Agent
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ebe50dbf528cd0e48ad2814f238f8f29, type: 3}
 --- !u!4 &2116865077 stripped
@@ -27239,6 +27263,63 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d7b65b59118ad1448a90e82efa7c8841, type: 3}
+--- !u!1001 &3981456435745429840
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3515693884013531899, guid: 41370a93c6a21854f97f3ce4c8002550, type: 3}
+      propertyPath: m_RootOrder
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 3515693884013531899, guid: 41370a93c6a21854f97f3ce4c8002550, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 3515693884013531899, guid: 41370a93c6a21854f97f3ce4c8002550, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3515693884013531899, guid: 41370a93c6a21854f97f3ce4c8002550, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 3515693884013531899, guid: 41370a93c6a21854f97f3ce4c8002550, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3515693884013531899, guid: 41370a93c6a21854f97f3ce4c8002550, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3515693884013531899, guid: 41370a93c6a21854f97f3ce4c8002550, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3515693884013531899, guid: 41370a93c6a21854f97f3ce4c8002550, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3515693884013531899, guid: 41370a93c6a21854f97f3ce4c8002550, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3515693884013531899, guid: 41370a93c6a21854f97f3ce4c8002550, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3515693884013531899, guid: 41370a93c6a21854f97f3ce4c8002550, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4287867034258344001, guid: 41370a93c6a21854f97f3ce4c8002550, type: 3}
+      propertyPath: m_Name
+      value: HQ_Building_Modelling
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 41370a93c6a21854f97f3ce4c8002550, type: 3}
 --- !u!1001 &4144508469205053902
 PrefabInstance:
   m_ObjectHideFlags: 0

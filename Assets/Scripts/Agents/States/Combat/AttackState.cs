@@ -62,7 +62,7 @@ public class AttackState : State
         RaycastHit hit;
 
         // check if turret is pointing at target
-        if (Physics.Raycast(unit.firingPoint.position, unit.turret.forward, out hit) && hit.transform == unit.AttackTarget)
+        if (Quaternion.Angle(unit.turret.rotation, lookRotation) < 0.1f)        
         {
             Debug.DrawLine(unit.turret.position, unit.AttackTarget.position, Color.yellow);
 
@@ -88,10 +88,10 @@ public class AttackState : State
         {
             unit.PlayParticles(unit.fireEffect);
 
-            try
-            {
+            //try
+            //{
                 // check if target is still in attack range
-                if (Vector3.Distance(transform.position, unit.AttackTarget.position) > unit.AttackRange)
+                if (Vector3.Distance(unit.body.position, unit.AttackTarget.position) > unit.AttackRange)
                 {
                     unit.ChangeState(UnitState.Follow);
                 }            
@@ -99,7 +99,7 @@ public class AttackState : State
                 // check if the target is a unit
                 else if (unit.AttackTarget.gameObject.layer == 6 || unit.AttackTarget.gameObject.layer == 7)
                 {
-                    unit.AttackTarget.GetComponent<UnitController>().TakeDamage(unit.DamagePerHit);
+                    unit.AttackTarget.GetComponentInParent<UnitController>().TakeDamage(unit.DamagePerHit);
                     Invoke("DealDamage", unit.AttackRate);
                 }
                 // check if the target is a building
@@ -109,11 +109,11 @@ public class AttackState : State
                     Invoke("DealDamage", unit.AttackRate);
                 }
 
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError(ex.Message);
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Debug.LogError(ex.Message);
+            //}
 
         }
         else
@@ -130,9 +130,9 @@ public class AttackState : State
 
 #if UNITY_EDITOR
         if(!pointingAtTarget)
-            UnityEditor.Handles.Label(transform.position + Vector3.up * 5, "Aiming");
+            UnityEditor.Handles.Label(unit.body.position + Vector3.up * 5, "Aiming");
         else
-            UnityEditor.Handles.Label(transform.position + Vector3.up * 5, "Firing");
+            UnityEditor.Handles.Label(unit.body.position + Vector3.up * 5, "Firing");
     }
 #endif
 

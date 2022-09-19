@@ -624,6 +624,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameManager
       objectReference: {fileID: 0}
+    - target: {fileID: 2434893712283191809, guid: a8235eec3e429fe4e9af279028c17a7c, type: 3}
+      propertyPath: gui
+      value: 
+      objectReference: {fileID: 1417604872}
     - target: {fileID: 2434893712283191810, guid: a8235eec3e429fe4e9af279028c17a7c, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -796,6 +800,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1582896361334903961, guid: 0572cd307a113a54eb747661473676f3, type: 3}
       propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2527386952669633952, guid: 0572cd307a113a54eb747661473676f3, type: 3}
+      propertyPath: seeThroughWalls
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5647858512007855413, guid: 0572cd307a113a54eb747661473676f3, type: 3}
@@ -1004,6 +1012,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3141801393996432479, guid: 092e7ab5df421af4fbb05796f6f1aac6, type: 3}
+      propertyPath: autoAttack
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3141801393996432479, guid: 092e7ab5df421af4fbb05796f6f1aac6, type: 3}
+      propertyPath: seeThroughWalls
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3235123660149911136, guid: 092e7ab5df421af4fbb05796f6f1aac6, type: 3}
       propertyPath: m_RootOrder
       value: 8
@@ -1071,6 +1087,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1582896361334903961, guid: 0572cd307a113a54eb747661473676f3, type: 3}
       propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2527386952669633952, guid: 0572cd307a113a54eb747661473676f3, type: 3}
+      propertyPath: seeThroughWalls
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7594720587372543484, guid: 0572cd307a113a54eb747661473676f3, type: 3}
@@ -1568,6 +1588,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3141801393996432479, guid: 092e7ab5df421af4fbb05796f6f1aac6, type: 3}
+      propertyPath: seeThroughWalls
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3191881788981067505, guid: 092e7ab5df421af4fbb05796f6f1aac6, type: 3}
       propertyPath: m_PlayOnAwake
       value: 0
@@ -1650,6 +1674,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1582896361334903961, guid: 0572cd307a113a54eb747661473676f3, type: 3}
       propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2527386952669633952, guid: 0572cd307a113a54eb747661473676f3, type: 3}
+      propertyPath: autoAttack
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2527386952669633952, guid: 0572cd307a113a54eb747661473676f3, type: 3}
+      propertyPath: seeThroughWalls
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7594720587372543484, guid: 0572cd307a113a54eb747661473676f3, type: 3}
@@ -1771,6 +1803,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a048b73dba1e87d548b02d84f647b65c, type: 3}
+--- !u!114 &1469681080 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2434893712283192060, guid: a8235eec3e429fe4e9af279028c17a7c, type: 3}
+  m_PrefabInstance: {fileID: 891476947}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 332fe9667dfa172439aa9558eb988fb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1482932633
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2358,6 +2401,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5307310220468627915, guid: 9b673fd8828422c4f8e24690a83ba7b1, type: 3}
+      propertyPath: gameManager
+      value: 
+      objectReference: {fileID: 1469681080}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9b673fd8828422c4f8e24690a83ba7b1, type: 3}
 --- !u!1001 &1883239216
@@ -2386,6 +2433,10 @@ PrefabInstance:
     - target: {fileID: 2279039663374699555, guid: 092e7ab5df421af4fbb05796f6f1aac6, type: 3}
       propertyPath: m_Layer
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3141801393996432479, guid: 092e7ab5df421af4fbb05796f6f1aac6, type: 3}
+      propertyPath: seeThroughWalls
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3235123660149911136, guid: 092e7ab5df421af4fbb05796f6f1aac6, type: 3}
       propertyPath: m_RootOrder
