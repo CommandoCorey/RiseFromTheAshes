@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class ResourceBuilding : Building
+public class ResourceBuilding : MonoBehaviour
 {
     //public int ResourceToGain;
     public ResourceType resourceToAdd;
