@@ -87,6 +87,8 @@ public class AttackState : State
         if (unit.AttackTarget != null)
         {
             unit.PlayParticles(unit.fireEffect);
+            unit.PlayFireSound();
+
 
             //try
             //{
@@ -133,7 +135,7 @@ public class AttackState : State
             UnityEditor.Handles.Label(unit.body.position + Vector3.up * 5, "Aiming");
         else
             UnityEditor.Handles.Label(unit.body.position + Vector3.up * 5, "Firing");
-    }
 #endif
+    }
 
 }
