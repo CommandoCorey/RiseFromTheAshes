@@ -87,6 +87,8 @@ public class AttackState : State
         if (unit.AttackTarget != null)
         {
             unit.PlayParticles(unit.fireEffect);
+            unit.PlayFireSound();
+
 
             //try
             //{

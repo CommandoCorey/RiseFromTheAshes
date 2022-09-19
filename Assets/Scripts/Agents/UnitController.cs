@@ -77,7 +77,6 @@ public class UnitController : MonoBehaviour
     float attackRangeOpacity = 0.04f;
 
     // private variables
-    [SerializeField]
     private float health;
     //private Vector3[] waypoints;
 
@@ -179,7 +178,7 @@ public class UnitController : MonoBehaviour
 
         if (hitSounds.Length > 0)
         {
-            audio.PlayOneShot(hitSounds[0], 0.5f);
+            audio.PlayOneShot(hitSounds[0], 0.25f);
         }
     }
 
@@ -215,8 +214,16 @@ public class UnitController : MonoBehaviour
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="newState"></param>
-    /// <param name="target"></param>
+    public void PlayFireSound()
+    {
+        audio.PlayOneShot(fireSounds[0], 0.1f);
+    }
+
+    /// <summary>
+    /// Changes the Unit's state in the finite state machine to another one
+    /// </summary>
+    /// <param name="newState">The state being switched to</param>
+    /// <param name="target">optional position parameter</param>
     public void ChangeState(UnitState newState, Vector3 target = new Vector3())
     {
         // Destroy script corrensponding to current state
