@@ -27,7 +27,7 @@ public abstract class State : MonoBehaviour
             //pathToTarget = agent.CreatePath(target.position);
             //state = CombatMode.MoveTowards;
         }
-        else if (Vector3.Distance(transform.position, unit.AttackTarget.position) <= unit.AttackRange)
+        else if (Vector3.Distance(unit.body.position, unit.AttackTarget.position) <= unit.AttackRange)
         {
             //state = CombatMode.Aim;
         }

@@ -29,7 +29,7 @@ public class IdleState : State
         if (!unit.autoAttack)
             return;
 
-        var enemiesInRange = Physics.OverlapSphere(transform.position, unit.DetectionRadius, unit.DetectionLayer);
+        var enemiesInRange = Physics.OverlapSphere(unit.body.position, unit.DetectionRadius, unit.DetectionLayer);
 
         // if there are any enemies in range change to the combat state
         if (enemiesInRange.Length > 0)
