@@ -4,15 +4,26 @@ using UnityEngine;
 
 public class Break_Props : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField] LayerMask unitLayerMask;
 
-    // Update is called once per frame
-    void Update()
+    [Space(10)]
+
+    public List<GameObject> SpawnObjects = new List<GameObject>();
+    public GameObject Remove;
+
+    // Start is called before the first frame update
+    void OnTriggerEnter(Collider other)
     {
-        
+        //entering the trigger
+        Debug.Log("Spawning Object");
+        if (((1 << other.gameObject.layer) & unitLayerMask) == 0)
+        {
+            foreach (var g in SpawnObjects)
+            {
+                g.SetActive(false);
+            }
+
+            Remove.SetActive(false);
+        }
     }
 }
