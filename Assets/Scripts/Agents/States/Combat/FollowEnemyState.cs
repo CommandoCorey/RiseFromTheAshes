@@ -11,7 +11,7 @@ public class FollowEnemyState : State
     // Start is called before the first frame update
     void Start()
     {
-        agent = GetComponent<NavMeshAgent>();        
+        agent = GetComponentInChildren<NavMeshAgent>();        
 
         // start the navmesh agent again
         if (agent.isStopped)
@@ -41,13 +41,13 @@ public class FollowEnemyState : State
         if (unit.AttackTarget != null)
         {
 
-            directionToTarget = (unit.AttackTarget.position - transform.position).normalized;
+            directionToTarget = (unit.AttackTarget.position - unit.body.position).normalized;
 
             agent.SetDestination(unit.AttackTarget.position);
 
             // check that the line of sight is vacant and we are in attack range
             if (!ObstacleInWay(directionToTarget) &&
-                Vector3.Distance(transform.position, unit.AttackTarget.position) <= unit.AttackRange)
+                Vector3.Distance(unit.body.position, unit.AttackTarget.position) <= unit.AttackRange)
             {
                 agent.isStopped = true;
                 unit.ChangeState(UnitState.Attack);
@@ -65,17 +65,17 @@ public class FollowEnemyState : State
         if (current != null)
         {
             closest = current;
-            shortestDistance = Vector3.Distance(transform.position, current.position);
+            shortestDistance = Vector3.Distance(unit.body.position, current.position);
         }
         else if (enemies.Length > 0)
         {
             closest = enemies[0].transform;
-            shortestDistance = Vector3.Distance(transform.position, enemies[0].transform.position);
+            shortestDistance = Vector3.Distance(unit.body.position, enemies[0].transform.position);
         }
 
         foreach (Collider enemy in enemies)
         {
-            float distance = Vector3.Distance(transform.position, enemy.transform.position);
+            float distance = Vector3.Distance(unit.body.position, enemy.transform.position);
             if (distance < shortestDistance)
             {
                 shortestDistance = distance;
@@ -91,10 +91,10 @@ public class FollowEnemyState : State
     {
         // Draw line to enemy
         Gizmos.color = Color.red;
-        Gizmos.DrawLine(transform.position, transform.position + directionToTarget * unit.DetectionRadius);
+        Gizmos.DrawLine(unit.body.position, unit.body.position + directionToTarget * unit.DetectionRadius);
 
 #if UNITY_EDITOR
-        UnityEditor.Handles.Label(transform.position + Vector3.up * 5, "Moving To Enemy");
+        UnityEditor.Handles.Label(unit.body.position + Vector3.up * 5, "Moving To Enemy");
 #endif
     }
 

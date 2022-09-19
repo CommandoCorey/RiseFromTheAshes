@@ -18,7 +18,7 @@ public class AgentMoveState : MonoBehaviour
     void Awake()
     {
         unit = GetComponent<UnitController>();
-        agent = GetComponent<NavMeshAgent>();
+        agent = GetComponentInChildren<NavMeshAgent>();
         targetPos = transform.position;
     }
 

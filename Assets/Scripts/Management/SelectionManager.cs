@@ -122,12 +122,12 @@ public class SelectionManager : MonoBehaviour
                 {
                     if (Input.GetKey(KeyCode.LeftShift)) //inclusive select
                     {
-                        AddSelected(hit.transform.gameObject);
+                        AddSelected(hit.transform.parent.gameObject);
                     }
                     else //exclusive selected
                     {
                         DeselectAll();
-                        AddSelected(hit.transform.gameObject);
+                        AddSelected(hit.transform.parent.gameObject);
 
                         gui.GenerateUnitIcons(Units);
                     }
@@ -183,7 +183,7 @@ public class SelectionManager : MonoBehaviour
                 foreach (Collider collision in collisions)
                 {
                     //Debug.Log("Selected: " + collision.gameObject.name);
-                    AddSelected(collision.gameObject);
+                    AddSelected(collision.transform.parent.gameObject);
                 }
 
                 gui.GenerateUnitIcons(Units);
