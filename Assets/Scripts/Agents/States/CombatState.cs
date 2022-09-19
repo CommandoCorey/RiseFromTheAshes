@@ -7,7 +7,7 @@ public enum CombatMode
     Search, MoveTowards, Aim, Fire, Follow, Halt
 }
 
-public class CombatState : MonoBehaviour
+public class CombatState : State
 {
     #region variables
     private UnitController unit;
@@ -132,11 +132,11 @@ public class CombatState : MonoBehaviour
             Destroy(seek);
 
         // check for other units in vision radius
-        var unitsInRange = Physics.OverlapSphere(transform.position, unit.DetectionRadius, unit.DetectionLayer);
+        var unitsInRange = GetEnemiesInRange();//Physics.OverlapSphere(transform.position, unit.DetectionRadius, unit.DetectionLayer);
 
-        if (unitsInRange.Length > 0)
+        if (unitsInRange.Count > 0)
         {
-            target = GetClosestEnemy(unitsInRange);
+            target = GetClosestEnemy(unitsInRange.ToArray());
 
             HandleEnemyInRange();
         }
@@ -233,8 +233,9 @@ public class CombatState : MonoBehaviour
         }
 
         // check if there is a closer target
-        var unitsInRange = Physics.OverlapSphere(transform.position, unit.DetectionRadius, unit.DetectionLayer);
-        var closest = GetClosestEnemy(unitsInRange, target);
+        var unitsInRange = GetEnemiesInRange();
+            //Physics.OverlapSphere(transform.position, unit.DetectionRadius, unit.DetectionLayer);
+        var closest = GetClosestEnemy(unitsInRange.ToArray(), target);
 
         if (closest != target) // closer enemy was found
         {

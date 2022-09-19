@@ -20,20 +20,35 @@ public abstract class State : MonoBehaviour
     }
 
     // functions
+    protected List<Collider> GetEnemiesInRange()
+    {
+        var unitsInRange = Physics.OverlapSphere(unit.body.position, unit.DetectionRadius, unit.EnemyUnitLayer);
+        var buildingsInInRange = Physics.OverlapSphere(unit.body.position, unit.DetectionRadius, unit.EnemyBuildingLayer);
+
+        List<Collider> enemiesFound = new List<Collider>();
+
+        enemiesFound.AddRange(unitsInRange);
+        enemiesFound.AddRange(buildingsInInRange);
+
+        return enemiesFound;
+    }
+
+
     protected void HandleEnemyInRange()
     {
         if (ObstacleInWay(directionToTarget) && !unit.UnitHalt)
         {
             //pathToTarget = agent.CreatePath(target.position);
             //state = CombatMode.MoveTowards;
+            unit.ChangeState(UnitState.Follow);
         }
         else if (Vector3.Distance(unit.body.position, unit.AttackTarget.position) <= unit.AttackRange)
         {
-            //state = CombatMode.Aim;
+            unit.ChangeState(UnitState.Idle);
         }
         else if (!unit.UnitHalt)
         {
-            //state = CombatMode.MoveTowards;
+            
         }
     }
 

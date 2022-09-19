@@ -2277,10 +2277,13 @@ MonoBehaviour:
   attackRate: 1
   attackRange: 20
   turretRotationSpeed: 20
-  detectionRadius: 40
-  detectionLayer:
+  detectionRadius: 60
+  enemyUnitLayer:
     serializedVersion: 2
-    m_Bits: 640
+    m_Bits: 0
+  enemyBuildingLayer:
+    serializedVersion: 2
+    m_Bits: 0
   environmentLayer:
     serializedVersion: 2
     m_Bits: 1024
@@ -2310,7 +2313,6 @@ MonoBehaviour:
   detectionOpacity: 0.02
   showAttackRange: 0
   attackRangeOpacity: 0.04
-  health: 0
 --- !u!1001 &2009581678242137460
 PrefabInstance:
   m_ObjectHideFlags: 0
