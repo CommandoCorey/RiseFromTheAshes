@@ -49,7 +49,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -148,7 +148,7 @@ MonoBehaviour:
   minimap: {fileID: 0}
   showMinimap: 0
   marker: {fileID: 3153306220058434080}
-  enableCursorChanges: 1
+  enableCursorChanges: 0
   defaultCursor:
     image: {fileID: 2800000, guid: 47a25573e4cf6594c8deb164367d846e, type: 3}
     hotspot: {x: 8, y: 0}
@@ -170,12 +170,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98313234fe913e042b4b3c89033ffa6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gui: {fileID: 0}
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
   enemyLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 640
   flockWhileMoving: 0
   spaceBetweenUnits: 3
   maxUnitsPerRow: 5
@@ -214,6 +215,7 @@ MonoBehaviour:
     icon: {fileID: 0}
     startingAmount: 0
     currentAmount: 0
+  steelAmount: {fileID: 0}
 --- !u!114 &5620373894487887830
 MonoBehaviour:
   m_ObjectHideFlags: 0
