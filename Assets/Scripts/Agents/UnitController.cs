@@ -23,7 +23,8 @@ public class UnitController : MonoBehaviour
     [Header("Game Objects and transforms")]
     public GameObject selectionHighlight;
     public Transform turret;
-    public Transform firingPoint;    
+    public Transform firingPoint;
+    public Transform body;
     public Sprite guiIcon;
 
     [Header("Particle System")]
@@ -67,8 +68,13 @@ public class UnitController : MonoBehaviour
     public bool seeThroughWalls = false;
 
     [Header("Gizmos")]
+    [SerializeField] bool showSolidDisks = true;
     [SerializeField] bool showDetectionRadius = true;
+    [SerializeField] [Range(0, 0.5f)]
+    float detectionOpacity = 0.02f;
     [SerializeField] bool showAttackRange = true;
+    [SerializeField] [Range(0, 0.5f)]
+    float attackRangeOpacity = 0.04f;
 
     // private variables
     [SerializeField]
@@ -145,10 +151,10 @@ public class UnitController : MonoBehaviour
                 gameManager.PlaySound(destroySounds[0], 1);            
 
             if(destroyEffect != null)
-                gameManager.InstantiateParticles(destroyEffect, transform.position);
+                gameManager.InstantiateParticles(destroyEffect, body.position);
         }
 
-        healthBar.transform.parent.position = transform.position + healthBarOffset;
+        healthBar.transform.position = body.position + healthBarOffset;
     }    
 
     /// <summary>
@@ -339,21 +345,34 @@ public class UnitController : MonoBehaviour
 
     private void OnDrawGizmos()
     {
+#if UNITY_EDITOR
         if (showDetectionRadius)
-        {            
-            UnityEditor.Handles.color = new Color(Color.yellow.r, Color.yellow.g, Color.yellow.b, 0.02f);
-            UnityEditor.Handles.DrawSolidDisc(transform.position, Vector3.up, detectionRadius);
-            //UnityEditor.Handles.color = Color.yellow;
-            //UnityEditor.Handles.DrawWireDisc(transform.position, Vector3.up, detectionRadius);
+        {
+            if (showSolidDisks)
+            {
+                UnityEditor.Handles.color = new Color(Color.yellow.r, Color.yellow.g, Color.yellow.b, detectionOpacity);
+                UnityEditor.Handles.DrawSolidDisc(body.position, Vector3.up, detectionRadius);
+            }
+            else
+            {
+                UnityEditor.Handles.color = Color.yellow;
+                UnityEditor.Handles.DrawWireDisc(body.position, Vector3.up, detectionRadius);
+            }
         }
 
         if (showAttackRange)
         {
-            UnityEditor.Handles.color = new Color(Color.red.r, Color.red.g, Color.red.b, 0.04f);
-            UnityEditor.Handles.DrawSolidDisc(transform.position + Vector3.up, Vector3.up, attackRange);
+            if (showSolidDisks)
+            {
+                UnityEditor.Handles.color = new Color(Color.red.r, Color.red.g, Color.red.b, attackRangeOpacity);
+                UnityEditor.Handles.DrawSolidDisc(body.position + Vector3.up, Vector3.up, attackRange);
+            }
+            else
+            {
+                UnityEditor.Handles.color = Color.red;
+                UnityEditor.Handles.DrawWireDisc(body.position, Vector3.up, attackRange);
+            }
 
-            //UnityEditor.Handles.color = Color.red;
-            //UnityEditor.Handles.DrawWireDisc(transform.position, Vector3.up, attackRange);
         }
 
         /*
@@ -366,7 +385,8 @@ public class UnitController : MonoBehaviour
 
         }
 
-        UnityEditor.Handles.Label(transform.position + Vector3.up * 5, stateString);*/
+        UnityEditor.Handles.Label(body.position + Vector3.up * 5, stateString);*/
+#endif
 
     }
 

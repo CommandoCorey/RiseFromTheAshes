@@ -13,6 +13,7 @@ public class TurretBuilding : Building
     public Transform turret;
     public Transform gun;
     public Transform firingPoint;
+    public ParticleSystem fireParticles;
 
     [Header("Stats")]
     [SerializeField] 
@@ -68,7 +69,7 @@ public class TurretBuilding : Building
         if (unitsInRange.Length > 0)
         {
             target = GetClosestEnemy(unitsInRange);
-            Debug.Log("Aiming");
+            //Debug.Log("Aiming");
             state = TurretState.Aiming;
         }
     }
@@ -82,7 +83,7 @@ public class TurretBuilding : Building
         
         if(turret.rotation == lookRotation)
         {
-            Debug.Log("Facing target");
+            //Debug.Log("Facing target");
             state = TurretState.Firing;
             Invoke("Fire", fireRate);
         }
@@ -98,7 +99,7 @@ public class TurretBuilding : Building
         else
         {
             state = TurretState.Searching;
-            Debug.Log("Searching");
+            //Debug.Log("Searching");
         }
     }
 

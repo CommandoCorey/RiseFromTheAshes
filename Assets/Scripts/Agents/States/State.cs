@@ -41,7 +41,7 @@ public abstract class State : MonoBehaviour
     {
         //Debug.DrawLine(unit.firingPoint.position, transform.position + direction * unit.DetectionRadius, Color.red, 1.0f);
 
-        if (Physics.Raycast(transform.position, direction, out RaycastHit hit, unit.DetectionRadius))
+        if (Physics.Raycast(unit.body.position, direction, out RaycastHit hit, unit.DetectionRadius))
         {
             //Debug.Log("Raycast from " + transform.name + " hit " + hit.transform.name);
 

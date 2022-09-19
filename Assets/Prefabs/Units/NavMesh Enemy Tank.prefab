@@ -203,6 +203,7 @@ GameObject:
   - component: {fileID: 7594720587372543484}
   - component: {fileID: 4286645190023919177}
   - component: {fileID: 5892800018010005378}
+  - component: {fileID: 2527386952669633952}
   m_Layer: 0
   m_Name: NavMesh Enemy Tank
   m_TagString: NavMesh Agent
@@ -331,6 +332,68 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &2527386952669633952
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1582896361334903961}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d337556d8371dc349a90c78320b2f3fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unitName: Tank
+  selectionHighlight: {fileID: 4514728295939477689}
+  turret: {fileID: 4117741979562791558}
+  firingPoint: {fileID: 3738012624718030392}
+  body: {fileID: 5809136631094942226}
+  guiIcon: {fileID: 21300000, guid: 8bca95f54096b70408c729ee59e590bd, type: 3}
+  fireEffect: {fileID: 1358344658346050649}
+  hitEffect: {fileID: 1805775040038083920}
+  destroyEffect: {fileID: 7159291665532620558, guid: 50f434bbf162ba948853cb88a27a1732, type: 3}
+  healthBar: {fileID: 1488737560176855686}
+  maxHealth: 100
+  movementSpeed: 1
+  damagePerHit: 10
+  attackRate: 1
+  attackRange: 20
+  turretRotationSpeed: 20
+  detectionRadius: 40
+  detectionLayer:
+    serializedVersion: 2
+    m_Bits: 320
+  environmentLayer:
+    serializedVersion: 2
+    m_Bits: 1024
+  unitSelectSound: {fileID: 8300000, guid: 13d7a2e409e0e0c4b8124eb88767c166, type: 3}
+  moveSounds:
+  - {fileID: 8300000, guid: 323e38a7614f9ed4b9a51bc8bd9f8d90, type: 3}
+  - {fileID: 8300000, guid: 6e655f2d263c51143806a255a3a62089, type: 3}
+  turretSounds:
+  - {fileID: 8300000, guid: 14f0085d34ab0ee4dbca30966464b20c, type: 3}
+  - {fileID: 8300000, guid: 434c2179ab766e34f9ebdd35498a96b1, type: 3}
+  fireSounds:
+  - {fileID: 8300000, guid: 7fd9ee4643a4ba047ab02cebe6a40856, type: 3}
+  - {fileID: 8300000, guid: bda24e7b1b86be64ba7be0bd651371e4, type: 3}
+  - {fileID: 8300000, guid: 43c06a5d180612a45beefdd85a313a44, type: 3}
+  hitSounds:
+  - {fileID: 8300000, guid: 5c2f7968f4c8298428503c0753be545c, type: 3}
+  - {fileID: 8300000, guid: 7651d9f65c249cd4699b703f7da4630f, type: 3}
+  - {fileID: 8300000, guid: 800c4c7b9b1da8640b9f291850a4c525, type: 3}
+  destroySounds:
+  - {fileID: 8300000, guid: 32b64650a4f502b4cafbcd342621b461, type: 3}
+  - {fileID: 8300000, guid: 57da73a0a2b86f14dafcff35194b943c, type: 3}
+  - {fileID: 8300000, guid: 4bb549534c370164584270f5514d91e3, type: 3}
+  autoAttack: 1
+  seeThroughWalls: 0
+  showSolidDisks: 1
+  showDetectionRadius: 0
+  detectionOpacity: 0.02
+  showAttackRange: 0
+  attackRangeOpacity: 0.04
+  health: 0
 --- !u!1 &2627763908979242436
 GameObject:
   m_ObjectHideFlags: 0
@@ -681,7 +744,6 @@ GameObject:
   - component: {fileID: 5809136631094942226}
   - component: {fileID: 237420323649846435}
   - component: {fileID: 8782060453167053335}
-  - component: {fileID: 2133700867880688349}
   m_Layer: 7
   m_Name: AFV_discenected
   m_TagString: NavMesh Agent
@@ -742,62 +804,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &2133700867880688349
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6617444062841520296}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d337556d8371dc349a90c78320b2f3fb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  unitName: Tank
-  selectionHighlight: {fileID: 4514728295939477689}
-  turret: {fileID: 4117741979562791558}
-  firingPoint: {fileID: 3738012624718030392}
-  guiIcon: {fileID: 21300000, guid: 8bca95f54096b70408c729ee59e590bd, type: 3}
-  fireEffect: {fileID: 1358344658346050649}
-  hitEffect: {fileID: 1805775040038083920}
-  destroyEffect: {fileID: 7159291665532620558, guid: 50f434bbf162ba948853cb88a27a1732, type: 3}
-  healthBar: {fileID: 1488737560176855686}
-  maxHealth: 100
-  movementSpeed: 1
-  damagePerHit: 10
-  attackRate: 1
-  attackRange: 20
-  turretRotationSpeed: 20
-  detectionRadius: 40
-  detectionLayer:
-    serializedVersion: 2
-    m_Bits: 320
-  environmentLayer:
-    serializedVersion: 2
-    m_Bits: 1024
-  unitSelectSound: {fileID: 8300000, guid: 13d7a2e409e0e0c4b8124eb88767c166, type: 3}
-  moveSounds:
-  - {fileID: 8300000, guid: 323e38a7614f9ed4b9a51bc8bd9f8d90, type: 3}
-  - {fileID: 8300000, guid: 6e655f2d263c51143806a255a3a62089, type: 3}
-  turretSounds:
-  - {fileID: 8300000, guid: 14f0085d34ab0ee4dbca30966464b20c, type: 3}
-  - {fileID: 8300000, guid: 434c2179ab766e34f9ebdd35498a96b1, type: 3}
-  fireSounds:
-  - {fileID: 8300000, guid: 7fd9ee4643a4ba047ab02cebe6a40856, type: 3}
-  - {fileID: 8300000, guid: bda24e7b1b86be64ba7be0bd651371e4, type: 3}
-  - {fileID: 8300000, guid: 43c06a5d180612a45beefdd85a313a44, type: 3}
-  hitSounds:
-  - {fileID: 8300000, guid: 5c2f7968f4c8298428503c0753be545c, type: 3}
-  - {fileID: 8300000, guid: 7651d9f65c249cd4699b703f7da4630f, type: 3}
-  - {fileID: 8300000, guid: 800c4c7b9b1da8640b9f291850a4c525, type: 3}
-  destroySounds:
-  - {fileID: 8300000, guid: 32b64650a4f502b4cafbcd342621b461, type: 3}
-  - {fileID: 8300000, guid: 57da73a0a2b86f14dafcff35194b943c, type: 3}
-  - {fileID: 8300000, guid: 4bb549534c370164584270f5514d91e3, type: 3}
-  showDetectionRadius: 0
-  showAttackRange: 0
-  health: 0
 --- !u!1001 &2316369641278678898
 PrefabInstance:
   m_ObjectHideFlags: 0

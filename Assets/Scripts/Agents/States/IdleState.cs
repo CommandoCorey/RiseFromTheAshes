@@ -25,7 +25,10 @@ public class IdleState : State
     }
 
     void Update()
-    {        
+    {
+        if (!unit.autoAttack)
+            return;
+
         var enemiesInRange = Physics.OverlapSphere(transform.position, unit.DetectionRadius, unit.DetectionLayer);
 
         // if there are any enemies in range change to the combat state
@@ -33,12 +36,27 @@ public class IdleState : State
         {
             //Debug.Log("Detected Enemy: " + enemiesInRange[0].gameObject.name);
 
-            unit.AttackTarget = enemiesInRange[0].gameObject.transform;
+            if (unit.seeThroughWalls)
+            {
+                unit.AttackTarget = enemiesInRange[0].gameObject.transform;
 
-            if (gameObject.tag == "PlayerUnit")
-                unit.ChangeState(UnitState.Attack);
-            else if (gameObject.tag == "NavMesh Agent")
-                unit.ChangeState(UnitState.Follow);
+                if (gameObject.tag == "PlayerUnit")
+                    unit.ChangeState(UnitState.Attack);
+                else if (gameObject.tag == "NavMesh Agent")
+                    unit.ChangeState(UnitState.Follow);
+            }
+            else
+            {
+                Vector3 directionToTarget = (enemiesInRange[0].gameObject.transform.position - transform.position).normalized;
+
+                if(!ObstacleInWay(directionToTarget))
+                {
+                    if (gameObject.tag == "PlayerUnit")
+                        unit.ChangeState(UnitState.Attack);
+                    else if (gameObject.tag == "NavMesh Agent")
+                        unit.ChangeState(UnitState.Follow);
+                }
+            }
         }
     }
 
