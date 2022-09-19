@@ -133,7 +133,7 @@ public class AttackState : State
             UnityEditor.Handles.Label(unit.body.position + Vector3.up * 5, "Aiming");
         else
             UnityEditor.Handles.Label(unit.body.position + Vector3.up * 5, "Firing");
-    }
 #endif
+    }
 
 }
