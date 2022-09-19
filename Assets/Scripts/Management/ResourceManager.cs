@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum ResourceType
+{
+    Steel = 0
+}
+
 [System.Serializable]
 public struct Resource
 {
@@ -10,16 +15,29 @@ public struct Resource
     public Image icon;
     public int startingAmount;
 
-    [HideInInspector]
+    //[HideInInspector]
     public int currentAmount;
 }
 
 public class ResourceManager : MonoBehaviour
 {
     public Resource[] resources;
+    static public ResourceManager Instance { get; set; }
 
-    // Start is called before the first frame update
-    void Start()
+	private void Awake()
+	{
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            Instance = this;
+        }
+    }
+
+	// Start is called before the first frame update
+	void Start()
     {
         for (int i = 0; i < resources.Length; i++)
             resources[i].currentAmount = resources[i].startingAmount;
@@ -36,9 +54,9 @@ public class ResourceManager : MonoBehaviour
     /// </summary>
     /// <param name="index">The location in the resources array</param>
     /// <returns>Integer value for the resource quantity</returns>
-    public int GetResource(int index)
+    public int GetResource(ResourceType type)
     {
-        return resources[index].currentAmount;
+        return resources[(int)type].currentAmount;
     }
 
     /// <summary>
@@ -46,9 +64,9 @@ public class ResourceManager : MonoBehaviour
     /// </summary>
     /// <param name="type">the position in the resources array for the resource type</param>
     /// <param name="amount">The quantity to add to the given resource</param>
-    public void AddResource(int type, int amount)
+    public void AddResource(ResourceType type, int amount)
     {
-        resources[type].currentAmount += amount;
+        resources[(int)type].currentAmount += amount;
     }
 
     /// <summary>
@@ -57,11 +75,11 @@ public class ResourceManager : MonoBehaviour
     /// <param name="index">The location in the resources array</param>
     /// <param name="amount">The quantity of given resource type to spend</param>
     /// <returns>boolean value based on whether the player has enough of that resource type</returns>
-    public bool SpendResource(int index, int amount)
+    public bool SpendResource(ResourceType type, int amount)
     {
-        if (resources[index].currentAmount <= amount)
+        if (resources[(int)type].currentAmount <= amount)
         {
-            resources[index].currentAmount -= amount;
+            resources[(int)type].currentAmount -= amount;
             return true;
         }
 
@@ -74,7 +92,7 @@ public class ResourceManager : MonoBehaviour
     /// <returns>First index of the resources array</returns>
     public int GetSteel()
     {
-        return resources[0].currentAmount;
+        return GetResource(ResourceType.Steel);
     }
 
     /// <summary>
@@ -83,7 +101,7 @@ public class ResourceManager : MonoBehaviour
     /// <param name="amount">The amount of units to add to the steel resource</param>
     public void AddSteel(int amount)
     {
-        resources[0].currentAmount += amount;
+        AddResource(ResourceType.Steel, amount);
     }
 
     /// <summary>
@@ -93,10 +111,7 @@ public class ResourceManager : MonoBehaviour
     /// <returns>boolean value based on whether the player has enough steel to spend</returns>
     public bool SpendSteel(int amount)
     {
-        if (amount <= resources[0].currentAmount)
-            resources[0].currentAmount -= amount;
-
-        return false;
+        return SpendResource(ResourceType.Steel, amount);
     }
     
 }
