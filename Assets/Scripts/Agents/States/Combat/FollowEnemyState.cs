@@ -24,15 +24,11 @@ public class FollowEnemyState : State
         if (target == null || unit.UnitHalt)        
             return;
 
-        directionToTarget = (unit.AttackTarget.position - transform.position).normalized;
-
-        agent.SetDestination(unit.AttackTarget.position);
-
         // check if there is a closer target
         var unitsInRange = Physics.OverlapSphere(transform.position, unit.DetectionRadius, unit.DetectionLayer);
         var closest = GetClosestEnemy(unitsInRange, unit.AttackTarget);
 
-        if (closest != unit.AttackTarget) // closest enemy was found
+        if (closest && closest != unit.AttackTarget) // closest enemy was found
         {
             unit.AttackTarget = closest;
 
@@ -42,12 +38,20 @@ public class FollowEnemyState : State
             HandleEnemyInRange();
         }
 
-        // check that the line of sight is vacant and we are in attack range
-        if (!ObstacleInWay(directionToTarget) &&
-            Vector3.Distance(transform.position, unit.AttackTarget.position) <= unit.AttackRange)
-        {            
-            agent.isStopped = true;
-            unit.ChangeState(UnitState.Attack);
+        if (unit.AttackTarget != null)
+        {
+
+            directionToTarget = (unit.AttackTarget.position - transform.position).normalized;
+
+            agent.SetDestination(unit.AttackTarget.position);
+
+            // check that the line of sight is vacant and we are in attack range
+            if (!ObstacleInWay(directionToTarget) &&
+                Vector3.Distance(transform.position, unit.AttackTarget.position) <= unit.AttackRange)
+            {
+                agent.isStopped = true;
+                unit.ChangeState(UnitState.Attack);
+            }
         }
     }
 
@@ -55,15 +59,15 @@ public class FollowEnemyState : State
     // of the one that is the closest
     private Transform GetClosestEnemy(Collider[] enemies, Transform current = null)
     {
-        Transform closest;
-        float shortestDistance;
+        Transform closest = null;
+        float shortestDistance = float.MaxValue;
 
         if (current != null)
         {
             closest = current;
             shortestDistance = Vector3.Distance(transform.position, current.position);
         }
-        else
+        else if (enemies.Length > 0)
         {
             closest = enemies[0].transform;
             shortestDistance = Vector3.Distance(transform.position, enemies[0].transform.position);
