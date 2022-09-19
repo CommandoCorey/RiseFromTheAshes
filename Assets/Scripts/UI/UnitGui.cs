@@ -13,11 +13,19 @@ public class UnitGui : MonoBehaviour
         Null, Move, Attack, Halt
     }
 
+    public GameManager gameManager;
+
+    [Header("Panels and prefabs")]
     public GameObject buttonPanel;
     public Transform unitPanal;
     public GameObject unitInfoPanel;
     public GameObject unitIconPrefab;
     public TextMeshProUGUI alertMessage;
+
+    [Header("Action Buttons")]
+    public Button moveButton;
+    public Button attackButton;
+    public Button haltButton;
 
     [Header("Unit Stats")]    
     public Image thumbnail;
@@ -54,14 +62,17 @@ public class UnitGui : MonoBehaviour
         UpdateUnitHealth();
 
         // check if mouse clicks on environment while an action is chosen
-        if(Input.GetMouseButtonUp(0) && ButtonClicked!= ActionChosen.Null && !EventSystem.current.IsPointerOverGameObject())
+        if(Input.GetMouseButtonUp(0) && ButtonClicked != ActionChosen.Null && !EventSystem.current.IsPointerOverGameObject())
         {
             RaycastHit hitInfo;
 
             if(ButtonClicked == ActionChosen.Move && Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo))
             {
-                //Debug.Log("Clicked");
                 unitManager.MoveUnits(hitInfo);
+
+                // reset cursor and button
+                gameManager.ResetCursor();
+                moveButton.interactable = true;
 
                 ButtonClicked = ActionChosen.Null;
             }
@@ -74,16 +85,28 @@ public class UnitGui : MonoBehaviour
                     StartCoroutine(ShowAlert("That's not a valid attack target", 2));
                 }
 
+                // reset cursor and button
+                gameManager.ResetCursor();
+                attackButton.interactable = true;
+
                 ButtonClicked = ActionChosen.Null;
             }
             else if(ButtonClicked == ActionChosen.Halt)
             {
                 unitManager.HaltUnitSelection();
             }
-            else
-            {
-                selectionManager.enabled = true;
-            }
+            
+            selectionManager.enabled = true;
+            
+        }
+
+        if (Input.GetMouseButtonUp(1) && ButtonClicked != ActionChosen.Null)
+        {
+            gameManager.ResetCursor();
+            EnableActionButtons();
+            ButtonClicked = ActionChosen.Null;
+
+            selectionManager.enabled = true;
         }
     }
 
@@ -154,6 +177,14 @@ public class UnitGui : MonoBehaviour
         alertMessage.gameObject.SetActive(false);
     }
 
+    // Makes all the buttons on the action button panel interactable
+    private void EnableActionButtons()
+    {
+        moveButton.interactable = true;
+        attackButton.interactable = true;
+        haltButton.interactable = true;
+    }
+
     #endregion
 
     #region public functions
@@ -190,6 +221,12 @@ public class UnitGui : MonoBehaviour
     {
         ButtonClicked = ActionChosen.Move;
         selectionManager.enabled = false;
+
+        moveButton.interactable = false;
+        attackButton.interactable = true;
+        haltButton.interactable = true;
+
+        gameManager.SetCursor(gameManager.moveCursor);
     }
 
     /// <summary>
@@ -198,6 +235,12 @@ public class UnitGui : MonoBehaviour
     public void SetAttackMode() {
         ButtonClicked = ActionChosen.Attack;
         selectionManager.enabled = false;
+
+        attackButton.interactable = false;
+        moveButton.interactable = true;
+        haltButton.interactable = true;
+
+        gameManager.SetCursor(gameManager.attackCursor);
     }
 
     /// <summary>
@@ -207,6 +250,11 @@ public class UnitGui : MonoBehaviour
     {
         ButtonClicked = ActionChosen.Halt;
         selectionManager.enabled = false;
+
+        moveButton.interactable = true;
+        attackButton.interactable = true;
+
+        gameManager.SetCursor(gameManager.defaultCursor);
     }
 
     /// <summary>
@@ -327,6 +375,7 @@ public class UnitGui : MonoBehaviour
 
         buttonPanel.SetActive(false);
     }
+    
     #endregion
 
 }

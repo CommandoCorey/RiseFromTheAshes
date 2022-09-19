@@ -9,6 +9,7 @@ class UnitDesc
 	public GameObject prefab;
 	public float timeToBuild;
 	public Button buildButton;
+	public int steelCost;
 	[HideInInspector] public int index;
 }
 
@@ -51,6 +52,7 @@ public class VehicleBay : MonoBehaviour {
 			ud.buildButton.onClick.AddListener(() => {
 				PrepareBuild();
 				isBuilding = true;
+				ResourceManager.Instance.SpendSteel(ud.steelCost);
 				buildTimer = 0.0f;
 				currentUnitDesc = ud;
 			});

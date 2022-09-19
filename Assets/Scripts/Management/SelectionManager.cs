@@ -31,6 +31,7 @@ public class SelectionManager : MonoBehaviour
 
     private float boxHeight = 10;
 
+    private GameManager gameManager;
     private UnitManager unitManager;
 
     // properties
@@ -73,6 +74,7 @@ public class SelectionManager : MonoBehaviour
         //selectedTable = GetComponent<SelectedDictionary>();
         dragSelect = false;
         unitManager = GetComponent<UnitManager>();
+        gameManager = GetComponent<GameManager>();
     }
 
     // Update is called once per frame
@@ -102,6 +104,12 @@ public class SelectionManager : MonoBehaviour
             if (dragSelect == false) //single select
             {
                 Ray ray = Camera.main.ScreenPointToRay(p1);
+
+                /*
+                if(Physics.Raycast(ray, out hit, 50000.0f))
+                {
+                    Debug.Log("Hit: " + hit.transform.name + " at " + hit.point);
+                }*/
 
                 // dont select anything if the GUI is clicked
                 if (EventSystem.current.IsPointerOverGameObject())
@@ -191,6 +199,8 @@ public class SelectionManager : MonoBehaviour
             // if only one unit is selected then display the unit stats/info
             if (Units.Count == 1)
                 gui.SelectSingleUnit(0);
+
+            // reset to default cursor
         }
 
     }
