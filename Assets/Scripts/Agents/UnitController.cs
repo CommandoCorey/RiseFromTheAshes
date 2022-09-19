@@ -43,12 +43,13 @@ public class UnitController : MonoBehaviour
     float damagePerHit = 1.0f;
     [SerializeField]
     float attackRate = 1.0f;
-    [SerializeField]
+    [SerializeField][Range(1, 100)]
     float attackRange = 20.0f;
-    [SerializeField] 
+    [SerializeField][Range(1, 100)]
     float turretRotationSpeed = 1.0f;
 
     [Header("Enemy Detection")]
+    [Range(1, 100)]
     [SerializeField] float detectionRadius = 30.0f;
     [SerializeField] LayerMask detectionLayer;
     [SerializeField] LayerMask environmentLayer;
@@ -334,15 +335,20 @@ public class UnitController : MonoBehaviour
     private void OnDrawGizmos()
     {
         if (showDetectionRadius)
-        {
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawWireSphere(transform.position, detectionRadius);
+        {            
+            UnityEditor.Handles.color = new Color(Color.yellow.r, Color.yellow.g, Color.yellow.b, 0.02f);
+            UnityEditor.Handles.DrawSolidDisc(transform.position, Vector3.up, detectionRadius);
+            //UnityEditor.Handles.color = Color.yellow;
+            //UnityEditor.Handles.DrawWireDisc(transform.position, Vector3.up, detectionRadius);
         }
 
         if (showAttackRange)
         {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(transform.position, attackRange);
+            UnityEditor.Handles.color = new Color(Color.red.r, Color.red.g, Color.red.b, 0.04f);
+            UnityEditor.Handles.DrawSolidDisc(transform.position + Vector3.up, Vector3.up, attackRange);
+
+            //UnityEditor.Handles.color = Color.red;
+            //UnityEditor.Handles.DrawWireDisc(transform.position, Vector3.up, attackRange);
         }
 
         /*

@@ -8,6 +8,8 @@ using UnityEngine.EventSystems;
 public class UnitManager : MonoBehaviour
 {
     #region variable declaration
+    public UnitGui gui;
+
     [Header("Layer Masks")]
     public LayerMask groundLayer;
     public LayerMask enemyLayers;
@@ -34,21 +36,21 @@ public class UnitManager : MonoBehaviour
     List<Vector3> formationPositions;
     Vector3[] groupPath;
 
-    private List<Vector3> searchedPositions = new List<Vector3>();
-
-    private GameManager gameManager;
-
+    private List<Vector3> searchedPositions = new List<Vector3>();   
     private Vector3 point;
 
     AudioSource audio;
 
+    // external scripts
+    private GameManager gameManager;
+
     #endregion
-    
+
     #region start and update
     // Start is called before the first frame update
     void Start()
     {
-        gameManager = GetComponent<GameManager>();
+        gameManager = GetComponent<GameManager>();        
 
         selectedUnits = new List<GameObject>();
         selection = GetComponent<SelectionManager>();
@@ -66,7 +68,7 @@ public class UnitManager : MonoBehaviour
         }
 
         // move units when right mouse buttons is clicked
-        if (Input.GetMouseButtonUp(1))
+        if (Input.GetMouseButtonUp(1) && gui.ButtonClicked == UnitGui.ActionChosen.Null)
         {          
             // check if the cursor is over the a UI element
             if (EventSystem.current.IsPointerOverGameObject())                
@@ -103,9 +105,9 @@ public class UnitManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 
+    /// Set an indivudal unit as the selection
     /// </summary>
-    /// <param name="unit"></param>
+    /// <param name="unit">The gameobject being selected as the unit</param>
     public void SetSelectedUnit(GameObject unit)
     {
         // turn off selection highlights
@@ -139,8 +141,6 @@ public class UnitManager : MonoBehaviour
         foreach (var selectedUnit in selectedUnits)
         {
             selectedUnit.GetComponent<UnitController>().SetSelected(true);
-
-
         }
     }
 
@@ -271,7 +271,7 @@ public class UnitManager : MonoBehaviour
     {
         formationPositions.Clear();
         Vector3 targetPos;
-
+        
         gameManager.SetMarkerLocation(new Vector3(hit.point.x, hit.point.y + 0.5f, hit.point.z));
 
         // check that the player clicked on the ground.
