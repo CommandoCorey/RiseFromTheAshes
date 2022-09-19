@@ -41,26 +41,46 @@ public class PauseMenu : MonoBehaviour
     public void LoadSceneMainMenu()
     {
         Debug.Log("Loading MainMenu...");
-        SceneManager.LoadScene("MainMenu");
+        SceneManager.LoadScene("4_MainMenu");
     }
     public void LoadSceneTestEnvironment()
     {
-        Debug.Log("Loading TestEnvironment...");
-        SceneManager.LoadScene("TestEnvironment");
+        Debug.Log("Loading...");
+        SceneManager.LoadScene("3_Test Environment");
     }
     public void LoadSceneLevel01()
     {
-        Debug.Log("Loading Level01...");
-        SceneManager.LoadScene("Level01");
+        Debug.Log("Loading...");
+        SceneManager.LoadScene("Ashley Test");
     }
     public void LoadSceneLevel02()
     {
-        Debug.Log("Loading Level02...");
-        SceneManager.LoadScene("Level02");
+        Debug.Log("Loading...");
+        SceneManager.LoadScene("");
     }
     public void LoadSceneLevel03()
     {
-        Debug.Log("Loading Level03...");
-        SceneManager.LoadScene("Level03");
+        Debug.Log("Loading...");
+        SceneManager.LoadScene("");
+    }
+    public void LoadSceneInsertHere1()
+    {
+        Debug.Log("Loading...");
+        SceneManager.LoadScene("Building_Test");
+    }
+    public void LoadSceneInsertHere2()
+    {
+        Debug.Log("Loading...");
+        SceneManager.LoadScene("");
+    }
+    public void LoadSceneInsertHere3()
+    {
+        Debug.Log("Loading...");
+        SceneManager.LoadScene("");
+    }
+    public void LoadSceneInsertHere4()
+    {
+        Debug.Log("Loading...");
+        SceneManager.LoadScene("");
     }
 }
