@@ -398,9 +398,11 @@ MonoBehaviour:
   unitName: 
   selectionHighlight: {fileID: 7560719892132837467}
   turret: {fileID: 51155242531674972}
-  castingPoint: {fileID: 8074012596348428733}
   firingPoint: {fileID: 752245461251551202}
   guiIcon: {fileID: 21300000, guid: 8bca95f54096b70408c729ee59e590bd, type: 3}
+  fireEffect: {fileID: 0}
+  hitEffect: {fileID: 0}
+  destroyEffect: {fileID: 0}
   healthBar: {fileID: 6592220297907828933}
   maxHealth: 100
   movementSpeed: 1
@@ -415,6 +417,12 @@ MonoBehaviour:
   environmentLayer:
     serializedVersion: 2
     m_Bits: 1024
+  unitSelectSound: {fileID: 0}
+  moveSounds: []
+  turretSounds: []
+  fireSounds: []
+  hitSounds: []
+  destroySounds: []
   showDetectionRadius: 0
   showAttackRange: 0
   health: 0
@@ -882,6 +890,10 @@ PrefabInstance:
     - target: {fileID: 8336667581928093053, guid: 0f580c44bf3349d4ab6dacc6f4d13645, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8526709059745094268, guid: 0f580c44bf3349d4ab6dacc6f4d13645, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0f580c44bf3349d4ab6dacc6f4d13645, type: 3}
