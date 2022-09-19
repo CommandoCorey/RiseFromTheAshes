@@ -23,6 +23,10 @@ public struct Resource
 public class ResourceManager : MonoBehaviour
 {
     public Resource[] resources;
+
+    [Header("GUI Text")]
+    public TextMeshProUGUI steelAmount;
+
     static public ResourceManager Instance { get; set; }
 
 	private void Awake()
