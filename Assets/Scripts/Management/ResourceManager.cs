@@ -16,7 +16,7 @@ public struct Resource
     public Image icon;
     public int startingAmount;
 
-    //[HideInInspector]
+    [HideInInspector]
     public int currentAmount;
 }
 
@@ -47,7 +47,7 @@ public class ResourceManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        steelAmount.text = resources[0].currentAmount.ToString();
+      //  steelAmount.text = resources[0].currentAmount.ToString();
     }
 
     /// <summary>
