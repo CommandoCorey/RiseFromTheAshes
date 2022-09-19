@@ -93,7 +93,7 @@ public class TurretBuilding : Building
     {
         if (Physics.Raycast(firingPoint.position, turret.forward, out RaycastHit hit, 30) && hit.transform == target)
         {
-            target.GetComponent<UnitController>().TakeDamage(damagePerShot);
+            target.GetComponentInParent<UnitController>().TakeDamage(damagePerShot);
             Invoke("Fire", fireRate);
         }
         else
