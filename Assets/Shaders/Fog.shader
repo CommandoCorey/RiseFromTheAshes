@@ -107,8 +107,8 @@ Shader "Hidden/Fog"
 						float3 p = hitPoint + rayDirection * (float(i) * _StepSize);
 
 						float3 samplePosMain   = (p * _CloudScale) + _ScrollDirection * _Time.y;
-						float3 samplePosDetail = (p * _CloudScale) - _ScrollDirection * _Time.y;
-						float mainNoise   = _NoiseTexture.SampleLevel(sampler_NoiseTexture, samplePosMain,   0).r * 1.5;
+						float3 samplePosDetail = (p * _CloudScale) - _ScrollDirection * _Time.y * 0.1;
+						float mainNoise   = _NoiseTexture.SampleLevel(sampler_NoiseTexture, samplePosMain, 0).r * 0.5;
 						float detailNoise = 0.0;
 						if (dist < 100.0) {
 							detailNoise = _NoiseTexture.SampleLevel(sampler_NoiseTexture, samplePosDetail, 0).g;

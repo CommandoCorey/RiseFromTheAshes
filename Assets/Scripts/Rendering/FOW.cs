@@ -146,9 +146,14 @@ public class FOW : MonoBehaviour {
 		return genBlurredMaskTexture;
 	}
 
-	bool GetMask(int x, int y)
+	public bool GetMask(int x, int y)
 	{
 		return FOWMask[x + y * maskExtent.x] == 0x0 ? true : false;
+	}
+
+	public bool GetMask(Vector2 xy)
+	{
+		return GetMask((int)xy.x, (int)xy.y);
 	}
 
 	public void ClearMask()
