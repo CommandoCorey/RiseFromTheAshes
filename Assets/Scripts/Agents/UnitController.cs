@@ -62,6 +62,10 @@ public class UnitController : MonoBehaviour
     public AudioClip[] hitSounds;
     public AudioClip[] destroySounds;
 
+    [Header("Configurations")]
+    public bool autoAttack = true;
+    public bool seeThroughWalls = false;
+
     [Header("Gizmos")]
     [SerializeField] bool showDetectionRadius = true;
     [SerializeField] bool showAttackRange = true;
@@ -120,7 +124,7 @@ public class UnitController : MonoBehaviour
     	health = maxHealth;
         healthBarOffset = healthBar.transform.parent.localPosition;
 
-        audio = GetComponentInParent<AudioSource>();
+        audio = GetComponent<AudioSource>();
         gameManager = GameObject.FindObjectOfType<GameManager>();
 
         ChangeState(UnitState.Idle);
@@ -134,13 +138,14 @@ public class UnitController : MonoBehaviour
         if (health <= 0)
         {
             GameObject.Destroy(this.gameObject);
-            GameObject.Destroy(this.gameObject.transform.parent.gameObject);
+            //GameObject.Destroy(this.gameObject.transform.parent.gameObject);
 
             // play destruction sound
             if (destroySounds.Length > 0)            
                 gameManager.PlaySound(destroySounds[0], 1);            
 
-            gameManager.InstantiateParticles(destroyEffect, transform.position);
+            if(destroyEffect != null)
+                gameManager.InstantiateParticles(destroyEffect, transform.position);
         }
 
         healthBar.transform.parent.position = transform.position + healthBarOffset;
@@ -267,7 +272,7 @@ public class UnitController : MonoBehaviour
                     if(agentMoveState == null)
                         agentMoveState = gameObject.AddComponent<AgentMoveState>();
                     else                      
-                        GetComponent<NavMeshAgent>().isStopped = true;
+                        GetComponentInChildren<NavMeshAgent>().isStopped = true;
 
                     agentMoveState.MoveTo(target);
                 }

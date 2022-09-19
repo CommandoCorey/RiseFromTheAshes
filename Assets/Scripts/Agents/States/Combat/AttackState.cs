@@ -88,8 +88,8 @@ public class AttackState : State
         {
             unit.PlayParticles(unit.fireEffect);
 
-            try
-            {
+            //try
+            //{
                 // check if target is still in attack range
                 if (Vector3.Distance(transform.position, unit.AttackTarget.position) > unit.AttackRange)
                 {
@@ -99,7 +99,7 @@ public class AttackState : State
                 // check if the target is a unit
                 else if (unit.AttackTarget.gameObject.layer == 6 || unit.AttackTarget.gameObject.layer == 7)
                 {
-                    unit.AttackTarget.GetComponent<UnitController>().TakeDamage(unit.DamagePerHit);
+                    unit.AttackTarget.GetComponentInParent<UnitController>().TakeDamage(unit.DamagePerHit);
                     Invoke("DealDamage", unit.AttackRate);
                 }
                 // check if the target is a building
@@ -109,11 +109,11 @@ public class AttackState : State
                     Invoke("DealDamage", unit.AttackRate);
                 }
 
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError(ex.Message);
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Debug.LogError(ex.Message);
+            //}
 
         }
         else

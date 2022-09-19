@@ -1165,7 +1165,6 @@ GameObject:
   - component: {fileID: 3677297043708892852}
   - component: {fileID: 4422938551234294165}
   - component: {fileID: 7574349369411680737}
-  - component: {fileID: 7021454170902800600}
   - component: {fileID: 5359893697614109029}
   m_Layer: 0
   m_Name: Discenected
@@ -1228,62 +1227,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &7021454170902800600
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5423072193404051765}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d337556d8371dc349a90c78320b2f3fb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  unitName: Armored Fighting Vehicle
-  selectionHighlight: {fileID: 4883728943607709057}
-  turret: {fileID: 6504873562474881247}
-  firingPoint: {fileID: 1504737229877904430}
-  guiIcon: {fileID: 21300000, guid: 1fcfe49e8eeacd44b893e907e43a2640, type: 3}
-  fireEffect: {fileID: 0}
-  hitEffect: {fileID: 0}
-  destroyEffect: {fileID: 0}
-  healthBar: {fileID: 1772945802963879228}
-  maxHealth: 100
-  movementSpeed: 1
-  damagePerHit: 10
-  attackRate: 1
-  attackRange: 20
-  turretRotationSpeed: 20
-  detectionRadius: 40
-  detectionLayer:
-    serializedVersion: 2
-    m_Bits: 640
-  environmentLayer:
-    serializedVersion: 2
-    m_Bits: 1024
-  unitSelectSound: {fileID: 8300000, guid: 13d7a2e409e0e0c4b8124eb88767c166, type: 3}
-  moveSounds:
-  - {fileID: 8300000, guid: 6e655f2d263c51143806a255a3a62089, type: 3}
-  - {fileID: 8300000, guid: 323e38a7614f9ed4b9a51bc8bd9f8d90, type: 3}
-  turretSounds:
-  - {fileID: 8300000, guid: 14f0085d34ab0ee4dbca30966464b20c, type: 3}
-  - {fileID: 8300000, guid: 434c2179ab766e34f9ebdd35498a96b1, type: 3}
-  fireSounds:
-  - {fileID: 8300000, guid: 7fd9ee4643a4ba047ab02cebe6a40856, type: 3}
-  - {fileID: 8300000, guid: bda24e7b1b86be64ba7be0bd651371e4, type: 3}
-  - {fileID: 8300000, guid: 43c06a5d180612a45beefdd85a313a44, type: 3}
-  hitSounds:
-  - {fileID: 8300000, guid: 5c2f7968f4c8298428503c0753be545c, type: 3}
-  - {fileID: 8300000, guid: 7651d9f65c249cd4699b703f7da4630f, type: 3}
-  - {fileID: 8300000, guid: 800c4c7b9b1da8640b9f291850a4c525, type: 3}
-  destroySounds:
-  - {fileID: 8300000, guid: 32b64650a4f502b4cafbcd342621b461, type: 3}
-  - {fileID: 8300000, guid: 4bb549534c370164584270f5514d91e3, type: 3}
-  - {fileID: 8300000, guid: 57da73a0a2b86f14dafcff35194b943c, type: 3}
-  showDetectionRadius: 0
-  showAttackRange: 0
-  health: 0
 --- !u!114 &5359893697614109029
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2172,9 +2115,10 @@ GameObject:
   m_Component:
   - component: {fileID: 8302662413746311316}
   - component: {fileID: 5791272546151283906}
+  - component: {fileID: 8997548830578781400}
   m_Layer: 0
   m_Name: AFV - Armored Fighting Vehicle
-  m_TagString: Untagged
+  m_TagString: NavMesh Agent
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2186,7 +2130,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8679329102041598510}
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -2291,6 +2235,64 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &8997548830578781400
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8679329102041598510}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d337556d8371dc349a90c78320b2f3fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unitName: Armored Fighting Vehicle
+  selectionHighlight: {fileID: 4883728943607709057}
+  turret: {fileID: 6504873562474881247}
+  firingPoint: {fileID: 1504737229877904430}
+  guiIcon: {fileID: 21300000, guid: 1fcfe49e8eeacd44b893e907e43a2640, type: 3}
+  fireEffect: {fileID: 0}
+  hitEffect: {fileID: 0}
+  destroyEffect: {fileID: 0}
+  healthBar: {fileID: 1772945802963879228}
+  maxHealth: 100
+  movementSpeed: 1
+  damagePerHit: 10
+  attackRate: 1
+  attackRange: 20
+  turretRotationSpeed: 20
+  detectionRadius: 40
+  detectionLayer:
+    serializedVersion: 2
+    m_Bits: 640
+  environmentLayer:
+    serializedVersion: 2
+    m_Bits: 1024
+  unitSelectSound: {fileID: 8300000, guid: 13d7a2e409e0e0c4b8124eb88767c166, type: 3}
+  moveSounds:
+  - {fileID: 8300000, guid: 6e655f2d263c51143806a255a3a62089, type: 3}
+  - {fileID: 8300000, guid: 323e38a7614f9ed4b9a51bc8bd9f8d90, type: 3}
+  turretSounds:
+  - {fileID: 8300000, guid: 14f0085d34ab0ee4dbca30966464b20c, type: 3}
+  - {fileID: 8300000, guid: 434c2179ab766e34f9ebdd35498a96b1, type: 3}
+  fireSounds:
+  - {fileID: 8300000, guid: 7fd9ee4643a4ba047ab02cebe6a40856, type: 3}
+  - {fileID: 8300000, guid: bda24e7b1b86be64ba7be0bd651371e4, type: 3}
+  - {fileID: 8300000, guid: 43c06a5d180612a45beefdd85a313a44, type: 3}
+  hitSounds:
+  - {fileID: 8300000, guid: 5c2f7968f4c8298428503c0753be545c, type: 3}
+  - {fileID: 8300000, guid: 7651d9f65c249cd4699b703f7da4630f, type: 3}
+  - {fileID: 8300000, guid: 800c4c7b9b1da8640b9f291850a4c525, type: 3}
+  destroySounds:
+  - {fileID: 8300000, guid: 32b64650a4f502b4cafbcd342621b461, type: 3}
+  - {fileID: 8300000, guid: 4bb549534c370164584270f5514d91e3, type: 3}
+  - {fileID: 8300000, guid: 57da73a0a2b86f14dafcff35194b943c, type: 3}
+  autoAttack: 1
+  seeThroughWalls: 0
+  showDetectionRadius: 0
+  showAttackRange: 0
+  health: 0
 --- !u!1001 &2009581678242137460
 PrefabInstance:
   m_ObjectHideFlags: 0

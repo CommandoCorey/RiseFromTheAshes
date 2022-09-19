@@ -11,7 +11,7 @@ public class FollowEnemyState : State
     // Start is called before the first frame update
     void Start()
     {
-        agent = GetComponent<NavMeshAgent>();        
+        agent = GetComponentInChildren<NavMeshAgent>();        
 
         // start the navmesh agent again
         if (agent.isStopped)
