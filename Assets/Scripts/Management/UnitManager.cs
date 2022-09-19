@@ -196,10 +196,10 @@ public class UnitManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 
+    /// Causes all units in selection to enter their attack a target
     /// </summary>
-    /// <param name="target"></param>
-    /// <returns></returns>
+    /// <param name="target">The game object that the use clicked on</param>
+    /// <returns>True or false value based on whether the object is valid</returns>
     public bool AttackTarget(Transform target)
     {
         // check if the target's layer is one of the enemy layers

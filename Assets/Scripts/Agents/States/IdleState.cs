@@ -29,10 +29,11 @@ public class IdleState : State
         if (!unit.autoAttack)
             return;
 
-        var enemiesInRange = Physics.OverlapSphere(unit.body.position, unit.DetectionRadius, unit.DetectionLayer);
+        var enemiesInRange = GetEnemiesInRange();
+            //Physics.OverlapSphere(unit.body.position, unit.DetectionRadius, unit.DetectionLayer);
 
         // if there are any enemies in range change to the combat state
-        if (enemiesInRange.Length > 0)
+        if (enemiesInRange.Count > 0)
         {
             //Debug.Log("Detected Enemy: " + enemiesInRange[0].gameObject.name);
 
@@ -58,12 +59,27 @@ public class IdleState : State
                 }
             }
         }
+        else if(unit.turret.rotation != Quaternion.identity)
+        {
+            unit.turret.rotation = Quaternion.RotateTowards(unit.turret.rotation, Quaternion.identity, 
+                Time.deltaTime * unit.TurretRotationSpeed);
+        }
+
+
     }
+
+
+    private void ResetTurret()
+    {
+        unit.turret.rotation = Quaternion.RotateTowards(unit.turret.rotation, Quaternion.identity, Time.deltaTime * unit.TurretRotationSpeed);
+
+    }
+
 
     private void OnDrawGizmos()
     {
 #if UNITY_EDITOR
-        UnityEditor.Handles.Label(transform.position + Vector3.up * 1, "Idle");
+        UnityEditor.Handles.Label(unit.body.position + Vector3.up * 1, "Idle");
 #endif
     }
 

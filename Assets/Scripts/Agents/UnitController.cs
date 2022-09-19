@@ -52,7 +52,9 @@ public class UnitController : MonoBehaviour
     [Header("Enemy Detection")]
     [Range(1, 100)]
     [SerializeField] float detectionRadius = 30.0f;
-    [SerializeField] LayerMask detectionLayer;
+    //[SerializeField] LayerMask detectionLayer;
+    [SerializeField] LayerMask enemyUnitLayer;
+    [SerializeField] LayerMask enemyBuildingLayer;
     [SerializeField] LayerMask environmentLayer;
 
     [Header("Sound Effects")]
@@ -99,7 +101,10 @@ public class UnitController : MonoBehaviour
     public UnitState State { get; private set; }
     public Transform AttackTarget { get; set; }
     public float DetectionRadius { get => detectionRadius; }
-    public LayerMask DetectionLayer { get => detectionLayer; }
+    //public LayerMask DetectionLayer { get => detectionLayer; }
+    public LayerMask EnemyUnitLayer { get => enemyUnitLayer; }
+    public LayerMask EnemyBuildingLayer { get => enemyBuildingLayer; }
+
     public LayerMask EnvironmentLayer { get => environmentLayer; }
     public Sprite GuiIcon { get => guiIcon; }
     //public float HaltTime { get => haltTime; }
@@ -231,11 +236,14 @@ public class UnitController : MonoBehaviour
         {
             case UnitState.Idle: Destroy(idleState); break;
             case UnitState.Moving:
-
-                if(tag == "PlayerUnit")
-                    Destroy(moveState);
-                else if(tag == "NavMesh Agent")
-                    Destroy(agentMoveState);
+                // prevents destruction during redirect
+                if (newState != UnitState.Moving)
+                {
+                    if (tag == "PlayerUnit")
+                        Destroy(moveState);
+                    else if (tag == "NavMesh Agent")
+                        Destroy(agentMoveState);
+                }
             break;
 
             case UnitState.Follow:
@@ -315,7 +323,6 @@ public class UnitController : MonoBehaviour
                     }
 
                 }
-
             break;
 
             case UnitState.Attack:
@@ -332,8 +339,8 @@ public class UnitController : MonoBehaviour
                 {
                     agentAttackState = gameObject.AddComponent<AttackState>();                    
                 }
-
            break;
+
         }
     }
 
