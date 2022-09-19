@@ -1007,7 +1007,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8859511448630083741, guid: 98c01c677f05c9d46862e1115de99f37, type: 3}
       propertyPath: seeThroughWalls
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8859511448630083741, guid: 98c01c677f05c9d46862e1115de99f37, type: 3}
       propertyPath: showAttackRange
@@ -2586,40 +2586,20 @@ PrefabInstance:
       value: NavMesh Agent
       objectReference: {fileID: 0}
     - target: {fileID: 2778575574780119864, guid: 06dd12c7152c2ce4ea99b6b26abd46e6, type: 3}
-      propertyPath: autoAttack
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2778575574780119864, guid: 06dd12c7152c2ce4ea99b6b26abd46e6, type: 3}
       propertyPath: showSolidDisks
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2778575574780119864, guid: 06dd12c7152c2ce4ea99b6b26abd46e6, type: 3}
       propertyPath: seeThroughWalls
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2778575574780119864, guid: 06dd12c7152c2ce4ea99b6b26abd46e6, type: 3}
       propertyPath: showAttackRange
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2778575574780119864, guid: 06dd12c7152c2ce4ea99b6b26abd46e6, type: 3}
-      propertyPath: detectionOpacity
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2778575574780119864, guid: 06dd12c7152c2ce4ea99b6b26abd46e6, type: 3}
-      propertyPath: attackRangeOpacity
-      value: 0.15
-      objectReference: {fileID: 0}
-    - target: {fileID: 2778575574780119864, guid: 06dd12c7152c2ce4ea99b6b26abd46e6, type: 3}
       propertyPath: showDetectionRadius
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2778575574780119864, guid: 06dd12c7152c2ce4ea99b6b26abd46e6, type: 3}
-      propertyPath: detectionLayer.m_Bits
-      value: 128
-      objectReference: {fileID: 0}
-    - target: {fileID: 2778575574780119864, guid: 06dd12c7152c2ce4ea99b6b26abd46e6, type: 3}
-      propertyPath: enemyBuildingLayer.m_Bits
-      value: 512
       objectReference: {fileID: 0}
     - target: {fileID: 2984257385262987124, guid: 06dd12c7152c2ce4ea99b6b26abd46e6, type: 3}
       propertyPath: m_RootOrder
@@ -6848,7 +6828,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &500195223
 Transform:
   m_ObjectHideFlags: 0
@@ -7187,18 +7167,6 @@ PrefabInstance:
     - target: {fileID: 835486160671293135, guid: 3fcfb217e62862548a7430d63f97e618, type: 3}
       propertyPath: seeThroughWalls
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 835486160671293135, guid: 3fcfb217e62862548a7430d63f97e618, type: 3}
-      propertyPath: turretRotationSpeed
-      value: 60
-      objectReference: {fileID: 0}
-    - target: {fileID: 835486160671293135, guid: 3fcfb217e62862548a7430d63f97e618, type: 3}
-      propertyPath: enemyUnitLayer.m_Bits
-      value: 128
-      objectReference: {fileID: 0}
-    - target: {fileID: 835486160671293135, guid: 3fcfb217e62862548a7430d63f97e618, type: 3}
-      propertyPath: enemyBuildingLayer.m_Bits
-      value: 512
       objectReference: {fileID: 0}
     - target: {fileID: 1096242866773448761, guid: 3fcfb217e62862548a7430d63f97e618, type: 3}
       propertyPath: m_Name
@@ -8438,18 +8406,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8859511448630083741, guid: 98c01c677f05c9d46862e1115de99f37, type: 3}
-      propertyPath: autoAttack
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8859511448630083741, guid: 98c01c677f05c9d46862e1115de99f37, type: 3}
-      propertyPath: seeThroughWalls
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8859511448630083741, guid: 98c01c677f05c9d46862e1115de99f37, type: 3}
-      propertyPath: showDetectionRadius
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 9105666644610197099, guid: 98c01c677f05c9d46862e1115de99f37, type: 3}
       propertyPath: m_Name
       value: AFV - Armored Fighting Vehicle Variant Red (26)
@@ -9635,10 +9591,6 @@ PrefabInstance:
     - target: {fileID: 2459500769794059726, guid: 06dd12c7152c2ce4ea99b6b26abd46e6, type: 3}
       propertyPath: m_Name
       value: AFV - Armored Fighting Vehicle Variant Green (15)
-      objectReference: {fileID: 0}
-    - target: {fileID: 2778575574780119864, guid: 06dd12c7152c2ce4ea99b6b26abd46e6, type: 3}
-      propertyPath: enemyBuildingLayer.m_Bits
-      value: 512
       objectReference: {fileID: 0}
     - target: {fileID: 2984257385262987124, guid: 06dd12c7152c2ce4ea99b6b26abd46e6, type: 3}
       propertyPath: m_RootOrder
@@ -13468,14 +13420,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8859511448630083741, guid: 98c01c677f05c9d46862e1115de99f37, type: 3}
-      propertyPath: showAttackRange
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8859511448630083741, guid: 98c01c677f05c9d46862e1115de99f37, type: 3}
-      propertyPath: showDetectionRadius
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 9105666644610197099, guid: 98c01c677f05c9d46862e1115de99f37, type: 3}
       propertyPath: m_Name
       value: AFV - Armored Fighting Vehicle Variant Red (9)
@@ -13753,7 +13697,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9105666644610197099, guid: 98c01c677f05c9d46862e1115de99f37, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 98c01c677f05c9d46862e1115de99f37, type: 3}
@@ -22733,6 +22677,10 @@ PrefabInstance:
       propertyPath: minimap
       value: 
       objectReference: {fileID: 360483765}
+    - target: {fileID: 2434893712283192060, guid: a8235eec3e429fe4e9af279028c17a7c, type: 3}
+      propertyPath: enableCursorChanges
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3005125415144582022, guid: a8235eec3e429fe4e9af279028c17a7c, type: 3}
       propertyPath: steelAmount
       value: 
@@ -22741,6 +22689,10 @@ PrefabInstance:
       propertyPath: mainCamera
       value: 
       objectReference: {fileID: 754460919}
+    - target: {fileID: 7577531856432402076, guid: a8235eec3e429fe4e9af279028c17a7c, type: 3}
+      propertyPath: m_Volume
+      value: 0.5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a8235eec3e429fe4e9af279028c17a7c, type: 3}
 --- !u!114 &1801552368 stripped
@@ -22866,26 +22818,6 @@ PrefabInstance:
     - target: {fileID: 8436934513957633233, guid: 98c01c677f05c9d46862e1115de99f37, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8859511448630083741, guid: 98c01c677f05c9d46862e1115de99f37, type: 3}
-      propertyPath: autoAttack
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8859511448630083741, guid: 98c01c677f05c9d46862e1115de99f37, type: 3}
-      propertyPath: showSolidDisks
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8859511448630083741, guid: 98c01c677f05c9d46862e1115de99f37, type: 3}
-      propertyPath: seeThroughWalls
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8859511448630083741, guid: 98c01c677f05c9d46862e1115de99f37, type: 3}
-      propertyPath: showAttackRange
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8859511448630083741, guid: 98c01c677f05c9d46862e1115de99f37, type: 3}
-      propertyPath: showDetectionRadius
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9105666644610197099, guid: 98c01c677f05c9d46862e1115de99f37, type: 3}
       propertyPath: m_Name
