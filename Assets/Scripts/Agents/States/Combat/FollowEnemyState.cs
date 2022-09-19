@@ -25,7 +25,7 @@ public class FollowEnemyState : State
             return;
 
         // check if there is a closer target
-        var unitsInRange = Physics.OverlapSphere(transform.position, unit.DetectionRadius, unit.DetectionLayer);
+        var unitsInRange = Physics.OverlapSphere(unit.body.position, unit.DetectionRadius, unit.DetectionLayer);
         var closest = GetClosestEnemy(unitsInRange, unit.AttackTarget);
 
         if (closest && closest != unit.AttackTarget) // closest enemy was found
