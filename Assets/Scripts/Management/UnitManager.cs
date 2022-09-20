@@ -372,11 +372,11 @@ public class UnitManager : MonoBehaviour
         int unitsPlaced = 0;
 
         // make sure an object with the ground tag exists
-        if (!GameObject.FindWithTag("Ground"))
+        /*if (!GameObject.FindWithTag("Ground"))
         {
             Debug.LogError("The ground object has not been tagged");
             return formationPositions;
-        }
+        }*/
 
         for (int row = 0; unitsPlaced < selection.Units.Count; row++)
         {            
@@ -396,18 +396,18 @@ public class UnitManager : MonoBehaviour
 
                 //Debug.Log("Old position: " + position);
                 position -= moveDirection * spaceBetweenUnits * row;
-                //Debug.Log("New position: " + position);
+                //Debug.Log("New position: " + position);                
 
                 // check that the position is not out of bounds
                 if (Physics.Raycast(position + Vector3.up, Vector3.down, out rayHit))
                 {
+                    
                     // check if the position is on the ground
-                    if (rayHit.transform.gameObject.layer == groundLayer || 
-                        rayHit.transform.tag == "Ground")
+                    if (rayHit.transform.gameObject.layer == 3 || rayHit.transform.tag == "Ground")
                     {
                         // Make sure point is on navmesh
-                        // Note: maxDistance must be abov zero else program will get stuck in loop forever
-                        if (NavMesh.SamplePosition(rayHit.point, out navHit, 0.1f, NavMesh.AllAreas))
+                        // Note: maxDistance must be above agent radius else program will get stuck in loop forever
+                        if (NavMesh.SamplePosition(rayHit.point, out navHit, 1.0f, NavMesh.AllAreas))
                         {
                             formationPositions.Add(navHit.position);
                             unitsPlaced++;
