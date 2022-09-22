@@ -470,6 +470,36 @@ Transform:
   m_Father: {fileID: 4443243646417916537}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2505290379150320539
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2066745330007294737}
+  m_Layer: 0
+  m_Name: Firing Point
+  m_TagString: Untagged
+  m_Icon: {fileID: 3443629218296621865, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2066745330007294737
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2505290379150320539}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.089, z: 1.53}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1530437833888941263}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2686752040899016056
 GameObject:
   m_ObjectHideFlags: 0
@@ -1359,6 +1389,7 @@ Transform:
   m_Children:
   - {fileID: 3590787853631353737}
   - {fileID: 5713206762085616158}
+  - {fileID: 2066745330007294737}
   m_Father: {fileID: 8972911425053166683}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1371,9 +1402,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8972911425053166683}
+  - component: {fileID: 2320091374910187867}
+  - component: {fileID: 8924296544527421054}
   m_Layer: 0
   m_Name: APHT - Half Track
-  m_TagString: Untagged
+  m_TagString: NavMesh Agent
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1396,6 +1429,81 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!195 &2320091374910187867
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8632837304087926497}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 7
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
+--- !u!114 &8924296544527421054
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8632837304087926497}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d337556d8371dc349a90c78320b2f3fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unitName: 
+  steelCost: 10
+  timeToTrain: 1
+  selectionHighlight: {fileID: 0}
+  turret: {fileID: 1530437833888941263}
+  firingPoint: {fileID: 2066745330007294737}
+  body: {fileID: 8972911425053166683}
+  guiIcon: {fileID: 0}
+  fireEffect: {fileID: 0}
+  hitEffect: {fileID: 0}
+  destroyEffect: {fileID: 0}
+  healthBar: {fileID: 0}
+  maxHealth: 100
+  movementSpeed: 1
+  damagePerHit: 1
+  attackRate: 1
+  attackRange: 20
+  turretRotationSpeed: 1
+  detectionRadius: 30
+  enemyUnitLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  enemyBuildingLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  environmentLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  unitSelectSound: {fileID: 0}
+  moveSounds: []
+  turretSounds: []
+  fireSounds: []
+  hitSounds: []
+  destroySounds: []
+  autoAttack: 1
+  seeThroughWalls: 0
+  showSolidDisks: 0
+  showDetectionRadius: 0
+  detectionOpacity: 0.02
+  showAttackRange: 0
+  attackRangeOpacity: 0.04
 --- !u!1 &8652765699483731915
 GameObject:
   m_ObjectHideFlags: 0

@@ -137,7 +137,9 @@ public class UnitController : MonoBehaviour
     void Start()
     {
     	health = maxHealth;
-        healthBarOffset = healthBar.transform.parent.localPosition;
+
+        if(healthBar)
+            healthBarOffset = healthBar.transform.parent.localPosition;
 
         audio = GetComponent<AudioSource>();
         gameManager = GameObject.FindObjectOfType<GameManager>();
@@ -147,7 +149,10 @@ public class UnitController : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {      
+    {
+        if (!healthBar)
+            return;
+
         healthBar.progress = health / maxHealth;
 
         if (health <= 0)
@@ -298,7 +303,7 @@ public class UnitController : MonoBehaviour
                     if(agentMoveState == null)
                         agentMoveState = gameObject.AddComponent<AgentMoveState>();
                     else                      
-                        GetComponentInChildren<NavMeshAgent>().isStopped = true;
+                        body.GetComponent<NavMeshAgent>().isStopped = true;
 
                     agentMoveState.MoveTo(target);
                 }

@@ -2262,6 +2262,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitName: Armored Fighting Vehicle
+  steelCost: 10
+  timeToTrain: 1
   selectionHighlight: {fileID: 4883728943607709057}
   turret: {fileID: 6504873562474881247}
   firingPoint: {fileID: 1504737229877904430}
@@ -2536,9 +2538,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3677297043708892852}
     m_Modifications:
+    - target: {fileID: 4119108375247259523, guid: 68ec58ae1d281a34eb79565561680e98, type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4119108375505451552, guid: 68ec58ae1d281a34eb79565561680e98, type: 3}
       propertyPath: m_Name
       value: Tank_Armour_Hit
+      objectReference: {fileID: 0}
+    - target: {fileID: 4119108375505451554, guid: 68ec58ae1d281a34eb79565561680e98, type: 3}
+      propertyPath: playOnAwake
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4119108375505451555, guid: 68ec58ae1d281a34eb79565561680e98, type: 3}
       propertyPath: m_RootOrder
@@ -2582,6 +2592,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4119108375505451555, guid: 68ec58ae1d281a34eb79565561680e98, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4119108375536381699, guid: 68ec58ae1d281a34eb79565561680e98, type: 3}
+      propertyPath: playOnAwake
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
