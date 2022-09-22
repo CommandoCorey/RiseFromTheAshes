@@ -19,6 +19,9 @@ public class UnitController : MonoBehaviour
 {
     [SerializeField] string unitName;
 
+    [SerializeField] int steelCost = 10;
+    [SerializeField] int timeToTrain = 1;
+
     #region variable declartion
     [Header("Game Objects and transforms")]
     public GameObject selectionHighlight;
@@ -112,6 +115,8 @@ public class UnitController : MonoBehaviour
 
     // unit stats
     public string Name { get => unitName; }
+    public int Cost { get => steelCost; }
+    public float TimeToTrain { get => timeToTrain; }
     public float MaxHealth { get => maxHealth; }
     public float CurrentHealth {  get=> health; }
     //public float Heal { set=> health = Mathf.Clamp(health + value, 0.0f, maxHealth); }

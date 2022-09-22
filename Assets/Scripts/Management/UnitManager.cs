@@ -43,7 +43,6 @@ public class UnitManager : MonoBehaviour
 
     // external scripts
     private GameManager gameManager;
-
     #endregion
 
     #region start and update
@@ -332,10 +331,7 @@ public class UnitManager : MonoBehaviour
 
             //unit.GetComponent<SeekState>().MoveTo(hitInfo.point);
         }
-    }
-    #endregion
-
-    #region private functions    
+    }       
 
     /// <summary>
     /// Removes a specifed unit from a moving group
@@ -352,7 +348,7 @@ public class UnitManager : MonoBehaviour
     /// </summary>
     /// <param name="point">The target position on the map to created a formation around</param>
     /// <returns>A list of coordinates for all positions in the formation</returns>
-    private List<Vector3> GetFormationPositions(Vector3 point)
+    public List<Vector3> GetFormationPositions(Vector3 point)
     {        
         Vector3 unitCenter = new Vector3();    
         RaycastHit rayHit;
@@ -400,8 +396,7 @@ public class UnitManager : MonoBehaviour
 
                 // check that the position is not out of bounds
                 if (Physics.Raycast(position + Vector3.up, Vector3.down, out rayHit))
-                {
-                    
+                {                    
                     // check if the position is on the ground
                     if (rayHit.transform.gameObject.layer == 3 || rayHit.transform.tag == "Ground")
                     {
@@ -429,6 +424,89 @@ public class UnitManager : MonoBehaviour
         return formationPositions;
     }
 
+    /// <summary>
+    /// Cretes formation positions for a group of units moving towards a specified point
+    /// </summary>
+    /// <param name="location"></param>
+    /// <param name="unitList"></param>
+    /// <returns></returns>
+    public List<Vector3> GetFormationPositions(Vector3 destination, List<Transform> unitList)
+    {
+        Vector3 unitCenter = new Vector3();
+        RaycastHit rayHit;
+        NavMeshHit navHit;
+        List<Vector3> formationPositions = new List<Vector3>();
+
+        foreach (Transform unit in unitList)
+        {
+            unitCenter += unit.position;
+        }
+        unitCenter /= unitList.Count;
+
+        Vector3 moveDirection = (destination - unitCenter).normalized;
+        Vector3 offsetDirection = GetRightAngle(moveDirection);
+        Vector3 position;
+        int unitsOnLeft = 0;
+        int unitsOnRight = 0;
+        int unitsPlaced = 0;
+
+        for (int row = 0; unitsPlaced < unitList.Count; row++)
+        {
+            // create the formation positions
+            for (int column = 0; column < maxUnitsPerRow; column++)
+            {
+                if (column <= maxUnitsPerRow / 2)
+                {
+                    position = destination + (offsetDirection * unitsOnRight * spaceBetweenUnits);
+                    unitsOnRight++;
+                }
+                else
+                {
+                    unitsOnLeft++;
+                    position = destination - (offsetDirection * unitsOnLeft * spaceBetweenUnits);
+                }
+
+                //Debug.Log("Old position: " + position);
+                position -= moveDirection * spaceBetweenUnits * row;
+                //Debug.Log("New position: " + position);               
+
+                // check that the position is not out of bounds
+                if (Physics.Raycast(position + Vector3.up, Vector3.down, out rayHit))
+                {
+                    // check if the position is on the ground
+                    if (rayHit.transform.gameObject.layer == 3 || rayHit.transform.tag == "Ground")
+                    {
+                        // Make sure point is on navmesh
+                        // Note: maxDistance must be above agent radius else program will get stuck in loop forever
+                        if (NavMesh.SamplePosition(rayHit.point, out navHit, 1.0f, NavMesh.AllAreas))
+                        {
+                            formationPositions.Add(navHit.position);
+                            unitsPlaced++;
+                        }
+                    }
+
+                }
+                else
+                {
+                    Debug.Log("Raycast did not hit anything at position " + position);
+                    break;
+                }
+
+                // exit loop if all units are placed
+                if (unitsPlaced == selection.Units.Count)
+                    break;
+            }
+
+            unitsOnLeft = 0;
+            unitsOnRight = 0;
+        }
+
+        return formationPositions;
+    }
+
+    #endregion
+
+    #region private functions 
     bool IsOutOfBounds(Vector3 position)
     {
         if(Physics.Raycast(position + Vector3.up * 10, Vector3.down, 10))
@@ -437,64 +515,10 @@ public class UnitManager : MonoBehaviour
         return true;
     }
 
-    private List<Vector3> GetBasicFormations(Vector3 point)
-    {
-        Vector3 unitCenter = new Vector3();
-        RaycastHit rayHit;
-        NavMeshHit navHit;
-
-        foreach (GameObject unit in selection.Units)
-        {
-            unitCenter += unit.transform.position;
-        }
-        unitCenter /= selection.Units.Count;
-
-        Vector3 moveDirection = (point - unitCenter).normalized;
-        Vector3 position;
-        int xOffset;
-        int unitsInRow = 0;
-        int row = 0;
-
-        // create the formation positions
-        for (int i = 0; i < selection.Units.Count; i++)
-        {
-            if (i <= selection.Units.Count / 2)            
-                xOffset = i;               
-            else            
-                xOffset = i - (selection.Units.Count / 2);            
-
-            position.x = point.x + xOffset * spaceBetweenUnits;
-            position.y = point.y;
-            position.z = point.z + row * spaceBetweenUnits;
-
-            // move units to next row
-            if (unitsInRow == maxUnitsPerRow)
-            {
-                row++;
-                unitsInRow = 0;
-            }
-
-            // check if the position is on the navigation mesh
-            if (!Physics.Raycast(position + Vector3.up * 10, Vector3.down, out rayHit, 10, groundLayer))
-            {
-                // get a new position
-                if (NavMesh.SamplePosition(position, out navHit, 5, NavMesh.AllAreas))
-                {
-                    position = navHit.position;
-                }
-            }
-
-            formationPositions.Add(position);
-            unitsInRow++;
-        }
-
-        return formationPositions;
-    }
-
     private Vector3 GetRightAngle(Vector3 current)
     {
         Vector3 newVector;
-        newVector.x = current.z;
+        newVector.x = -current.z;
         newVector.y = 0;
         newVector.z = current.x;
 

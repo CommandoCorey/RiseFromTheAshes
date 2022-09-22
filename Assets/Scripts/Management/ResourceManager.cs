@@ -23,6 +23,7 @@ public struct Resource
 public class ResourceManager : MonoBehaviour
 {
     public Resource[] resources;
+    public Resource[] aiResources;
 
     [Header("GUI Text")]
     public TextMeshProUGUI steelAmount;
@@ -74,6 +75,11 @@ public class ResourceManager : MonoBehaviour
         resources[(int)type].currentAmount += amount;
     }
 
+    public void AddResourceToAI(ResourceType type, int amount)
+    {
+        aiResources[(int)type].currentAmount += amount;
+    }
+
     /// <summary>
     /// Subtracts resources of specified type by a specified amount if the player currently has enough
     /// </summary>
@@ -117,6 +123,17 @@ public class ResourceManager : MonoBehaviour
     public bool SpendSteel(int amount)
     {
         return SpendResource(ResourceType.Steel, amount);
+    }
+
+    public bool AiSpendSteel(int amount)
+    {
+        if (aiResources[0].currentAmount >= amount)
+        {
+            aiResources[0].currentAmount -= amount;
+            return true;
+        }
+
+        return false;
     }
     
 }
