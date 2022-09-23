@@ -173,7 +173,6 @@ GameObject:
   - component: {fileID: 3280850917285978547}
   - component: {fileID: 2539994311860129598}
   - component: {fileID: 3280850917285978551}
-  - component: {fileID: -6901201135667339854}
   m_Layer: 9
   m_Name: AI VehicleBay
   m_TagString: Untagged
@@ -221,7 +220,7 @@ NavMeshObstacle:
   m_Enabled: 1
   serializedVersion: 3
   m_Shape: 1
-  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_Extents: {x: 5, y: 0.5, z: 5}
   m_MoveThreshold: 0.1
   m_Carve: 1
   m_CarveOnlyStationary: 1
@@ -242,40 +241,6 @@ MonoBehaviour:
   timeToBuild: 1
   maxHP: 500
   hitSounds: []
---- !u!114 &-6901201135667339854
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3280850917285978546}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dd97b7ab22767f847b9291c16f6039de, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  units:
-  - name: Player Tank
-    prefab: {fileID: 5798167006062429957, guid: 092e7ab5df421af4fbb05796f6f1aac6, type: 3}
-    timeToBuild: 1
-    buildButton: {fileID: 0}
-    steelCost: 10
-    index: 0
-  - name: AFV - Armored Fighting Vehicle
-    prefab: {fileID: 2459500769794059726, guid: 06dd12c7152c2ce4ea99b6b26abd46e6, type: 3}
-    timeToBuild: 1
-    buildButton: {fileID: 0}
-    steelCost: 10
-    index: 0
-  spawnLocation: {fileID: 1007521924654814051}
-  buildProgress: {fileID: 7021595132684825345}
-  buildMenu: {fileID: 0}
-  cancelButton: {fileID: 0}
-  healUnitRadius: 10
-  healUnitPerSecond: 0
-  unitLayer:
-    serializedVersion: 2
-    m_Bits: 0
 --- !u!1 &8733210577458148908
 GameObject:
   m_ObjectHideFlags: 0
@@ -807,17 +772,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 4253294982966209324, guid: 95507aabacf00d4419803318f17e5aec, type: 3}
   m_PrefabInstance: {fileID: 6518690885669787692}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &7021595132684825345 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4253294982966209325, guid: 95507aabacf00d4419803318f17e5aec, type: 3}
-  m_PrefabInstance: {fileID: 6518690885669787692}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 564c469fd87df924aa8f204acbc11710, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &7567274217771063795
 PrefabInstance:
   m_ObjectHideFlags: 0

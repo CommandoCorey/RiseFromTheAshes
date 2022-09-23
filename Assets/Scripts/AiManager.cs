@@ -6,21 +6,27 @@ using UnityEngine.AI;
 public class AiManager : MonoBehaviour
 {
     public Transform vehicleBay;
-    public int unitsBeforeAttacking = 10;
-    public GameObject[] trainOdrer;
+    public UnitController[] trainOdrer;
     public Transform playerBase;
+    [SerializeField] float timeBetweenWave = 3;
+
+    public EnemyWave[] enemyWaves;
 
     private ResourceManager resources;
     [SerializeField]
     private int steel = 0;
     private int unitNum = 0;
+    private int waveNumber = 0;
     private UnitController unit;
 
     private bool available = true;
-    private bool dispatchedUnits = false;
+    private bool waveFinished = false;
     private int unitsTrained = 0;
 
-    private float zOffset = 12;
+    [SerializeField]
+    private float zOffset = 0;
+    private float unitsPerRow = 5;
+    private float spaceBetween = 4;
 
     // unit management
     private List<Transform> unitGroup;
@@ -30,28 +36,39 @@ public class AiManager : MonoBehaviour
     void Start()
     {
         resources = ResourceManager.Instance;
-        unit = trainOdrer[unitNum].GetComponent<UnitController>();
+        trainOdrer = enemyWaves[waveNumber].units;
+
+        unit = trainOdrer[unitNum];
         unitGroup = new List<Transform>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (waveFinished)
+            return;
+
         steel = resources.aiResources[0].currentAmount;
 
-        if (available && steel >= unit.Cost && unitsTrained < unitsBeforeAttacking)
+        if (unitsTrained < enemyWaves[waveNumber].units.Length)
         {
-            //Debug.Log("Enough Steel has been gatherd");
-            StartCoroutine(TrainUnit(unit));
-            available = false;
+            if (available && steel >= unit.Cost)
+            {
+                //Debug.Log("Enough Steel has been gatherd");
+                StartCoroutine(TrainUnit(unit));
+                available = false;
 
-            NextUnit();            
+                NextUnit();
+            }
         }
-
-        if (unitsTrained == unitsBeforeAttacking && !dispatchedUnits)
+        else
         {
             //Debug.Log("Enough units have been trained");
-            DispatchUnits();
+            DispatchUnits();                       
+            
+            unitsTrained = 0;
+            unitNum = 0;
+            zOffset = 0;            
         }
     }
 
@@ -64,7 +81,8 @@ public class AiManager : MonoBehaviour
 
         yield return new WaitForSeconds(unit.TimeToTrain);
  
-        var unitInstance = Instantiate(unit.gameObject, vehicleBay.position + GetSpawnOffset(), Quaternion.identity);
+        var unitInstance = Instantiate(unit.gameObject, GetSpawnPosition(), Quaternion.identity);
+        unitInstance.GetComponent<UnitController>().body.forward = vehicleBay.forward;
 
         //Debug.Log("Training Complete");
         unitGroup.Add(unitInstance.transform);
@@ -86,17 +104,20 @@ public class AiManager : MonoBehaviour
         else
             unitNum = 0;
 
-        unit = trainOdrer[unitNum].GetComponent<UnitController>();
+        unit = trainOdrer[unitNum];
     }
 
-    private Vector3 GetSpawnOffset()
+    private Vector3 GetSpawnPosition()
     {
-        return new Vector3((unitsTrained % 5) * 4, 0, zOffset);
+        float x = vehicleBay.position.x + (unitsTrained % unitsPerRow * spaceBetween);
+        float z = vehicleBay.position.z + vehicleBay.forward.z * zOffset;
+
+        return new Vector3(x, 0, z);
     }
 
     private void DispatchUnits()
     {
-        Debug.Log("Dispatching Units");
+        //Debug.Log("Dispatching Units");
         UnitManager unitManager = GameObject.FindObjectOfType<UnitManager>();
 
         formationPositions = unitManager.GetFormationPositions(playerBase.position, unitGroup);
@@ -114,7 +135,22 @@ public class AiManager : MonoBehaviour
                 ChangeState(UnitState.Moving, formationPositions[i]);
         }
 
-        dispatchedUnits = true;
+        waveFinished = true;
+
+        Invoke("StartNextWave", timeBetweenWave);
+    }
+
+    private void StartNextWave()
+    {
+        if (waveNumber < enemyWaves.Length - 1)
+            waveNumber++;
+        else
+            waveNumber = 0;
+
+        waveFinished = false;
+
+        trainOdrer = enemyWaves[waveNumber].units;
+        unit = trainOdrer[unitNum];
     }
 
     private void OnDrawGizmos()
@@ -128,6 +164,15 @@ public class AiManager : MonoBehaviour
                 Gizmos.DrawWireSphere(position, 1);
             }
         }
+
+        if(vehicleBay != null)
+            Gizmos.DrawLine(vehicleBay.position, vehicleBay.position + vehicleBay.forward * zOffset);
     }
 
+}
+
+[System.Serializable]
+public struct EnemyWave
+{
+    public UnitController[] units;
 }

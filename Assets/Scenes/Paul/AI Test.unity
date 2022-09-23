@@ -243,6 +243,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 9
       objectReference: {fileID: 0}
+    - target: {fileID: 3280850917285978546, guid: dcb65805abc30304392b6086a98749a0, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3280850917285978550, guid: dcb65805abc30304392b6086a98749a0, type: 3}
       propertyPath: m_RootOrder
       value: 6
@@ -335,7 +339,8 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 9
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: -6901201135667339854, guid: dcb65805abc30304392b6086a98749a0, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: dcb65805abc30304392b6086a98749a0, type: 3}
 --- !u!4 &354994686 stripped
 Transform:
@@ -852,13 +857,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   vehicleBay: {fileID: 354994686}
-  unitsBeforeAttacking: 10
-  trainOdrer:
-  - {fileID: 9105666644610197099, guid: 98c01c677f05c9d46862e1115de99f37, type: 3}
-  - {fileID: 8111638073337904198, guid: bbf49ee58c5fb9f4ca37b18b1ffa60c0, type: 3}
-  - {fileID: 4633297264045833991, guid: 971d7be0b2a3e1443931281ce676ae72, type: 3}
-  - {fileID: 5268226621432198667, guid: 82297b6639dcd0046bbc012a45d2e1dd, type: 3}
+  trainOdrer: []
   playerBase: {fileID: 1360260163}
+  timeBetweenWave: 3
+  enemyWaves:
+  - units:
+    - {fileID: 8859511448630083741, guid: 98c01c677f05c9d46862e1115de99f37, type: 3}
+    - {fileID: 8859511448630083741, guid: 98c01c677f05c9d46862e1115de99f37, type: 3}
+    - {fileID: 8859511448630083741, guid: 98c01c677f05c9d46862e1115de99f37, type: 3}
+    - {fileID: 8859511448630083741, guid: 98c01c677f05c9d46862e1115de99f37, type: 3}
+    - {fileID: 8859511448630083741, guid: 98c01c677f05c9d46862e1115de99f37, type: 3}
+    - {fileID: 8859511448630083741, guid: 98c01c677f05c9d46862e1115de99f37, type: 3}
+    - {fileID: 8859511448630083741, guid: 98c01c677f05c9d46862e1115de99f37, type: 3}
+    - {fileID: 8859511448630083741, guid: 98c01c677f05c9d46862e1115de99f37, type: 3}
+  - units:
+    - {fileID: 8973092950531482841, guid: bbf49ee58c5fb9f4ca37b18b1ffa60c0, type: 3}
+    - {fileID: 8973092950531482841, guid: bbf49ee58c5fb9f4ca37b18b1ffa60c0, type: 3}
+    - {fileID: 8711375421019320778, guid: 971d7be0b2a3e1443931281ce676ae72, type: 3}
+    - {fileID: 8711375421019320778, guid: 971d7be0b2a3e1443931281ce676ae72, type: 3}
+    - {fileID: 6683147605955251850, guid: 82297b6639dcd0046bbc012a45d2e1dd, type: 3}
+    - {fileID: 6683147605955251850, guid: 82297b6639dcd0046bbc012a45d2e1dd, type: 3}
   steel: 0
 --- !u!1 &993576956 stripped
 GameObject:
