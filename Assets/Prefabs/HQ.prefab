@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 241617701239003307}
   - component: {fileID: 6662276595388222291}
   - component: {fileID: 4015447118661936381}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: HQ Square
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -105,7 +105,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4802027936604837687}
   - component: {fileID: 3883963621263522768}
-  m_Layer: 0
+  - component: {fileID: 8543104418545833270}
+  m_Layer: 8
   m_Name: HQ
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -142,6 +143,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   permRadius: 30
   impermRadius: 10
+--- !u!65 &8543104418545833270
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4802027936604837686}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 8.32103, y: 16.464245, z: 8.69422}
+  m_Center: {x: 0.07106018, y: 8.288904, z: -0.0025157928}
 --- !u!1001 &626535030485496157
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -196,6 +210,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 56c1649f5a9fecd4891e1564beb76205, type: 3}
       propertyPath: m_Name
       value: HQ_Building_Modelling
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 56c1649f5a9fecd4891e1564beb76205, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 56c1649f5a9fecd4891e1564beb76205, type: 3}

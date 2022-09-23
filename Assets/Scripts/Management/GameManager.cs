@@ -6,6 +6,8 @@ using UnityEngine.Timeline;
 
 public class GameManager : MonoBehaviour
 {
+    [Range(0, 10)]
+    public float timeScale = 1;
     public GameObject minimap;
     public bool showMinimap = false;
     public Transform marker;
@@ -38,7 +40,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        Time.timeScale = timeScale;
     }
 
     /// <summary>
@@ -60,7 +62,6 @@ public class GameManager : MonoBehaviour
     {
         audio.PlayOneShot(clip, volumeScale);
     }
-
 
     public void InstantiateParticles(ParticleSystem prefab, Vector3 position)
     {

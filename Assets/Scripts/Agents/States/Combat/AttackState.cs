@@ -62,7 +62,7 @@ public class AttackState : State
         RaycastHit hit;
 
         // check if turret is pointing at target
-        if (Quaternion.Angle(unit.turret.rotation, lookRotation) < 1)        
+        if (Quaternion.Angle(unit.turret.rotation, lookRotation) < 2)        
         {
             Debug.DrawLine(unit.turret.position, unit.AttackTarget.position, Color.yellow);
 

@@ -9,6 +9,7 @@ public class AiManager : MonoBehaviour
     public UnitController[] trainOdrer;
     public Transform playerBase;
     [SerializeField] float timeBetweenWave = 3;
+    [SerializeField] bool loopEnemyWaves;
 
     public EnemyWave[] enemyWaves;
 
@@ -22,9 +23,8 @@ public class AiManager : MonoBehaviour
     private bool available = true;
     private bool waveFinished = false;
     private int unitsTrained = 0;
-
-    [SerializeField]
-    private float zOffset = 0;
+   
+    private float zOffset = 6;
     private float unitsPerRow = 5;
     private float spaceBetween = 4;
 
@@ -68,7 +68,7 @@ public class AiManager : MonoBehaviour
             
             unitsTrained = 0;
             unitNum = 0;
-            zOffset = 0;            
+            zOffset = 6;            
         }
     }
 
@@ -145,7 +145,12 @@ public class AiManager : MonoBehaviour
         if (waveNumber < enemyWaves.Length - 1)
             waveNumber++;
         else
+        {
             waveNumber = 0;
+
+            if (!loopEnemyWaves)
+                return;
+        }
 
         waveFinished = false;
 

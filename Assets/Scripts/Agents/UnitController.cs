@@ -231,7 +231,8 @@ public class UnitController : MonoBehaviour
     /// </summary>
     public void PlayFireSound()
     {
-        audio.PlayOneShot(fireSounds[0], 0.1f);
+        if(fireSounds.Length > 0)
+            audio.PlayOneShot(fireSounds[0], 0.1f);
     }
 
     /// <summary>
