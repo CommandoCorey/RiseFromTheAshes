@@ -45,7 +45,7 @@ public class AgentMoveState : MonoBehaviour
         agent.isStopped = false;
 
         // plays random move sound
-        AudioSource audio = GetComponentInParent<AudioSource>();
+        AudioSource audio = unit.body.GetComponent<AudioSource>();
 
         if (audio && unit.moveSounds.Length > 0)
         {

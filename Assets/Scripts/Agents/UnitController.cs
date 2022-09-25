@@ -141,7 +141,7 @@ public class UnitController : MonoBehaviour
         if(healthBar)
             healthBarOffset = healthBar.transform.parent.localPosition;
 
-        audio = GetComponent<AudioSource>();
+        audio = body.GetComponent<AudioSource>();
         gameManager = GameObject.FindObjectOfType<GameManager>();
 
         ChangeState(UnitState.Idle);
