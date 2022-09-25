@@ -15,7 +15,7 @@ public class PLAN : MonoBehaviour
     // - can be used between all Major Uses (DONE)
 
     // Generates Buildings Using Prefabs (25%)
-    // - Building spots need to be made (50% - 2 more versions)
+    // - Building spots need to be made (50% - 2-4 more versions)
     // - Need Buildings 
 
     // Generates Props for The Level using prefabs (50%)
