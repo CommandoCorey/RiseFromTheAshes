@@ -1,160 +1,86 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-[System.Serializable]
-public struct ZoomLevel
-{
-	[Range(0, 1)]
-	[Tooltip("Describes where on the curve that the camera will be placed at this zoom level index. " +
-		"1 is fully zoomed in, 0 is fully zoomed out.")]
-	public float interp;
-
-	[Tooltip("How fast the camera will move with WASD at this zoom level index.")]
-	public float WASDMoveSpeed;
-	public bool mouseLook;
-};
-
 public class CameraController : MonoBehaviour {
-	[SerializeField] List<ZoomLevel> zoomLevels;
-	[SerializeField] int zoomLevelIndex;
+	[SerializeField] float mouseSensitivity = 0.01f;
+	[SerializeField] float maxZoom = 15.0f;
+	[SerializeField] float minZoom = 1.0f;
 
-	float zoomTime;
-	float zoomLevel;
-	[SerializeField] float zoomInterpSpeed = 2.0f;
-	[SerializeField] float mouseLookSensitivity = 0.3f;
+	Vector2 mousePos;
+	Vector2 oldMousePos;
+	Vector2 mouseDelta;
 
-	Vector2 zoomRange;
+	Vector2 velocity;
+	Queue<Vector2> velocities = new Queue<Vector2>();
+	[SerializeField] float friction = 100.0f;
 
-	[SerializeField] Camera zoomedIn;
-	[SerializeField] Camera zoomedOut;
+	bool firstMove;
+	bool moving;
 
-	Transform zoomedInTransform;
-	Transform zoomedOutTransform;
-
-	[SerializeField] Transform zoomCurveHandle;
-
-	[SerializeField] BoxCollider bounds;
-
-	static Vector3 QuadBezierCurve(Vector3 p0, Vector3 p1, Vector3 p2, float t) {
-		return p1 + Mathf.Pow((1.0f - t), 2.0f) * (p0 - p1) + Mathf.Pow(t, 2.0f) * (p2 - p1);
+	private void Start()
+	{
+		firstMove = true;
 	}
 
-	bool looking = false;
-	bool firstMouseMove;
-	Vector2 lastMousePos;
-
-	void Start() {
-		zoomedInTransform = zoomedIn.transform;
-		zoomedOutTransform = zoomedOut.transform;
-
-		zoomedIn .gameObject.SetActive(false);
-		zoomedOut.gameObject.SetActive(false);
-
-		zoomRange = new Vector2(zoomLevel, zoomLevels[zoomLevelIndex].interp);
-
-		transform.position = QuadBezierCurve(
-			zoomedInTransform.position,
-			zoomCurveHandle.position,
-			zoomedOutTransform.position,
-			zoomLevels[zoomLevelIndex].interp);
-
-		firstMouseMove = true;
-	}
-
-	void Update() {
-		float scroll = Input.GetAxis("Mouse ScrollWheel");
-		int zoomIncrease = scroll > 0.0f ? 1 : scroll < 0.0f ? -1 : 0;
-		if (zoomIncrease != 0) {
-			zoomLevelIndex += zoomIncrease;
-
-			if (zoomLevelIndex < 0) { zoomLevelIndex = 0; }
-			if (zoomLevelIndex > zoomLevels.Count - 1) { zoomLevelIndex = zoomLevels.Count - 1; }
-
-			zoomRange = new Vector2(zoomLevel, zoomLevels[zoomLevelIndex].interp);
-			zoomTime = 0.0f;
-		}
-
-		if (zoomTime < 1.0f) {
-			zoomTime += Time.deltaTime * zoomInterpSpeed;
-			zoomLevel = Mathf.Lerp(zoomRange.x, zoomRange.y, zoomTime);
-		}
-
-		Vector2 axis = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-		Vector2 mod = axis * zoomLevels[zoomLevelIndex].WASDMoveSpeed * Time.deltaTime;
-		zoomedInTransform.position += new Vector3(mod.x, 0.0f, mod.y);
-		zoomedInTransform.position = new Vector3(
-			Mathf.Clamp(zoomedInTransform.position.x, bounds.bounds.min.x, bounds.bounds.max.x),
-			zoomedInTransform.position.y,
-			Mathf.Clamp(zoomedInTransform.position.z, bounds.bounds.min.z, bounds.bounds.max.z)
-		);
-
+	private void Update()
+	{
 		if (Input.GetMouseButtonDown(2))
 		{
-			looking = true;
-			firstMouseMove = true;
+			firstMove = true;
+			moving = true;
 		}
 
-		if (Input.GetMouseButtonUp(2))
+		transform.position += new Vector3(0.0f, -Input.mouseScrollDelta.y, 0.0f);
+		transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, minZoom, maxZoom), transform.position.z);
+		float zoom = transform.position.y;
+
+		if (moving)
 		{
-			looking = false;
-		}
+			mousePos = Input.mousePosition;
 
-		if (looking) {
-			Vector2 mousePos = Input.mousePosition;
-			Vector2 mouseDelta = lastMousePos - mousePos;
-
-			if (firstMouseMove)
-			{
-				lastMousePos = mousePos;
-				mouseDelta = new Vector2(0, 0);
-				firstMouseMove = false;
+			if (firstMove) {
+				oldMousePos = mousePos;
+				firstMove = false;
+				velocities.Clear();
 			}
 
-			Vector3 euler = zoomedInTransform.eulerAngles;
-			euler.x += mouseDelta.y * mouseLookSensitivity;
-			//euler.x = Mathf.Clamp(euler.x, -89.0f, 89.0f);
-			if (euler.x > 89.0f) { euler.x = 89.0f; }
-			if (euler.x < 0.0f) { euler.x = 0.0f; }
-			zoomedInTransform.rotation = Quaternion.Euler(euler.x, euler.y, euler.z);
+			mouseDelta = oldMousePos - mousePos;
 
-			lastMousePos = mousePos;
+			transform.transform.position += new Vector3(mouseDelta.x, 0.0f, mouseDelta.y) * mouseSensitivity * zoom;
+
+			oldMousePos = mousePos;
+
+			velocities.Enqueue(mouseDelta);
+
+			if (velocities.Count > 64) {
+				velocities.Dequeue();
+			}
+
+			if (Input.GetMouseButtonUp(2))
+			{
+				velocity = mouseDelta;
+				moving = false;
+
+				velocity = new Vector2(0.0f, 0.0f);
+
+				foreach (var v in velocities)
+				{
+					velocity += v;
+				}
+
+				velocity /= (float)velocities.Count;
+			}
 		}
+		else {
+			transform.transform.position += new Vector3(velocity.x, 0.0f, velocity.y) * Time.deltaTime;
 
-		transform.position = QuadBezierCurve(
-			zoomedInTransform.position,
-			zoomCurveHandle.position,
-			zoomedOutTransform.position,
-			zoomLevel);
-		transform.rotation = Quaternion.Slerp(zoomedInTransform.rotation, zoomedOutTransform.rotation, zoomLevel);
-	}
-
-	void OnDrawGizmos() {
-		/* For some reason, this causes the editor to freeze if the two cameras
-		 * are thousands of units apart. Which is interesting. */
-		int steps = 32;
-		Vector3 prev = zoomedIn.transform.position;
-		for (int i = 0; i < steps; i++) {
-			Vector3 pos = QuadBezierCurve(
-				zoomedIn.transform.position,
-				zoomCurveHandle.position,
-				zoomedOut.transform.position,
-				(float)i / (float)steps);
-
-			Gizmos.DrawLine(prev, pos);
-
-			prev = pos;
+			if (velocity.x > 0.0001f && velocity.y > 0.0001 || velocity.x < -0.0001 || velocity.y < -0.0001)
+			{
+				velocity -= new Vector2(Time.deltaTime * friction, Time.deltaTime * friction) * velocity;
+			} else
+			{
+				velocity = new Vector2(0.0f, 0.0f);
+			}
 		}
-
-		Gizmos.DrawLine(prev, zoomedOut.transform.position);
-
-		Gizmos.color = Color.grey;
-
-		if (zoomCurveHandle)
-		{
-			Gizmos.DrawSphere(zoomCurveHandle.transform.position, 0.1f);
-		}
-
-		Gizmos.DrawLine(zoomedIn.transform.position, zoomCurveHandle.transform.position);
-		Gizmos.DrawLine(zoomCurveHandle.transform.position, zoomedOut.transform.position);
 	}
 }
