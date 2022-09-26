@@ -13,7 +13,7 @@ public class Building : MonoBehaviour
 
     [SerializeField] AudioClip[] hitSounds;
 
-    AudioSource audio;
+    new AudioSource audio;
 
 	MeshRenderer[] childMeshRenderers;
 	MeshRenderer myMeshRenderer;
