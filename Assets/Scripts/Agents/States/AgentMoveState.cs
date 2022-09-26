@@ -7,6 +7,7 @@ using UnityEngine.UIElements;
 public class AgentMoveState : MonoBehaviour
 {
     //[SerializeField] float movementSpeed = 100;
+    [SerializeField] float stoppingDistance = 0.5f;
 
     private NavMeshAgent agent;
     private Vector3 targetPos;
@@ -30,7 +31,7 @@ public class AgentMoveState : MonoBehaviour
         {
             agent.destination = targetPos;
 
-            if (Vector3.Distance(unit.body.position, agent.destination) < 0.2f)
+            if (agent.isStopped || Vector3.Distance(unit.body.position, agent.destination) < stoppingDistance)
             {
                 agent.isStopped = true;
                 unit.ChangeState(UnitState.Idle);
