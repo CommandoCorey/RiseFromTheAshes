@@ -12,6 +12,7 @@ public class Building : MonoBehaviour
 	float HP;
 
     [SerializeField] AudioClip[] hitSounds;
+	[SerializeField] ParticleSystem[] hitVFX;
 
     new AudioSource audio;
 
@@ -130,12 +131,18 @@ public class Building : MonoBehaviour
 		TryVehicleBayInteract();
 	}
 
-	public void TakeDamage(float amount) {
+	public void TakeDamage(Vector3 hitPoint, float amount) {
 		HP -= amount;
 
         if (hitSounds.Length > 0) {
-            audio.PlayOneShot(hitSounds[0], 0.5f);
+            audio.PlayOneShot(hitSounds[Random.Range(0, hitSounds.Length - 1)], 0.5f);
         }
+
+		if (hitVFX.Length > 0)
+		{
+			var go = Instantiate(hitVFX[Random.Range(0, hitVFX.Length - 1)], hitPoint, Quaternion.identity);
+			Destroy(go.gameObject, 3.0f);
+		}
 
         if (HP <= 0.0f) {
 			Destroy(gameObject);
