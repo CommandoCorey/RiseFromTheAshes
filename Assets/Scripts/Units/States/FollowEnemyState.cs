@@ -5,8 +5,8 @@ using UnityEngine.AI;
 
 public class FollowEnemyState : State
 {
-    private NavMeshAgent agent;
-    private Vector3 directionToTarget;
+    private new NavMeshAgent agent;
+    private new Vector3 directionToTarget;
 
     // Start is called before the first frame update
     void Start()

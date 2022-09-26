@@ -7,6 +7,7 @@ using UnityEngine.UIElements;
 public class AgentMoveState : MonoBehaviour
 {
     //[SerializeField] float movementSpeed = 100;
+    [SerializeField] float stoppingDistance = 0.5f;
 
     private NavMeshAgent agent;
     private Vector3 targetPos;
@@ -30,7 +31,7 @@ public class AgentMoveState : MonoBehaviour
         {
             agent.destination = targetPos;
 
-            if (Vector3.Distance(unit.body.position, agent.destination) < 0.2f)
+            if (agent.isStopped || Vector3.Distance(unit.body.position, agent.destination) < stoppingDistance)
             {
                 agent.isStopped = true;
                 unit.ChangeState(UnitState.Idle);
@@ -46,12 +47,7 @@ public class AgentMoveState : MonoBehaviour
 
         // plays random move sound
         AudioSource audio = unit.body.GetComponent<AudioSource>();
-
-        if (audio && unit.moveSounds.Length > 0)
-        {
-            int randomPick = Random.Range(0, unit.moveSounds.Length - 1);
-            audio.PlayOneShot(unit.moveSounds[randomPick], 0.5f);
-        }
+        unit.PlayMoveSound();
     }
 
     private void OnDrawGizmos()

@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,7 +13,7 @@ public class AttackState : State
     // Start is called before the first frame update
     void Start()
     {
-
+        unit.PlayAimSound();
     }
 
     // Update is called once per frame
@@ -59,12 +58,14 @@ public class AttackState : State
         unit.turret.localRotation = Quaternion.Euler(initialRotation.x, unit.turret.localRotation.eulerAngles.y, initialRotation.z);
 
         //Debug.Log("Enemy target detected");
-        RaycastHit hit;
 
         // check if turret is pointing at target
         if (Quaternion.Angle(unit.turret.rotation, lookRotation) < 2)        
         {
             Debug.DrawLine(unit.turret.position, unit.AttackTarget.position, Color.yellow);
+
+            // change to combat music
+
 
             Invoke("DealDamage", unit.AttackRate);
             pointingAtTarget = true;
@@ -86,36 +87,39 @@ public class AttackState : State
     {
         if (unit.AttackTarget != null)
         {
-            unit.PlayParticles(unit.fireEffect);
+            Vector3 hitPosition = new Vector3();
+
+            ParticleSystem fireParticles = unit.fireEffects[Random.Range(0, unit.fireEffects.Length)];
+
+            //unit.PlayParticles(unit.fireEffect);
+            unit.InstantiateParticles(fireParticles, unit.firingPoint.position);
+
             unit.PlayFireSound();
 
+            // generate damage particles at hit position
+            if(Physics.Raycast(unit.firingPoint.position, unit.turret.forward, out RaycastHit hit))
+            {
+                hitPosition = hit.point;
+            }
 
-            //try
-            //{
-                // check if target is still in attack range
-                if (Vector3.Distance(unit.body.position, unit.AttackTarget.position) > unit.AttackRange)
-                {
-                    unit.ChangeState(UnitState.Follow);
-                }            
+            // check if target is still in attack range
+            if (Vector3.Distance(unit.body.position, unit.AttackTarget.position) > unit.AttackRange)
+            {
+                unit.ChangeState(UnitState.Follow);
+            }            
 
-                // check if the target is a unit
-                else if (unit.AttackTarget.gameObject.layer == 6 || unit.AttackTarget.gameObject.layer == 7)
-                {
-                    unit.AttackTarget.GetComponentInParent<UnitController>().TakeDamage(unit.DamagePerHit);
-                    Invoke("DealDamage", unit.AttackRate);
-                }
-                // check if the target is a building
-                else if (unit.AttackTarget.gameObject.layer == 8 || unit.AttackTarget.gameObject.layer == 9)
-                {
-                    //Debug.Log("Dealing " + unit.DamagePerHit + " damage to " + unit.AttackTarget.name);
-                    Invoke("DealDamage", unit.AttackRate);
-                }
-
-            //}
-            //catch (Exception ex)
-            //{
-            //    Debug.LogError(ex.Message);
-            //}
+            // check if the target is a unit
+            else if (unit.AttackTarget.gameObject.layer == 6 || unit.AttackTarget.gameObject.layer == 7)
+            {
+                unit.AttackTarget.GetComponentInParent<UnitController>().TakeDamage(unit.DamagePerHit, hitPosition);
+                Invoke("DealDamage", unit.AttackRate);
+            }
+            // check if the target is a building
+            else if (unit.AttackTarget.gameObject.layer == 8 || unit.AttackTarget.gameObject.layer == 9)
+            {
+                //Debug.Log("Dealing " + unit.DamagePerHit + " damage to " + unit.AttackTarget.name);
+                Invoke("DealDamage", unit.AttackRate);
+            }
 
         }
         else

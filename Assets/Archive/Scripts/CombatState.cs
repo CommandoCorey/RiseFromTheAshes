@@ -10,15 +10,15 @@ public enum CombatMode
 public class CombatState : State
 {
     #region variables
-    private UnitController unit;
+    private new UnitController unit;
 
-    private Transform target;
+    private new Transform target;
     private Quaternion lookRotation;    
     private Vector3 direction;
     private Vector3 initialRotation;
     //private Quaternion initialRotation;
 
-    private AgentMovement agent;
+    private new AgentMovement agent;
     private SeekBehaviour seek;
     private CombatMode state = CombatMode.Search;
 
@@ -26,19 +26,12 @@ public class CombatState : State
     private int waypointNum = 1;
 
     private float distanceFromWaypoint = 1;
-    private Vector3 directionToTarget;
+    private new Vector3 directionToTarget;
     //private float initialX, initialY, initialZ;
 
     Vector3 castingOffset = Vector3.up;
 
     #endregion
-
-    void Awake()
-    {
-        unit = GetComponent<UnitController>();
-        agent = GetComponent<AgentMovement>();
-        
-    }
 
     void Start()
     {
@@ -161,7 +154,7 @@ public class CombatState : State
     }
 
     // Switches state base on enemy position from current unit
-    private void HandleEnemyInRange()
+    private new void HandleEnemyInRange()
     {
         if (ObstacleInWay(directionToTarget) && !unit.UnitHalt)
         {
@@ -383,26 +376,6 @@ public class CombatState : State
 
     }
 
-    private bool ObstacleInWay(Vector3 direction)
-    {
-        //Debug.DrawLine(unit.firingPoint.position, transform.position + direction * unit.DetectionRadius, Color.red, 1.0f);
-
-        if (Physics.Raycast(transform.position, direction, out RaycastHit hit, unit.DetectionRadius))//, ~unit.EnvironmentLayer.value))
-        {
-            //Debug.Log("Raycast from " + transform.name + " hit " + hit.transform.name);
-
-            int layerNum = (int) Mathf.Log(unit.EnvironmentLayer.value, 2);
-
-            if (hit.transform.gameObject.layer == layerNum)
-            {
-                //Debug.Log("Hit " + hit.transform.name);
-                return true;
-            }
-        }
-        
-        return false;
-    }
-
     private void SetNewPath()
     {
         if(target != null)
@@ -429,14 +402,14 @@ public class CombatState : State
         Debug.DrawLine(unit.firingPoint.position, unit.firingPoint.position + (unit.turret.forward * unit.AttackRange), Color.yellow);
         //Gizmos.DrawLine(transform.position, transform.position + (directionToTarget * unit.DetectionRadius));
 
-        string combatMode = "";
+        string combatMode ="";
         switch(state)
         {
             case CombatMode.Search: combatMode = "Searching";        
                 break;
 
             case CombatMode.MoveTowards: combatMode = "Following Path";          
-                break;;
+                break;
 
             case CombatMode.Follow: combatMode = "Following Enemy";
                 break;
@@ -448,7 +421,7 @@ public class CombatState : State
                 break;
         }
 
-#if UnityEditor
+#if UNITY_EDITOR
         UnityEditor.Handles.Label(transform.position + Vector3.up * 5, combatMode);
 #endif
 

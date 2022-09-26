@@ -7,9 +7,8 @@ using UnityEngine.AI;
 public class FlockState : State
 {
     UnitManager unitManager;
-
-    UnitController unit;
-    AgentMovement agent;
+    new UnitController unit;
+    new AgentMovement agent;
     Steering steer;
     BehaviourManager behaviours;
     
