@@ -61,12 +61,12 @@ public class UnitController : MonoBehaviour
     [SerializeField] LayerMask environmentLayer;
 
     [Header("Sound Effects")]
-    public AudioClip unitSelectSound;
-    public AudioClip[] moveSounds;
-    public AudioClip[] turretSounds;
-    public AudioClip[] fireSounds;
-    public AudioClip[] hitSounds;
-    public AudioClip[] destroySounds;
+    public SoundEffect unitSelectSound;
+    public SoundEffect[] moveSounds;
+    public SoundEffect[] turretSounds;
+    public SoundEffect[] fireSounds;
+    public SoundEffect[] hitSounds;
+    public SoundEffect[] destroySounds;
 
     [Header("Configurations")]
     public bool autoAttack = true;
@@ -161,8 +161,12 @@ public class UnitController : MonoBehaviour
             //GameObject.Destroy(this.gameObject.transform.parent.gameObject);
 
             // play destruction sound
-            if (destroySounds.Length > 0)            
-                gameManager.PlaySound(destroySounds[0], 1);            
+            if (destroySounds.Length > 0)
+            {
+                int randomPick = Random.Range(0, destroySounds.Length-1);
+                gameManager.PlaySound(destroySounds[randomPick].clip,
+                    destroySounds[randomPick].volumeScale);
+            }
 
             if(destroyEffect != null)
                 gameManager.InstantiateParticles(destroyEffect, body.position);
@@ -193,7 +197,8 @@ public class UnitController : MonoBehaviour
 
         if (hitSounds.Length > 0)
         {
-            audio.PlayOneShot(hitSounds[0], 0.25f);
+            int randomPick = Random.Range(0, hitSounds.Length-1);
+            audio.PlayOneShot(hitSounds[randomPick].clip, hitSounds[randomPick].volumeScale);
         }
     }
 
@@ -227,12 +232,39 @@ public class UnitController : MonoBehaviour
     }
 
     /// <summary>
-    /// 
+    /// Playss a random movement sound
+    /// </summary>
+    public void PlayMoveSound()
+    {
+        if (audio && moveSounds.Length > 0)
+        {
+            int randomPick = Random.Range(0, moveSounds.Length - 1);
+            audio.PlayOneShot(moveSounds[randomPick].clip, moveSounds[randomPick].volumeScale);
+        }
+    }
+
+    /// <summary>
+    /// Plays a random sound from the fireSounds list
     /// </summary>
     public void PlayFireSound()
     {
-        if(fireSounds.Length > 0)
-            audio.PlayOneShot(fireSounds[0], 0.1f);
+        if (fireSounds.Length > 0)
+        {
+            int randomPick = Random.Range(0, hitSounds.Length - 1);
+            audio.PlayOneShot(fireSounds[randomPick].clip, destroySounds[randomPick].volumeScale);
+        }
+    }
+
+    /// <summary>
+    /// Plays a random sound from the turretSounds
+    /// </summary>
+    public void PlayAimSound()
+    {
+        if(turretSounds.Length > 0)
+        {
+            var randomPick = Random.Range(0, turretSounds.Length - 1);
+            audio.PlayOneShot(turretSounds[randomPick].clip);
+        }
     }
 
     /// <summary>

@@ -90,8 +90,10 @@ public struct CursorSprite
     public Vector2 hotspot;
 }
 
-/*
-public enum CursorMode
+[System.Serializable]
+public class SoundEffect
 {
-    Normal, Move, Attack
-}*/
+    public AudioClip clip;
+    [Range(0f, 1f)]
+    public float volumeScale = 1;
+}

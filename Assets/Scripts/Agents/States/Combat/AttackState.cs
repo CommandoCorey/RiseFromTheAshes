@@ -14,7 +14,7 @@ public class AttackState : State
     // Start is called before the first frame update
     void Start()
     {
-
+        unit.PlayAimSound();
     }
 
     // Update is called once per frame
@@ -89,33 +89,24 @@ public class AttackState : State
             unit.PlayParticles(unit.fireEffect);
             unit.PlayFireSound();
 
+            // check if target is still in attack range
+            if (Vector3.Distance(unit.body.position, unit.AttackTarget.position) > unit.AttackRange)
+            {
+                unit.ChangeState(UnitState.Follow);
+            }            
 
-            //try
-            //{
-                // check if target is still in attack range
-                if (Vector3.Distance(unit.body.position, unit.AttackTarget.position) > unit.AttackRange)
-                {
-                    unit.ChangeState(UnitState.Follow);
-                }            
-
-                // check if the target is a unit
-                else if (unit.AttackTarget.gameObject.layer == 6 || unit.AttackTarget.gameObject.layer == 7)
-                {
-                    unit.AttackTarget.GetComponentInParent<UnitController>().TakeDamage(unit.DamagePerHit);
-                    Invoke("DealDamage", unit.AttackRate);
-                }
-                // check if the target is a building
-                else if (unit.AttackTarget.gameObject.layer == 8 || unit.AttackTarget.gameObject.layer == 9)
-                {
-                    //Debug.Log("Dealing " + unit.DamagePerHit + " damage to " + unit.AttackTarget.name);
-                    Invoke("DealDamage", unit.AttackRate);
-                }
-
-            //}
-            //catch (Exception ex)
-            //{
-            //    Debug.LogError(ex.Message);
-            //}
+            // check if the target is a unit
+            else if (unit.AttackTarget.gameObject.layer == 6 || unit.AttackTarget.gameObject.layer == 7)
+            {
+                unit.AttackTarget.GetComponentInParent<UnitController>().TakeDamage(unit.DamagePerHit);
+                Invoke("DealDamage", unit.AttackRate);
+            }
+            // check if the target is a building
+            else if (unit.AttackTarget.gameObject.layer == 8 || unit.AttackTarget.gameObject.layer == 9)
+            {
+                //Debug.Log("Dealing " + unit.DamagePerHit + " damage to " + unit.AttackTarget.name);
+                Invoke("DealDamage", unit.AttackRate);
+            }
 
         }
         else

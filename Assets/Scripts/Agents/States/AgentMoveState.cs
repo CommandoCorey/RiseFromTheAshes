@@ -47,12 +47,7 @@ public class AgentMoveState : MonoBehaviour
 
         // plays random move sound
         AudioSource audio = unit.body.GetComponent<AudioSource>();
-
-        if (audio && unit.moveSounds.Length > 0)
-        {
-            int randomPick = Random.Range(0, unit.moveSounds.Length - 1);
-            audio.PlayOneShot(unit.moveSounds[randomPick], 0.5f);
-        }
+        unit.PlayMoveSound();
     }
 
     private void OnDrawGizmos()
