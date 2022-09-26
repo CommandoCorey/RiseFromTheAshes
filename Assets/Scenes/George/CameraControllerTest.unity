@@ -123,11 +123,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!4 &441917809 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3296082223811242091, guid: 52a9014df1a5b961380edef8c0ad966e, type: 3}
-  m_PrefabInstance: {fileID: 3296082223713257754}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &564357480
 GameObject:
   m_ObjectHideFlags: 0
@@ -371,11 +366,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 618297785}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!20 &683209671 stripped
-Camera:
-  m_CorrespondingSourceObject: {fileID: 3296082223032203997, guid: 52a9014df1a5b961380edef8c0ad966e, type: 3}
-  m_PrefabInstance: {fileID: 3296082223713257754}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -569,7 +559,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!81 &963194226
 AudioListener:
   m_ObjectHideFlags: 0
@@ -647,22 +637,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fda355f326b9604e99f0beb1a705e1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  zoomLevels:
-  - interp: 1
-    WASDMoveSpeed: 0
-    mouseLook: 1
-  - interp: 0.5
-    WASDMoveSpeed: 10
-    mouseLook: 0
-  - interp: 0
-    WASDMoveSpeed: 1
-    mouseLook: 1
-  zoomLevelIndex: 2
-  zoomInterpSpeed: 2
-  zoomedIn: {fileID: 683209671}
-  zoomedOut: {fileID: 1577242657}
-  zoomCurveHandle: {fileID: 441917809}
-  bounds: {fileID: 1201432590}
+  mouseSensitivity: 0
+  maxZoom: 0
+  minZoom: 0
+  friction: 100
 --- !u!114 &963194230
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -776,11 +754,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1021733597}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!65 &1201432590 stripped
-BoxCollider:
-  m_CorrespondingSourceObject: {fileID: 3296082224695533844, guid: 52a9014df1a5b961380edef8c0ad966e, type: 3}
-  m_PrefabInstance: {fileID: 3296082223713257754}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1212072185
 GameObject:
   m_ObjectHideFlags: 0
@@ -930,11 +903,6 @@ Transform:
   m_Father: {fileID: 1326322364}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!20 &1577242657 stripped
-Camera:
-  m_CorrespondingSourceObject: {fileID: 3296082224820672827, guid: 52a9014df1a5b961380edef8c0ad966e, type: 3}
-  m_PrefabInstance: {fileID: 3296082223713257754}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2044154377
 GameObject:
   m_ObjectHideFlags: 0
@@ -1023,6 +991,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 549032014, guid: 52a9014df1a5b961380edef8c0ad966e, type: 3}
+      propertyPath: minZoom
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 549032014, guid: 52a9014df1a5b961380edef8c0ad966e, type: 3}
+      propertyPath: friction
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 549032014, guid: 52a9014df1a5b961380edef8c0ad966e, type: 3}
+      propertyPath: mouseSensitivity
+      value: 0.01
+      objectReference: {fileID: 0}
     - target: {fileID: 3296082223032203998, guid: 52a9014df1a5b961380edef8c0ad966e, type: 3}
       propertyPath: m_LocalRotation.w
       value: -0.9986187
@@ -1097,6 +1077,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3296082224386543019, guid: 52a9014df1a5b961380edef8c0ad966e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3296082224570665077, guid: 52a9014df1a5b961380edef8c0ad966e, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
