@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -86,8 +85,20 @@ public class AttackState : State
     {
         if (unit.AttackTarget != null)
         {
-            unit.PlayParticles(unit.fireEffect);
+            Vector3 hitPosition = new Vector3();
+
+            ParticleSystem fireParticles = unit.fireEffects[Random.Range(0, unit.fireEffects.Length)];
+
+            //unit.PlayParticles(unit.fireEffect);
+            unit.InstantiateParticles(fireParticles, unit.firingPoint.position);
+
             unit.PlayFireSound();
+
+            // generate damage particles at hit position
+            if(Physics.Raycast(unit.firingPoint.position, unit.turret.forward, out RaycastHit hit))
+            {
+                hitPosition = hit.point;
+            }
 
             // check if target is still in attack range
             if (Vector3.Distance(unit.body.position, unit.AttackTarget.position) > unit.AttackRange)
@@ -98,7 +109,7 @@ public class AttackState : State
             // check if the target is a unit
             else if (unit.AttackTarget.gameObject.layer == 6 || unit.AttackTarget.gameObject.layer == 7)
             {
-                unit.AttackTarget.GetComponentInParent<UnitController>().TakeDamage(unit.DamagePerHit);
+                unit.AttackTarget.GetComponentInParent<UnitController>().TakeDamage(unit.DamagePerHit, hitPosition);
                 Invoke("DealDamage", unit.AttackRate);
             }
             // check if the target is a building

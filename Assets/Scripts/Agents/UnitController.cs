@@ -28,12 +28,7 @@ public class UnitController : MonoBehaviour
     public Transform turret;
     public Transform firingPoint;
     public Transform body;
-    public Sprite guiIcon;
-
-    [Header("Particle System")]
-    public ParticleSystem fireEffect;
-    public ParticleSystem hitEffect;
-    public ParticleSystem destroyEffect;
+    public Sprite guiIcon;    
 
     [Header("External Scripts")]
     public ProgressBar healthBar;
@@ -60,8 +55,12 @@ public class UnitController : MonoBehaviour
     [SerializeField] LayerMask enemyBuildingLayer;
     [SerializeField] LayerMask environmentLayer;
 
+    [Header("Particle Systems")]
+    public ParticleSystem[] fireEffects;
+    public ParticleSystem[] hitEffects;
+    public ParticleSystem[] destroyEffects;
+
     [Header("Sound Effects")]
-    public SoundEffect unitSelectSound;
     public SoundEffect[] moveSounds;
     public SoundEffect[] turretSounds;
     public SoundEffect[] fireSounds;
@@ -168,12 +167,12 @@ public class UnitController : MonoBehaviour
                     destroySounds[randomPick].volumeScale);
             }
 
-            if(destroyEffect != null)
-                gameManager.InstantiateParticles(destroyEffect, body.position);
+            if(destroyEffects != null)
+                gameManager.InstantiateParticles(destroyEffects[RandomPick(destroyEffects)], body.position);
         }
 
         healthBar.transform.position = body.position + healthBarOffset;
-    }    
+    }        
 
     /// <summary>
     /// Toggles the visibility of the unit selection highlight and health bar
@@ -189,11 +188,19 @@ public class UnitController : MonoBehaviour
     /// Removes health from the unit by a specified amoount
     /// </summary>
     /// <param name="amount">the amount of HP to remove</param>
-    public void TakeDamage(float amount)
+    public void TakeDamage(float amount, Vector3 hitPosition = new Vector3())
     {
         health -= amount;
 
-        PlayParticles(hitEffect);
+        ParticleSystem hitParticles = hitEffects[RandomPick(hitEffects)];
+
+        /*
+        if(hitPosition != Vector3.zero)
+            hitEffect.transform.position = hitPosition;
+
+        PlayParticles(hitEffect);*/
+
+        InstantiateParticles(hitParticles, hitPosition);
 
         if (hitSounds.Length > 0)
         {
@@ -223,10 +230,26 @@ public class UnitController : MonoBehaviour
         if (particles == null)
             return;
 
+        particles.gameObject.SetActive(true);
+
         var childParticles = particles.gameObject.GetComponentsInChildren<ParticleSystem>();
 
         particles.Play();
 
+        foreach (ParticleSystem child in childParticles)
+            child.Play();
+    }
+
+    public void InstantiateParticles(ParticleSystem particles, Vector3 position)
+    {
+        if (particles == null)
+            return;
+
+        Instantiate(particles, position, Quaternion.identity, transform);
+
+        var childParticles = particles.gameObject.GetComponentsInChildren<ParticleSystem>();
+
+        particles.Play();
         foreach (ParticleSystem child in childParticles)
             child.Play();
     }
@@ -387,6 +410,12 @@ public class UnitController : MonoBehaviour
         }
     }
 
+    #region private functions
+    private int RandomPick(Object[] array)
+    {
+        return Random.Range(0, array.Length - 1);
+    }
+
     // Removes unit from lists in unit manager and GUI once it is destroyed
     private void OnDestroy()
     {
@@ -447,6 +476,6 @@ public class UnitController : MonoBehaviour
 
     }
 
-
+    #endregion
 
 }
