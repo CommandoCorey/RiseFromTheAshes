@@ -64,4 +64,9 @@ public static class Utils
         // Create Rect
         return Rect.MinMaxRect(topLeft.x, topLeft.y, bottomRight.x, bottomRight.y);
     }
+
+    public static float Map(float v, float min1, float max1, float min2, float max2)
+	{
+        return min2 + (v - min1) * (max2 - min2) / (max1 - min1);
+    }
 }
