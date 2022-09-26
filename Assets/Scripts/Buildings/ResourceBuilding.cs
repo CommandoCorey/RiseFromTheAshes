@@ -9,6 +9,7 @@ public class ResourceBuilding : MonoBehaviour
     public ResourceType resourceToAdd;
     public int quantityToAdd = 10;
     public float timePerIncerement = 1;
+    public bool giveToAIPlayer = false;
 
     [Header("Floating Text Label")]
     public GameObject floatingLabel;
@@ -31,7 +32,11 @@ public class ResourceBuilding : MonoBehaviour
 
     private void IncrementResource()
     {
-        resources.AddResource(resourceToAdd, quantityToAdd);
+        if (giveToAIPlayer)
+            resources.AddResourceToAI(resourceToAdd, quantityToAdd);        
+        else
+            resources.AddResource(resourceToAdd, quantityToAdd);
+
         floatingLabel.SetActive(true);
         floatingLabel.GetComponent<FloatingResourceLabel>().Begin(quantityToAdd);
         Invoke("IncrementResource", timePerIncerement);

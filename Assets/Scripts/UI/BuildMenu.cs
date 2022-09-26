@@ -21,6 +21,16 @@ public class BuildMenu : MonoBehaviour
 	[SerializeField] float spacing;
 	[HideInInspector] public Ghost ghostBuilding;
 
+	static public BuildMenu Instance { get; private set; }
+
+	void Awake() {
+		if (Instance != null && Instance != this) {
+			Destroy(this);
+		} else {
+			Instance = this;
+		}
+	}
+
 	private void Start()
 	{
 		float cursorY = 0.0f;

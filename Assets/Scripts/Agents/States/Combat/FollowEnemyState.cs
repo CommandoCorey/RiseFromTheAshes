@@ -40,10 +40,9 @@ public class FollowEnemyState : State
 
         if (unit.AttackTarget != null)
         {
-
             directionToTarget = (unit.AttackTarget.position - unit.body.position).normalized;
 
-            agent.SetDestination(unit.AttackTarget.position);
+            agent.SetDestination(unit.AttackTarget.position - directionToTarget * unit.AttackRange);
 
             // check that the line of sight is vacant and we are in attack range
             if (!ObstacleInWay(directionToTarget) &&

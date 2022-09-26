@@ -19,6 +19,9 @@ public class UnitController : MonoBehaviour
 {
     [SerializeField] string unitName;
 
+    [SerializeField] int steelCost = 10;
+    [SerializeField] int timeToTrain = 1;
+
     #region variable declartion
     [Header("Game Objects and transforms")]
     public GameObject selectionHighlight;
@@ -112,6 +115,8 @@ public class UnitController : MonoBehaviour
 
     // unit stats
     public string Name { get => unitName; }
+    public int Cost { get => steelCost; }
+    public float TimeToTrain { get => timeToTrain; }
     public float MaxHealth { get => maxHealth; }
     public float CurrentHealth {  get=> health; }
     //public float Heal { set=> health = Mathf.Clamp(health + value, 0.0f, maxHealth); }
@@ -132,9 +137,11 @@ public class UnitController : MonoBehaviour
     void Start()
     {
     	health = maxHealth;
-        healthBarOffset = healthBar.transform.parent.localPosition;
 
-        audio = GetComponent<AudioSource>();
+        if(healthBar)
+            healthBarOffset = healthBar.transform.parent.localPosition;
+
+        audio = body.GetComponent<AudioSource>();
         gameManager = GameObject.FindObjectOfType<GameManager>();
 
         ChangeState(UnitState.Idle);
@@ -142,7 +149,10 @@ public class UnitController : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {      
+    {
+        if (!healthBar)
+            return;
+
         healthBar.progress = health / maxHealth;
 
         if (health <= 0)
@@ -221,7 +231,8 @@ public class UnitController : MonoBehaviour
     /// </summary>
     public void PlayFireSound()
     {
-        audio.PlayOneShot(fireSounds[0], 0.1f);
+        if(fireSounds.Length > 0)
+            audio.PlayOneShot(fireSounds[0], 0.1f);
     }
 
     /// <summary>
@@ -293,7 +304,7 @@ public class UnitController : MonoBehaviour
                     if(agentMoveState == null)
                         agentMoveState = gameObject.AddComponent<AgentMoveState>();
                     else                      
-                        GetComponentInChildren<NavMeshAgent>().isStopped = true;
+                        body.GetComponent<NavMeshAgent>().isStopped = true;
 
                     agentMoveState.MoveTo(target);
                 }
