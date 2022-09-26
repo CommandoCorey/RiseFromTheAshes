@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
     public CursorSprite moveCursor;
     public CursorSprite attackCursor;
 
-    private AudioSource audio;
+    private new AudioSource audio;
 
     // Start is called before the first frame update
     void Start()
@@ -65,7 +65,6 @@ public class GameManager : MonoBehaviour
 
     public void InstantiateParticles(ParticleSystem prefab, Vector3 position)
     {
-
         var particles = Instantiate(prefab.gameObject, position, Quaternion.identity);
     }
 
@@ -90,8 +89,10 @@ public struct CursorSprite
     public Vector2 hotspot;
 }
 
-/*
-public enum CursorMode
+[System.Serializable]
+public class SoundEffect
 {
-    Normal, Move, Attack
-}*/
+    public AudioClip clip;
+    [Range(0f, 1f)]
+    public float volumeScale = 1;
+}

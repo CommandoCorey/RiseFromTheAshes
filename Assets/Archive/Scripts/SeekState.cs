@@ -8,8 +8,7 @@ public class SeekState : State
 {
     // external scripts
     UnitManager unitManager;
-    UnitController unit;
-    AgentMovement agent;
+    new UnitController unit;    
     Steering steer;
     BehaviourManager behaviours;
 

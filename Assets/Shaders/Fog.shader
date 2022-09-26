@@ -85,7 +85,7 @@ Shader "Hidden/Fog"
 				float3 rayOrigin = _WorldSpaceCameraPos;
 				float3 rayDirection = normalize(i.viewVector);
 
-				float dist = rayVSPlane(float3(0.0, 0.0, 0.0), float3(0.0, 1.0, 0.0), rayOrigin, rayDirection);
+				float dist = rayVSPlane(float3(0.0, _Height, 0.0), float3(0.0, 1.0, 0.0), rayOrigin, rayDirection);
 
 				float4 col = tex2D(_MainTex, i.uv);
 

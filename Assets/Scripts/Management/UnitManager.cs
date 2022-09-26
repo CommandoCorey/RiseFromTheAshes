@@ -38,8 +38,7 @@ public class UnitManager : MonoBehaviour
 
     private List<Vector3> searchedPositions = new List<Vector3>();   
     private Vector3 point;
-
-    AudioSource audio;
+    new AudioSource audio;
 
     // external scripts
     private GameManager gameManager;

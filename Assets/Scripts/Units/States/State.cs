@@ -10,6 +10,7 @@ public abstract class State : MonoBehaviour
     protected Vector3 directionToTarget;
 
     protected UnitController unit;
+    protected AgentMovement agent;
 
     public Vector3 Target { get => target; set => target = value; }
     public Vector3 FormationTarget { set => formationTarget = value; }
@@ -17,6 +18,7 @@ public abstract class State : MonoBehaviour
     protected virtual void Awake()
     {
         unit = GetComponent<UnitController>();
+        agent = GetComponent<AgentMovement>();
     }
 
     // functions
