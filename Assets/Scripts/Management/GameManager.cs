@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
     public CursorSprite moveCursor;
     public CursorSprite attackCursor;
 
-    private AudioSource audio;
+    private new AudioSource audio;
 
     // Start is called before the first frame update
     void Start()

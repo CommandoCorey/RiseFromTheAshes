@@ -58,12 +58,14 @@ public class AttackState : State
         unit.turret.localRotation = Quaternion.Euler(initialRotation.x, unit.turret.localRotation.eulerAngles.y, initialRotation.z);
 
         //Debug.Log("Enemy target detected");
-        RaycastHit hit;
 
         // check if turret is pointing at target
         if (Quaternion.Angle(unit.turret.rotation, lookRotation) < 2)        
         {
             Debug.DrawLine(unit.turret.position, unit.AttackTarget.position, Color.yellow);
+
+            // change to combat music
+
 
             Invoke("DealDamage", unit.AttackRate);
             pointingAtTarget = true;

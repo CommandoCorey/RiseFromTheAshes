@@ -95,7 +95,7 @@ public class UnitController : MonoBehaviour
 
     // other variables
     private Vector3 healthBarOffset;
-    private AudioSource audio;
+    private new AudioSource audio;
     private GameManager gameManager;
     #endregion
 

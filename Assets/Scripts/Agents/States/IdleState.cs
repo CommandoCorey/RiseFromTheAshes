@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class IdleState : State
-{
-    AgentMovement agent;
-    
+{    
     protected override void Awake()
     {
         base.Awake();
