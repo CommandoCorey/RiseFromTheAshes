@@ -1,10 +1,16 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections.Generic;
 
 public class CameraController : MonoBehaviour {
-	[SerializeField] float mouseSensitivity = 0.01f;
+	[SerializeField] float zoomedInMouseSensitivity = 0.001f;
+	[SerializeField] float zoomedOutMouseSensitivity = 0.01f;
+	[SerializeField] float zoomedInWASDSensitivity = 15.0f;
+	[SerializeField] float zoomedOutWASDSensitivity = 15.0f;
 	[SerializeField] float maxZoom = 15.0f;
 	[SerializeField] float minZoom = 1.0f;
+	[SerializeField] float zoomInterpSpeed = 10.0f;
+
+	float zoom;
 
 	Vector2 mousePos;
 	Vector2 oldMousePos;
@@ -14,25 +20,60 @@ public class CameraController : MonoBehaviour {
 	Queue<Vector2> velocities = new Queue<Vector2>();
 	[SerializeField] float friction = 100.0f;
 
+	[Header("Edge scrolling.")]
+	[SerializeField] [Tooltip("The size of the areas that are to trigger scrolling, in pixels.")] float edgeSize = 30.0f;
+	[SerializeField] float zoomedInEdgeScrollSpeed = 15.0f;
+	[SerializeField] float zoomedOutEdgeScrollSpeed = 30.0f;
+	[SerializeField] bool enabledEdgeScrolling = true;
+
 	bool firstMove;
 	bool moving;
+
+	float startPy;
+	float targetPy;
+	float zoomTime;
 
 	private void Start()
 	{
 		firstMove = true;
+		zoom = 0.0f;
+		zoomTime = 0.0f;
+		startPy = minZoom;
+		targetPy = maxZoom;
 	}
 
 	private void Update()
 	{
+
+		Vector2 mp = Input.mousePosition;
+
 		if (Input.GetMouseButtonDown(2))
 		{
 			firstMove = true;
 			moving = true;
+			Cursor.visible = false;
 		}
 
-		transform.position += new Vector3(0.0f, -Input.mouseScrollDelta.y, 0.0f);
-		transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, minZoom, maxZoom), transform.position.z);
-		float zoom = transform.position.y;
+		zoom += Input.mouseScrollDelta.y;
+		zoom = Mathf.Clamp(zoom, minZoom, maxZoom);
+
+		float zoomPerc = Utils.Map(zoom, minZoom, maxZoom, 0.0f, 1.0f);
+
+		if (Input.mouseScrollDelta.y != 0.0f) {
+			zoomTime = 0.0f;
+			startPy = transform.position.y;
+			targetPy -= Input.mouseScrollDelta.y;
+			targetPy = Mathf.Clamp(targetPy, minZoom, maxZoom);
+		}
+
+		if (zoomTime < 1.0)
+		{
+			zoomTime += Time.deltaTime * zoomInterpSpeed;
+		}
+
+		zoom = Mathf.Lerp(startPy, targetPy, zoomTime);
+
+		transform.position = new Vector3(transform.position.x, zoom, transform.position.z);
 
 		if (moving)
 		{
@@ -46,8 +87,10 @@ public class CameraController : MonoBehaviour {
 
 			mouseDelta = oldMousePos - mousePos;
 
-			transform.transform.position += new Vector3(mouseDelta.x, 0.0f, mouseDelta.y) * mouseSensitivity * zoom;
+			Vector3 delta = new Vector3(mouseDelta.x, 0.0f, mouseDelta.y) * Mathf.Lerp(zoomedInMouseSensitivity, zoomedOutMouseSensitivity, zoomPerc);
 
+			transform.transform.position += delta;
+			
 			oldMousePos = mousePos;
 
 			velocities.Enqueue(mouseDelta);
@@ -58,7 +101,6 @@ public class CameraController : MonoBehaviour {
 
 			if (Input.GetMouseButtonUp(2))
 			{
-				velocity = mouseDelta;
 				moving = false;
 
 				velocity = new Vector2(0.0f, 0.0f);
@@ -69,9 +111,10 @@ public class CameraController : MonoBehaviour {
 				}
 
 				velocity /= (float)velocities.Count;
+
+				Cursor.visible = true;
 			}
-		}
-		else {
+		} else {
 			transform.transform.position += new Vector3(velocity.x, 0.0f, velocity.y) * Time.deltaTime;
 
 			if (velocity.x > 0.0001f && velocity.y > 0.0001 || velocity.x < -0.0001 || velocity.y < -0.0001)
@@ -81,6 +124,36 @@ public class CameraController : MonoBehaviour {
 			{
 				velocity = new Vector2(0.0f, 0.0f);
 			}
+		}
+
+		float s = Mathf.Lerp(zoomedInWASDSensitivity, zoomedOutWASDSensitivity, zoomPerc);
+		Vector2 WASD = new Vector2();
+		WASD.x = Input.GetAxis("Horizontal") * s;
+		WASD.y = Input.GetAxis("Vertical") * s;
+
+		if (WASD.x != 0.0f) { velocity.x = WASD.x; }
+		if (WASD.y != 0.0f) { velocity.y = WASD.y; }
+
+		/* Check the mouse pointer against a 2D box that's the same size as the screen minus
+		 * the borderSize for the edge scrolling. */
+		Vector2 checkBoxMin = new Vector2(edgeSize, edgeSize);
+		Vector2 checkBoxMax = new Vector2(Screen.width - edgeSize, Screen.height - edgeSize);
+
+#if UNITY_EDITOR
+		/* Stop the camera from zooming around if someone is trying to do things in the editor,
+		 * that is, the mouse is outside the game view. */
+		if (mp.x < 0.0f || mp.y < 0.0f || mp.x > Screen.width || mp.y > Screen.height)
+		{
+			return;
+		}
+#endif
+
+		if (enabledEdgeScrolling && !moving && mp.x < checkBoxMin.x || mp.y < checkBoxMin.y || mp.x > checkBoxMax.x || mp.y > checkBoxMax.y)
+		{
+			Vector2 screenCentre = new Vector2(Screen.width * 0.5f, Screen.height * 0.5f);
+			Vector2 dir = (mp - screenCentre).normalized;
+
+			velocity = dir * Mathf.Lerp(zoomedInEdgeScrollSpeed, zoomedOutEdgeScrollSpeed, zoomPerc);
 		}
 	}
 }
