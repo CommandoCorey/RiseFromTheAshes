@@ -59,9 +59,9 @@ public class IdleState : State
                 }
             }
         }
-        else if(unit.turret.rotation != Quaternion.identity)
+        else if(unit.turret.localRotation != unit.transform.rotation )
         {
-            unit.turret.rotation = Quaternion.RotateTowards(unit.turret.rotation, Quaternion.identity, 
+            unit.turret.rotation = Quaternion.RotateTowards(unit.turret.rotation, unit.transform.rotation, 
                 Time.deltaTime * unit.TurretRotationSpeed);
         }
 
