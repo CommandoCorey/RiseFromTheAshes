@@ -5,10 +5,13 @@ public class CameraController : MonoBehaviour {
 	[SerializeField] float zoomedInMouseSensitivity = 0.001f;
 	[SerializeField] float zoomedOutMouseSensitivity = 0.01f;
 	[SerializeField] float zoomedInWASDSensitivity = 15.0f;
-	[SerializeField] float zoomedOutWASDSensitivity = 15.0f;
+	[SerializeField] float zoomedOutWASDSensitivity = 30.0f;
+	[SerializeField] float zoomedInWASDSensitivitySprint = 20.0f;
+	[SerializeField] float zoomedOutWASDSensitivitySprint = 40.0f;
 	[SerializeField] float maxZoom = 15.0f;
 	[SerializeField] float minZoom = 1.0f;
 	[SerializeField] float zoomInterpSpeed = 10.0f;
+	[SerializeField] BoxCollider bounds;
 
 	float zoom;
 
@@ -24,7 +27,7 @@ public class CameraController : MonoBehaviour {
 	[SerializeField] [Tooltip("The size of the areas that are to trigger scrolling, in pixels.")] float edgeSize = 30.0f;
 	[SerializeField] float zoomedInEdgeScrollSpeed = 15.0f;
 	[SerializeField] float zoomedOutEdgeScrollSpeed = 30.0f;
-	[SerializeField] bool enabledEdgeScrolling = true;
+	[SerializeField] bool enableEdgeScrolling = true;
 
 	bool firstMove;
 	bool moving;
@@ -126,7 +129,15 @@ public class CameraController : MonoBehaviour {
 			}
 		}
 
-		float s = Mathf.Lerp(zoomedInWASDSensitivity, zoomedOutWASDSensitivity, zoomPerc);
+		transform.position = new Vector3(
+				Mathf.Clamp(transform.position.x, bounds.bounds.min.x, bounds.bounds.max.x),
+				transform.position.y,
+				Mathf.Clamp(transform.position.z, bounds.bounds.min.z, bounds.bounds.max.z)
+			);
+
+		float s1 = Input.GetKey(KeyCode.LeftShift) ? zoomedInWASDSensitivitySprint : zoomedInWASDSensitivity;
+		float s2 = Input.GetKey(KeyCode.LeftShift) ? zoomedOutWASDSensitivitySprint : zoomedOutWASDSensitivity;
+		float s = Mathf.Lerp(s1, s2, zoomPerc);
 		Vector2 WASD = new Vector2();
 		WASD.x = Input.GetAxis("Horizontal") * s;
 		WASD.y = Input.GetAxis("Vertical") * s;
@@ -148,7 +159,7 @@ public class CameraController : MonoBehaviour {
 		}
 #endif
 
-		if (enabledEdgeScrolling && !moving && mp.x < checkBoxMin.x || mp.y < checkBoxMin.y || mp.x > checkBoxMax.x || mp.y > checkBoxMax.y)
+		if (enableEdgeScrolling && !moving && mp.x < checkBoxMin.x || mp.y < checkBoxMin.y || mp.x > checkBoxMax.x || mp.y > checkBoxMax.y)
 		{
 			Vector2 screenCentre = new Vector2(Screen.width * 0.5f, Screen.height * 0.5f);
 			Vector2 dir = (mp - screenCentre).normalized;
