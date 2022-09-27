@@ -5,7 +5,9 @@ public class CameraController : MonoBehaviour {
 	[SerializeField] float zoomedInMouseSensitivity = 0.001f;
 	[SerializeField] float zoomedOutMouseSensitivity = 0.01f;
 	[SerializeField] float zoomedInWASDSensitivity = 15.0f;
-	[SerializeField] float zoomedOutWASDSensitivity = 15.0f;
+	[SerializeField] float zoomedOutWASDSensitivity = 30.0f;
+	[SerializeField] float zoomedInWASDSensitivitySprint = 20.0f;
+	[SerializeField] float zoomedOutWASDSensitivitySprint = 40.0f;
 	[SerializeField] float maxZoom = 15.0f;
 	[SerializeField] float minZoom = 1.0f;
 	[SerializeField] float zoomInterpSpeed = 10.0f;
@@ -133,7 +135,9 @@ public class CameraController : MonoBehaviour {
 				Mathf.Clamp(transform.position.z, bounds.bounds.min.z, bounds.bounds.max.z)
 			);
 
-		float s = Mathf.Lerp(zoomedInWASDSensitivity, zoomedOutWASDSensitivity, zoomPerc);
+		float s1 = Input.GetKey(KeyCode.LeftShift) ? zoomedInWASDSensitivitySprint : zoomedInWASDSensitivity;
+		float s2 = Input.GetKey(KeyCode.LeftShift) ? zoomedOutWASDSensitivitySprint : zoomedOutWASDSensitivity;
+		float s = Mathf.Lerp(s1, s2, zoomPerc);
 		Vector2 WASD = new Vector2();
 		WASD.x = Input.GetAxis("Horizontal") * s;
 		WASD.y = Input.GetAxis("Vertical") * s;
