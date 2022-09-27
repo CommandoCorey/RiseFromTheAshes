@@ -14,20 +14,32 @@ public class ResourceBuilding : MonoBehaviour
     [Header("Floating Text Label")]
     public GameObject floatingLabel;
 
-    ResourceManager resources;
+    private ResourceManager resources;
+    private GameManager gameManager;
+
+    private bool wasPaused = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        resources = FindObjectOfType<ResourceManager>();        
+        resources = FindObjectOfType<ResourceManager>();
+        gameManager = FindObjectOfType<GameManager>();
 
-        Invoke("IncrementResource", timePerIncerement);
+        if(gameManager.State == GameState.Running)
+            Invoke("IncrementResource", timePerIncerement);
     }
 
     // Update is called once per frame
     void Update()
-    {
-        
+    {        
+        if(!wasPaused && gameManager.State == GameState.Paused)
+            wasPaused = true;
+
+        if(wasPaused && gameManager.State == GameState.Running)
+        {
+            Invoke("IncrementResource", timePerIncerement);
+            wasPaused = false;
+        }
     }
 
     private void IncrementResource()
@@ -39,7 +51,9 @@ public class ResourceBuilding : MonoBehaviour
 
         floatingLabel.SetActive(true);
         floatingLabel.GetComponent<FloatingResourceLabel>().Begin(quantityToAdd);
-        Invoke("IncrementResource", timePerIncerement);
+
+        if (gameManager.State == GameState.Running)
+            Invoke("IncrementResource", timePerIncerement);
     }
 
     private void HideLabel()

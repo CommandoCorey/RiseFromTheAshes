@@ -22,6 +22,7 @@ public class FloatingResourceLabel : MonoBehaviour
     private bool moving = false;
     private Color transparentWhite;
     private Color transparentGreen;
+    private GameManager gameManager;
 
     // Start is called before the first frame update
     void Start()
@@ -35,17 +36,19 @@ public class FloatingResourceLabel : MonoBehaviour
         icon.color = transparentWhite;
         plusSign.color = transparentGreen;
         amountLabel.color = transparentGreen;
+
+        gameManager = FindObjectOfType<GameManager>();
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if(gameObject.activeInHierarchy && moving)
         {            
-            rect.anchoredPosition += new Vector2(0, raiseSpeed) * Time.deltaTime;
-            icon.color += new Color(0, 0, 0, fadeInSpeed) * Time.deltaTime;
-            plusSign.color += new Color(0, 0, 0, fadeInSpeed) * Time.deltaTime;
-            amountLabel.color += new Color(0, 0, 0, fadeInSpeed) * Time.deltaTime;
+            rect.anchoredPosition += new Vector2(0, raiseSpeed) * Time.fixedDeltaTime;
+            icon.color += new Color(0, 0, 0, fadeInSpeed) * Time.fixedDeltaTime;
+            plusSign.color += new Color(0, 0, 0, fadeInSpeed) * Time.fixedDeltaTime;
+            amountLabel.color += new Color(0, 0, 0, fadeInSpeed) * Time.fixedDeltaTime;
         }
 
     }

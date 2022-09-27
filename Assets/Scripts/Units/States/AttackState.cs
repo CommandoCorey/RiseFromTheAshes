@@ -118,6 +118,7 @@ public class AttackState : State
             else if (unit.AttackTarget.gameObject.layer == 8 || unit.AttackTarget.gameObject.layer == 9)
             {
                 //Debug.Log("Dealing " + unit.DamagePerHit + " damage to " + unit.AttackTarget.name);
+                unit.AttackTarget.GetComponent<Building>().TakeDamage(hitPosition, unit.DamagePerHit);
                 Invoke("DealDamage", unit.AttackRate);
             }
 
