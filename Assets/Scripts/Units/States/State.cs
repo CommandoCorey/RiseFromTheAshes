@@ -21,6 +21,11 @@ public abstract class State : MonoBehaviour
         agent = GetComponent<AgentMovement>();
     }
 
+    protected virtual void Update()
+    {
+
+    }
+
     // functions
     protected List<Collider> GetEnemiesInRange()
     {

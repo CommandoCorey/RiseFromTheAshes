@@ -13,6 +13,10 @@ public class AiManager : MonoBehaviour
 
     public EnemyWave[] enemyWaves;
 
+    [Header("Buildings")]
+    [SerializeField] Ghost[] placeholders;
+    [SerializeField] List<BuildItem> buildItems;
+
     private ResourceManager resources;
     [SerializeField]
     private int steel = 0;
@@ -32,6 +36,8 @@ public class AiManager : MonoBehaviour
     private List<Transform> unitGroup;
     private List<Vector3> formationPositions;
 
+    private GameManager gameManager;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -40,11 +46,16 @@ public class AiManager : MonoBehaviour
 
         unit = trainOdrer[unitNum];
         unitGroup = new List<Transform>();
+
+        gameManager = GetComponent<GameManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (gameManager.State != GameState.Running)
+            return;
+
         if (waveFinished)
             return;
 
@@ -156,6 +167,13 @@ public class AiManager : MonoBehaviour
 
         trainOdrer = enemyWaves[waveNumber].units;
         unit = trainOdrer[unitNum];
+    }
+
+    private void ConstructBuilding(Ghost ghostBuilding, Building buildItem)
+    {
+        Building building = Instantiate(buildItem, ghostBuilding.transform.position, ghostBuilding.transform.rotation);
+        ghostBuilding.gameObject.SetActive(false);
+        building.Build();
     }
 
     private void OnDrawGizmos()

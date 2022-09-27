@@ -149,8 +149,8 @@ public class UnitController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!healthBar)
-            return;
+        //if (gameManager.State != GameState.Running || !healthBar)
+            //return;
 
         healthBar.progress = health / maxHealth;
 

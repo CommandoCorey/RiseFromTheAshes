@@ -13,7 +13,8 @@ public class AgentMoveState : MonoBehaviour
     private Vector3 targetPos;
 
     private UnitController unit;
-    private UnitState state;    
+
+    private GameManager gameManager;
 
     // Start is called before the first frame update
     void Awake()
@@ -21,11 +22,17 @@ public class AgentMoveState : MonoBehaviour
         unit = GetComponent<UnitController>();
         agent = unit.body.GetComponent<NavMeshAgent>();
         targetPos = transform.position;
+
+        gameManager = FindObjectOfType<GameManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        agent.enabled = (gameManager.State == GameState.Running);
+
+        if (!agent.enabled)
+            return;
 
         if (unit.State == UnitState.Moving)
         {

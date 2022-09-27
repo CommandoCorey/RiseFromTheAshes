@@ -4,6 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Timeline;
 
+public enum GameState
+{
+    Running, Paused, Win, Lose
+}
+
 public class GameManager : MonoBehaviour
 {
     [Range(0, 10)]
@@ -12,13 +17,31 @@ public class GameManager : MonoBehaviour
     public bool showMinimap = false;
     public Transform marker;
 
+    [Header("Headquater Buildings")]
+    public Building playerHQ;
+    public Building enemyHQ;
+
+    [Header("Dialogs")]
+    public GameObject pauseDialog;
+    public GameObject winDialog;
+    public GameObject loseDialog;
+
     [Header("Cursors")]
     public bool enableCursorChanges;
     public CursorSprite defaultCursor;
     public CursorSprite moveCursor;
     public CursorSprite attackCursor;
 
+    [Header("Keyboard Shortcuts")]
+    public KeyCode pauseKey;
+
+    private GameState state;
     private new AudioSource audio;
+
+    private bool handleEndConidition = false;
+
+    // properties
+    public GameState State { get => state;}
 
     // Start is called before the first frame update
     void Start()
@@ -35,12 +58,64 @@ public class GameManager : MonoBehaviour
 
         if(enableCursorChanges)
             Cursor.SetCursor(defaultCursor.image, defaultCursor.hotspot, CursorMode.ForceSoftware);
+
+        if (playerHQ != null && enemyHQ != null)
+            handleEndConidition = true;
+
+        state = GameState.Running;
     }
 
     // Update is called once per frame
     void Update()
     {
-        Time.timeScale = timeScale;
+        if(state == GameState.Running)
+            Time.timeScale = timeScale;
+
+        if(state == GameState.Running)
+        {
+            if (handleEndConidition && (playerHQ == null || playerHQ.HP <= 0))
+                ChangeGameState(GameState.Lose);
+
+            else if (handleEndConidition && (enemyHQ == null || enemyHQ.HP <= 0))
+                ChangeGameState(GameState.Win);
+
+            else if (Input.GetKeyUp(pauseKey))
+                ChangeGameState(GameState.Paused);
+        }
+        else if (state == GameState.Paused && Input.GetKeyUp(pauseKey))
+        {
+            ChangeGameState(GameState.Running);
+        }
+    }
+
+    #region public functions
+    public void ChangeGameState(GameState newState)
+    {
+        state = newState;
+
+        if (state != GameState.Running)
+            Time.timeScale = 0;
+        // end if
+
+        switch (state)
+        {
+            case GameState.Running:
+                TogglePause(false);
+                Time.timeScale = 1;
+                break;
+
+            case GameState.Paused:
+                TogglePause(true);                
+                break;
+
+            case GameState.Win:
+                winDialog.SetActive(true);
+                break;
+
+            case GameState.Lose: 
+                loseDialog.SetActive(false);
+            break;
+        }
     }
 
     /// <summary>
@@ -73,13 +148,26 @@ public class GameManager : MonoBehaviour
         if(enableCursorChanges)
             Cursor.SetCursor(sprite.image, sprite.hotspot, CursorMode.ForceSoftware);
     }
-
     public void ResetCursor()
     {
         if (enableCursorChanges)
             Cursor.SetCursor(defaultCursor.image, defaultCursor.hotspot, CursorMode.ForceSoftware);
     }
+    #endregion
 
+    #region private functions
+    private void TogglePause(bool paused)
+    {
+        // disable all other scripts on the game manageer
+        GetComponent<UnitManager>().enabled = !paused;
+        GetComponent<SelectionManager>().enabled = !paused;
+        GetComponent<ResourceManager>().enabled = !paused;
+        GetComponent<BuildingManager>().enabled = !paused;
+        GetComponent<AiManager>().enabled = !paused;
+
+        pauseDialog.SetActive(paused);
+    }
+    #endregion
 }
 
 [System.Serializable]
