@@ -149,10 +149,11 @@ public class UnitController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (gameManager.State != GameState.Running || !healthBar)
-            //return;
-
-        healthBar.progress = health / maxHealth;
+        if (healthBar)
+        {
+            healthBar.progress = health / maxHealth;
+            healthBar.transform.position = body.position + healthBarOffset;
+        }
 
         if (health <= 0)
         {
@@ -170,8 +171,7 @@ public class UnitController : MonoBehaviour
             if(destroyEffects != null)
                 gameManager.InstantiateParticles(destroyEffects[RandomPick(destroyEffects)], body.position);
         }
-
-        healthBar.transform.position = body.position + healthBarOffset;
+        
     }        
 
     /// <summary>

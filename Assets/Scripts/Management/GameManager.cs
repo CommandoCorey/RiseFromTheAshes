@@ -113,7 +113,7 @@ public class GameManager : MonoBehaviour
                 break;
 
             case GameState.Lose: 
-                loseDialog.SetActive(false);
+                loseDialog.SetActive(true);
             break;
         }
     }
