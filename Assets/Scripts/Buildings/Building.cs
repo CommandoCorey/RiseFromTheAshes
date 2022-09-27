@@ -5,11 +5,12 @@ public class Building : MonoBehaviour
 {
 	[SerializeField] float timeToBuild = 1.0f;
 	public float maxHP = 100.0f;
+	[SerializeField] bool startAtMaxHP = false;
 
 	bool isBuilding;
 
 	float buildTimer;
-	float HP;
+	public float HP;
 
     [SerializeField] AudioClip[] hitSounds;
 	[SerializeField] ParticleSystem[] hitVFX;
@@ -88,6 +89,12 @@ public class Building : MonoBehaviour
 			myMeshRenderer.enabled = enable;
 		}
 	}
+
+	void Start()
+    {
+		if (startAtMaxHP)
+			HP = maxHP;
+    }
 
 	void Update()
 	{
