@@ -31,6 +31,10 @@ public class UnitManager : MonoBehaviour
     [Header("Gizmos")]
     public bool showFormationPosition = false;
 
+    public float unitInCombatTimeout = 30.0f;
+
+    public static UnitManager Instance { get; private set; }
+
     List<List<GameObject>> squads;
 
     List<Vector3> formationPositions;
@@ -40,9 +44,25 @@ public class UnitManager : MonoBehaviour
     private Vector3 point;
     new AudioSource audio;
 
+    bool anythingInCombat;
+
     // external scripts
     private GameManager gameManager;
+
+    public LinkedList<UnitController> UCRefs = new LinkedList<UnitController>();
     #endregion
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            Instance = this;
+        }
+    }
 
     #region start and update
     // Start is called before the first frame update
@@ -55,6 +75,8 @@ public class UnitManager : MonoBehaviour
 
         squads = new List<List<GameObject>>();
         formationPositions = new List<Vector3>();
+
+        anythingInCombat = false;
     }
 
     // Update is called once per frame
@@ -80,9 +102,27 @@ public class UnitManager : MonoBehaviour
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo) && selection.Units.Count > 0)
                 MoveUnits(hitInfo);
         }
-
+        DoTheMusic();
     }
     #endregion
+
+    void DoTheMusic() {
+
+        /* Bit slow. I guess. I am tired. */
+        if (MusicManager.Instance)
+        {
+            foreach (var r in UCRefs)
+            {
+                if (r.IsInCombat)
+                {
+                    MusicManager.Instance.ChangeState(MusicManager.State.Combat);
+                    return;
+                }
+            }
+
+            MusicManager.Instance.ChangeState(MusicManager.State.Normal);
+        }
+	}
 
     #region public functions
 

@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 2434893712283191811}
   - component: {fileID: 3005125415144582022}
   - component: {fileID: 5620373894487887830}
+  - component: {fileID: 9010775530588872922}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: GameManager
@@ -145,6 +146,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 332fe9667dfa172439aa9558eb988fb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  timeScale: 1
   minimap: {fileID: 0}
   showMinimap: 0
   marker: {fileID: 3153306220058434080}
@@ -181,6 +183,7 @@ MonoBehaviour:
   spaceBetweenUnits: 3
   maxUnitsPerRow: 5
   showFormationPosition: 0
+  unitInCombatTimeout: 30
 --- !u!114 &2434893712283191811
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -215,6 +218,7 @@ MonoBehaviour:
     icon: {fileID: 0}
     startingAmount: 0
     currentAmount: 0
+  aiResources: []
   steelAmount: {fileID: 0}
 --- !u!114 &5620373894487887830
 MonoBehaviour:
@@ -235,6 +239,21 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8388608
   mainCamera: {fileID: 0}
+--- !u!114 &9010775530588872922
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2434893712283191808}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50053e9c560e7f44aaa6fe5486530943, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  normalSTs: []
+  combatSTs: []
+  fadeSpeed: 0.5
 --- !u!1 &3153306220058434084
 GameObject:
   m_ObjectHideFlags: 0
