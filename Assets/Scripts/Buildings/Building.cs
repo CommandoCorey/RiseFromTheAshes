@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 public class Building : MonoBehaviour
 {
+	public int steelCost;
 	[SerializeField] float timeToBuild = 1.0f;
 	public float maxHP = 100.0f;
 	[SerializeField] bool startAtMaxHP = false;

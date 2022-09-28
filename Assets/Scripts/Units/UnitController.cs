@@ -305,27 +305,27 @@ public class UnitController : MonoBehaviour
                 // prevents destruction during redirect
                 if (newState != UnitState.Moving)
                 {
-                    if (tag == "PlayerUnit")
-                        Destroy(moveState);
-                    else if (tag == "NavMesh Agent")
+                    //if (tag == "PlayerUnit")
+                        //Destroy(moveState);
+                    //else if (tag == "NavMesh Agent")
                         Destroy(agentMoveState);
                 }
             break;
 
             case UnitState.Follow:
 
-                if (tag == "NavMesh Agent")
+                //if (tag == "NavMesh Agent")
                     Destroy(followState);
-                else if (tag == "PlayerUnit")
-                    Destroy(attackState);
+                //else if (tag == "PlayerUnit")
+                    //Destroy(attackState);
 
             break;
 
             case UnitState.Flock: Destroy(flockState); break;
             case UnitState.Attack:                
-                if(tag == "PlayerUnit")
-                    Destroy(attackState);
-                else if (tag == "NavMesh Agent")
+                //if(tag == "PlayerUnit")
+                    //Destroy(attackState);
+                //else if (tag == "NavMesh Agent")
                     Destroy(agentAttackState);                
             break;            
         }
@@ -344,6 +344,7 @@ public class UnitController : MonoBehaviour
 
             case UnitState.Moving:
 
+                /*
                 if (this.tag == "PlayerUnit")
                 {
                     if (GetComponent<SeekState>() == null)
@@ -353,16 +354,16 @@ public class UnitController : MonoBehaviour
 
                     //moveState.Target = target;
                     moveState.MoveTo(target);
-                }
-                else if (this.tag == "NavMesh Agent")
-                {
+                }*/
+                //else if (this.tag == "NavMesh Agent")
+                //{
                     if(agentMoveState == null)
                         agentMoveState = gameObject.AddComponent<AgentMoveState>();
                     else                      
                         body.GetComponent<NavMeshAgent>().isStopped = true;
 
                     agentMoveState.MoveTo(target);
-                }
+                //}
             break;
 
             case UnitState.Flock:
@@ -376,23 +377,24 @@ public class UnitController : MonoBehaviour
             break;
 
             case UnitState.Follow:
-
+                /*
                 if (this.tag == "NavMesh Agent")
                 {
                     followState = gameObject.AddComponent<FollowEnemyState>();
                 }
                 else if (this.tag == "PlayerUnit")
-                {
+                {*/
                     if (GetComponent<CombatState>() == null)
                     {
                         attackState = gameObject.AddComponent<CombatState>();
                     }
 
-                }
+                //}
             break;
 
             case UnitState.Attack:
 
+                /*
                 if (this.tag == "PlayerUnit")
                 {
                     if (GetComponent<CombatState>() == null)
@@ -400,11 +402,12 @@ public class UnitController : MonoBehaviour
                         attackState = gameObject.AddComponent<CombatState>();
                     }
 
-                }
-                else if (this.tag == "NavMesh Agent")
-                {
+                }*/
+                
+                //else if (this.tag == "NavMesh Agent")
+                //{
                     agentAttackState = gameObject.AddComponent<AttackState>();                    
-                }
+                //}
            break;
 
         }

@@ -35,6 +35,9 @@ public class VehicleBay : MonoBehaviour {
 	int buildingIndex;
 	bool isBuilding;
 
+	// properties
+	public bool IsBuilding { get => isBuilding; }
+
 	private void OnEnable()
 	{
 		building = GetComponent<Building>();
