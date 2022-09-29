@@ -7,6 +7,7 @@ public class Building : MonoBehaviour
 	[SerializeField] float timeToBuild = 1.0f;
 	public float maxHP = 100.0f;
 	[SerializeField] bool startAtMaxHP = false;
+	public bool aiBuilding;
 
 	bool isBuilding;
 
@@ -39,6 +40,11 @@ public class Building : MonoBehaviour
 		get {
 			return HP / maxHP;
 		}
+	}
+
+	public bool IsBuilding {
+		get => isBuilding;
+		set => isBuilding = value; 
 	}
 
 	private void OnEnable()

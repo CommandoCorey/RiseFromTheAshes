@@ -36,14 +36,17 @@ public class VehicleBay : MonoBehaviour {
 	bool isBuilding;
 
 	// properties
-	public bool IsBuilding { get => isBuilding; }
+	public bool IsBuilding { get => isBuilding; set => isBuilding = value; }
 
 	private void OnEnable()
-	{
+	{	
 		building = GetComponent<Building>();
 		if (building == null) {
 			Debug.LogError("Game objects with the VehicleBay component must  also have a Building component.");
 		}
+
+		if (building.aiBuilding)
+			return;
 
 		buildTimer = 100.0f;
 		buildProgress.progress = 0.0f;
@@ -82,10 +85,10 @@ public class VehicleBay : MonoBehaviour {
 	{
 		if (building.IsBuilt)
 		{
-			if (isBuilding) {
+			if (isBuilding && !building.aiBuilding) {
 				UnitDesc desc = currentUnitDesc;
 
-				float timeToBuild = desc.timeToBuild;
+				float timeToBuild = desc.prefab.GetComponent<UnitController>().TimeToTrain;
 
 				buildTimer += Time.deltaTime / timeToBuild;
 

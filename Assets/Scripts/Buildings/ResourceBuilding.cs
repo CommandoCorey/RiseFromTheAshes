@@ -16,16 +16,22 @@ public class ResourceBuilding : MonoBehaviour
 
     private ResourceManager resources;
     private GameManager gameManager;
+    private Building building;
 
     private bool wasPaused = false;
+    private bool generating = false;
 
     // Start is called before the first frame update
     void Start()
     {
         resources = FindObjectOfType<ResourceManager>();
         gameManager = FindObjectOfType<GameManager>();
+        building = GetComponent<Building>();
 
-        if(gameManager.State == GameState.Running)
+        if (gameObject.CompareTag("Headquarters"))
+            building.IsBuilding = false;
+
+        if(gameManager.State == GameState.Running && !building.IsBuilding)
             Invoke("IncrementResource", timePerIncerement);
     }
 
@@ -35,7 +41,13 @@ public class ResourceBuilding : MonoBehaviour
         if(!wasPaused && gameManager.State == GameState.Paused)
             wasPaused = true;
 
-        if(wasPaused && gameManager.State == GameState.Running)
+        if(gameManager.State == GameState.Running && building.IsBuilt && !generating)
+        {
+            generating = true;
+            Invoke("IncrementResource", timePerIncerement);
+        }
+
+        if(wasPaused && gameManager.State == GameState.Running && building.IsBuilt)
         {
             Invoke("IncrementResource", timePerIncerement);
             wasPaused = false;
@@ -49,8 +61,11 @@ public class ResourceBuilding : MonoBehaviour
         else
             resources.AddResource(resourceToAdd, quantityToAdd);
 
-        floatingLabel.SetActive(true);
-        floatingLabel.GetComponent<FloatingResourceLabel>().Begin(quantityToAdd);
+        if (floatingLabel)
+        {
+            floatingLabel.SetActive(true);
+            floatingLabel.GetComponent<FloatingResourceLabel>().Begin(quantityToAdd);
+        }
 
         if (gameManager.State == GameState.Running)
             Invoke("IncrementResource", timePerIncerement);

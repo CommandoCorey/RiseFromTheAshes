@@ -7,12 +7,13 @@ using UnityEngine.AI;
 public class AiPlayer : MonoBehaviour
 {
     public Transform playerBase;
-    [SerializeField] List<Ghost> placeholders;
+    public Transform vantagePoint;
+    [SerializeField] List<Transform> buildingPlaceholders;
 
     [SerializeField] bool loopTasks;
     public AiTask[] tasksSchedule;
 
-    public List<VehicleBay> vehicleBays;    
+    public List<VehicleBay> vehicleBays;   
 
     private ResourceManager resources;
     [SerializeField]
@@ -34,9 +35,11 @@ public class AiPlayer : MonoBehaviour
     private List<Transform> unitGroup;
     private List<Vector3> formationPositions;
 
+    private List<Building> baysInConstruction;
+
     private GameManager gameManager;
 
-    public bool PlaceHoldersLeft { get => placeholders.Count > 0; }
+    public bool PlaceHoldersLeft { get => buildingPlaceholders.Count > 0; }
 
     // Start is called before the first frame update
     void Start()
@@ -44,6 +47,7 @@ public class AiPlayer : MonoBehaviour
         resources = ResourceManager.Instance;
         aiUnits = new List<UnitController>();
         unitGroup = new List<Transform>();
+        baysInConstruction = new List<Building>();
 
         gameManager = GetComponent<GameManager>();
     }
@@ -63,6 +67,17 @@ public class AiPlayer : MonoBehaviour
         {
             Invoke("PerformNextTask", tasksSchedule[taskNum].timeDelay);
             readyToPerform = false;
+        }
+
+        // check if vehicle bays in construction have finished building
+        foreach(Building v in baysInConstruction)
+        {
+            if(v.IsBuilt)
+            {
+                vehicleBays.Add(v.GetComponent<VehicleBay>());
+                baysInConstruction.Remove(v);
+                return;
+            }
         }
         
     }
@@ -92,11 +107,19 @@ public class AiPlayer : MonoBehaviour
         return false;
     }
 
-    public void ConstructBuilding(Ghost ghostBuilding, Building buildItem)
+    public void ConstructBuilding(Transform ghostBuilding, Building buildItem)
     {
-        Building building = Instantiate(buildItem, ghostBuilding.transform.position, ghostBuilding.transform.rotation);
+        resources.AiSpendSteel(buildItem.steelCost);
+
+        // create the building
+        Building building = Instantiate(buildItem, ghostBuilding.position, ghostBuilding.rotation);
         ghostBuilding.gameObject.SetActive(false);
         building.Build();
+
+        if (building.gameObject.CompareTag("VehicleBay") && building.GetComponent<VehicleBay>())
+            baysInConstruction.Add(building);
+
+        buildingPlaceholders.Remove(ghostBuilding);
     }
 
     public void DispatchAllUnits()
@@ -147,12 +170,12 @@ public class AiPlayer : MonoBehaviour
         return true;
     } 
 
-    public Ghost GetPlaceholder(int number)
+    public Transform GetPlaceholder(int number)
     {
-        if(number >-1 && number < placeholders.Count)
-            return placeholders[number];
+        if(number >-1 && number < buildingPlaceholders.Count)
+            return buildingPlaceholders[number];
 
-        return placeholders[0];
+        return buildingPlaceholders[0];
     }
 
     public Transform[] GetIdleUnits()
@@ -173,9 +196,12 @@ public class AiPlayer : MonoBehaviour
         //Debug.Log("Training Unit");
         resources.AiSpendSteel(unit.Cost);
         steel = resources.aiResources[0].currentAmount;
+        vehicleBay.IsBuilding = true;
 
         yield return new WaitForSeconds(unit.TimeToTrain);
- 
+
+        vehicleBay.IsBuilding = false;
+
         var unitInstance = Instantiate(unit, GetSpawnPosition(vehicleBay.transform), Quaternion.identity);
         unitInstance.body.forward = vehicleBay.transform.forward;
 

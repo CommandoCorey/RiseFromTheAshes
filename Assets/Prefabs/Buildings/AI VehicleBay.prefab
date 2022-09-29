@@ -173,9 +173,10 @@ GameObject:
   - component: {fileID: 3280850917285978547}
   - component: {fileID: 2539994311860129598}
   - component: {fileID: 3280850917285978551}
+  - component: {fileID: 279892928825702706}
   m_Layer: 9
   m_Name: AI VehicleBay
-  m_TagString: Untagged
+  m_TagString: VehicleBay
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -238,9 +239,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ce1311378444314781025cff0c15cca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeToBuild: 1
+  steelCost: 100
+  timeToBuild: 25
   maxHP: 500
+  startAtMaxHP: 0
+  aiBuilding: 1
+  HP: 0
   hitSounds: []
+  hitVFX: []
+--- !u!114 &279892928825702706
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3280850917285978546}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd97b7ab22767f847b9291c16f6039de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  units: []
+  spawnLocation: {fileID: 0}
+  buildProgress: {fileID: 0}
+  buildMenu: {fileID: 0}
+  cancelButton: {fileID: 0}
+  healUnitRadius: 0
+  healUnitPerSecond: 0
+  unitLayer:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!1 &8733210577458148908
 GameObject:
   m_ObjectHideFlags: 0

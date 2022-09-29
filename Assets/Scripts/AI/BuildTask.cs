@@ -7,6 +7,7 @@ public class BuildTask : AiTask
 {
     public Building buildingToConstruct;
 
+    public bool autoSelectPlaeholder = true;
     [Range(0, 7)]
     public int placeholderNumber;
 
@@ -25,7 +26,12 @@ public class BuildTask : AiTask
             return false;
         }
 
-        Ghost ghostBuilding = ai.GetPlaceholder(placeholderNumber);
+        Transform ghostBuilding;
+        if (autoSelectPlaeholder)
+            ghostBuilding = ai.GetPlaceholder(0);
+        else
+            ghostBuilding = ai.GetPlaceholder(placeholderNumber);
+
         ai.ConstructBuilding(ghostBuilding, buildingToConstruct);
 
         return true;
