@@ -166,23 +166,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d337556d8371dc349a90c78320b2f3fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitName: 
-  steelCost: 10
-  timeToTrain: 1
+  unitName: Main Battle Tank
+  steelCost: 300
+  timeToTrain: 30
   selectionHighlight: {fileID: 0}
   turret: {fileID: 7252500317300047841}
   firingPoint: {fileID: 5935576001053141235}
   body: {fileID: 944934464667121525}
   guiIcon: {fileID: 0}
-  fireEffect: {fileID: 0}
-  hitEffect: {fileID: 0}
-  destroyEffect: {fileID: 0}
   healthBar: {fileID: 0}
-  maxHealth: 100
-  movementSpeed: 1
-  damagePerHit: 1
+  maxHealth: 250
+  movementSpeed: 8
+  damagePerHit: 30
   attackRate: 1
-  attackRange: 20
+  attackRange: 30
   turretRotationSpeed: 1
   detectionRadius: 30
   enemyUnitLayer:
@@ -194,7 +191,9 @@ MonoBehaviour:
   environmentLayer:
     serializedVersion: 2
     m_Bits: 0
-  unitSelectSound: {fileID: 0}
+  fireEffects: []
+  hitEffects: []
+  destroyEffects: []
   moveSounds: []
   turretSounds: []
   fireSounds: []

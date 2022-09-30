@@ -33,8 +33,7 @@ public class TrainUnitTask : AiTask
             taskStatus = "Training unit";
             return true;
         }
-
-        taskStatus = "No vehicle bays available";
+        
         return false;
     }
 

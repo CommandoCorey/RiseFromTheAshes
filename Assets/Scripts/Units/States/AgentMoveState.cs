@@ -24,6 +24,8 @@ public class AgentMoveState : MonoBehaviour
         targetPos = transform.position;
 
         gameManager = FindObjectOfType<GameManager>();
+
+        agent.speed = unit.Speed;
     }
 
     // Update is called once per frame

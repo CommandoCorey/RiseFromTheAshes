@@ -13,7 +13,7 @@ public abstract class AiTask : ScriptableObject
 
     public abstract string TaskDescription { get; }
     public abstract string ActiveTaskDescription { get; }
-    public string TaskStatus { get => taskStatus; }
+    public string TaskStatus { get => taskStatus; set => taskStatus = value; }
     
     // abstract functions
     public abstract int GetSteelCost();

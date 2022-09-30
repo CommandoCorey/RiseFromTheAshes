@@ -126,15 +126,15 @@ public class AiPlayer : MonoBehaviour
         else
             taskStatus.text = tasksSchedule[taskNum].TaskStatus;
 
-        //UpdateActiveTasks();
+        UpdateActiveTasks();
 
         // display active tasks
         activeTaskList.text = ""; 
         foreach(var task in activeTasks)
         {
-            if (task.IsComplete())
-                activeTaskList.text += "DONE\n";            
-            else
+            //if (task.IsComplete())
+                //activeTaskList.text += "DONE\n";            
+            //else
                 activeTaskList.text += task.ActiveTaskDescription + "\n";
         }
     }
@@ -156,6 +156,12 @@ public class AiPlayer : MonoBehaviour
     public bool TrainUnit(UnitController unit, TrainUnitTask task = null)
     {
         // check for available vehicle bays
+        if(vehicleBays.Count == 0)
+        {
+            task.TaskStatus = "No vehicle bays in base";
+            return false;
+        }
+
         foreach(VehicleBay bay in vehicleBays)
         {
             if(!bay.IsTraining)
@@ -168,6 +174,7 @@ public class AiPlayer : MonoBehaviour
             
         }
 
+        task.TaskStatus = "All vehicle bays are busy";
         return false;
     }
 
@@ -260,10 +267,12 @@ public class AiPlayer : MonoBehaviour
         resources.AiSpendSteel(unit.Cost);
         steel = resources.aiResources[0].currentAmount;
         vehicleBay.IsTraining = true;
+        task.UnitTrained = false;
 
         yield return new WaitForSeconds(unit.TimeToTrain);
 
-        vehicleBay.IsTraining = false;
+        vehicleBay.IsTraining = false;        
+
         var unitInstance = Instantiate(unit, GetSpawnPosition(vehicleBay.transform), Quaternion.identity);
         unitInstance.body.forward = vehicleBay.transform.forward;
 
