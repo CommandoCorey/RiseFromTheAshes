@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using static DispatchWaveTask;
 
 [CreateAssetMenu(fileName = "Dispatch Wave Task", menuName = "Ai Task/Dispatch Unit Wave", order = 2)]
 public class DispatchWaveTask : AiTask
@@ -20,6 +21,16 @@ public class DispatchWaveTask : AiTask
 
     public DispatchableUnit[] enemyWave;
 
+    public override string TaskDescription
+    {
+        get => " Send " + this.name + " to player's base";
+    }
+
+    public override string ActiveTaskDescription
+    {
+        get => "Sending wave to player's base";
+    }
+
     public override int GetSteelCost() { return 0; }
 
     public override bool PerformTask()
@@ -34,13 +45,16 @@ public class DispatchWaveTask : AiTask
         List<Transform> unitWave = new List<Transform>();
 
         // ensure that there are enough units of each type in the scene
-        foreach(var unitType in enemyWave)
+        foreach (var unitType in enemyWave)
         {
             switch(unitType.type)
             {
                 case UnitType.AFV:
                     if (afvs.Length < unitType.quantity)
+                    {
+                        taskStatus = "Not enough units";
                         return false;
+                    }
 
                     for(int i=0; i< unitType.quantity; i++)
                     {
@@ -50,7 +64,10 @@ public class DispatchWaveTask : AiTask
 
                 case UnitType.APHT:
                     if (aphts.Length < unitType.quantity)
-                        return false;
+                    {
+                        taskStatus = "Not enough units";
+                        return false;                        
+                    }                        
 
                     for (int i = 0; i < unitType.quantity; i++)
                     {
@@ -61,7 +78,10 @@ public class DispatchWaveTask : AiTask
 
                 case UnitType.MBT:
                     if (mbts.Length < unitType.quantity)
+                    {
+                        taskStatus = "Not enough units";
                         return false;
+                    }
 
                     for (int i = 0; i < unitType.quantity; i++)
                     {
@@ -71,7 +91,10 @@ public class DispatchWaveTask : AiTask
 
                 case UnitType.RCV:
                     if (rcvs.Length < unitType.quantity)
+                    {
+                        taskStatus = "Not enough units";
                         return false;
+                    }
 
                     for (int i = 0; i < unitType.quantity; i++)
                     {
@@ -86,4 +109,8 @@ public class DispatchWaveTask : AiTask
         return true;
     }
 
+    public override bool IsComplete()
+    {
+        return false;
+    }
 }

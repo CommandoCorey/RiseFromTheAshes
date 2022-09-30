@@ -9,6 +9,14 @@ public abstract class AiTask : ScriptableObject
 
     protected AiPlayer ai;
 
+    protected string taskStatus;
+
+    public abstract string TaskDescription { get; }
+    public abstract string ActiveTaskDescription { get; }
+    public string TaskStatus { get => taskStatus; }
+    
+    // abstract functions
     public abstract int GetSteelCost();
     public abstract bool PerformTask();
+    public abstract bool IsComplete();
 }

@@ -6,13 +6,21 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Dispatch Task", menuName = "Ai Task/Dispatch Idle Units", order = 2)]
 public class DispatchIdleUnitsTask : AiTask
 {
-    float timeBeforeAttacking = 0;
-
     [Header("Unit types to dispatch")]
     public bool armoredFightingVehciels = true;
     public bool halftracks = true;
     public bool mainBattleTanks = true;
     public bool recconaissanceVehicles = true;
+
+    public override string TaskDescription
+    {
+        get => "Send idle units to player's base";
+    }
+
+    public override string ActiveTaskDescription
+    {
+        get => "Sending units to player's base";
+    }
 
     public override int GetSteelCost() { return 0; }
 
@@ -45,7 +53,12 @@ public class DispatchIdleUnitsTask : AiTask
                 dispatchGroup.Add(unit.transform);
         }
 
+        taskStatus = "Units have been dispatched";
         return true;
     }
 
+    public override bool IsComplete()
+    {
+        return false;
+    }
 }

@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -10,19 +12,25 @@ public class AiPlayer : MonoBehaviour
     public Transform vantagePoint;
     [SerializeField] List<Transform> buildingPlaceholders;
 
+    public List<VehicleBay> vehicleBays;
+
     [SerializeField] bool loopTasks;
-    public AiTask[] tasksSchedule;
+    public AiTask[] tasksSchedule;    
 
-    public List<VehicleBay> vehicleBays;   
+    [Header("Info Panel")]
+    [SerializeField] bool showInfoPanel;
+    [SerializeField] GameObject infoPanel;
+    [SerializeField] TextMeshProUGUI steelAmount;
+    [SerializeField] TextMeshProUGUI taskDescription;
+    [SerializeField] TextMeshProUGUI taskStatus;
+    [SerializeField] TextMeshProUGUI activeTaskList;
 
+    // private variables
     private ResourceManager resources;
-    [SerializeField]
     private int steel = 0;
     private int taskNum = 0;
     private UnitController unit;
 
-    private bool available = true;
-    private bool waveFinished = false;
     private int unitsTrained = 0;
     private bool readyToPerform = true;
 
@@ -39,6 +47,8 @@ public class AiPlayer : MonoBehaviour
 
     private GameManager gameManager;
 
+    List<AiTask> activeTasks;
+
     public bool PlaceHoldersLeft { get => buildingPlaceholders.Count > 0; }
 
     // Start is called before the first frame update
@@ -49,7 +59,9 @@ public class AiPlayer : MonoBehaviour
         unitGroup = new List<Transform>();
         baysInConstruction = new List<Building>();
 
-        gameManager = GetComponent<GameManager>();
+        gameManager = FindObjectOfType<GameManager>();
+
+        activeTasks = new List<AiTask>();
     }
 
     // Update is called once per frame
@@ -63,7 +75,18 @@ public class AiPlayer : MonoBehaviour
 
         steel = resources.aiResources[0].currentAmount;
 
-        if(steel >= tasksSchedule[taskNum].GetSteelCost() && readyToPerform)
+        // toggle info panel
+        if (showInfoPanel)
+        {
+            infoPanel.SetActive(true);
+            UpdateInfoPanel();
+        }
+        else
+        {
+            infoPanel.SetActive(false);
+        }
+
+        if (steel >= tasksSchedule[taskNum].GetSteelCost() && readyToPerform)
         {
             Invoke("PerformNextTask", tasksSchedule[taskNum].timeDelay);
             readyToPerform = false;
@@ -85,29 +108,70 @@ public class AiPlayer : MonoBehaviour
     private void PerformNextTask()
     {
         if (tasksSchedule[taskNum].PerformTask()) // attempt to perform the task
+        {
+            activeTasks.Add(tasksSchedule[taskNum]);
             taskNum++;
+        }
 
         readyToPerform = true;
     }
 
-    public bool TrainUnit(UnitController unit)
+    private void UpdateInfoPanel()
+    {
+        steelAmount.text = steel.ToString();
+        taskDescription.text = tasksSchedule[taskNum].TaskDescription;
+
+        if (steel < tasksSchedule[taskNum].GetSteelCost())
+            taskStatus.text = "Not enough Steel";
+        else
+            taskStatus.text = tasksSchedule[taskNum].TaskStatus;
+
+        //UpdateActiveTasks();
+
+        // display active tasks
+        activeTaskList.text = ""; 
+        foreach(var task in activeTasks)
+        {
+            if (task.IsComplete())
+                activeTaskList.text += "DONE\n";            
+            else
+                activeTaskList.text += task.ActiveTaskDescription + "\n";
+        }
+    }
+
+    private void UpdateActiveTasks()
+    {
+        foreach(var task in activeTasks)
+        {
+            if(task.IsComplete())
+            {
+                activeTasks.Remove(task);
+                UpdateActiveTasks();
+
+                return;
+            }
+        }
+    }
+
+    public bool TrainUnit(UnitController unit, TrainUnitTask task = null)
     {
         // check for available vehicle bays
         foreach(VehicleBay bay in vehicleBays)
         {
-            if(!bay.IsBuilding)
+            if(!bay.IsTraining)
             {
-                StartCoroutine(StartTraining(bay, unit));
+                StartCoroutine(StartTraining(bay, unit, task));
                 Debug.Log("Training Unit");
 
                 return true;
             }
+            
         }
 
         return false;
     }
 
-    public void ConstructBuilding(Transform ghostBuilding, Building buildItem)
+    public void ConstructBuilding(Transform ghostBuilding, Building buildItem, BuildTask task = null)
     {
         resources.AiSpendSteel(buildItem.steelCost);
 
@@ -120,6 +184,8 @@ public class AiPlayer : MonoBehaviour
             baysInConstruction.Add(building);
 
         buildingPlaceholders.Remove(ghostBuilding);
+
+        task.SetBuildingInstance(building);
     }
 
     public void DispatchAllUnits()
@@ -141,10 +207,7 @@ public class AiPlayer : MonoBehaviour
             unitGroup[i].GetComponent<UnitController>().
                 ChangeState(UnitState.Moving, formationPositions[i]);
         }
-
-        waveFinished = true;
-
-        //Invoke("StartNextWave", timeBetweenWave);
+        
     }
 
     public bool DispatchUnits(List<Transform> unitGroup)
@@ -191,17 +254,16 @@ public class AiPlayer : MonoBehaviour
         return idleUnits.ToArray();
     }
 
-    private IEnumerator StartTraining(VehicleBay vehicleBay, UnitController unit)
+    private IEnumerator StartTraining(VehicleBay vehicleBay, UnitController unit, TrainUnitTask task = null)
     {
         //Debug.Log("Training Unit");
         resources.AiSpendSteel(unit.Cost);
         steel = resources.aiResources[0].currentAmount;
-        vehicleBay.IsBuilding = true;
+        vehicleBay.IsTraining = true;
 
         yield return new WaitForSeconds(unit.TimeToTrain);
 
-        vehicleBay.IsBuilding = false;
-
+        vehicleBay.IsTraining = false;
         var unitInstance = Instantiate(unit, GetSpawnPosition(vehicleBay.transform), Quaternion.identity);
         unitInstance.body.forward = vehicleBay.transform.forward;
 
@@ -209,26 +271,15 @@ public class AiPlayer : MonoBehaviour
         aiUnits.Add(unitInstance);
         unitGroup.Add(unitInstance.transform);
 
-        unitsTrained++;
-        available = true;
+        unitsTrained++;        
 
         if(unitsTrained % 5 == 0)
         {
             zOffset += 6;
         }
 
+        task.UnitTrained = true;
     }
-
-    /*
-    private void NextUnit()
-    {
-        if (unitNum < trainOdrer.Length - 1)
-            unitNum++;
-        else
-            unitNum = 0;
-
-        unit = trainOdrer[unitNum];
-    }*/
 
     private Vector3 GetSpawnPosition(Transform vehicleBay)
     {
@@ -236,26 +287,7 @@ public class AiPlayer : MonoBehaviour
         float z = vehicleBay.position.z + vehicleBay.forward.z * zOffset;
 
         return new Vector3(x, 0, z);
-    }    
-
-    /*
-    private void StartNextWave()
-    {
-        if (waveNumber < enemyWaves.Length - 1)
-            waveNumber++;
-        else
-        {
-            waveNumber = 0;
-
-            if (!loopEnemyWaves)
-                return;
-        }
-
-        waveFinished = false;
-
-        trainOdrer = enemyWaves[waveNumber].units;
-        unit = trainOdrer[unitNum];
-    }    */
+    }
 
     private void OnDrawGizmos()
     {

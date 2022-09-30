@@ -36,7 +36,7 @@ public class VehicleBay : MonoBehaviour {
 	bool isBuilding;
 
 	// properties
-	public bool IsBuilding { get => isBuilding; set => isBuilding = value; }
+	public bool IsTraining { get => isBuilding; set => isBuilding = value; }
 
 	private void OnEnable()
 	{	

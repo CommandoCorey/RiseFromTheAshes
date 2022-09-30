@@ -11,6 +11,17 @@ public class BuildTask : AiTask
     [Range(0, 7)]
     public int placeholderNumber;
 
+    private Building instance;
+
+    public override string TaskDescription { 
+        get => "Build " + buildingToConstruct.buildingName;
+    }
+
+    public override string ActiveTaskDescription
+    {
+        get => "Constructing " + buildingToConstruct.buildingName + "... ";
+    }
+
     public override int GetSteelCost()
     {
         return buildingToConstruct.steelCost;
@@ -22,6 +33,7 @@ public class BuildTask : AiTask
 
         if (!ai.PlaceHoldersLeft)
         {
+            taskStatus = "No placeholders left";
             Debug.LogError("There are no more placeholders to construct the next building");
             return false;
         }
@@ -32,8 +44,19 @@ public class BuildTask : AiTask
         else
             ghostBuilding = ai.GetPlaceholder(placeholderNumber);
 
-        ai.ConstructBuilding(ghostBuilding, buildingToConstruct);
+        ai.ConstructBuilding(ghostBuilding, buildingToConstruct, this);
 
+        taskStatus = "Constructing building";
         return true;
+    }
+
+    public void SetBuildingInstance(Building building)
+    {
+        instance = building;
+    }
+
+    public override bool IsComplete()
+    {
+        return instance.IsBuilding == false;
     }
 }

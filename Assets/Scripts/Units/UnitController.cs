@@ -103,14 +103,12 @@ public class UnitController : MonoBehaviour
     public UnitState State { get; private set; }
     public Transform AttackTarget { get; set; }
     public float DetectionRadius { get => detectionRadius; }
-    //public LayerMask DetectionLayer { get => detectionLayer; }
     public LayerMask EnemyUnitLayer { get => enemyUnitLayer; }
     public LayerMask EnemyBuildingLayer { get => enemyBuildingLayer; }
-
     public LayerMask EnvironmentLayer { get => environmentLayer; }
     public Sprite GuiIcon { get => guiIcon; }
-    //public float HaltTime { get => haltTime; }
     public bool UnitHalt { get; set; } = false;
+    public bool IsBuilt { get; set; } = false;
 
     // unit stats
     public string Name { get => unitName; }
@@ -158,7 +156,6 @@ public class UnitController : MonoBehaviour
         if (health <= 0)
         {
             GameObject.Destroy(this.gameObject);
-            //GameObject.Destroy(this.gameObject.transform.parent.gameObject);
 
             // play destruction sound
             if (destroySounds.Length > 0)
@@ -193,12 +190,6 @@ public class UnitController : MonoBehaviour
         health -= amount;
 
         ParticleSystem hitParticles = hitEffects[RandomPick(hitEffects)];
-
-        /*
-        if(hitPosition != Vector3.zero)
-            hitEffect.transform.position = hitPosition;
-
-        PlayParticles(hitEffect);*/
 
         InstantiateParticles(hitParticles, hitPosition);
 
@@ -411,6 +402,11 @@ public class UnitController : MonoBehaviour
            break;
 
         }
+    }
+
+    public void TrainUnit()
+    {
+
     }
 
     #region private functions
