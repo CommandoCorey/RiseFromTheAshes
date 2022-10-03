@@ -281,6 +281,17 @@ public class UnitController : MonoBehaviour
         }
     }
 
+    public void MoveToRallyPoint(Vector3 point)
+    {
+        UnitManager um = FindObjectOfType<UnitManager>();
+        NavMeshAgent agent = body.GetComponent<NavMeshAgent>();
+
+        agent.avoidancePriority -= um.GetCurrentRallySize(1);
+        Vector3 formationPos = um.GetRallyPosition(point, 1);
+
+        ChangeState(UnitState.Moving, formationPos);
+    }
+
     /// <summary>
     /// Changes the Unit's state in the finite state machine to another one
     /// </summary>
@@ -402,11 +413,6 @@ public class UnitController : MonoBehaviour
            break;
 
         }
-    }
-
-    public void TrainUnit()
-    {
-
     }
 
     #region private functions

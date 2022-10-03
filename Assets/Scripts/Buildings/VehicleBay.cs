@@ -15,7 +15,7 @@ class UnitDesc
 
 public class VehicleBay : MonoBehaviour {
 	[SerializeField] List<UnitDesc> units = new List<UnitDesc>();
-	[SerializeField] Transform spawnLocation;
+	public Transform spawnLocation;
 	[SerializeField] ProgressBar buildProgress;
 
 	[SerializeField] GameObject buildMenu;

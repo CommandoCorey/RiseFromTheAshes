@@ -235,6 +235,8 @@ public class SimpleAiPlayer : MonoBehaviour
                 ChangeState(UnitState.Moving, formationPositions[i]);
         }
 
+        unitManager.ClearRallyFormation(1);
+
         Debug.Log("Dispatching Units");
         return true;
     } 
@@ -270,10 +272,13 @@ public class SimpleAiPlayer : MonoBehaviour
 
         yield return new WaitForSeconds(unit.TimeToTrain);
 
-        vehicleBay.IsTraining = false;        
+        vehicleBay.IsTraining = false;
+        //GetSpawnPosition(vehicleBay.transform)
 
-        var unitInstance = Instantiate(unit, GetSpawnPosition(vehicleBay.transform), Quaternion.identity);
+        var unitInstance = Instantiate(unit, vehicleBay.transform.position + vehicleBay.transform.forward, Quaternion.identity);
         unitInstance.body.forward = vehicleBay.transform.forward;
+
+        unitInstance.MoveToRallyPoint(rallyPoint.position);
 
         //Debug.Log("Training Complete");
         aiUnits.Add(unitInstance);

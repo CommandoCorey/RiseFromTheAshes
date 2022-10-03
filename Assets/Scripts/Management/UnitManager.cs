@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.EventSystems;
+using UnityEngine.UIElements;
 
 public class UnitManager : MonoBehaviour
 {
@@ -29,11 +30,15 @@ public class UnitManager : MonoBehaviour
     int maxUnitsPerRow = 5;
 
     [Header("Gizmos")]
-    public bool showFormationPosition = false;
+    public bool showFormationPositions = false;
+    public bool showAiRallyPositions = false;
 
     List<List<GameObject>> squads;
 
     List<Vector3> formationPositions;
+    List<Vector3> playerRallyFormation;
+    List<Vector3> aiRallyFormation;
+
     Vector3[] groupPath;
 
     private List<Vector3> searchedPositions = new List<Vector3>();   
@@ -55,6 +60,8 @@ public class UnitManager : MonoBehaviour
 
         squads = new List<List<GameObject>>();
         formationPositions = new List<Vector3>();
+        playerRallyFormation = new List<Vector3>();
+        aiRallyFormation = new List<Vector3>();
     }
 
     // Update is called once per frame
@@ -503,9 +510,98 @@ public class UnitManager : MonoBehaviour
         return formationPositions;
     }
 
+    public void AddRallyFormationPoint(Vector3 point, int player = 0)
+    {
+        if(player == 0)
+            playerRallyFormation.Add(point);
+        else if(player == 1)
+            aiRallyFormation.Add(point);
+    }
+
+    public List<Vector3> GetRallyFormation(int player = 0)
+    {
+        if (player == 0)
+            return playerRallyFormation;
+        else
+            return aiRallyFormation;
+    }
+
+    public void ClearRallyFormation(int player = 0)
+    {
+        if(player == 0)
+            playerRallyFormation.Clear();
+        else
+            aiRallyFormation.Clear();
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="rallyPoint"></param>
+    /// <param name="player"></param>
+    /// <returns></returns>
+    public Vector3 GetRallyPosition(Vector3 rallyPoint, int player)
+    {
+        if (player == 0) // Human player
+            return GetNextFormationPoint(playerRallyFormation, rallyPoint);
+
+        else if (player == 1) // Ai player
+            return GetNextFormationPoint(aiRallyFormation, rallyPoint);
+
+        else
+            return rallyPoint;
+    }
+
+    // used for agent priorities
+    public int GetCurrentRallySize(int player)
+    {
+        if (player == 0)
+            return playerRallyFormation.Count;
+
+        else if (player == 1) // Ai player
+            return aiRallyFormation.Count;
+
+        return 0;
+    }
     #endregion
 
     #region private functions 
+    private Vector3 GetNextFormationPoint(List<Vector3> formation, Vector3 centerPoint)
+    {
+        Vector3 lastPos;
+        Vector3 newPos;
+
+        if (formation.Count == 0)
+        {
+            formation.Add(centerPoint);
+            return formation[0];
+        }
+
+        lastPos = formation.Last();
+        newPos = lastPos;
+
+        // check end of row
+        if (formation.Count % maxUnitsPerRow == 0)
+        {
+            newPos.z = lastPos.z - spaceBetweenUnits;
+            newPos.x = centerPoint.x;
+        }
+        // check if odd or even
+        else if (formation.Count % 2 == 0)
+        {
+            int unitsOnRight = formation.Count % maxUnitsPerRow;
+            newPos.x = lastPos.x + (unitsOnRight * spaceBetweenUnits);
+        }
+        else
+        {
+            int unitsOnLeft = formation.Count % maxUnitsPerRow;
+            newPos.x = lastPos.x - (unitsOnLeft * spaceBetweenUnits);
+        }
+
+        formation.Add(newPos);
+        return newPos;
+    }
+
     bool IsOutOfBounds(Vector3 position)
     {
         if(Physics.Raycast(position + Vector3.up * 10, Vector3.down, 10))
@@ -534,9 +630,9 @@ public class UnitManager : MonoBehaviour
         }
 
         return true;
-    } 
+    }
 
-    // Not 
+    // Not currently be using
     private void CheckNeigboursMoving(int squadNum)
     {
         bool unitsStillMoving = false;
@@ -564,12 +660,22 @@ public class UnitManager : MonoBehaviour
         }
 
         // draws the fromation positions that each unit will finish at
-        if (formationPositions != null && showFormationPosition)
+        if (formationPositions != null && showFormationPositions)
         {
             foreach (Vector3 position in formationPositions)
             {
                 Gizmos.color = Color.green;
                 Gizmos.DrawWireSphere(position, 1);
+            }
+        }
+
+        // 
+        if (aiRallyFormation != null && showAiRallyPositions)
+        {
+            foreach (Vector3 position in aiRallyFormation)
+            {
+                Gizmos.color = Color.green;
+                Gizmos.DrawWireSphere(position + Vector3.up * 0.5f, 1);
             }
         }
 

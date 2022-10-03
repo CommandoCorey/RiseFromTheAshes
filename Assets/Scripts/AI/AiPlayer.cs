@@ -119,13 +119,6 @@ public class AiPlayer : MonoBehaviour
             }
         }
 
-        /*
-        if (steel >= tasksSchedule[taskNum].GetSteelCost() && readyToPerform)
-        {
-            Invoke("PerformNextTask", tasksSchedule[taskNum].timeDelay);
-            readyToPerform = false;
-        }*/
-
         // check if vehicle bays in construction have finished building
         foreach(Building v in baysInConstruction)
         {
@@ -222,7 +215,7 @@ public class AiPlayer : MonoBehaviour
             if(!bay.IsTraining)
             {
                 StartCoroutine(StartTraining(bay, unit, task));
-                Debug.Log("Training Unit");
+                //Debug.Log("Training Unit");
 
                 return true;
             }
@@ -326,10 +319,12 @@ public class AiPlayer : MonoBehaviour
 
         yield return new WaitForSeconds(unit.TimeToTrain);
 
-        vehicleBay.IsTraining = false;        
-
-        var unitInstance = Instantiate(unit, GetSpawnPosition(vehicleBay.transform), Quaternion.identity);
+        vehicleBay.IsTraining = false;
+      
+        var unitInstance = Instantiate(unit, vehicleBay.spawnLocation.position, Quaternion.identity);
         unitInstance.body.forward = vehicleBay.transform.forward;
+
+        unitInstance.MoveToRallyPoint(rallyPoint.position);
 
         //Debug.Log("Training Complete");
         aiUnits.Add(unitInstance);

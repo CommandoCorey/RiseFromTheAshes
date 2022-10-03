@@ -13,6 +13,7 @@ public class AgentMoveState : MonoBehaviour
     private Vector3 targetPos;
 
     private UnitController unit;
+    //private UnitManager um;
 
     private GameManager gameManager;
 
@@ -24,6 +25,7 @@ public class AgentMoveState : MonoBehaviour
         targetPos = transform.position;
 
         gameManager = FindObjectOfType<GameManager>();
+        //um = FindObjectOfType<UnitManager>();
 
         agent.speed = unit.Speed;
     }
