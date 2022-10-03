@@ -7,7 +7,8 @@ public abstract class AiTask : ScriptableObject
 {
     public float timeDelay;
 
-    protected AiPlayer ai;
+    //protected AiPlayer ai;
+    //protected SimpleAiPlayer simpleAi;
 
     protected string taskStatus;
 
@@ -19,4 +20,5 @@ public abstract class AiTask : ScriptableObject
     public abstract int GetSteelCost();
     public abstract bool PerformTask();
     public abstract bool IsComplete();
+    
 }

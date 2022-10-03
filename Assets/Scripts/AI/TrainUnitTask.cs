@@ -26,12 +26,25 @@ public class TrainUnitTask : AiTask
 
     public override bool PerformTask()
     {
-        ai = FindObjectOfType<AiPlayer>();
-
-        if (ai.TrainUnit(unitToTrain, this))
+        if (FindObjectOfType<AiPlayer>())
         {
-            taskStatus = "Training unit";
-            return true;
+            var ai = FindObjectOfType<AiPlayer>();
+
+            if (ai.TrainUnit(unitToTrain, this))
+            {
+                taskStatus = "Training unit";
+                return true;
+            }
+        }
+        else if(FindObjectOfType<SimpleAiPlayer>())
+        {
+            var ai = FindObjectOfType<SimpleAiPlayer>();
+
+            if (ai.TrainUnit(unitToTrain, this))
+            {
+                taskStatus = "Training unit";
+                return true;
+            }
         }
         
         return false;

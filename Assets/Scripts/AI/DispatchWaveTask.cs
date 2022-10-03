@@ -23,7 +23,7 @@ public class DispatchWaveTask : AiTask
 
     public override string TaskDescription
     {
-        get => " Send " + this.name + " to player's base";
+        get => "Send " + this.name + " to player's base";
     }
 
     public override string ActiveTaskDescription
@@ -35,8 +35,6 @@ public class DispatchWaveTask : AiTask
 
     public override bool PerformTask()
     {
-        ai = FindObjectOfType<AiPlayer>();
-
         var afvs = GameObject.FindGameObjectsWithTag("ai AFV");
         var aphts = GameObject.FindGameObjectsWithTag("ai APHT");
         var mbts = GameObject.FindGameObjectsWithTag("ai MBT");
@@ -104,13 +102,26 @@ public class DispatchWaveTask : AiTask
             }
         }
 
-        ai.DispatchUnits(unitWave);
+        if (FindObjectOfType<AiPlayer>())
+        {
+            var ai = FindObjectOfType<AiPlayer>();
+            ai.DispatchUnits(unitWave);
 
-        return true;
+            return true;
+        }
+        else if (FindObjectOfType<SimpleAiPlayer>())
+        {
+            var ai = FindObjectOfType<SimpleAiPlayer>();
+            ai.DispatchUnits(unitWave);
+
+            return true;
+        }
+
+        return false;
     }
 
     public override bool IsComplete()
     {
-        return false;
+        return true;
     }
 }

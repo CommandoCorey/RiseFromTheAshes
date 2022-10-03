@@ -25,36 +25,72 @@ public class DispatchIdleUnitsTask : AiTask
     public override int GetSteelCost() { return 0; }
 
     public override bool PerformTask()
-    {
-        ai = FindObjectOfType<AiPlayer>();
-
-        var idleUnits = ai.GetIdleUnits();
-
-        if (armoredFightingVehciels && halftracks && 
-            mainBattleTanks && recconaissanceVehicles)
-        {
-            ai.DispatchUnits(idleUnits.ToList());
-        }
-
+    {        
         List<Transform> dispatchGroup = new List<Transform>();
+        Transform[] idleUnits;
 
-        foreach (var unit in idleUnits)
+        if (FindObjectOfType<AiPlayer>())
         {
-            if (armoredFightingVehciels && unit.gameObject.tag == "AFV")
-                dispatchGroup.Add(unit.transform);
+            var ai = FindObjectOfType<AiPlayer>();
 
-            else if (halftracks && unit.gameObject.tag == "APHT")
-                dispatchGroup.Add(unit.transform);
+            idleUnits = ai.GetIdleUnits();
 
-            else if (mainBattleTanks && unit.gameObject.tag == "MBT")
-                dispatchGroup.Add(unit.transform);
+            if (armoredFightingVehciels && halftracks &&
+                mainBattleTanks && recconaissanceVehicles)
+            {
+                ai.DispatchUnits(idleUnits.ToList());
+            }
 
-            else if (recconaissanceVehicles && unit.gameObject.tag == "RCV")
-                dispatchGroup.Add(unit.transform);
+            foreach (var unit in idleUnits)
+            {
+                if (armoredFightingVehciels && unit.gameObject.tag == "AFV")
+                    dispatchGroup.Add(unit.transform);
+
+                else if (halftracks && unit.gameObject.tag == "APHT")
+                    dispatchGroup.Add(unit.transform);
+
+                else if (mainBattleTanks && unit.gameObject.tag == "MBT")
+                    dispatchGroup.Add(unit.transform);
+
+                else if (recconaissanceVehicles && unit.gameObject.tag == "RCV")
+                    dispatchGroup.Add(unit.transform);
+            }
+
+            taskStatus = "Units have been dispatched";
+            return true;
+        }
+        else if (FindObjectOfType<SimpleAiPlayer>())
+        {
+            var ai = FindObjectOfType<SimpleAiPlayer>();
+
+            idleUnits = ai.GetIdleUnits();
+
+            if (armoredFightingVehciels && halftracks &&
+                mainBattleTanks && recconaissanceVehicles)
+            {
+                ai.DispatchUnits(idleUnits.ToList());
+            }
+
+            foreach (var unit in idleUnits)
+            {
+                if (armoredFightingVehciels && unit.gameObject.tag == "AFV")
+                    dispatchGroup.Add(unit.transform);
+
+                else if (halftracks && unit.gameObject.tag == "APHT")
+                    dispatchGroup.Add(unit.transform);
+
+                else if (mainBattleTanks && unit.gameObject.tag == "MBT")
+                    dispatchGroup.Add(unit.transform);
+
+                else if (recconaissanceVehicles && unit.gameObject.tag == "RCV")
+                    dispatchGroup.Add(unit.transform);
+            }
+
+            taskStatus = "Units have been dispatched";
+            return true;
         }
 
-        taskStatus = "Units have been dispatched";
-        return true;
+        return false;
     }
 
     public override bool IsComplete()

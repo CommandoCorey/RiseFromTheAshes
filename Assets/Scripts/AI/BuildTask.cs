@@ -29,25 +29,54 @@ public class BuildTask : AiTask
 
     public override bool PerformTask()
     {
-        ai = FindObjectOfType<AiPlayer>();
-
-        if (!ai.PlaceHoldersLeft)
+        if (FindObjectOfType<AiPlayer>())
         {
-            taskStatus = "No placeholders left";
-            Debug.LogError("There are no more placeholders to construct the next building");
-            return false;
+            var ai = FindObjectOfType<AiPlayer>();
+
+            if (!ai.PlaceHoldersLeft)
+            {
+                taskStatus = "No placeholders left";
+                Debug.LogError("There are no more placeholders to construct the next building");
+                return false;
+            }
+
+            Transform ghostBuilding;
+            if (autoSelectPlaeholder)
+                ghostBuilding = ai.GetPlaceholder(0);
+            else
+                ghostBuilding = ai.GetPlaceholder(placeholderNumber);
+
+            ai.ConstructBuilding(ghostBuilding, buildingToConstruct, this);
+
+            taskStatus = "Constructing building";
+            return true;
+
+        }
+        else if (FindObjectOfType<SimpleAiPlayer>())
+        {
+            var ai = FindObjectOfType<SimpleAiPlayer>();
+
+            if (!ai.PlaceHoldersLeft)
+            {
+                taskStatus = "No placeholders left";
+                Debug.LogError("There are no more placeholders to construct the next building");
+                return false;
+            }
+
+            Transform ghostBuilding;
+            if (autoSelectPlaeholder)
+                ghostBuilding = ai.GetPlaceholder(0);
+            else
+                ghostBuilding = ai.GetPlaceholder(placeholderNumber);
+
+            ai.ConstructBuilding(ghostBuilding, buildingToConstruct, this);
+
+            taskStatus = "Constructing building";
+            return true;
+
         }
 
-        Transform ghostBuilding;
-        if (autoSelectPlaeholder)
-            ghostBuilding = ai.GetPlaceholder(0);
-        else
-            ghostBuilding = ai.GetPlaceholder(placeholderNumber);
-
-        ai.ConstructBuilding(ghostBuilding, buildingToConstruct, this);
-
-        taskStatus = "Constructing building";
-        return true;
+        return false;
     }
 
     public void SetBuildingInstance(Building building)

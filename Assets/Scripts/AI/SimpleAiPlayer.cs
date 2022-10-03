@@ -6,18 +6,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
 
-[System.Serializable]
-public class TaskSet
-{
-    public string description;
-    public bool loopTaskSet;
-    public AiTask[] tasks;
-
-    public int TaskNum { get; set; } = 0;
-    public bool ReadyToPerform { get; set; } = true;
-}
-
-public class AiPlayer : MonoBehaviour
+public class SimpleAiPlayer : MonoBehaviour
 {
     public Transform playerBase;
     public Transform rallyPoint;
@@ -25,26 +14,24 @@ public class AiPlayer : MonoBehaviour
 
     public List<VehicleBay> vehicleBays;
 
-    //public AiTask[] tasksSchedule;
-    public TaskSet[] tasksSchedule;
+    [SerializeField] bool loopTasks;
+    public AiTask[] tasksSchedule;    
 
     [Header("Info Panel")]
     [SerializeField] bool showInfoPanel;
     [SerializeField] GameObject infoPanel;
     [SerializeField] TextMeshProUGUI steelAmount;
-    [SerializeField] Transform taskListPanel;
-    [SerializeField] TaskSetDisplay taskSetPanelPrefab;
-
-    //[SerializeField] TextMeshProUGUI taskDescription;
-    //[SerializeField] TextMeshProUGUI taskStatus;
+    [SerializeField] TextMeshProUGUI taskDescription;
+    [SerializeField] TextMeshProUGUI taskStatus;
     [SerializeField] TextMeshProUGUI activeTaskList;
 
     // private variables
     private ResourceManager resources;
     private int steel = 0;
-    private UnitController unit;
+    private int taskNum = 0;
 
     private int unitsTrained = 0;
+    private bool readyToPerform = true;
 
     private float zOffset = 6;
     private float unitsPerRow = 5;
@@ -60,7 +47,6 @@ public class AiPlayer : MonoBehaviour
     private GameManager gameManager;
 
     List<AiTask> activeTasks;
-    List<TaskSetDisplay> taskDisplays;
 
     public bool PlaceHoldersLeft { get => buildingPlaceholders.Count > 0; }
 
@@ -75,22 +61,16 @@ public class AiPlayer : MonoBehaviour
         gameManager = FindObjectOfType<GameManager>();
 
         activeTasks = new List<AiTask>();
-
-        // instantiate task sets on info panel
-        taskDisplays = new List<TaskSetDisplay>();
-        for (int i= 0; i < tasksSchedule.Length; i++)
-        {
-            taskDisplays.Add(Instantiate(taskSetPanelPrefab, taskListPanel));
-            taskDisplays[i].taskSetNumber.text = "Task Set " + i + ":";
-        }
-
     }
 
     // Update is called once per frame
     void Update()
     {
         if (gameManager.State != GameState.Running)
-            return;       
+            return;
+        
+        if (!loopTasks && taskNum >= tasksSchedule.Length)
+            return;
 
         steel = resources.aiResources[0].currentAmount;
 
@@ -105,26 +85,11 @@ public class AiPlayer : MonoBehaviour
             infoPanel.SetActive(false);
         }
 
-        // check status of current tasks
-        foreach (TaskSet set in tasksSchedule)
-        {
-            // if not looping move to the next set
-            if (set.TaskNum >= set.tasks.Length && !set.loopTaskSet)
-                continue;
-
-            if (steel >= set.tasks[set.TaskNum].GetSteelCost() && set.ReadyToPerform)
-            {
-                StartCoroutine(PerformNextTask(set));
-                set.ReadyToPerform = false;
-            }
-        }
-
-        /*
         if (steel >= tasksSchedule[taskNum].GetSteelCost() && readyToPerform)
         {
             Invoke("PerformNextTask", tasksSchedule[taskNum].timeDelay);
             readyToPerform = false;
-        }*/
+        }
 
         // check if vehicle bays in construction have finished building
         foreach(Building v in baysInConstruction)
@@ -139,47 +104,26 @@ public class AiPlayer : MonoBehaviour
         
     }
 
-    private IEnumerator PerformNextTask(TaskSet set)
+    private void PerformNextTask()
     {
-        yield return new WaitForSeconds(set.tasks[set.TaskNum].timeDelay);
-
-        if (set.tasks[set.TaskNum].PerformTask()) // attempt to perform the task
+        if (tasksSchedule[taskNum].PerformTask()) // attempt to perform the task
         {
-            activeTasks.Add(set.tasks[set.TaskNum]);
-            set.TaskNum++;
-
-            if(set.TaskNum >= set.tasks.Length && set.loopTaskSet)
-            {
-                set.TaskNum = 0;
-            }
+            activeTasks.Add(tasksSchedule[taskNum]);
+            taskNum++;
         }
 
-        set.ReadyToPerform = true;
+        readyToPerform = true;
     }
 
     private void UpdateInfoPanel()
     {
         steelAmount.text = steel.ToString();
+        taskDescription.text = tasksSchedule[taskNum].TaskDescription;
 
-        for(int i=0; i < tasksSchedule.Length; i++)
-        {
-            if (tasksSchedule[i].TaskNum >= tasksSchedule[i].tasks.Length)
-            {
-                taskDisplays[i].taskDescription.text = "None";
-                taskDisplays[i].taskStatus.text = "Task Set complete";
-            }
-            else
-            {
-                AiTask task = tasksSchedule[i].tasks[tasksSchedule[i].TaskNum];
-
-                taskDisplays[i].taskDescription.text = task.TaskDescription;
-
-                if (steel < task.GetSteelCost())
-                    taskDisplays[i].taskStatus.text = "Not enough Steel";
-                else
-                    taskDisplays[i].taskStatus.text = task.TaskStatus;
-            }
-        }
+        if (steel < tasksSchedule[taskNum].GetSteelCost())
+            taskStatus.text = "Not enough Steel";
+        else
+            taskStatus.text = tasksSchedule[taskNum].TaskStatus;
 
         UpdateActiveTasks();
 
