@@ -83,6 +83,10 @@ public class UnitController : MonoBehaviour
     // private variables
     private float health;
     //private Vector3[] waypoints;
+    //
+
+    bool recentlyDamaged;
+    float RDTimer;
 
     // state classes
     private IdleState idleState;
@@ -122,6 +126,11 @@ public class UnitController : MonoBehaviour
     public float DamagePerHit { get => damagePerHit; }
     public float AttackRate { get => attackRate; }
     public float AttackRange {  get => attackRange; }
+   
+    public bool IsInCombat { get {
+            return State == UnitState.Attack || recentlyDamaged;
+        }
+    }
     #endregion
 
     /*
@@ -142,10 +151,15 @@ public class UnitController : MonoBehaviour
         gameManager = GameObject.FindObjectOfType<GameManager>();
 
         ChangeState(UnitState.Idle);
+
+        if (UnitManager.Instance)
+        {
+            UnitManager.Instance.UCRefs.AddLast(this);
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+	// Update is called once per frame
+	void Update()
     {
         if (healthBar)
         {
@@ -168,7 +182,20 @@ public class UnitController : MonoBehaviour
             if(destroyEffects != null)
                 gameManager.InstantiateParticles(destroyEffects[RandomPick(destroyEffects)], body.position);
         }
-        
+
+        healthBar.transform.position = body.position + healthBarOffset;
+
+
+        if (UnitManager.Instance)
+        {
+            RDTimer += Time.deltaTime;
+
+            if (RDTimer >= UnitManager.Instance.unitInCombatTimeout)
+            {
+                recentlyDamaged = false;
+                RDTimer = 0.0f;
+            }
+        }
     }        
 
     /// <summary>
@@ -198,6 +225,9 @@ public class UnitController : MonoBehaviour
             int randomPick = Random.Range(0, hitSounds.Length-1);
             audio.PlayOneShot(hitSounds[randomPick].clip, hitSounds[randomPick].volumeScale);
         }
+
+        recentlyDamaged = true;
+        RDTimer = 0.0f;
     }
 
     /// <summary>
@@ -213,7 +243,7 @@ public class UnitController : MonoBehaviour
     }
 
     /// <summary>
-    /// Plays a particle system attached to the UnitControlelr script
+    /// Plays a particle system attached to the UnitController script
     /// </summary>
     /// <param name="particles">The particle system to start playing</param>
     public void PlayParticles(ParticleSystem particles)
@@ -425,10 +455,11 @@ public class UnitController : MonoBehaviour
     private void OnDestroy()
     {
         var unitGui = GameObject.FindObjectOfType<UnitGui>();
-        var unitManager = GameObject.FindObjectOfType<UnitManager>();
 
-        if (unitManager != null)
-            unitManager.RemoveFromSelection(this.gameObject);
+        if (UnitManager.Instance != null) {
+            UnitManager.Instance.RemoveFromSelection(this.gameObject);
+            UnitManager.Instance.UCRefs.Remove(this);
+        }
 
         if (unitGui != null)        
             unitGui.RemoveUnitFromSelection(this);
