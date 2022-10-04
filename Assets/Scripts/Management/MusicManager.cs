@@ -23,7 +23,7 @@ public class MusicManager : MonoBehaviour {
 	float fadeTime;
 
 	public State state { get; private set; }
-	public MusicManager Instance { get; private set; }
+	public static MusicManager Instance { get; private set; }
 
 	private void Awake()
 	{
@@ -89,11 +89,11 @@ public class MusicManager : MonoBehaviour {
 		if (s != state) {
 			if (s == State.Normal && state == State.Combat)
 			{
-				ChangeToCombat();
+				ChangeToNormal();
 			}
 			else
 			{
-				ChangeToNormal();
+				ChangeToCombat();
 			}
 		}
 
