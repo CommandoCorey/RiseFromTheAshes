@@ -22,15 +22,20 @@ public class BuildingManager : MonoBehaviour
 	void Update()
 	{
 		RaycastHit hit;
-		if (Input.GetMouseButtonUp(0) && Physics.Raycast(mainCamera.ScreenPointToRay(Input.mousePosition), out hit, Mathf.Infinity, buildableLayer)) {
-			Ghost building = hit.collider.gameObject.GetComponent<Ghost>();
-			building.ShowBuildMenu();
-		}
 
-		if (Input.GetMouseButtonUp(0) && Physics.Raycast(mainCamera.ScreenPointToRay(Input.mousePosition), out hit, Mathf.Infinity, buildingLayer)) {
-			Building building = hit.collider.gameObject.GetComponent<Building>();
+		if (Input.GetMouseButtonUp(0))
+		{
 
-			building.Interact();
+			if (Physics.Raycast(mainCamera.ScreenPointToRay(Input.mousePosition), out hit, Mathf.Infinity, buildableLayer))
+			{
+				Ghost building = hit.collider.gameObject.GetComponent<Ghost>();
+				building.ShowBuildMenu();
+			} else if (Physics.Raycast(mainCamera.ScreenPointToRay(Input.mousePosition), out hit, Mathf.Infinity, buildingLayer))
+			{
+				Building building = hit.collider.gameObject.GetComponent<Building>();
+
+				building.Interact();
+			}
 		}
 	}
 }
