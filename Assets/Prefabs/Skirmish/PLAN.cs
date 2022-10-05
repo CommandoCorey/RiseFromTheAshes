@@ -14,16 +14,16 @@ public class PLAN : MonoBehaviour
     // - Can be Random and not using the prefabs (DONE)
     // - can be used between all Major Uses (DONE)
 
-    // Generates Buildings Using Prefabs (25%)
-    // - Building spots need to be made (50% - 2-4 more versions)
-    // - Need Buildings 
+    // Generates Buildings Using Prefabs (DONE)
+    // - Building spots need to be made (DONE)
+    // - Need Buildings (DONE) 
 
     // Generates Props for The Level using prefabs (50%)
     // - Needs Prop Spots (DONE)
-    // - props need to be made
+    // - props need to be made (0%)
     // - Props Break (50% - Needs Testing)
 
-    // Generates Using a Grid System (90%)
+    // Generates Using a Grid System (90-0%)
     // - Grids can be edited (DONE)
     // - Needs to be one Script
 
@@ -93,5 +93,5 @@ public class PLAN : MonoBehaviour
     // no issues occurred 
     // stays inside the game object
     // Scripts can play
-    // no Cripping
+    // no Clipping
 }
