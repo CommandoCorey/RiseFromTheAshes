@@ -1,14 +1,22 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using TMPro;
 using System.Collections.Generic;
+using UnityEngine.EventSystems;
 
 [System.Serializable]
-struct BuildItem
+public struct BuildItem
 {
 	public string name;
 	public Building buildingPrefab;
 	public Button button;
+
+	BuildItem(string n, Building pre, Button but = null) {
+		name = n;
+		buildingPrefab = pre;
+		button = but;
+	}
 }
 
 public class BuildMenu : MonoBehaviour
@@ -18,6 +26,9 @@ public class BuildMenu : MonoBehaviour
 	[HideInInspector] public Ghost ghostBuilding;
 
 	[SerializeField] Button cancelButton;
+
+	[SerializeField] GraphicRaycaster raycaster;
+	[SerializeField] EventSystem eventSystem;
 
 	static public BuildMenu Instance { get; private set; }
 
@@ -33,17 +44,42 @@ public class BuildMenu : MonoBehaviour
 	{
 		foreach (var buildItem in buildItems) {
 			buildItem.button.onClick.AddListener(() => {
-				Building b = Instantiate(buildItem.buildingPrefab, ghostBuilding.transform.position, ghostBuilding.transform.rotation);
-				ghostBuilding.gameObject.SetActive(false);
-				b.Build();
-				gameObject.SetActive(false);
+				Build(buildItem);
 			});
 		}
 
 		cancelButton.onClick.AddListener(() => {
-			gameObject.SetActive(false);
+			Hide();
 		});
 
+		Hide();
+	}
+
+	public void Hide()
+	{
+		gameObject.SetActive(false);
+	}
+
+	private void Update()
+	{
+		if (Input.GetMouseButtonUp(0))
+		{
+			RaycastHit hit;
+			if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit))
+			{
+				if (!hit.collider.gameObject.CompareTag("BuildMenu"))
+				{
+					Hide();
+				}
+			}
+		}
+	}
+
+	public void Build(in BuildItem item)
+	{
+		Building b = Instantiate(item.buildingPrefab, ghostBuilding.transform.position, ghostBuilding.transform.rotation);
+		ghostBuilding.gameObject.SetActive(false);
+		b.Build();
 		gameObject.SetActive(false);
 	}
 }
