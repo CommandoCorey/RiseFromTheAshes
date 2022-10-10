@@ -1440,7 +1440,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 1.8
-  m_Speed: 7
+  m_Speed: 4
   m_Acceleration: 8
   avoidancePriority: 40
   m_AngularSpeed: 120
@@ -1560,21 +1560,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d337556d8371dc349a90c78320b2f3fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitName: 
-  steelCost: 10
-  timeToTrain: 1
+  unitName: Half Track
+  steelCost: 50
+  timeToTrain: 12
   selectionHighlight: {fileID: 0}
   turret: {fileID: 1530437833888941263}
   firingPoint: {fileID: 2066745330007294737}
   body: {fileID: 8972911425053166683}
   guiIcon: {fileID: 0}
-  fireEffect: {fileID: 0}
-  hitEffect: {fileID: 0}
-  destroyEffect: {fileID: 0}
   healthBar: {fileID: 0}
-  maxHealth: 100
-  movementSpeed: 1
-  damagePerHit: 1
+  maxHealth: 125
+  movementSpeed: 10
+  damagePerHit: 20
   attackRate: 1
   attackRange: 20
   turretRotationSpeed: 1
@@ -1588,7 +1585,9 @@ MonoBehaviour:
   environmentLayer:
     serializedVersion: 2
     m_Bits: 1024
-  unitSelectSound: {fileID: 0}
+  fireEffects: []
+  hitEffects: []
+  destroyEffects: []
   moveSounds: []
   turretSounds: []
   fireSounds: []

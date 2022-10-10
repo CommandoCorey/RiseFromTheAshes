@@ -11,6 +11,8 @@ public enum GameState
 
 public class GameManager : MonoBehaviour
 {
+    [SerializeField] int startingMaxUnits = 10;
+
     [Range(0, 10)]
     public float timeScale = 1;
     public GameObject minimap;
@@ -40,6 +42,10 @@ public class GameManager : MonoBehaviour
 
     private bool handleEndConidition = false;
 
+    // private variables
+    private int maxUnitsPlayer;
+    private int maxUnitsAi;
+
     // properties
     public GameState State { get => state;}
 
@@ -63,6 +69,9 @@ public class GameManager : MonoBehaviour
             handleEndConidition = true;
 
         state = GameState.Running;
+
+        maxUnitsPlayer = startingMaxUnits;
+        maxUnitsAi = startingMaxUnits;
     }
 
     // Update is called once per frame

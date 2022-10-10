@@ -83,6 +83,25 @@ public class AiManager : MonoBehaviour
         }
     }
 
+    public void StartTrainTask(UnitController unit)
+    {
+        StartCoroutine(TrainUnit(unit));
+    }
+
+    public Ghost GetPlaceholder(int number)
+    {
+        if(number >-1 && number < placeholders.Length)
+            return placeholders[number];
+
+        return placeholders[0];
+    }
+
+    public void ConstructBuilding(Ghost ghostBuilding, Building buildItem)
+    {
+        Building building = Instantiate(buildItem, ghostBuilding.transform.position, ghostBuilding.transform.rotation);
+        ghostBuilding.gameObject.SetActive(false);
+        building.Build();
+    }
 
     private IEnumerator TrainUnit(UnitController unit)
     {
@@ -167,14 +186,7 @@ public class AiManager : MonoBehaviour
 
         trainOdrer = enemyWaves[waveNumber].units;
         unit = trainOdrer[unitNum];
-    }
-
-    private void ConstructBuilding(Ghost ghostBuilding, Building buildItem)
-    {
-        Building building = Instantiate(buildItem, ghostBuilding.transform.position, ghostBuilding.transform.rotation);
-        ghostBuilding.gameObject.SetActive(false);
-        building.Build();
-    }
+    }    
 
     private void OnDrawGizmos()
     {

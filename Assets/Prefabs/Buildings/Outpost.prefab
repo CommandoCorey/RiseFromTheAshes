@@ -136,9 +136,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ce1311378444314781025cff0c15cca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeToBuild: 1
+  buildingName: Outpost
+  steelCost: 300
+  timeToBuild: 25
   maxHP: 500
+  startAtMaxHP: 0
+  aiBuilding: 0
+  HP: 0
   hitSounds: []
+  hitVFX: []
 --- !u!114 &4101868242953890456
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -151,12 +157,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a56b81af409a3304eb5cf94a79f81e0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeToBuild: 1
-  maxHP: 100
-  hitSounds: []
   resourceToAdd: 0
-  quantityToAdd: 10
-  timePerIncerement: 5
+  quantityToAdd: 5
+  timePerIncerement: 3
+  giveToAIPlayer: 0
   floatingLabel: {fileID: 9058742007939192520}
 --- !u!114 &190107870062908096
 MonoBehaviour:

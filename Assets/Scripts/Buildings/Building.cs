@@ -3,9 +3,12 @@ using System.Collections.Generic;
 
 public class Building : MonoBehaviour
 {
+	public string buildingName;
+	public int steelCost;
 	[SerializeField] float timeToBuild = 1.0f;
 	public float maxHP = 100.0f;
 	[SerializeField] bool startAtMaxHP = false;
+	public bool aiBuilding;
 
 	bool isBuilding;
 
@@ -38,6 +41,11 @@ public class Building : MonoBehaviour
 		get {
 			return HP / maxHP;
 		}
+	}
+
+	public bool IsBuilding {
+		get => isBuilding;
+		set => isBuilding = value; 
 	}
 
 	private void OnEnable()

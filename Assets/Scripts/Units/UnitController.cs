@@ -82,9 +82,13 @@ public class UnitController : MonoBehaviour
 
     // private variables
     private float health;
-    //private Vector3[] waypoints;
-    //
 
+    //private Vector3[] waypoints;
+    private Vector3 healthBarOffset;
+    private new AudioSource audio;
+    private GameManager gameManager;
+
+    // added by George
     bool recentlyDamaged;
     float RDTimer;
 
@@ -93,28 +97,24 @@ public class UnitController : MonoBehaviour
     private SeekState moveState;
     private AgentMoveState agentMoveState;
     private FlockState flockState;
-    private CombatState attackState;
+    //private CombatState attackState;
     private FollowEnemyState followState;
     private AttackState agentAttackState;
-
-    // other variables
-    private Vector3 healthBarOffset;
-    private new AudioSource audio;
-    private GameManager gameManager;
+    
     #endregion
 
     # region properties
     public UnitState State { get; private set; }
     public Transform AttackTarget { get; set; }
     public float DetectionRadius { get => detectionRadius; }
-    //public LayerMask DetectionLayer { get => detectionLayer; }
     public LayerMask EnemyUnitLayer { get => enemyUnitLayer; }
     public LayerMask EnemyBuildingLayer { get => enemyBuildingLayer; }
-
     public LayerMask EnvironmentLayer { get => environmentLayer; }
     public Sprite GuiIcon { get => guiIcon; }
-    //public float HaltTime { get => haltTime; }
     public bool UnitHalt { get; set; } = false;
+    public bool IsBuilt { get; set; } = false;
+    public bool MovingToBase { get; set; } = false;
+
 
     // unit stats
     public string Name { get => unitName; }
@@ -172,7 +172,6 @@ public class UnitController : MonoBehaviour
         if (health <= 0)
         {
             GameObject.Destroy(this.gameObject);
-            //GameObject.Destroy(this.gameObject.transform.parent.gameObject);
 
             // play destruction sound
             if (destroySounds.Length > 0)
@@ -220,12 +219,6 @@ public class UnitController : MonoBehaviour
         health -= amount;
 
         ParticleSystem hitParticles = hitEffects[RandomPick(hitEffects)];
-
-        /*
-        if(hitPosition != Vector3.zero)
-            hitEffect.transform.position = hitPosition;
-
-        PlayParticles(hitEffect);*/
 
         InstantiateParticles(hitParticles, hitPosition);
 
@@ -320,6 +313,17 @@ public class UnitController : MonoBehaviour
         }
     }
 
+    public void MoveToRallyPoint(Vector3 point)
+    {
+        UnitManager um = FindObjectOfType<UnitManager>();
+        NavMeshAgent agent = body.GetComponent<NavMeshAgent>();
+
+        agent.avoidancePriority -= um.GetCurrentRallySize(1);
+        Vector3 formationPos = um.GetRallyPosition(point, 1);
+
+        ChangeState(UnitState.Moving, formationPos);
+    }
+
     /// <summary>
     /// Changes the Unit's state in the finite state machine to another one
     /// </summary>
@@ -335,27 +339,27 @@ public class UnitController : MonoBehaviour
                 // prevents destruction during redirect
                 if (newState != UnitState.Moving)
                 {
-                    if (tag == "PlayerUnit")
-                        Destroy(moveState);
-                    else if (tag == "NavMesh Agent")
+                    //if (tag == "PlayerUnit")
+                        //Destroy(moveState);
+                    //else if (tag == "NavMesh Agent")
                         Destroy(agentMoveState);
                 }
             break;
 
             case UnitState.Follow:
 
-                if (tag == "NavMesh Agent")
+                //if (tag == "NavMesh Agent")
                     Destroy(followState);
-                else if (tag == "PlayerUnit")
-                    Destroy(attackState);
+                //else if (tag == "PlayerUnit")
+                    //Destroy(attackState);
 
             break;
 
             case UnitState.Flock: Destroy(flockState); break;
             case UnitState.Attack:                
-                if(tag == "PlayerUnit")
-                    Destroy(attackState);
-                else if (tag == "NavMesh Agent")
+                //if(tag == "PlayerUnit")
+                    //Destroy(attackState);
+                //else if (tag == "NavMesh Agent")
                     Destroy(agentAttackState);                
             break;            
         }
@@ -374,6 +378,7 @@ public class UnitController : MonoBehaviour
 
             case UnitState.Moving:
 
+                /*
                 if (this.tag == "PlayerUnit")
                 {
                     if (GetComponent<SeekState>() == null)
@@ -383,16 +388,16 @@ public class UnitController : MonoBehaviour
 
                     //moveState.Target = target;
                     moveState.MoveTo(target);
-                }
-                else if (this.tag == "NavMesh Agent")
-                {
+                }*/
+                //else if (this.tag == "NavMesh Agent")
+                //{
                     if(agentMoveState == null)
                         agentMoveState = gameObject.AddComponent<AgentMoveState>();
                     else                      
                         body.GetComponent<NavMeshAgent>().isStopped = true;
 
                     agentMoveState.MoveTo(target);
-                }
+                //}
             break;
 
             case UnitState.Flock:
@@ -406,23 +411,24 @@ public class UnitController : MonoBehaviour
             break;
 
             case UnitState.Follow:
-
-                if (this.tag == "NavMesh Agent")
-                {
+                
+                //if (this.tag == "NavMesh Agent")
+                //{
                     followState = gameObject.AddComponent<FollowEnemyState>();
-                }
-                else if (this.tag == "PlayerUnit")
+                //}
+                /*else if (this.tag == "PlayerUnit")
                 {
-                    if (GetComponent<CombatState>() == null)
-                    {
-                        attackState = gameObject.AddComponent<CombatState>();
-                    }
+                    //if (GetComponent<CombatState>() == null)
+                    //{
+                        //attackState = gameObject.AddComponent<CombatState>();
+                    //}
 
-                }
+                //}
             break;
 
             case UnitState.Attack:
 
+                /*
                 if (this.tag == "PlayerUnit")
                 {
                     if (GetComponent<CombatState>() == null)
@@ -430,11 +436,12 @@ public class UnitController : MonoBehaviour
                         attackState = gameObject.AddComponent<CombatState>();
                     }
 
-                }
-                else if (this.tag == "NavMesh Agent")
-                {
+                }*/
+                
+                //else if (this.tag == "NavMesh Agent")
+                //{
                     agentAttackState = gameObject.AddComponent<AttackState>();                    
-                }
+                //}
            break;
 
         }

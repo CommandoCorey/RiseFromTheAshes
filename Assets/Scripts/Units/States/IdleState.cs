@@ -52,7 +52,7 @@ public class IdleState : State
                 {
                     if (gameObject.tag == "PlayerUnit")
                         unit.ChangeState(UnitState.Attack);
-                    else if (gameObject.tag == "NavMesh Agent")
+                    else
                         unit.ChangeState(UnitState.Follow);
                 }
             }
