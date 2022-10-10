@@ -15,10 +15,15 @@ public class MainMenu : MonoBehaviour
         UnityEditor.EditorApplication.isPlaying = false;
 #endif
     }
+    public void LoadSceneLevel1()
+    {
+        Debug.Log("Loading...");
+        SceneManager.LoadScene("Level 1 (Beta)");
+    }
     public void LoadSceneL1()
     {
         Debug.Log("Loading...");
-        SceneManager.LoadScene("Ashley Test");
+        SceneManager.LoadScene("");
     }
     public void LoadSceneL2()
     {
