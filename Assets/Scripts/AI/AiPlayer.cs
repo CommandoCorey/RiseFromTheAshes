@@ -194,7 +194,7 @@ public class AiPlayer : MonoBehaviour
             if(task.IsComplete())
             {
                 activeTasks.Remove(task);
-                UpdateActiveTasks();
+                //UpdateActiveTasks();
 
                 return;
             }
@@ -259,8 +259,10 @@ public class AiPlayer : MonoBehaviour
         // move all units to their designated target positions
         for (int i = 0; i < unitGroup.Count; i++)
         {
-            unitGroup[i].GetComponent<UnitController>().
-                ChangeState(UnitState.Moving, formationPositions[i]);
+            var unit = unitGroup[i].GetComponent<UnitController>();
+
+            unit.ChangeState(UnitState.Moving, formationPositions[i]);
+            unit.MovingToBase = true;
         }
         
     }
@@ -280,8 +282,10 @@ public class AiPlayer : MonoBehaviour
         // move all units to their designated target positions
         for (int i = 0; i < unitGroup.Count; i++)
         {
-            unitGroup[i].GetComponent<UnitController>().
-                ChangeState(UnitState.Moving, formationPositions[i]);
+            var unit = unitGroup[i].GetComponent<UnitController>();
+
+            unit.ChangeState(UnitState.Moving, formationPositions[i]);
+            unit.MovingToBase = true;
         }
 
         Debug.Log("Dispatching Units");

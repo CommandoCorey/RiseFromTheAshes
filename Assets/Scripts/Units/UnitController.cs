@@ -82,9 +82,13 @@ public class UnitController : MonoBehaviour
 
     // private variables
     private float health;
-    //private Vector3[] waypoints;
-    //
 
+    //private Vector3[] waypoints;
+    private Vector3 healthBarOffset;
+    private new AudioSource audio;
+    private GameManager gameManager;
+
+    // added by George
     bool recentlyDamaged;
     float RDTimer;
 
@@ -93,14 +97,10 @@ public class UnitController : MonoBehaviour
     private SeekState moveState;
     private AgentMoveState agentMoveState;
     private FlockState flockState;
-    private CombatState attackState;
+    //private CombatState attackState;
     private FollowEnemyState followState;
     private AttackState agentAttackState;
-
-    // other variables
-    private Vector3 healthBarOffset;
-    private new AudioSource audio;
-    private GameManager gameManager;
+    
     #endregion
 
     # region properties
@@ -113,6 +113,8 @@ public class UnitController : MonoBehaviour
     public Sprite GuiIcon { get => guiIcon; }
     public bool UnitHalt { get; set; } = false;
     public bool IsBuilt { get; set; } = false;
+    public bool MovingToBase { get; set; } = false;
+
 
     // unit stats
     public string Name { get => unitName; }
@@ -409,17 +411,17 @@ public class UnitController : MonoBehaviour
             break;
 
             case UnitState.Follow:
-                /*
-                if (this.tag == "NavMesh Agent")
-                {
+                
+                //if (this.tag == "NavMesh Agent")
+                //{
                     followState = gameObject.AddComponent<FollowEnemyState>();
-                }
-                else if (this.tag == "PlayerUnit")
-                {*/
-                    if (GetComponent<CombatState>() == null)
-                    {
-                        attackState = gameObject.AddComponent<CombatState>();
-                    }
+                //}
+                /*else if (this.tag == "PlayerUnit")
+                {
+                    //if (GetComponent<CombatState>() == null)
+                    //{
+                        //attackState = gameObject.AddComponent<CombatState>();
+                    //}
 
                 //}
             break;

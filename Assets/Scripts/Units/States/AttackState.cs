@@ -27,10 +27,10 @@ public class AttackState : State
     {
         if (unit.AttackTarget == null)
         {
-            if (unit.UnitHalt)
+            //if (unit.UnitHalt)
                 unit.ChangeState(UnitState.Idle);
-            else
-                unit.ChangeState(UnitState.Follow);
+            //else
+                //unit.ChangeState(UnitState.Follow);
 
             return;
         }
