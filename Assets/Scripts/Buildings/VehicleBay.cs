@@ -96,7 +96,7 @@ public class VehicleBay : MonoBehaviour {
 
 				if (buildTimer >= 1.0f)
 				{
-					Instantiate(desc.prefab, spawnLocation.position, Quaternion.identity);
+					Instantiate(desc.prefab, spawnLocation.position, spawnLocation.rotation);
 					buildProgress.gameObject.SetActive(false);
 
 					isBuilding = false;
