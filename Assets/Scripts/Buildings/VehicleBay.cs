@@ -58,7 +58,7 @@ public class VehicleBay : MonoBehaviour {
 			ud.buildButton.onClick.AddListener(() => {
 				PrepareBuild();
 				isBuilding = true;
-				ResourceManager.Instance.SpendSteel(ud.steelCost);
+				//ResourceManager.Instance.SpendSteel(ud.steelCost);
 				buildTimer = 0.0f;
 				currentUnitDesc = ud;
 			});
