@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4999239961471015111}
   - component: {fileID: 4999239961471015108}
-  m_Layer: 0
+  m_Layer: 23
   m_Name: Turret Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -44,12 +44,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba5770ddb47e1bb4eba75cd6dff05570, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  buildingName: 
+  steelCost: 0
   timeToBuild: 1
   maxHP: 100
+  startAtMaxHP: 0
+  aiBuilding: 0
+  HP: 0
   hitSounds: []
+  hitVFX: []
   turret: {fileID: 4999239961639206769}
   gun: {fileID: 4999239962058745277}
   firingPoint: {fileID: 4999239963437683607}
+  fireParticles: {fileID: 0}
   detectionRadius: 20
   aimSpeed: 30
   damagePerShot: 10
@@ -67,7 +74,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4999239961639206769}
-  m_Layer: 0
+  m_Layer: 23
   m_Name: Turret
   m_TagString: Untagged
   m_Icon: {fileID: 7866945982896999795, guid: 0000000000000000d000000000000000, type: 0}
@@ -101,7 +108,7 @@ GameObject:
   - component: {fileID: 4999239962058745278}
   - component: {fileID: 4999239962058745279}
   - component: {fileID: 4999239962058745276}
-  m_Layer: 0
+  m_Layer: 23
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -198,7 +205,7 @@ GameObject:
   - component: {fileID: 4999239962427482165}
   - component: {fileID: 4999239962427482170}
   - component: {fileID: 4999239962427482171}
-  m_Layer: 0
+  m_Layer: 23
   m_Name: Neck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -294,7 +301,7 @@ GameObject:
   - component: {fileID: 4999239963416855601}
   - component: {fileID: 4999239963416855606}
   - component: {fileID: 4999239963416855607}
-  m_Layer: 0
+  m_Layer: 23
   m_Name: Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -389,7 +396,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4999239963437683607}
-  m_Layer: 0
+  m_Layer: 23
   m_Name: Firing Point
   m_TagString: Untagged
   m_Icon: {fileID: 7148428337604731935, guid: 0000000000000000d000000000000000, type: 0}
