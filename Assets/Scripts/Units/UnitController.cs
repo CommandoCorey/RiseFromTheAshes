@@ -423,7 +423,7 @@ public class UnitController : MonoBehaviour
                         //attackState = gameObject.AddComponent<CombatState>();
                     //}
 
-                //}
+                //}*/
             break;
 
             case UnitState.Attack:

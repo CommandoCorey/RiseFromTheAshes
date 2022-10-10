@@ -103,7 +103,7 @@ public class AttackState : State
             }
 
             // check if target is still in attack range
-            if (Vector3.Distance(unit.body.position, unit.AttackTarget.position) > unit.AttackRange)
+            if (Vector3.Distance(unit.body.position, unit.AttackTarget.position) > unit.AttackRange + 0.01f)
             {
                 unit.ChangeState(UnitState.Follow);
             }            
@@ -123,15 +123,13 @@ public class AttackState : State
             }
 
         }
-        else if (unit.MovingToBase && gameObject.layer == 7)
+        else if (unit.MovingToBase && unit.body.gameObject.layer == 7)
         {
-            var ai = FindObjectOfType<AiManager>();           
+            var ai = FindObjectOfType<AiPlayer>();           
             unit.ChangeState(UnitState.Moving, ai.playerBase.position);
         }
         else
-        {
-            
-
+        {            
             unit.ChangeState(UnitState.Idle);
         }
 
