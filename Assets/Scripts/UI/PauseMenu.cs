@@ -21,7 +21,7 @@ public class PauseMenu : MonoBehaviour
             }
         }
     }
-    void Resume()
+    public void Resume()
     {
         pauseMenuUI.SetActive(false);
         Time.timeScale = 1f;
@@ -41,17 +41,17 @@ public class PauseMenu : MonoBehaviour
     public void LoadSceneMainMenu()
     {
         Debug.Log("Loading MainMenu...");
-        SceneManager.LoadScene("4_MainMenu");
+        SceneManager.LoadScene("Main Menu (Beta)");
     }
     public void LoadSceneTestEnvironment()
     {
         Debug.Log("Loading...");
-        SceneManager.LoadScene("3_Test Environment");
+        SceneManager.LoadScene("");
     }
     public void LoadSceneLevel01()
     {
         Debug.Log("Loading...");
-        SceneManager.LoadScene("Ashley Test");
+        SceneManager.LoadScene("");
     }
     public void LoadSceneLevel02()
     {
@@ -66,7 +66,7 @@ public class PauseMenu : MonoBehaviour
     public void LoadSceneInsertHere1()
     {
         Debug.Log("Loading...");
-        SceneManager.LoadScene("Building_Test");
+        SceneManager.LoadScene("");
     }
     public void LoadSceneInsertHere2()
     {
