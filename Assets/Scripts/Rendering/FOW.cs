@@ -83,8 +83,8 @@ public class FOW : MonoBehaviour {
 		if (permanent) {
 			ClearMask();
 
-			int oldSeed = Random.seed;
-			Random.seed = noiseSeed;
+			var oldState = Random.state;
+			Random.InitState(noiseSeed);
 
 			noiseTexture = new RenderTexture(noiseResolution.x, noiseResolution.y, 0, RenderTextureFormat.RG16);
 			noiseTexture.enableRandomWrite = true;
@@ -113,7 +113,7 @@ public class FOW : MonoBehaviour {
 			mainPoints.Release();
 			detailPoints.Release();
 
-			Random.seed = oldSeed;
+			Random.state = oldState;
 		}
 	}
 

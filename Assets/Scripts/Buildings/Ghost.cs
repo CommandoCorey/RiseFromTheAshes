@@ -2,14 +2,13 @@ using UnityEngine;
 
 public class Ghost : MonoBehaviour
 {
-	[SerializeField] BuildMenu buildMenu;
 	[SerializeField] Vector3 buildMenuOffset;
 
 	public void ShowBuildMenu()
 	{
-		buildMenu.transform.position = transform.position + buildMenuOffset;
-		buildMenu.ghostBuilding = this;
-		buildMenu.gameObject.SetActive(true);
+		BuildMenu.Instance.transform.position = transform.position + buildMenuOffset;
+		BuildMenu.Instance.ghostBuilding = this;
+		BuildMenu.Instance.gameObject.SetActive(true);
 	}
 
 	public void OnDrawGizmosSelected()

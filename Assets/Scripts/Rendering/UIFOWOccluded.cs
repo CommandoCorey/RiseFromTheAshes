@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System;
 
 /* This script disables the rendering of the game object
  * if it is occluded by the fog of war. For UI objects
@@ -38,14 +39,27 @@ public class UIFOWOccluded : MonoBehaviour
 
 	private void Update()
 	{
-		var f = FOWManager.Instance.imperm;
-		if (!f) { return; }
+		FOW f;
+
+        try
+		{
+			f = FOWManager.Instance.imperm;
+        }
+        catch (Exception e)
+        {
+            //Debug.Log("Fog of war not in scene");
+            f = null;
+        }
+
+        if (!f) { return; }
 		if (f.GetMask(f.WorldPosToMaskPos(transform.position)))
 		{
 			EnableRendering(true);
-		} else
+		}
+		else
 		{
 			EnableRendering(false);
 		}
+		
 	}
 }

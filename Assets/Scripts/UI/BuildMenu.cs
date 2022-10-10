@@ -1,76 +1,85 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using TMPro;
 using System.Collections.Generic;
+using UnityEngine.EventSystems;
 
 [System.Serializable]
-struct BuildItem
+public struct BuildItem
 {
 	public string name;
 	public Building buildingPrefab;
+	public Button button;
+
+	BuildItem(string n, Building pre, Button but = null) {
+		name = n;
+		buildingPrefab = pre;
+		button = but;
+	}
 }
 
 public class BuildMenu : MonoBehaviour
 {
-	[SerializeField] Canvas canvas;
 	[SerializeField] List<BuildItem> buildItems;
 
-	[Space] [Space]
-	[Header("UI")]
-	[SerializeField] Button buildButtonPrefab;
-	[SerializeField] float spacing;
 	[HideInInspector] public Ghost ghostBuilding;
+
+	[SerializeField] Button cancelButton;
+
+	[SerializeField] GraphicRaycaster raycaster;
+	[SerializeField] EventSystem eventSystem;
+
+	static public BuildMenu Instance { get; private set; }
+
+	void Awake() {
+		if (Instance != null && Instance != this) {
+			Destroy(this);
+		} else {
+			Instance = this;
+		}
+	}
 
 	private void Start()
 	{
-		float cursorY = 0.0f;
-
 		foreach (var buildItem in buildItems) {
-			Button b = Instantiate(buildButtonPrefab, canvas.transform);
-			RectTransform bt = b.GetComponent<RectTransform>();
-
-			bt.localPosition = new Vector3(0.0f, cursorY, 0.0f);
-
-			b.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = buildItem.name;
-
-			b.onClick.AddListener(() => {
-				Building b = Instantiate(buildItem.buildingPrefab, ghostBuilding.transform.position, ghostBuilding.transform.rotation);
-				ghostBuilding.gameObject.SetActive(false);
-				b.Build();
-				gameObject.SetActive(false);
+			buildItem.button.onClick.AddListener(() => {
+				Build(buildItem);
 			});
-
-			RectTransform rt = canvas.GetComponent<RectTransform>();
-
-			Rect r = rt.rect;
-			rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical,
-					r.height +
-					bt.rect.height +
-					spacing);
-
-			cursorY -= bt.rect.height + spacing;
 		}
-
-		Button cancelButton = Instantiate(buildButtonPrefab, canvas.transform);
-		RectTransform cancelButtonTransform = cancelButton.GetComponent<RectTransform>();
-		cancelButtonTransform.localPosition = new Vector3(0.0f, cursorY, 0.0f);
-
-		cancelButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Cancel";
 
 		cancelButton.onClick.AddListener(() => {
-			gameObject.SetActive(false);
+			Hide();
 		});
 
+		Hide();
+	}
+
+	public void Hide()
+	{
+		gameObject.SetActive(false);
+	}
+
+	private void Update()
+	{
+		if (Input.GetMouseButtonUp(0))
 		{
-			RectTransform rt = canvas.GetComponent<RectTransform>();
-
-			Rect r = rt.rect;
-			rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical,
-					r.height +
-					cancelButtonTransform.rect.height +
-					spacing);
+			RaycastHit hit;
+			if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit))
+			{
+				if (!hit.collider.gameObject.CompareTag("BuildMenu"))
+				{
+					Hide();
+				}
+			}
 		}
+	}
 
+	public void Build(in BuildItem item)
+	{
+		Building b = Instantiate(item.buildingPrefab, ghostBuilding.transform.position, ghostBuilding.transform.rotation);
+		ghostBuilding.gameObject.SetActive(false);
+		b.Build();
 		gameObject.SetActive(false);
 	}
 }

@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 2434893712283191811}
   - component: {fileID: 3005125415144582022}
   - component: {fileID: 5620373894487887830}
+  - component: {fileID: 9010775530588872922}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: GameManager
@@ -49,7 +50,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -145,18 +146,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 332fe9667dfa172439aa9558eb988fb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  timeScale: 1
   minimap: {fileID: 0}
   showMinimap: 0
   marker: {fileID: 3153306220058434080}
   enableCursorChanges: 1
   defaultCursor:
-    image: {fileID: 2800000, guid: 47a25573e4cf6594c8deb164367d846e, type: 3}
+    image: {fileID: 2800000, guid: 56c0931ea7b3c034ebe10162c1a4d856, type: 3}
     hotspot: {x: 8, y: 0}
   moveCursor:
-    image: {fileID: 2800000, guid: 3c008f2e01527824ab553a9cccbb70fd, type: 3}
+    image: {fileID: 2800000, guid: 063e55e962f14ad479184c3cd08f7d71, type: 3}
     hotspot: {x: 16, y: 16}
   attackCursor:
-    image: {fileID: 2800000, guid: 3261c26d8cf87ba45986fd1ded841962, type: 3}
+    image: {fileID: 2800000, guid: d764854a499e3f64ab5162a5f6f1704c, type: 3}
     hotspot: {x: 2, y: 2}
 --- !u!114 &2434893712283191809
 MonoBehaviour:
@@ -170,16 +172,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98313234fe913e042b4b3c89033ffa6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gui: {fileID: 0}
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
   enemyLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 640
   flockWhileMoving: 0
   spaceBetweenUnits: 3
   maxUnitsPerRow: 5
   showFormationPosition: 0
+  unitInCombatTimeout: 30
 --- !u!114 &2434893712283191811
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -214,6 +218,8 @@ MonoBehaviour:
     icon: {fileID: 0}
     startingAmount: 0
     currentAmount: 0
+  aiResources: []
+  steelAmount: {fileID: 0}
 --- !u!114 &5620373894487887830
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -233,6 +239,21 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8388608
   mainCamera: {fileID: 0}
+--- !u!114 &9010775530588872922
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2434893712283191808}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50053e9c560e7f44aaa6fe5486530943, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  normalSTs: []
+  combatSTs: []
+  fadeSpeed: 0.5
 --- !u!1 &3153306220058434084
 GameObject:
   m_ObjectHideFlags: 0

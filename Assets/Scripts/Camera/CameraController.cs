@@ -1,160 +1,170 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections.Generic;
 
-[System.Serializable]
-public struct ZoomLevel
-{
-	[Range(0, 1)]
-	[Tooltip("Describes where on the curve that the camera will be placed at this zoom level index. " +
-		"1 is fully zoomed in, 0 is fully zoomed out.")]
-	public float interp;
-
-	[Tooltip("How fast the camera will move with WASD at this zoom level index.")]
-	public float WASDMoveSpeed;
-	public bool mouseLook;
-};
-
 public class CameraController : MonoBehaviour {
-	[SerializeField] List<ZoomLevel> zoomLevels;
-	[SerializeField] int zoomLevelIndex;
-
-	float zoomTime;
-	float zoomLevel;
-	[SerializeField] float zoomInterpSpeed = 2.0f;
-	[SerializeField] float mouseLookSensitivity = 0.3f;
-
-	Vector2 zoomRange;
-
-	[SerializeField] Camera zoomedIn;
-	[SerializeField] Camera zoomedOut;
-
-	Transform zoomedInTransform;
-	Transform zoomedOutTransform;
-
-	[SerializeField] Transform zoomCurveHandle;
-
+	[SerializeField] float zoomedInMouseSensitivity = 0.001f;
+	[SerializeField] float zoomedOutMouseSensitivity = 0.01f;
+	[SerializeField] float zoomedInWASDSensitivity = 15.0f;
+	[SerializeField] float zoomedOutWASDSensitivity = 30.0f;
+	[SerializeField] float zoomedInWASDSensitivitySprint = 20.0f;
+	[SerializeField] float zoomedOutWASDSensitivitySprint = 40.0f;
+	[SerializeField] float maxZoom = 15.0f;
+	[SerializeField] float minZoom = 1.0f;
+	[SerializeField] float zoomInterpSpeed = 10.0f;
 	[SerializeField] BoxCollider bounds;
 
-	static Vector3 QuadBezierCurve(Vector3 p0, Vector3 p1, Vector3 p2, float t) {
-		return p1 + Mathf.Pow((1.0f - t), 2.0f) * (p0 - p1) + Mathf.Pow(t, 2.0f) * (p2 - p1);
+	float zoom;
+
+	Vector2 mousePos;
+	Vector2 oldMousePos;
+	Vector2 mouseDelta;
+
+	Vector2 velocity;
+	Queue<Vector2> velocities = new Queue<Vector2>();
+	[SerializeField] float friction = 100.0f;
+
+	[Header("Edge scrolling.")]
+	[SerializeField] [Tooltip("The size of the areas that are to trigger scrolling, in pixels.")] float edgeSize = 30.0f;
+	[SerializeField] float zoomedInEdgeScrollSpeed = 15.0f;
+	[SerializeField] float zoomedOutEdgeScrollSpeed = 30.0f;
+	[SerializeField] bool enableEdgeScrolling = true;
+
+	bool firstMove;
+	bool moving;
+
+	float startPy;
+	float targetPy;
+	float zoomTime;
+
+	private void Start()
+	{
+		firstMove = true;
+		zoom = 0.0f;
+		zoomTime = 0.0f;
+		startPy = minZoom;
+		targetPy = maxZoom;
 	}
 
-	bool looking = false;
-	bool firstMouseMove;
-	Vector2 lastMousePos;
+	private void Update()
+	{
 
-	void Start() {
-		zoomedInTransform = zoomedIn.transform;
-		zoomedOutTransform = zoomedOut.transform;
-
-		zoomedIn .gameObject.SetActive(false);
-		zoomedOut.gameObject.SetActive(false);
-
-		zoomRange = new Vector2(zoomLevel, zoomLevels[zoomLevelIndex].interp);
-
-		transform.position = QuadBezierCurve(
-			zoomedInTransform.position,
-			zoomCurveHandle.position,
-			zoomedOutTransform.position,
-			zoomLevels[zoomLevelIndex].interp);
-
-		firstMouseMove = true;
-	}
-
-	void Update() {
-		float scroll = Input.GetAxis("Mouse ScrollWheel");
-		int zoomIncrease = scroll > 0.0f ? 1 : scroll < 0.0f ? -1 : 0;
-		if (zoomIncrease != 0) {
-			zoomLevelIndex += zoomIncrease;
-
-			if (zoomLevelIndex < 0) { zoomLevelIndex = 0; }
-			if (zoomLevelIndex > zoomLevels.Count - 1) { zoomLevelIndex = zoomLevels.Count - 1; }
-
-			zoomRange = new Vector2(zoomLevel, zoomLevels[zoomLevelIndex].interp);
-			zoomTime = 0.0f;
-		}
-
-		if (zoomTime < 1.0f) {
-			zoomTime += Time.deltaTime * zoomInterpSpeed;
-			zoomLevel = Mathf.Lerp(zoomRange.x, zoomRange.y, zoomTime);
-		}
-
-		Vector2 axis = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-		Vector2 mod = axis * zoomLevels[zoomLevelIndex].WASDMoveSpeed * Time.deltaTime;
-		zoomedInTransform.position += new Vector3(mod.x, 0.0f, mod.y);
-		zoomedInTransform.position = new Vector3(
-			Mathf.Clamp(zoomedInTransform.position.x, bounds.bounds.min.x, bounds.bounds.max.x),
-			zoomedInTransform.position.y,
-			Mathf.Clamp(zoomedInTransform.position.z, bounds.bounds.min.z, bounds.bounds.max.z)
-		);
+		Vector2 mp = Input.mousePosition;
 
 		if (Input.GetMouseButtonDown(2))
 		{
-			looking = true;
-			firstMouseMove = true;
+			firstMove = true;
+			moving = true;
+			Cursor.visible = false;
 		}
 
-		if (Input.GetMouseButtonUp(2))
+		zoom += Input.mouseScrollDelta.y;
+		zoom = Mathf.Clamp(zoom, minZoom, maxZoom);
+
+		float zoomPerc = Utils.Map(zoom, minZoom, maxZoom, 0.0f, 1.0f);
+
+		if (Input.mouseScrollDelta.y != 0.0f) {
+			zoomTime = 0.0f;
+			startPy = transform.position.y;
+			targetPy -= Input.mouseScrollDelta.y;
+			targetPy = Mathf.Clamp(targetPy, minZoom, maxZoom);
+		}
+
+		if (zoomTime < 1.0)
 		{
-			looking = false;
+			zoomTime += Time.deltaTime * zoomInterpSpeed;
 		}
 
-		if (looking) {
-			Vector2 mousePos = Input.mousePosition;
-			Vector2 mouseDelta = lastMousePos - mousePos;
+		zoom = Mathf.Lerp(startPy, targetPy, zoomTime);
 
-			if (firstMouseMove)
-			{
-				lastMousePos = mousePos;
-				mouseDelta = new Vector2(0, 0);
-				firstMouseMove = false;
+		transform.position = new Vector3(transform.position.x, zoom, transform.position.z);
+
+		if (moving)
+		{
+			mousePos = Input.mousePosition;
+
+			if (firstMove) {
+				oldMousePos = mousePos;
+				firstMove = false;
+				velocities.Clear();
 			}
 
-			Vector3 euler = zoomedInTransform.eulerAngles;
-			euler.x += mouseDelta.y * mouseLookSensitivity;
-			//euler.x = Mathf.Clamp(euler.x, -89.0f, 89.0f);
-			if (euler.x > 89.0f) { euler.x = 89.0f; }
-			if (euler.x < 0.0f) { euler.x = 0.0f; }
-			zoomedInTransform.rotation = Quaternion.Euler(euler.x, euler.y, euler.z);
+			mouseDelta = oldMousePos - mousePos;
 
-			lastMousePos = mousePos;
+			Vector3 delta = new Vector3(mouseDelta.x, 0.0f, mouseDelta.y) * Mathf.Lerp(zoomedInMouseSensitivity, zoomedOutMouseSensitivity, zoomPerc);
+
+			transform.transform.position += delta;
+			
+			oldMousePos = mousePos;
+
+			velocities.Enqueue(mouseDelta);
+
+			if (velocities.Count > 64) {
+				velocities.Dequeue();
+			}
+
+			if (Input.GetMouseButtonUp(2))
+			{
+				moving = false;
+
+				velocity = new Vector2(0.0f, 0.0f);
+
+				foreach (var v in velocities)
+				{
+					velocity += v;
+				}
+
+				velocity /= (float)velocities.Count;
+
+				Cursor.visible = true;
+			}
+		} else {
+			transform.transform.position += new Vector3(velocity.x, 0.0f, velocity.y) * Time.deltaTime;
+
+			if (velocity.x > 0.0001f && velocity.y > 0.0001 || velocity.x < -0.0001 || velocity.y < -0.0001)
+			{
+				velocity -= new Vector2(Time.deltaTime * friction, Time.deltaTime * friction) * velocity;
+			} else
+			{
+				velocity = new Vector2(0.0f, 0.0f);
+			}
 		}
 
-		transform.position = QuadBezierCurve(
-			zoomedInTransform.position,
-			zoomCurveHandle.position,
-			zoomedOutTransform.position,
-			zoomLevel);
-		transform.rotation = Quaternion.Slerp(zoomedInTransform.rotation, zoomedOutTransform.rotation, zoomLevel);
-	}
+		transform.position = new Vector3(
+				Mathf.Clamp(transform.position.x, bounds.bounds.min.x, bounds.bounds.max.x),
+				transform.position.y,
+				Mathf.Clamp(transform.position.z, bounds.bounds.min.z, bounds.bounds.max.z)
+			);
 
-	void OnDrawGizmos() {
-		/* For some reason, this causes the editor to freeze if the two cameras
-		 * are thousands of units apart. Which is interesting. */
-		int steps = 32;
-		Vector3 prev = zoomedIn.transform.position;
-		for (int i = 0; i < steps; i++) {
-			Vector3 pos = QuadBezierCurve(
-				zoomedIn.transform.position,
-				zoomCurveHandle.position,
-				zoomedOut.transform.position,
-				(float)i / (float)steps);
+		float s1 = Input.GetKey(KeyCode.LeftShift) ? zoomedInWASDSensitivitySprint : zoomedInWASDSensitivity;
+		float s2 = Input.GetKey(KeyCode.LeftShift) ? zoomedOutWASDSensitivitySprint : zoomedOutWASDSensitivity;
+		float s = Mathf.Lerp(s1, s2, zoomPerc);
+		Vector2 WASD = new Vector2();
+		WASD.x = Input.GetAxis("Horizontal") * s;
+		WASD.y = Input.GetAxis("Vertical") * s;
 
-			Gizmos.DrawLine(prev, pos);
+		if (WASD.x != 0.0f) { velocity.x = WASD.x; }
+		if (WASD.y != 0.0f) { velocity.y = WASD.y; }
 
-			prev = pos;
-		}
+		/* Check the mouse pointer against a 2D box that's the same size as the screen minus
+		 * the borderSize for the edge scrolling. */
+		Vector2 checkBoxMin = new Vector2(edgeSize, edgeSize);
+		Vector2 checkBoxMax = new Vector2(Screen.width - edgeSize, Screen.height - edgeSize);
 
-		Gizmos.DrawLine(prev, zoomedOut.transform.position);
-
-		Gizmos.color = Color.grey;
-
-		if (zoomCurveHandle)
+#if UNITY_EDITOR
+		/* Stop the camera from zooming around if someone is trying to do things in the editor,
+		 * that is, the mouse is outside the game view. */
+		if (mp.x < 0.0f || mp.y < 0.0f || mp.x > Screen.width || mp.y > Screen.height)
 		{
-			Gizmos.DrawSphere(zoomCurveHandle.transform.position, 0.1f);
+			return;
 		}
+#endif
 
-		Gizmos.DrawLine(zoomedIn.transform.position, zoomCurveHandle.transform.position);
-		Gizmos.DrawLine(zoomCurveHandle.transform.position, zoomedOut.transform.position);
+		if (enableEdgeScrolling && !moving && mp.x < checkBoxMin.x || mp.y < checkBoxMin.y || mp.x > checkBoxMax.x || mp.y > checkBoxMax.y)
+		{
+			Vector2 screenCentre = new Vector2(Screen.width * 0.5f, Screen.height * 0.5f);
+			Vector2 dir = (mp - screenCentre).normalized;
+
+			velocity = dir * Mathf.Lerp(zoomedInEdgeScrollSpeed, zoomedOutEdgeScrollSpeed, zoomPerc);
+		}
 	}
 }

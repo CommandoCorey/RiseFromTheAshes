@@ -85,7 +85,7 @@ Shader "Hidden/Fog"
 				float3 rayOrigin = _WorldSpaceCameraPos;
 				float3 rayDirection = normalize(i.viewVector);
 
-				float dist = rayVSPlane(float3(0.0, 0.0, 0.0), float3(0.0, 1.0, 0.0), rayOrigin, rayDirection);
+				float dist = rayVSPlane(float3(0.0, _Height, 0.0), float3(0.0, 1.0, 0.0), rayOrigin, rayDirection);
 
 				float4 col = tex2D(_MainTex, i.uv);
 
@@ -108,7 +108,7 @@ Shader "Hidden/Fog"
 
 						float3 samplePosMain   = (p * _CloudScale) + _ScrollDirection * _Time.y;
 						float3 samplePosDetail = (p * _CloudScale) - _ScrollDirection * _Time.y * 0.1;
-						float mainNoise   = _NoiseTexture.SampleLevel(sampler_NoiseTexture, samplePosMain, 0).r * 0.5;
+						float mainNoise   = _NoiseTexture.SampleLevel(sampler_NoiseTexture, samplePosMain, 0).r * 1;
 						float detailNoise = 0.0;
 						if (dist < 100.0) {
 							detailNoise = _NoiseTexture.SampleLevel(sampler_NoiseTexture, samplePosDetail, 0).g;

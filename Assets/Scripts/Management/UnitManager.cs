@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.EventSystems;
+using UnityEngine.UIElements;
 
 public class UnitManager : MonoBehaviour
 {
@@ -29,22 +30,44 @@ public class UnitManager : MonoBehaviour
     int maxUnitsPerRow = 5;
 
     [Header("Gizmos")]
-    public bool showFormationPosition = false;
+    public bool showFormationPositions = false;
+    public bool showAiRallyPositions = false;
+
+    public float unitInCombatTimeout = 30.0f;
+
+    public static UnitManager Instance { get; private set; }
 
     List<List<GameObject>> squads;
 
     List<Vector3> formationPositions;
+    List<Vector3> playerRallyFormation;
+    List<Vector3> aiRallyFormation;
+
     Vector3[] groupPath;
 
     private List<Vector3> searchedPositions = new List<Vector3>();   
     private Vector3 point;
+    new AudioSource audio;
 
-    AudioSource audio;
+    bool anythingInCombat;
 
     // external scripts
     private GameManager gameManager;
 
+    public LinkedList<UnitController> UCRefs = new LinkedList<UnitController>();
     #endregion
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            Instance = this;
+        }
+    }
 
     #region start and update
     // Start is called before the first frame update
@@ -57,6 +80,10 @@ public class UnitManager : MonoBehaviour
 
         squads = new List<List<GameObject>>();
         formationPositions = new List<Vector3>();
+        playerRallyFormation = new List<Vector3>();
+        aiRallyFormation = new List<Vector3>();
+
+        anythingInCombat = false;
     }
 
     // Update is called once per frame
@@ -82,9 +109,27 @@ public class UnitManager : MonoBehaviour
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo) && selection.Units.Count > 0)
                 MoveUnits(hitInfo);
         }
-
+        DoTheMusic();
     }
     #endregion
+
+    void DoTheMusic() {
+
+        /* Bit slow. I guess. I am tired. */
+        if (MusicManager.Instance)
+        {
+            foreach (var r in UCRefs)
+            {
+                if (r.IsInCombat)
+                {
+                    MusicManager.Instance.ChangeState(MusicManager.State.Combat);
+                    return;
+                }
+            }
+
+            MusicManager.Instance.ChangeState(MusicManager.State.Normal);
+        }
+	}
 
     #region public functions
 
@@ -196,10 +241,10 @@ public class UnitManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 
+    /// Causes all units in selection to enter their attack a target
     /// </summary>
-    /// <param name="target"></param>
-    /// <returns></returns>
+    /// <param name="target">The game object that the use clicked on</param>
+    /// <returns>True or false value based on whether the object is valid</returns>
     public bool AttackTarget(Transform target)
     {
         // check if the target's layer is one of the enemy layers
@@ -332,10 +377,7 @@ public class UnitManager : MonoBehaviour
 
             //unit.GetComponent<SeekState>().MoveTo(hitInfo.point);
         }
-    }
-    #endregion
-
-    #region private functions    
+    }       
 
     /// <summary>
     /// Removes a specifed unit from a moving group
@@ -352,7 +394,7 @@ public class UnitManager : MonoBehaviour
     /// </summary>
     /// <param name="point">The target position on the map to created a formation around</param>
     /// <returns>A list of coordinates for all positions in the formation</returns>
-    private List<Vector3> GetFormationPositions(Vector3 point)
+    public List<Vector3> GetFormationPositions(Vector3 point)
     {        
         Vector3 unitCenter = new Vector3();    
         RaycastHit rayHit;
@@ -372,11 +414,11 @@ public class UnitManager : MonoBehaviour
         int unitsPlaced = 0;
 
         // make sure an object with the ground tag exists
-        if (!GameObject.FindWithTag("Ground"))
+        /*if (!GameObject.FindWithTag("Ground"))
         {
             Debug.LogError("The ground object has not been tagged");
             return formationPositions;
-        }
+        }*/
 
         for (int row = 0; unitsPlaced < selection.Units.Count; row++)
         {            
@@ -396,18 +438,17 @@ public class UnitManager : MonoBehaviour
 
                 //Debug.Log("Old position: " + position);
                 position -= moveDirection * spaceBetweenUnits * row;
-                //Debug.Log("New position: " + position);
+                //Debug.Log("New position: " + position);                
 
                 // check that the position is not out of bounds
                 if (Physics.Raycast(position + Vector3.up, Vector3.down, out rayHit))
-                {
+                {                    
                     // check if the position is on the ground
-                    if (rayHit.transform.gameObject.layer == groundLayer || 
-                        rayHit.transform.tag == "Ground")
+                    if (rayHit.transform.gameObject.layer == 3 || rayHit.transform.tag == "Ground")
                     {
                         // Make sure point is on navmesh
-                        // Note: maxDistance must be abov zero else program will get stuck in loop forever
-                        if (NavMesh.SamplePosition(rayHit.point, out navHit, 0.1f, NavMesh.AllAreas))
+                        // Note: maxDistance must be above agent radius else program will get stuck in loop forever
+                        if (NavMesh.SamplePosition(rayHit.point, out navHit, 1.0f, NavMesh.AllAreas))
                         {
                             formationPositions.Add(navHit.position);
                             unitsPlaced++;
@@ -429,6 +470,178 @@ public class UnitManager : MonoBehaviour
         return formationPositions;
     }
 
+    /// <summary>
+    /// Cretes formation positions for a group of units moving towards a specified point
+    /// </summary>
+    /// <param name="location"></param>
+    /// <param name="unitList"></param>
+    /// <returns></returns>
+    public List<Vector3> GetFormationPositions(Vector3 destination, List<Transform> unitList)
+    {
+        Vector3 unitCenter = new Vector3();
+        RaycastHit rayHit;
+        NavMeshHit navHit;
+        List<Vector3> formationPositions = new List<Vector3>();
+
+        foreach (Transform unit in unitList)
+        {
+            unitCenter += unit.position;
+        }
+        unitCenter /= unitList.Count;
+
+        Vector3 moveDirection = (destination - unitCenter).normalized;
+        Vector3 offsetDirection = GetRightAngle(moveDirection);
+        Vector3 position;
+        int unitsOnLeft = 0;
+        int unitsOnRight = 0;
+        int unitsPlaced = 0;
+
+        for (int row = 0; unitsPlaced < unitList.Count; row++)
+        {
+            // create the formation positions
+            for (int column = 0; column < maxUnitsPerRow; column++)
+            {
+                if (column <= maxUnitsPerRow / 2)
+                {
+                    position = destination + (offsetDirection * unitsOnRight * spaceBetweenUnits);
+                    unitsOnRight++;
+                }
+                else
+                {
+                    unitsOnLeft++;
+                    position = destination - (offsetDirection * unitsOnLeft * spaceBetweenUnits);
+                }
+
+                //Debug.Log("Old position: " + position);
+                position -= moveDirection * spaceBetweenUnits * row;
+                //Debug.Log("New position: " + position);               
+
+                // check that the position is not out of bounds
+                if (Physics.Raycast(position + Vector3.up, Vector3.down, out rayHit))
+                {
+                    // check if the position is on the ground
+                    if (rayHit.transform.gameObject.layer == 3 || rayHit.transform.tag == "Ground")
+                    {
+                        // Make sure point is on navmesh
+                        // Note: maxDistance must be above agent radius else program will get stuck in loop forever
+                        if (NavMesh.SamplePosition(rayHit.point, out navHit, 1.0f, NavMesh.AllAreas))
+                        {
+                            formationPositions.Add(navHit.position);
+                            unitsPlaced++;
+                        }
+                    }
+
+                }
+                else
+                {
+                    Debug.Log("Raycast did not hit anything at position " + position);
+                    break;
+                }
+
+                // exit loop if all units are placed
+                if (unitsPlaced == selection.Units.Count)
+                    break;
+            }
+
+            unitsOnLeft = 0;
+            unitsOnRight = 0;
+        }
+
+        return formationPositions;
+    }
+
+    public void AddRallyFormationPoint(Vector3 point, int player = 0)
+    {
+        if(player == 0)
+            playerRallyFormation.Add(point);
+        else if(player == 1)
+            aiRallyFormation.Add(point);
+    }
+
+    public List<Vector3> GetRallyFormation(int player = 0)
+    {
+        if (player == 0)
+            return playerRallyFormation;
+        else
+            return aiRallyFormation;
+    }
+
+    public void ClearRallyFormation(int player = 0)
+    {
+        if(player == 0)
+            playerRallyFormation.Clear();
+        else
+            aiRallyFormation.Clear();
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="rallyPoint"></param>
+    /// <param name="player"></param>
+    /// <returns></returns>
+    public Vector3 GetRallyPosition(Vector3 rallyPoint, int player)
+    {
+        if (player == 0) // Human player
+            return GetNextFormationPoint(playerRallyFormation, rallyPoint);
+
+        else if (player == 1) // Ai player
+            return GetNextFormationPoint(aiRallyFormation, rallyPoint);
+
+        else
+            return rallyPoint;
+    }
+
+    // used for agent priorities
+    public int GetCurrentRallySize(int player)
+    {
+        if (player == 0)
+            return playerRallyFormation.Count;
+
+        else if (player == 1) // Ai player
+            return aiRallyFormation.Count;
+
+        return 0;
+    }
+    #endregion
+
+    #region private functions 
+    private Vector3 GetNextFormationPoint(List<Vector3> formation, Vector3 centerPoint)
+    {
+        Vector3 lastPos;
+        Vector3 newPos;
+
+        if (formation.Count == 0)
+        {
+            formation.Add(centerPoint);
+            return formation[0];
+        }
+
+        lastPos = formation.Last();
+        newPos = lastPos;
+
+        // check end of row
+        if (formation.Count % maxUnitsPerRow == 0)
+        {
+            newPos.z = lastPos.z - spaceBetweenUnits;
+            newPos.x = centerPoint.x;
+        }
+        // check if odd or even
+        else if (formation.Count % 2 == 0)
+        {
+            int unitsOnRight = formation.Count % maxUnitsPerRow;
+            newPos.x = lastPos.x + (unitsOnRight * spaceBetweenUnits);
+        }
+        else
+        {
+            int unitsOnLeft = formation.Count % maxUnitsPerRow;
+            newPos.x = lastPos.x - (unitsOnLeft * spaceBetweenUnits);
+        }
+
+        formation.Add(newPos);
+        return newPos;
+    }
+
     bool IsOutOfBounds(Vector3 position)
     {
         if(Physics.Raycast(position + Vector3.up * 10, Vector3.down, 10))
@@ -437,64 +650,10 @@ public class UnitManager : MonoBehaviour
         return true;
     }
 
-    private List<Vector3> GetBasicFormations(Vector3 point)
-    {
-        Vector3 unitCenter = new Vector3();
-        RaycastHit rayHit;
-        NavMeshHit navHit;
-
-        foreach (GameObject unit in selection.Units)
-        {
-            unitCenter += unit.transform.position;
-        }
-        unitCenter /= selection.Units.Count;
-
-        Vector3 moveDirection = (point - unitCenter).normalized;
-        Vector3 position;
-        int xOffset;
-        int unitsInRow = 0;
-        int row = 0;
-
-        // create the formation positions
-        for (int i = 0; i < selection.Units.Count; i++)
-        {
-            if (i <= selection.Units.Count / 2)            
-                xOffset = i;               
-            else            
-                xOffset = i - (selection.Units.Count / 2);            
-
-            position.x = point.x + xOffset * spaceBetweenUnits;
-            position.y = point.y;
-            position.z = point.z + row * spaceBetweenUnits;
-
-            // move units to next row
-            if (unitsInRow == maxUnitsPerRow)
-            {
-                row++;
-                unitsInRow = 0;
-            }
-
-            // check if the position is on the navigation mesh
-            if (!Physics.Raycast(position + Vector3.up * 10, Vector3.down, out rayHit, 10, groundLayer))
-            {
-                // get a new position
-                if (NavMesh.SamplePosition(position, out navHit, 5, NavMesh.AllAreas))
-                {
-                    position = navHit.position;
-                }
-            }
-
-            formationPositions.Add(position);
-            unitsInRow++;
-        }
-
-        return formationPositions;
-    }
-
     private Vector3 GetRightAngle(Vector3 current)
     {
         Vector3 newVector;
-        newVector.x = current.z;
+        newVector.x = -current.z;
         newVector.y = 0;
         newVector.z = current.x;
 
@@ -511,9 +670,9 @@ public class UnitManager : MonoBehaviour
         }
 
         return true;
-    } 
+    }
 
-    // Not 
+    // Not currently be using
     private void CheckNeigboursMoving(int squadNum)
     {
         bool unitsStillMoving = false;
@@ -541,12 +700,22 @@ public class UnitManager : MonoBehaviour
         }
 
         // draws the fromation positions that each unit will finish at
-        if (formationPositions != null && showFormationPosition)
+        if (formationPositions != null && showFormationPositions)
         {
             foreach (Vector3 position in formationPositions)
             {
                 Gizmos.color = Color.green;
                 Gizmos.DrawWireSphere(position, 1);
+            }
+        }
+
+        // 
+        if (aiRallyFormation != null && showAiRallyPositions)
+        {
+            foreach (Vector3 position in aiRallyFormation)
+            {
+                Gizmos.color = Color.green;
+                Gizmos.DrawWireSphere(position + Vector3.up * 0.5f, 1);
             }
         }
 

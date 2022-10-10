@@ -15,7 +15,7 @@ class UnitDesc
 
 public class VehicleBay : MonoBehaviour {
 	[SerializeField] List<UnitDesc> units = new List<UnitDesc>();
-	[SerializeField] Transform spawnLocation;
+	public Transform spawnLocation;
 	[SerializeField] ProgressBar buildProgress;
 
 	[SerializeField] GameObject buildMenu;
@@ -35,12 +35,18 @@ public class VehicleBay : MonoBehaviour {
 	int buildingIndex;
 	bool isBuilding;
 
+	// properties
+	public bool IsTraining { get => isBuilding; set => isBuilding = value; }
+
 	private void OnEnable()
-	{
+	{	
 		building = GetComponent<Building>();
 		if (building == null) {
 			Debug.LogError("Game objects with the VehicleBay component must  also have a Building component.");
 		}
+
+		if (building.aiBuilding)
+			return;
 
 		buildTimer = 100.0f;
 		buildProgress.progress = 0.0f;
@@ -79,10 +85,10 @@ public class VehicleBay : MonoBehaviour {
 	{
 		if (building.IsBuilt)
 		{
-			if (isBuilding) {
+			if (isBuilding && !building.aiBuilding) {
 				UnitDesc desc = currentUnitDesc;
 
-				float timeToBuild = desc.timeToBuild;
+				float timeToBuild = desc.prefab.GetComponent<UnitController>().TimeToTrain;
 
 				buildTimer += Time.deltaTime / timeToBuild;
 
