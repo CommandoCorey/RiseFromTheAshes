@@ -123,8 +123,15 @@ public class AttackState : State
             }
 
         }
+        else if (unit.MovingToBase && gameObject.layer == 7)
+        {
+            var ai = FindObjectOfType<AiManager>();           
+            unit.ChangeState(UnitState.Moving, ai.playerBase.position);
+        }
         else
         {
+            
+
             unit.ChangeState(UnitState.Idle);
         }
 

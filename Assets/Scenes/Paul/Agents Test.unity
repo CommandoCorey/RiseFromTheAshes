@@ -7277,7 +7277,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1570870970
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7391,14 +7391,17 @@ MonoBehaviour:
   zoomedOutMouseSensitivity: 0.01
   zoomedInWASDSensitivity: 15
   zoomedOutWASDSensitivity: 15
+  zoomedInWASDSensitivitySprint: 20
+  zoomedOutWASDSensitivitySprint: 40
   maxZoom: 15
   minZoom: 1
   zoomInterpSpeed: 2
+  bounds: {fileID: 0}
   friction: 100
   edgeSize: 30
   zoomedInEdgeScrollSpeed: 15
   zoomedOutEdgeScrollSpeed: 30
-  enabledEdgeScrolling: 1
+  enableEdgeScrolling: 1
 --- !u!1001 &1585768088
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11500,8 +11503,7 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 549032011, guid: 52a9014df1a5b961380edef8c0ad966e, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 52a9014df1a5b961380edef8c0ad966e, type: 3}
 --- !u!1001 &2111504866
 PrefabInstance:
