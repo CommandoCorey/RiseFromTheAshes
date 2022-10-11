@@ -28,10 +28,13 @@ public class UnitManager : MonoBehaviour
     float spaceBetweenUnits = 1.5f;
     [SerializeField][Range(1, 20)]
     int maxUnitsPerRow = 5;
+    [SerializeField]
+    int maxRows = 1000;
 
     [Header("Gizmos")]
     public bool showFormationPositions = false;
     public bool showAiRallyPositions = false;
+    public bool showSearchedPositions = false;
 
     public float unitInCombatTimeout = 30.0f;
 
@@ -42,6 +45,7 @@ public class UnitManager : MonoBehaviour
     List<Vector3> formationPositions;
     List<Vector3> playerRallyFormation;
     List<Vector3> aiRallyFormation;
+    List<Vector3> sarchedPositions;
 
     Vector3[] groupPath;
 
@@ -82,6 +86,7 @@ public class UnitManager : MonoBehaviour
         formationPositions = new List<Vector3>();
         playerRallyFormation = new List<Vector3>();
         aiRallyFormation = new List<Vector3>();
+        sarchedPositions = new List<Vector3>();
 
         anythingInCombat = false;
     }
@@ -400,6 +405,8 @@ public class UnitManager : MonoBehaviour
         RaycastHit rayHit;
         NavMeshHit navHit;
 
+        searchedPositions.Clear();
+
         foreach (GameObject unit in selection.Units)
         {
             unitCenter += unit.transform.position;
@@ -420,7 +427,7 @@ public class UnitManager : MonoBehaviour
             return formationPositions;
         }*/
 
-        for (int row = 0; unitsPlaced < selection.Units.Count; row++)
+        for (int row = 0; row < maxRows; row++)
         {            
             // create the formation positions
             for (int column = 0; column < maxUnitsPerRow; column++)
@@ -439,6 +446,8 @@ public class UnitManager : MonoBehaviour
                 //Debug.Log("Old position: " + position);
                 position -= moveDirection * spaceBetweenUnits * row;
                 //Debug.Log("New position: " + position);                
+
+                searchedPositions.Add(position);
 
                 // check that the position is not out of bounds
                 if (Physics.Raycast(position + Vector3.up, Vector3.down, out rayHit))
@@ -459,8 +468,7 @@ public class UnitManager : MonoBehaviour
 
                 // exit loop if all units are placed
                 if (unitsPlaced == selection.Units.Count)
-                    break;
-
+                    return formationPositions;
             }
 
             unitsOnLeft = 0;
@@ -473,8 +481,8 @@ public class UnitManager : MonoBehaviour
     /// <summary>
     /// Cretes formation positions for a group of units moving towards a specified point
     /// </summary>
-    /// <param name="location"></param>
-    /// <param name="unitList"></param>
+    /// <param name="destination">The position on the map to move all of the units to</param>
+    /// <param name="unitList">The list of transforms being moved</param>
     /// <returns></returns>
     public List<Vector3> GetFormationPositions(Vector3 destination, List<Transform> unitList)
     {
@@ -482,6 +490,8 @@ public class UnitManager : MonoBehaviour
         RaycastHit rayHit;
         NavMeshHit navHit;
         List<Vector3> formationPositions = new List<Vector3>();
+
+        searchedPositions.Clear();
 
         foreach (Transform unit in unitList)
         {
@@ -494,9 +504,9 @@ public class UnitManager : MonoBehaviour
         Vector3 position;
         int unitsOnLeft = 0;
         int unitsOnRight = 0;
-        int unitsPlaced = 0;
+        int unitsPlaced = 0;        
 
-        for (int row = 0; unitsPlaced < unitList.Count; row++)
+        for (int row = 0; row < maxRows; row++)
         {
             // create the formation positions
             for (int column = 0; column < maxUnitsPerRow; column++)
@@ -515,6 +525,7 @@ public class UnitManager : MonoBehaviour
                 //Debug.Log("Old position: " + position);
                 position -= moveDirection * spaceBetweenUnits * row;
                 //Debug.Log("New position: " + position);               
+                searchedPositions.Add(position);
 
                 // check that the position is not out of bounds
                 if (Physics.Raycast(position + Vector3.up, Vector3.down, out rayHit))
@@ -534,17 +545,22 @@ public class UnitManager : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("Raycast did not hit anything at position " + position);
+                    //Debug.Log("Raycast did not hit anything at position " + position);
                     break;
                 }
 
                 // exit loop if all units are placed
-                if (unitsPlaced == selection.Units.Count)
-                    break;
+                if (unitsPlaced == unitList.Count)
+                    return formationPositions;
             }
 
             unitsOnLeft = 0;
             unitsOnRight = 0;
+        }
+
+        if (unitsPlaced < selection.Units.Count)
+        {
+            Debug.LogError("Max Rows in formation exceeded");
         }
 
         return formationPositions;
@@ -708,6 +724,15 @@ public class UnitManager : MonoBehaviour
                 Gizmos.DrawWireSphere(position, 1);
             }
         }
+
+        if(searchedPositions != null && showSearchedPositions)
+        {
+            foreach (Vector3 position in searchedPositions)
+            {
+                Gizmos.color = Color.yellow;
+                Gizmos.DrawWireSphere(position, 1);
+            }
+        }                
 
         // 
         if (aiRallyFormation != null && showAiRallyPositions)
