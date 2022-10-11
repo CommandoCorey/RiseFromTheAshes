@@ -427,7 +427,7 @@ public class UnitManager : MonoBehaviour
             return formationPositions;
         }*/
 
-        for (int row = 0; unitsPlaced < selection.Units.Count; row++)
+        for (int row = 0; row < maxRows; row++)
         {            
             // create the formation positions
             for (int column = 0; column < maxUnitsPerRow; column++)
@@ -468,8 +468,7 @@ public class UnitManager : MonoBehaviour
 
                 // exit loop if all units are placed
                 if (unitsPlaced == selection.Units.Count)
-                    break;
-
+                    return formationPositions;
             }
 
             unitsOnLeft = 0;
@@ -482,8 +481,8 @@ public class UnitManager : MonoBehaviour
     /// <summary>
     /// Cretes formation positions for a group of units moving towards a specified point
     /// </summary>
-    /// <param name="location"></param>
-    /// <param name="unitList"></param>
+    /// <param name="destination">The position on the map to move all of the units to</param>
+    /// <param name="unitList">The list of transforms being moved</param>
     /// <returns></returns>
     public List<Vector3> GetFormationPositions(Vector3 destination, List<Transform> unitList)
     {
@@ -551,8 +550,8 @@ public class UnitManager : MonoBehaviour
                 }
 
                 // exit loop if all units are placed
-                if (unitsPlaced == selection.Units.Count)
-                    break;
+                if (unitsPlaced == unitList.Count)
+                    return formationPositions;
             }
 
             unitsOnLeft = 0;
