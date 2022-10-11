@@ -2,25 +2,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
-[System.Serializable]
-class UnitDesc
-{
-	public string name;
-	public GameObject prefab;
-	public float timeToBuild;
-	public Button buildButton;
-	public int steelCost;
-	[HideInInspector] public int index;
-}
-
 public class VehicleBay : MonoBehaviour {
-	[SerializeField] List<UnitDesc> units = new List<UnitDesc>();
 	public Transform spawnLocation;
 	[SerializeField] ProgressBar buildProgress;
 
-	[SerializeField] GameObject buildMenu;
+	[SerializeField] Vector3 buildMenuOffset;
 
-	[SerializeField] Button cancelButton;
 	Building building;
 
 	[Space]
@@ -29,11 +16,11 @@ public class VehicleBay : MonoBehaviour {
 	[SerializeField] float healUnitPerSecond;
 	[SerializeField] LayerMask unitLayer;
 
-	UnitDesc currentUnitDesc;
+	[HideInInspector] public UnitDesc currentUnitDesc;
 
-	float buildTimer = 0.0f;
-	int buildingIndex;
-	bool isBuilding;
+	[HideInInspector] public float buildTimer = 0.0f;
+	[HideInInspector] public int buildingIndex;
+	[HideInInspector] public bool isBuilding;
 
 	// properties
 	public bool IsTraining { get => isBuilding; set => isBuilding = value; }
@@ -51,33 +38,18 @@ public class VehicleBay : MonoBehaviour {
 		buildTimer = 100.0f;
 		buildProgress.progress = 0.0f;
 		buildProgress.gameObject.SetActive(false);
-		buildMenu.SetActive(false);
-
-		foreach (UnitDesc ud in units)
-		{
-			ud.buildButton.onClick.AddListener(() => {
-				PrepareBuild();
-				isBuilding = true;
-				//ResourceManager.Instance.SpendSteel(ud.steelCost);
-				buildTimer = 0.0f;
-				currentUnitDesc = ud;
-			});
-		}
-
-		cancelButton.onClick.AddListener(() => {
-			buildMenu.SetActive(false);
-		});
 	}
-	void PrepareBuild()
+	public void PrepareBuild()
 	{
 		buildProgress.gameObject.SetActive(true);
-		buildMenu.SetActive(false);
 	}
 
 	public void Interact()
 	{
 		if (building != null && building.IsBuilt) {
-			buildMenu.SetActive(true);
+			VehicleBayBuildMenu.Instance.transform.position = transform.position + buildMenuOffset;
+			VehicleBayBuildMenu.Instance.currentVehicleBay = this;
+			VehicleBayBuildMenu.Instance.gameObject.SetActive(true);
 		}
 	}
 
