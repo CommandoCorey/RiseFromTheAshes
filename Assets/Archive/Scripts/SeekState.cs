@@ -11,6 +11,7 @@ public class SeekState : State
     new UnitController unit;    
     Steering steer;
     BehaviourManager behaviours;
+    AgentMovement agent;
 
     // Behaviour classes
     SeekBehaviour seek;

@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UIElements;
 
-public class AgentMoveState : MonoBehaviour
+public class AgentMoveState : State
 {
     //[SerializeField] float movementSpeed = 100;
     [SerializeField] float stoppingDistance = 0.5f;
@@ -12,7 +12,7 @@ public class AgentMoveState : MonoBehaviour
     private NavMeshAgent agent;
     private Vector3 targetPos;
 
-    private UnitController unit;
+    //private UnitController unit;
     //private UnitManager um;
 
     private GameManager gameManager;
@@ -20,7 +20,9 @@ public class AgentMoveState : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        unit = GetComponent<UnitController>();
+        base.Awake();
+
+        //unit = GetComponent<UnitController>();
         agent = unit.body.GetComponent<NavMeshAgent>();
         targetPos = transform.position;
 
@@ -48,7 +50,23 @@ public class AgentMoveState : MonoBehaviour
                 unit.ChangeState(UnitState.Idle);
             }
         }
-    }    
+
+        if(unit.body.gameObject.layer == 7 && unit.MovingToBase)
+        {
+            CheckForeEnemies();
+        }
+    }
+
+    private void CheckForeEnemies()
+    {
+        var enemiesInRange = GetEnemiesInRange();
+
+        if (enemiesInRange.Count > 0)
+        {
+            unit.AttackTarget = GetClosestEnemy(enemiesInRange.ToArray());
+            HandleEnemyInRange();
+        }
+    }
 
     public void MoveTo(Vector3 position)
     {
