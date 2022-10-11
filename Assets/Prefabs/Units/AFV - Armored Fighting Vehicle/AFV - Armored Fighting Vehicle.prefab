@@ -1189,6 +1189,7 @@ Transform:
   - {fileID: 5368595047625328820}
   - {fileID: 6504873562474881247}
   - {fileID: 8115202016504930392}
+  - {fileID: 6078453089320838894}
   m_Father: {fileID: 8302662413746311316}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1240,7 +1241,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   permRadius: 40
-  impermRadius: 40
+  impermRadius: 35
 --- !u!82 &7128339325172058019
 AudioSource:
   m_ObjectHideFlags: 0
@@ -2230,7 +2231,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 3677297043708892852}
-  - {fileID: 6078453089320838894}
   - {fileID: 7260449553546266203}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -2249,8 +2249,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitName: Armored Fighting Vehicle
   steelCost: 100
-  timeToTrain: 20
-  selectionHighlight: {fileID: 8247501165176549934}
+  timeToTrain: 1
+  selectionHighlight: {fileID: 391092744802148561}
   turret: {fileID: 6504873562474881247}
   firingPoint: {fileID: 1504737229877904430}
   body: {fileID: 3677297043708892852}
@@ -2345,7 +2345,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3832191274636159422, guid: 463b547a9094f0e4ab43cdee0fbe99be, type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3832191274636159422, guid: 463b547a9094f0e4ab43cdee0fbe99be, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2410,7 +2410,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 8302662413746311316}
+    m_TransformParent: {fileID: 3677297043708892852}
     m_Modifications:
     - target: {fileID: 1602046774058169136, guid: 3fcf1309d39d6474aa94a63084308cbe, type: 3}
       propertyPath: m_IsActive
@@ -2422,7 +2422,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3464850793719654384, guid: 3fcf1309d39d6474aa94a63084308cbe, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 3464850793719654384, guid: 3fcf1309d39d6474aa94a63084308cbe, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2482,14 +2482,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3fcf1309d39d6474aa94a63084308cbe, type: 3}
+--- !u!1 &391092744802148561 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6999701401791226319, guid: 3fcf1309d39d6474aa94a63084308cbe, type: 3}
+  m_PrefabInstance: {fileID: 7227889898231677214}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6078453089320838894 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3464850793719654384, guid: 3fcf1309d39d6474aa94a63084308cbe, type: 3}
-  m_PrefabInstance: {fileID: 7227889898231677214}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &8247501165176549934 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1602046774058169136, guid: 3fcf1309d39d6474aa94a63084308cbe, type: 3}
   m_PrefabInstance: {fileID: 7227889898231677214}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8817448997901996515
