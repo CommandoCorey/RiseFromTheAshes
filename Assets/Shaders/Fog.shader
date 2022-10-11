@@ -99,7 +99,7 @@ Shader "Hidden/Fog"
 				depth = ComputeWorldSpacePosition(i.uv, depth, UNITY_MATRIX_I_VP).y;
 
 				if (hitPoint.y < depth) {
-					return col;
+					//return col;
 				}
 
 				int maxSamples = min(_Samples, 32);
@@ -129,7 +129,9 @@ Shader "Hidden/Fog"
 						light -= noise * 0.01 * (_Height - p.y);
 						light = max(0.04, light);
 
-						density += max(0.1, noise - _Threshold);
+						if (p.y > depth) {
+							density += max(0.1, noise - _Threshold);
+						}
 					}
 				}
 
@@ -146,7 +148,7 @@ Shader "Hidden/Fog"
 				float4 fogColour = (1.0 - density) * _FogColour * light;
 				fogColour.a = 1.0;
 
-				return col * density + fogColour;
+				return ((maskVal >= 1.0) ? float4(0.0, 0.0, 0.0, 1.0) : col) * density + fogColour;
 			}
 			ENDHLSL
 		}

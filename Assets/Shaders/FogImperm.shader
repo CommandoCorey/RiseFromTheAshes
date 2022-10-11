@@ -104,8 +104,10 @@ Shader "Hidden/FogImperm"
 				if (hitPoint.y < depth) {
 					return col;
 				}
-
-				col.rgb *= (1.0 - (maskVal - _FogColour.rgb * _FogColour.a));
+				else {
+					float3 m = (1.0 - (maskVal - _FogColour.rgb * _FogColour.a));
+					col.rgb *= m;
+				}
 
 				return float4(col.rgb, 1.0);
 			}
