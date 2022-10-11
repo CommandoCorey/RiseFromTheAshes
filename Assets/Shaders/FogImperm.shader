@@ -13,16 +13,17 @@ Shader "Hidden/FogImperm"
 
 		Pass
 		{
-			CGPROGRAM
+			HLSLPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
 
-			#include "UnityCG.cginc"
+			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/SurfaceInput.hlsl"
+			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Color.hlsl"
 
-			struct appdata
+			struct Attributes
 			{
-				float4 vertex : POSITION;
-				float2 uv : TEXCOORD0;
+				float4 positionOS       : POSITION;
+				float2 uv               : TEXCOORD0;
 			};
 
 			struct v2f
@@ -32,21 +33,23 @@ Shader "Hidden/FogImperm"
 				float3 viewVector : TEXCOORD1;
 			};
 
-			v2f vert (appdata v)
+			v2f vert (Attributes input)
 			{
 				v2f o;
-				o.vertex = UnityObjectToClipPos(v.vertex);
-				o.uv = v.uv;
+				o.vertex = GetVertexPositionInputs(input.positionOS.xyz).positionCS;
+				o.uv = input.uv;
 
-				float3 viewVector = mul(unity_CameraInvProjection, float4(v.uv * 2 - 1, 0, -1));
+				float3 viewVector = mul(unity_CameraInvProjection, float4(input.uv * 2 - 1, 0, -1));
 				o.viewVector = mul(unity_CameraToWorld, float4(viewVector, 0));
 
 				return o;
 			}
 
 			sampler2D _MainTex;
-			sampler2D _LastCameraDepthTexture;
 			sampler2D _MaskTex;
+
+			TEXTURE2D(_CameraDepthTexture);
+			SAMPLER(sampler_CameraDepthTexture);
 
 			uniform float _Height;
 
@@ -64,15 +67,12 @@ Shader "Hidden/FogImperm"
 				return dot(p, float3(0.0, 1.0, 0.0)) - _Height;
 			}
 
-			float rayMarch(float3 origin, float3 direction) {
-				float dist = 0.0;
-				for (int i = 0; i < MAX_RAY_STEPS; i++) {
-					float3 p = origin + dist * direction;
-					float hit = map(p);
-					dist += hit;
-					if (abs(hit) < MIN_RAY_DIST || dist > MAX_RAY_DIST) { break; }
+			float rayVSPlane(float3 centre, float3 normal, float3 origin, float3 dir) {
+				float denom = dot(normal, dir);
+				if (abs(denom) > 0.0001) {
+					return dot((centre - origin), normal) / denom;
 				}
-				return dist;
+				return 0.0;
 			}
 
 			float2 worldPosToFogMaskPos(float3 worldPos) {
@@ -85,13 +85,9 @@ Shader "Hidden/FogImperm"
 				float3 rayOrigin = _WorldSpaceCameraPos;
 				float3 rayDirection = normalize(i.viewVector);
 
-				float dist = rayMarch(rayOrigin, rayDirection);
+				float dist = rayVSPlane(float3(0.0, _Height, 0.0), float3(0.0, 1.0, 0.0), rayOrigin, rayDirection);
 
-				float density = 0.0;
-				float3 hitPoint = float3(0.0, 0.0, 0.0);
-				if (dist > 0.0 && dist < MAX_RAY_DIST) {
-					hitPoint = rayOrigin + rayDirection * dist;
-				}
+				float3 hitPoint = rayOrigin + rayDirection * dist;
 
 				float2 hitPointMaskSpace = worldPosToFogMaskPos(hitPoint);
 				hitPointMaskSpace /= _FogMaskSize;
@@ -102,11 +98,18 @@ Shader "Hidden/FogImperm"
 
 				float4 col = tex2D(_MainTex, i.uv);
 
+				float depth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, sampler_CameraDepthTexture, i.uv);
+				depth = ComputeWorldSpacePosition(i.uv, depth, UNITY_MATRIX_I_VP).y;
+
+				if (hitPoint.y < depth) {
+					return col;
+				}
+
 				col.rgb *= (1.0 - (maskVal - _FogColour.rgb * _FogColour.a));
 
 				return float4(col.rgb, 1.0);
 			}
-			ENDCG
+			ENDHLSL
 		}
 	}
 }

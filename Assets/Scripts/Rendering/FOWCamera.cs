@@ -9,11 +9,14 @@ public class FOWCamera : MonoBehaviour {
 
 	[HideInInspector] public RenderTexture FOWAffectedRenderTexture;
 
-	void Start() {
+	void Awake()
+	{
+		myCamera = GetComponent<Camera>();
+		myCamera.depthTextureMode = DepthTextureMode.Depth;
+
 		/*myCamera = GetComponent<Camera>();
 
 		myCamera.cullingMask &= ~FOWManager.Instance.affectedLayer;
-		myCamera.depthTextureMode = DepthTextureMode.Depth;
 
 		GameObject affectedCameraGO = new GameObject();
 		affectedCameraGO.transform.parent = this.gameObject.transform;
