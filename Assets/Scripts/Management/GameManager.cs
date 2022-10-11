@@ -2,6 +2,7 @@ using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Timeline;
 
 public enum GameState
@@ -163,9 +164,7 @@ public class GameManager : MonoBehaviour
             Cursor.SetCursor(defaultCursor.image, defaultCursor.hotspot, CursorMode.ForceSoftware);
     }
     #endregion
-
-    #region private functions
-    private void TogglePause(bool paused)
+    public void TogglePause(bool paused)
     {
         pauseDialog.SetActive(paused);
 
@@ -176,7 +175,12 @@ public class GameManager : MonoBehaviour
         GetComponent<BuildingManager>().enabled = !paused;
      //   GetComponent<AiManager>().enabled = !paused;
     }
-    #endregion
+
+    public void LoadMainMenu()
+    {
+        Time.timeScale = 1.0f;
+        SceneManager.LoadScene(0);
+    }
 }
 
 [System.Serializable]
