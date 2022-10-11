@@ -24,7 +24,7 @@ public class UnitController : MonoBehaviour
     [SerializeField] int timeToTrain = 1;
 
     #region variable declartion
-    [Header("Game Objects and transforms")]
+    [Header("Game Objects and Transforms")]
     public GameObject selectionHighlight;
     public Transform turret;
     public Transform firingPoint;
