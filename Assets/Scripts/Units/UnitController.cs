@@ -12,7 +12,8 @@ public enum UnitState
     Moving,
     Flock,
     Follow,
-    Attack
+    Attack,
+    Patrol
 }
 
 public class UnitController : MonoBehaviour
@@ -97,9 +98,9 @@ public class UnitController : MonoBehaviour
     private SeekState moveState;
     private AgentMoveState agentMoveState;
     private FlockState flockState;
-    //private CombatState attackState;
     private FollowEnemyState followState;
     private AttackState agentAttackState;
+    private PatrolState patrolState;
     
     #endregion
 
@@ -361,7 +362,11 @@ public class UnitController : MonoBehaviour
                     //Destroy(attackState);
                 //else if (tag == "NavMesh Agent")
                     Destroy(agentAttackState);                
-            break;            
+            break;
+
+            case UnitState.Patrol:
+                Destroy(patrolState);
+            break;
         }
 
         State = newState;
@@ -442,6 +447,10 @@ public class UnitController : MonoBehaviour
                 //{
                     agentAttackState = gameObject.AddComponent<AttackState>();                    
                 //}
+           break;
+
+           case UnitState.Patrol:
+                patrolState = gameObject.AddComponent<PatrolState>();
            break;
 
         }

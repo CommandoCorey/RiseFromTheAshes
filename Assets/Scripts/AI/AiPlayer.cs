@@ -25,6 +25,8 @@ public class AiPlayer : MonoBehaviour
 
     public List<VehicleBay> vehicleBays;
 
+    public Transform[] patrolRoute;
+
     //public AiTask[] tasksSchedule;
     public TaskSet[] tasksSchedule;
 
@@ -130,6 +132,22 @@ public class AiPlayer : MonoBehaviour
             }
         }
         
+    }
+
+    /// <summary>
+    /// Sends all units in a specified list along the patrol route 
+    /// </summary>
+    /// <param name="units">list of transforms containing the UnitController</param>
+    public void SendOnPatrol(List<Transform> units)
+    {
+        foreach(Transform t in units)
+        {
+            var unit = t.GetComponent<UnitController>();
+            unit.ChangeState(UnitState.Patrol);
+
+            var patrolState = unit.GetComponent<PatrolState>();
+            patrolState.SetPatrolRoute(patrolRoute);
+        }
     }
 
     private IEnumerator PerformNextTask(TaskSet set)
