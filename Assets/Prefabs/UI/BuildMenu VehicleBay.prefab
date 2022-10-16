@@ -654,7 +654,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: Z2
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 0}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -730,6 +730,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4537353837834309505}
+  - component: {fileID: 8436992037450826178}
   m_Layer: 5
   m_Name: BuildMenuVehicleBay WIP 2
   m_TagString: Untagged
@@ -752,6 +753,45 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8436992037450826178
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4537353837834309506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c83da7879b5faf41ae934e7d8057b6b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  units:
+  - name: RCV
+    prefab: {fileID: 9124623445725208702, guid: 49cbc35acb6efd049bc5bd7ef02b41d6, type: 3}
+    timeToBuild: 1
+    buildButton: {fileID: 4537353837901721168}
+    steelCost: 10
+    index: 0
+  - name: MBT
+    prefab: {fileID: 146164153429463303, guid: 49efddb462596164b96be45c4cf156cb, type: 3}
+    timeToBuild: 1
+    buildButton: {fileID: 6746819031082527487}
+    steelCost: 10
+    index: 0
+  - name: AFV
+    prefab: {fileID: 2459500769794059726, guid: 06dd12c7152c2ce4ea99b6b26abd46e6, type: 3}
+    timeToBuild: 1
+    buildButton: {fileID: 4537353838763806308}
+    steelCost: 10
+    index: 0
+  - name: APHT
+    prefab: {fileID: 6250228713319606561, guid: e48fcace8c087d746991770c4fbd3c27, type: 3}
+    timeToBuild: 1
+    buildButton: {fileID: 4537353839116844771}
+    steelCost: 10
+    index: 0
+  cancelButton: {fileID: 4537353839111926648}
+  currentVehicleBay: {fileID: 0}
 --- !u!1 &4537353837901721170
 GameObject:
   m_ObjectHideFlags: 0
@@ -1209,7 +1249,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: Z1
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 0}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
