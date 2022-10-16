@@ -2,6 +2,7 @@ using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Timeline;
 
 public enum GameState
@@ -84,14 +85,13 @@ public class GameManager : MonoBehaviour
         {
             if (handleEndConidition && (playerHQ == null || playerHQ.HP <= 0))
                 ChangeGameState(GameState.Lose);
-
             else if (handleEndConidition && (enemyHQ == null || enemyHQ.HP <= 0))
                 ChangeGameState(GameState.Win);
 
-            else if (Input.GetKeyUp(pauseKey))
+            if (Input.GetKeyDown(pauseKey))
                 ChangeGameState(GameState.Paused);
         }
-        else if (state == GameState.Paused && Input.GetKeyUp(pauseKey))
+        else if (state == GameState.Paused && Input.GetKeyDown(pauseKey))
         {
             ChangeGameState(GameState.Running);
         }
@@ -102,28 +102,29 @@ public class GameManager : MonoBehaviour
     {
         state = newState;
 
-        if (state != GameState.Running)
-            Time.timeScale = 0;
-        // end if
+        Time.timeScale = 1;
 
         switch (state)
         {
             case GameState.Running:
-                TogglePause(false);
                 Time.timeScale = 1;
+                TogglePause(false);
                 break;
 
             case GameState.Paused:
-                TogglePause(true);                
+                Time.timeScale = 0;
+                TogglePause(true);
                 break;
 
             case GameState.Win:
+                Time.timeScale = 0;
                 winDialog.SetActive(true);
                 break;
 
-            case GameState.Lose: 
-               // loseDialog.SetActive(true);
-            break;
+            case GameState.Lose:
+                Time.timeScale = 0;
+                loseDialog.SetActive(true);
+               break;
         }
     }
 
@@ -163,20 +164,23 @@ public class GameManager : MonoBehaviour
             Cursor.SetCursor(defaultCursor.image, defaultCursor.hotspot, CursorMode.ForceSoftware);
     }
     #endregion
-
-    #region private functions
-    private void TogglePause(bool paused)
+    public void TogglePause(bool paused)
     {
+        pauseDialog.SetActive(paused);
+
         // disable all other scripts on the game manageer
         GetComponent<UnitManager>().enabled = !paused;
         GetComponent<SelectionManager>().enabled = !paused;
         GetComponent<ResourceManager>().enabled = !paused;
         GetComponent<BuildingManager>().enabled = !paused;
-        GetComponent<AiManager>().enabled = !paused;
-
-        pauseDialog.SetActive(paused);
+     //   GetComponent<AiManager>().enabled = !paused;
     }
-    #endregion
+
+    public void LoadMainMenu()
+    {
+        Time.timeScale = 1.0f;
+        SceneManager.LoadScene(0);
+    }
 }
 
 [System.Serializable]

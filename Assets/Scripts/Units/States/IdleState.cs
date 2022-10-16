@@ -8,8 +8,8 @@ public class IdleState : State
     {
         base.Awake();
 
-        if(gameObject.tag == "PlayerUnit")
-            agent = GetComponent<AgentMovement>();
+        //if(gameObject.tag == "PlayerUnit")
+           // agent = GetComponent<AgentMovement>();
     }
 
     private void Start()

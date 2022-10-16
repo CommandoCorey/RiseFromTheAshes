@@ -13,16 +13,17 @@ Shader "Hidden/Fog"
 
 		Pass
 		{
-			CGPROGRAM
+			HLSLPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
 
-			#include "UnityCG.cginc"
+			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/SurfaceInput.hlsl"
+			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Color.hlsl"
 
-			struct appdata
+			struct Attributes
 			{
-				float4 vertex : POSITION;
-				float2 uv : TEXCOORD0;
+				float4 positionOS       : POSITION;
+				float2 uv               : TEXCOORD0;
 			};
 
 			struct v2f
@@ -32,20 +33,23 @@ Shader "Hidden/Fog"
 				float3 viewVector : TEXCOORD1;
 			};
 
-			v2f vert (appdata v)
+			v2f vert (Attributes input)
 			{
 				v2f o;
-				o.vertex = UnityObjectToClipPos(v.vertex);
-				o.uv = v.uv;
+				o.vertex = GetVertexPositionInputs(input.positionOS.xyz).positionCS;
+				o.uv = input.uv;
 
-				float3 viewVector = mul(unity_CameraInvProjection, float4(v.uv * 2 - 1, 0, -1));
+				float3 viewVector = mul(unity_CameraInvProjection, float4(input.uv * 2 - 1, 0, -1));
 				o.viewVector = mul(unity_CameraToWorld, float4(viewVector, 0));
 
 				return o;
 			}
 
 			sampler2D _MainTex;
-			sampler2D _CameraDepthTexture;
+
+			TEXTURE2D(_CameraDepthTexture);
+			SAMPLER(sampler_CameraDepthTexture);
+
 			sampler2D _MaskTex;
 			Texture3D<float2> _NoiseTexture;
 
@@ -87,15 +91,21 @@ Shader "Hidden/Fog"
 
 				float dist = rayVSPlane(float3(0.0, _Height, 0.0), float3(0.0, 1.0, 0.0), rayOrigin, rayDirection);
 
+				float3 hitPoint = rayOrigin + rayDirection * dist;
+
 				float4 col = tex2D(_MainTex, i.uv);
 
-				float depth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, i.uv);
+				float depth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, sampler_CameraDepthTexture, i.uv);
+				depth = ComputeWorldSpacePosition(i.uv, depth, UNITY_MATRIX_I_VP).y;
+
+				if (hitPoint.y < depth) {
+					//return col;
+				}
 
 				int maxSamples = min(_Samples, 32);
 
 				float density = 0.0;
 				float light = 1.0;
-				float3 hitPoint = float3(0.0, 0.0, 0.0);
 				if (dist > 0.0 && dist < _RenderDistance) {
 					/* Ray trace from the hit point returned by the raymarch and
 					 * take samples from the 3-D noise to determine the density of the
@@ -119,7 +129,9 @@ Shader "Hidden/Fog"
 						light -= noise * 0.01 * (_Height - p.y);
 						light = max(0.04, light);
 
-						density += max(0.1, noise - _Threshold);
+						if (p.y > depth) {
+							density += max(0.1, noise - _Threshold);
+						}
 					}
 				}
 
@@ -136,9 +148,9 @@ Shader "Hidden/Fog"
 				float4 fogColour = (1.0 - density) * _FogColour * light;
 				fogColour.a = 1.0;
 
-				return col * density + fogColour;
+				return ((maskVal >= 1.0) ? float4(0.0, 0.0, 0.0, 1.0) : col) * density + fogColour;
 			}
-			ENDCG
+			ENDHLSL
 		}
 	}
 }

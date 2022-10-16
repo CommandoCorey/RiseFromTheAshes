@@ -85,7 +85,6 @@ public class FollowEnemyState : State
         return closest;
     }
 
-
     private void OnDrawGizmos()
     {
         // Draw line to enemy

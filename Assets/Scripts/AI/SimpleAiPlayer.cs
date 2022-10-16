@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class SimpleAiPlayer : MonoBehaviour
 {
@@ -45,6 +44,7 @@ public class SimpleAiPlayer : MonoBehaviour
     private List<Building> baysInConstruction;
 
     private GameManager gameManager;
+    private FormationManager formations;
 
     List<AiTask> activeTasks;
 
@@ -54,6 +54,8 @@ public class SimpleAiPlayer : MonoBehaviour
     void Start()
     {
         resources = ResourceManager.Instance;
+        formations = FormationManager.Instance;
+
         aiUnits = new List<UnitController>();
         unitGroup = new List<Transform>();
         baysInConstruction = new List<Building>();
@@ -194,12 +196,9 @@ public class SimpleAiPlayer : MonoBehaviour
         task.SetBuildingInstance(building);
     }
 
-    public void DispatchAllUnits()
-    {
-        //Debug.Log("Dispatching Units");
-        UnitManager unitManager = GameObject.FindObjectOfType<UnitManager>();
-
-        formationPositions = unitManager.GetFormationPositions(playerBase.position, unitGroup);
+    public void DispatchAllUnits()    {        
+        
+        formationPositions = formations.GetFormationPositions(playerBase.position, unitGroup);
 
         if (formationPositions.Count < unitGroup.Count)
         {
@@ -218,9 +217,7 @@ public class SimpleAiPlayer : MonoBehaviour
 
     public bool DispatchUnits(List<Transform> unitGroup)
     {
-        UnitManager unitManager = GameObject.FindObjectOfType<UnitManager>();
-
-        formationPositions = unitManager.GetFormationPositions(playerBase.position, unitGroup);
+        formationPositions = formations.GetFormationPositions(playerBase.position, unitGroup);
 
         if (formationPositions.Count < unitGroup.Count)
         {
@@ -235,7 +232,7 @@ public class SimpleAiPlayer : MonoBehaviour
                 ChangeState(UnitState.Moving, formationPositions[i]);
         }
 
-        unitManager.ClearRallyFormation(1);
+        formations.ClearRallyFormation(1);
 
         Debug.Log("Dispatching Units");
         return true;

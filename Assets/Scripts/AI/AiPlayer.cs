@@ -25,6 +25,8 @@ public class AiPlayer : MonoBehaviour
 
     public List<VehicleBay> vehicleBays;
 
+    public Transform[] patrolRoute;
+
     //public AiTask[] tasksSchedule;
     public TaskSet[] tasksSchedule;
 
@@ -58,9 +60,10 @@ public class AiPlayer : MonoBehaviour
     private List<Building> baysInConstruction;
 
     private GameManager gameManager;
+    private FormationManager formations;
 
-    List<AiTask> activeTasks;
-    List<TaskSetDisplay> taskDisplays;
+    private List<AiTask> activeTasks;
+    private List<TaskSetDisplay> taskDisplays;
 
     public bool PlaceHoldersLeft { get => buildingPlaceholders.Count > 0; }
 
@@ -68,6 +71,8 @@ public class AiPlayer : MonoBehaviour
     void Start()
     {
         resources = ResourceManager.Instance;
+        formations = FormationManager.Instance;
+
         aiUnits = new List<UnitController>();
         unitGroup = new List<Transform>();
         baysInConstruction = new List<Building>();
@@ -130,6 +135,22 @@ public class AiPlayer : MonoBehaviour
             }
         }
         
+    }
+
+    /// <summary>
+    /// Sends all units in a specified list along the patrol route 
+    /// </summary>
+    /// <param name="units">list of transforms containing the UnitController</param>
+    public void SendOnPatrol(List<Transform> units)
+    {
+        foreach(Transform t in units)
+        {
+            var unit = t.GetComponent<UnitController>();
+            unit.ChangeState(UnitState.Patrol);
+
+            var patrolState = unit.GetComponent<PatrolState>();
+            patrolState.SetPatrolRoute(patrolRoute);
+        }
     }
 
     private IEnumerator PerformNextTask(TaskSet set)
@@ -245,10 +266,7 @@ public class AiPlayer : MonoBehaviour
 
     public void DispatchAllUnits()
     {
-        //Debug.Log("Dispatching Units");
-        UnitManager unitManager = GameObject.FindObjectOfType<UnitManager>();
-
-        formationPositions = unitManager.GetFormationPositions(playerBase.position, unitGroup);
+        formationPositions = formations.GetFormationPositions(playerBase.position, unitGroup);
 
         if (formationPositions.Count < unitGroup.Count)
         {
@@ -269,9 +287,7 @@ public class AiPlayer : MonoBehaviour
 
     public bool DispatchUnits(List<Transform> unitGroup)
     {
-        UnitManager unitManager = GameObject.FindObjectOfType<UnitManager>();
-
-        formationPositions = unitManager.GetFormationPositions(playerBase.position, unitGroup);
+        formationPositions = formations.GetFormationPositions(playerBase.position, unitGroup);
 
         if (formationPositions.Count < unitGroup.Count)
         {
@@ -363,7 +379,6 @@ public class AiPlayer : MonoBehaviour
                 Gizmos.DrawWireSphere(position, 1);
             }
         }
-
 
         //if(vehicleBay != null)
             //Gizmos.DrawLine(vehicleBay.position, vehicleBay.position + vehicleBay.forward * zOffset);

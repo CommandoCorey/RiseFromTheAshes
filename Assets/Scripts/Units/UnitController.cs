@@ -12,7 +12,8 @@ public enum UnitState
     Moving,
     Flock,
     Follow,
-    Attack
+    Attack,
+    Patrol
 }
 
 public class UnitController : MonoBehaviour
@@ -23,7 +24,7 @@ public class UnitController : MonoBehaviour
     [SerializeField] int timeToTrain = 1;
 
     #region variable declartion
-    [Header("Game Objects and transforms")]
+    [Header("Game Objects and Transforms")]
     public GameObject selectionHighlight;
     public Transform turret;
     public Transform firingPoint;
@@ -97,9 +98,9 @@ public class UnitController : MonoBehaviour
     private SeekState moveState;
     private AgentMoveState agentMoveState;
     private FlockState flockState;
-    //private CombatState attackState;
     private FollowEnemyState followState;
     private AttackState agentAttackState;
+    private PatrolState patrolState;
     
     #endregion
 
@@ -313,13 +314,17 @@ public class UnitController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="point"></param>
     public void MoveToRallyPoint(Vector3 point)
     {
-        UnitManager um = FindObjectOfType<UnitManager>();
+        FormationManager formations = FormationManager.Instance;
         NavMeshAgent agent = body.GetComponent<NavMeshAgent>();
 
-        agent.avoidancePriority -= um.GetCurrentRallySize(1);
-        Vector3 formationPos = um.GetRallyPosition(point, 1);
+        agent.avoidancePriority -= formations.GetCurrentRallySize(1);
+        Vector3 formationPos = formations.GetRallyPosition(point, 1);
 
         ChangeState(UnitState.Moving, formationPos);
     }
@@ -361,7 +366,11 @@ public class UnitController : MonoBehaviour
                     //Destroy(attackState);
                 //else if (tag == "NavMesh Agent")
                     Destroy(agentAttackState);                
-            break;            
+            break;
+
+            case UnitState.Patrol:
+                Destroy(patrolState);
+            break;
         }
 
         State = newState;
@@ -423,7 +432,7 @@ public class UnitController : MonoBehaviour
                         //attackState = gameObject.AddComponent<CombatState>();
                     //}
 
-                //}
+                //}*/
             break;
 
             case UnitState.Attack:
@@ -442,6 +451,10 @@ public class UnitController : MonoBehaviour
                 //{
                     agentAttackState = gameObject.AddComponent<AttackState>();                    
                 //}
+           break;
+
+           case UnitState.Patrol:
+                patrolState = gameObject.AddComponent<PatrolState>();
            break;
 
         }
