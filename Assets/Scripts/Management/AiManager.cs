@@ -148,9 +148,9 @@ public class AiManager : MonoBehaviour
     private void DispatchUnits()
     {
         //Debug.Log("Dispatching Units");
-        UnitManager unitManager = GameObject.FindObjectOfType<UnitManager>();
+        FormationManager formations = FormationManager.Instance;
 
-        formationPositions = unitManager.GetFormationPositions(playerBase.position, unitGroup);
+        formationPositions = formations.GetFormationPositions(playerBase.position, unitGroup);
 
         if (formationPositions.Count < unitGroup.Count)
         {
