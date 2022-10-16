@@ -28,17 +28,6 @@ public abstract class State : MonoBehaviour
     }
 
     #region protected functions
-    protected void HandleEnemies()
-    {
-        var enemiesInRange = GetEnemiesInRange();
-
-        if (enemiesInRange.Count > 0)
-        {
-            unit.AttackTarget = GetClosestEnemy(enemiesInRange.ToArray());
-            HandleEnemyInRange();
-        }
-    }
-
     protected List<Collider> GetEnemiesInRange()
     {
         //int unitLayer = (int)Mathf.Log(unit.EnemyUnitLayer.value, 2);

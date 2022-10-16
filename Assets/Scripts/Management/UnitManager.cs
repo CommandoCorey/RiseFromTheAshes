@@ -23,11 +23,30 @@ public class UnitManager : MonoBehaviour
     [Header("Group Movement")]
     [SerializeField] bool flockWhileMoving;
 
+    [Header("Unit Formations")]
+    [SerializeField][Range(1, 10)]
+    float spaceBetweenUnits = 1.5f;
+    [SerializeField][Range(1, 20)]
+    int maxUnitsPerRow = 5;
+    [SerializeField]
+    int maxRows = 1000;
+
+    [Header("Gizmos")]
+    public bool showFormationPositions = false;
+    public bool showAiRallyPositions = false;
+    public bool showSearchedPositions = false;
+
     public float unitInCombatTimeout = 30.0f;
 
     public static UnitManager Instance { get; private set; }
 
     List<List<GameObject>> squads;
+
+    List<Vector3> formationPositions;
+    List<Vector3> playerRallyFormation;
+    List<Vector3> aiRallyFormation;
+    List<Vector3> sarchedPositions;
+
     Vector3[] groupPath;
       
     private Vector3 point;
@@ -64,6 +83,10 @@ public class UnitManager : MonoBehaviour
         selection = GetComponent<SelectionManager>();
 
         squads = new List<List<GameObject>>();
+        formationPositions = new List<Vector3>();
+        playerRallyFormation = new List<Vector3>();
+        aiRallyFormation = new List<Vector3>();
+        sarchedPositions = new List<Vector3>();
 
         formations = FormationManager.Instance;
 
@@ -373,7 +396,233 @@ public class UnitManager : MonoBehaviour
     public void RemoveFromSquad(GameObject unit, int squadNum)
     {
         squads[squadNum].Remove(unit);
-    }    
+    }
+    
+    /// <summary>
+    /// Create a formations for all the selected units based on the position the player clicked
+    /// </summary>
+    /// <param name="point">The target position on the map to created a formation around</param>
+    /// <returns>A list of coordinates for all positions in the formation</returns>
+    public List<Vector3> GetFormationPositions(Vector3 point)
+    {        
+        Vector3 unitCenter = new Vector3();    
+        RaycastHit rayHit;
+        NavMeshHit navHit;
+
+        searchedPositions.Clear();
+
+        foreach (GameObject unit in selection.Units)
+        {
+            unitCenter += unit.transform.position;
+        }
+        unitCenter /= selection.Units.Count;
+
+        Vector3 moveDirection = (point - unitCenter).normalized;
+        Vector3 offsetDirection = GetRightAngle(moveDirection);
+        Vector3 position;
+        int unitsOnLeft = 0;
+        int unitsOnRight = 0;
+        int unitsPlaced = 0;
+
+        // make sure an object with the ground tag exists
+        /*if (!GameObject.FindWithTag("Ground"))
+        {
+            Debug.LogError("The ground object has not been tagged");
+            return formationPositions;
+        }*/
+
+        for (int row = 0; row < maxRows; row++)
+        {            
+            // create the formation positions
+            for (int column = 0; column < maxUnitsPerRow; column++)
+            {                
+                if (column <= maxUnitsPerRow / 2)
+                {  
+                    position = point + (offsetDirection * unitsOnRight * spaceBetweenUnits);
+                    unitsOnRight++;
+                }
+                else
+                {
+                    unitsOnLeft++;
+                    position = point - (offsetDirection * unitsOnLeft * spaceBetweenUnits);
+                }
+
+                //Debug.Log("Old position: " + position);
+                position -= moveDirection * spaceBetweenUnits * row;
+                //Debug.Log("New position: " + position);                
+
+                searchedPositions.Add(position);
+
+                // check that the position is not out of bounds
+                if (Physics.Raycast(position + Vector3.up, Vector3.down, out rayHit))
+                {                    
+                    // check if the position is on the ground
+                    if (rayHit.transform.gameObject.layer == 3 || rayHit.transform.tag == "Ground")
+                    {
+                        // Make sure point is on navmesh
+                        // Note: maxDistance must be above agent radius else program will get stuck in loop forever
+                        if (NavMesh.SamplePosition(rayHit.point, out navHit, 1.0f, NavMesh.AllAreas))
+                        {
+                            formationPositions.Add(navHit.position);
+                            unitsPlaced++;
+                        }
+                    }
+
+                }
+
+                // exit loop if all units are placed
+                if (unitsPlaced == selection.Units.Count)
+                    return formationPositions;
+            }
+
+            unitsOnLeft = 0;
+            unitsOnRight = 0;
+        }
+
+        return formationPositions;
+    }
+
+    /// <summary>
+    /// Cretes formation positions for a group of units moving towards a specified point
+    /// </summary>
+    /// <param name="destination">The position on the map to move all of the units to</param>
+    /// <param name="unitList">The list of transforms being moved</param>
+    /// <returns></returns>
+    public List<Vector3> GetFormationPositions(Vector3 destination, List<Transform> unitList)
+    {
+        Vector3 unitCenter = new Vector3();
+        RaycastHit rayHit;
+        NavMeshHit navHit;
+        List<Vector3> formationPositions = new List<Vector3>();
+
+        searchedPositions.Clear();
+
+        foreach (Transform unit in unitList)
+        {
+            unitCenter += unit.position;
+        }
+        unitCenter /= unitList.Count;
+
+        Vector3 moveDirection = (destination - unitCenter).normalized;
+        Vector3 offsetDirection = GetRightAngle(moveDirection);
+        Vector3 position;
+        int unitsOnLeft = 0;
+        int unitsOnRight = 0;
+        int unitsPlaced = 0;        
+
+        for (int row = 0; row < maxRows; row++)
+        {
+            // create the formation positions
+            for (int column = 0; column < maxUnitsPerRow; column++)
+            {
+                if (column <= maxUnitsPerRow / 2)
+                {
+                    position = destination + (offsetDirection * unitsOnRight * spaceBetweenUnits);
+                    unitsOnRight++;
+                }
+                else
+                {
+                    unitsOnLeft++;
+                    position = destination - (offsetDirection * unitsOnLeft * spaceBetweenUnits);
+                }
+
+                //Debug.Log("Old position: " + position);
+                position -= moveDirection * spaceBetweenUnits * row;
+                //Debug.Log("New position: " + position);               
+                searchedPositions.Add(position);
+
+                // check that the position is not out of bounds
+                if (Physics.Raycast(position + Vector3.up, Vector3.down, out rayHit))
+                {
+                    // check if the position is on the ground
+                    if (rayHit.transform.gameObject.layer == 3 || rayHit.transform.tag == "Ground")
+                    {
+                        // Make sure point is on navmesh
+                        // Note: maxDistance must be above agent radius else program will get stuck in loop forever
+                        if (NavMesh.SamplePosition(rayHit.point, out navHit, 1.0f, NavMesh.AllAreas))
+                        {
+                            formationPositions.Add(navHit.position);
+                            unitsPlaced++;
+                        }
+                    }
+
+                }
+                else
+                {
+                    //Debug.Log("Raycast did not hit anything at position " + position);
+                    break;
+                }
+
+                // exit loop if all units are placed
+                if (unitsPlaced == unitList.Count)
+                    return formationPositions;
+            }
+
+            unitsOnLeft = 0;
+            unitsOnRight = 0;
+        }
+
+        if (unitsPlaced < selection.Units.Count)
+        {
+            Debug.LogError("Max Rows in formation exceeded");
+        }
+
+        return formationPositions;
+    }
+
+    public void AddRallyFormationPoint(Vector3 point, int player = 0)
+    {
+        if(player == 0)
+            playerRallyFormation.Add(point);
+        else if(player == 1)
+            aiRallyFormation.Add(point);
+    }
+
+    public List<Vector3> GetRallyFormation(int player = 0)
+    {
+        if (player == 0)
+            return playerRallyFormation;
+        else
+            return aiRallyFormation;
+    }
+
+    public void ClearRallyFormation(int player = 0)
+    {
+        if(player == 0)
+            playerRallyFormation.Clear();
+        else
+            aiRallyFormation.Clear();
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="rallyPoint"></param>
+    /// <param name="player"></param>
+    /// <returns></returns>
+    public Vector3 GetRallyPosition(Vector3 rallyPoint, int player)
+    {
+        if (player == 0) // Human player
+            return GetNextFormationPoint(playerRallyFormation, rallyPoint);
+
+        else if (player == 1) // Ai player
+            return GetNextFormationPoint(aiRallyFormation, rallyPoint);
+
+        else
+            return rallyPoint;
+    }
+
+    // used for agent priorities
+    public int GetCurrentRallySize(int player)
+    {
+        if (player == 0)
+            return playerRallyFormation.Count;
+
+        else if (player == 1) // Ai player
+            return aiRallyFormation.Count;
+
+        return 0;
+    }
     #endregion
 
     #region private functions 
@@ -415,6 +664,48 @@ public class UnitManager : MonoBehaviour
             for (int i = 0; i < groupPath.Length - 1; i++)
                 Gizmos.DrawLine(groupPath[i], groupPath[i + 1]);
         }        
+
+        // draws the fromation positions that each unit will finish at
+        if (formationPositions != null && showFormationPositions)
+        {
+            foreach (Vector3 position in formationPositions)
+            {
+                Gizmos.color = Color.green;
+                Gizmos.DrawWireSphere(position, 1);
+            }
+        }
+
+        if(searchedPositions != null && showSearchedPositions)
+        {
+            foreach (Vector3 position in searchedPositions)
+            {
+                Gizmos.color = Color.yellow;
+                Gizmos.DrawWireSphere(position, 1);
+            }
+        }                
+
+        // 
+        if (aiRallyFormation != null && showAiRallyPositions)
+        {
+            foreach (Vector3 position in aiRallyFormation)
+            {
+                Gizmos.color = Color.green;
+                Gizmos.DrawWireSphere(position + Vector3.up * 0.5f, 1);
+            }
+        }
+
+        /*
+        if (searchedPositions != null)
+        {
+            Gizmos.color = Color.green;
+            foreach (Vector3 position in searchedPositions)
+            {                   
+                if(position == searchedPositions.Last())
+                    Gizmos.color = Color.blue;
+
+                Gizmos.DrawWireCube(position, Vector3.one);
+            }               
+        }*/
 
     }
 
