@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using static UnityEngine.UI.CanvasScaler;
 
+
 public abstract class AiTask : ScriptableObject
 {
     public float timeDelay;
+    public int priorityScore = 10;
 
     //protected AiPlayer ai;
     //protected SimpleAiPlayer simpleAi;
@@ -19,6 +21,5 @@ public abstract class AiTask : ScriptableObject
     // abstract functions
     public abstract int GetSteelCost();
     public abstract bool PerformTask();
-    public abstract bool IsComplete();
-    
+    public abstract bool IsComplete();    
 }

@@ -314,13 +314,17 @@ public class UnitController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="point"></param>
     public void MoveToRallyPoint(Vector3 point)
     {
-        UnitManager um = FindObjectOfType<UnitManager>();
+        FormationManager formations = FormationManager.Instance;
         NavMeshAgent agent = body.GetComponent<NavMeshAgent>();
 
-        agent.avoidancePriority -= um.GetCurrentRallySize(1);
-        Vector3 formationPos = um.GetRallyPosition(point, 1);
+        agent.avoidancePriority -= formations.GetCurrentRallySize(1);
+        Vector3 formationPos = formations.GetRallyPosition(point, 1);
 
         ChangeState(UnitState.Moving, formationPos);
     }
