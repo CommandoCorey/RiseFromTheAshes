@@ -40,12 +40,19 @@ public class VehicleBayBuildMenu : MonoBehaviour {
 		foreach (UnitDesc ud in units)
 		{
 			ud.buildButton.onClick.AddListener(() => {
-				currentVehicleBay.PrepareBuild();
-				currentVehicleBay.isBuilding = true;
-				//ResourceManager.Instance.SpendSteel(ud.steelCost);
-				currentVehicleBay.buildTimer = 0.0f;
-				currentVehicleBay.currentUnitDesc = ud;
-				Hide();
+				if (GameManager.Instance.UnitCountPlayer < GameManager.Instance.MaxUnitsPlayer)
+				{
+					currentVehicleBay.PrepareBuild();
+					currentVehicleBay.isBuilding = true;
+					//ResourceManager.Instance.SpendSteel(ud.steelCost);
+					currentVehicleBay.buildTimer = 0.0f;
+					currentVehicleBay.currentUnitDesc = ud;
+					Hide();
+					GameManager.Instance.IncreaseUnitCount(false);
+				} else
+				{
+						Hide();
+				}
 			});
 		}
 
