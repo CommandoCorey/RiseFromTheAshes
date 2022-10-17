@@ -54,6 +54,7 @@ public class GameManager : MonoBehaviour
     private int unitCountPlayer = 0;
     private int unitCountAi = 0;
 
+
     static GameManager gameManager;
 
     // properties
@@ -99,7 +100,8 @@ public class GameManager : MonoBehaviour
         maxUnitsPlayer = startingMaxUnits;
         maxUnitsAi = startingMaxUnits;
 
-        maxUnitsText.text = maxUnitsPlayer.ToString();
+        if(maxUnitsText)
+            maxUnitsText.text = maxUnitsPlayer.ToString();
     }
 
     // Update is called once per frame

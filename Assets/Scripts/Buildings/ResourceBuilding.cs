@@ -5,11 +5,11 @@ using UnityEngine;
 
 public class ResourceBuilding : MonoBehaviour
 {
-    //public int ResourceToGain;
-    public ResourceType resourceToAdd;
-    public int quantityToAdd = 10;
-    public float timePerIncerement = 1;
-    public bool giveToAIPlayer = false;
+    [SerializeField] ResourceType resourceToAdd;
+    [SerializeField] int maxQuantityIncrease = 0;
+    [SerializeField] public int quantityToAdd = 10;
+    [SerializeField] public float timePerIncerement = 1;
+    [SerializeField] public bool giveToAIPlayer = false;
 
     [Header("Floating Text Label")]
     public GameObject floatingLabel;
@@ -20,6 +20,8 @@ public class ResourceBuilding : MonoBehaviour
 
     private bool wasPaused = false;
     private bool generating = false;
+
+    private int currentAmount, maxAmount;
 
     // Start is called before the first frame update
     void Start()
@@ -33,11 +35,19 @@ public class ResourceBuilding : MonoBehaviour
 
         if(gameManager.State == GameState.Running && !building.IsBuilding)
             Invoke("IncrementResource", timePerIncerement);
+
+        resources.IncreaseResourceMax(resourceToAdd, maxQuantityIncrease, giveToAIPlayer);
     }
 
     // Update is called once per frame
     void Update()
-    {        
+    {
+        currentAmount = resources.GetResource(resourceToAdd, giveToAIPlayer);
+        maxAmount = resources.GetResourceMax(resourceToAdd, giveToAIPlayer);
+
+        if (currentAmount >= maxAmount)
+            return;
+
         if(!wasPaused && gameManager.State == GameState.Paused)
             wasPaused = true;
 
@@ -67,8 +77,15 @@ public class ResourceBuilding : MonoBehaviour
             floatingLabel.GetComponent<FloatingResourceLabel>().Begin(quantityToAdd);
         }
 
-        if (gameManager.State == GameState.Running)
+
+        currentAmount = resources.GetResource(resourceToAdd, giveToAIPlayer);
+        maxAmount = resources.GetResourceMax(resourceToAdd, giveToAIPlayer);
+
+        // if reosources is not at maximum generate again
+        if (gameManager.State == GameState.Running && currentAmount < maxAmount)
+        {
             Invoke("IncrementResource", timePerIncerement);
+        }
     }
 
     private void HideLabel()

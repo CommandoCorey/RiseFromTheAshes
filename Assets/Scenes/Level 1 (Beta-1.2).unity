@@ -389,7 +389,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7362181638702442783, guid: 3623418b7e9fef346a36510a2f2fe878, type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 7362181638702442783, guid: 3623418b7e9fef346a36510a2f2fe878, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1284,11 +1284,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1314541714}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
---- !u!4 &1333147439 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8021059972323872336, guid: 77a477ce493da3c439bc0749466a4af1, type: 3}
-  m_PrefabInstance: {fileID: 2111599849}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1360160956 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8115696531288314860, guid: 3450d15c802a67b4e93dec63d482e348, type: 3}
@@ -1734,6 +1729,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3892714476887254199, guid: 9b0794ed9f391a843bde4c3675787aee, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3892714476971548612, guid: 9b0794ed9f391a843bde4c3675787aee, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -1781,6 +1780,10 @@ PrefabInstance:
     - target: {fileID: 3892714476971548613, guid: 9b0794ed9f391a843bde4c3675787aee, type: 3}
       propertyPath: m_Name
       value: AI Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 3892714476971548613, guid: 9b0794ed9f391a843bde4c3675787aee, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3892714476971548615, guid: 9b0794ed9f391a843bde4c3675787aee, type: 3}
       propertyPath: playerBase
@@ -2048,6 +2051,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 944934464667121525, guid: d7b65b59118ad1448a90e82efa7c8841, type: 3}
   m_PrefabInstance: {fileID: 2043509439}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1982658708 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8282633477599844643, guid: 77a477ce493da3c439bc0749466a4af1, type: 3}
+  m_PrefabInstance: {fileID: 2111599849}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2005206700
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2310,6 +2324,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3795532392224223611, guid: 77a477ce493da3c439bc0749466a4af1, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -321.8
+      objectReference: {fileID: 0}
     - target: {fileID: 4442768539490478212, guid: 77a477ce493da3c439bc0749466a4af1, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -2327,16 +2345,32 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7435061208588234708, guid: 77a477ce493da3c439bc0749466a4af1, type: 3}
+      propertyPath: maxSteelAmount
+      value: 
+      objectReference: {fileID: 1982658708}
+    - target: {fileID: 7435061208588234708, guid: 77a477ce493da3c439bc0749466a4af1, type: 3}
       propertyPath: aiResources.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7435061208588234708, guid: 77a477ce493da3c439bc0749466a4af1, type: 3}
+      propertyPath: playerResources.Array.size
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7435061208588234708, guid: 77a477ce493da3c439bc0749466a4af1, type: 3}
       propertyPath: aiResources.Array.data[0].name
       value: Steel
       objectReference: {fileID: 0}
+    - target: {fileID: 7435061208588234708, guid: 77a477ce493da3c439bc0749466a4af1, type: 3}
+      propertyPath: playerResources.Array.data[0].name
+      value: Steel
+      objectReference: {fileID: 0}
+    - target: {fileID: 7435061208588234708, guid: 77a477ce493da3c439bc0749466a4af1, type: 3}
+      propertyPath: playerResources.Array.data[0].maxAmount
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 8021059972323872336, guid: 77a477ce493da3c439bc0749466a4af1, type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8021059972323872336, guid: 77a477ce493da3c439bc0749466a4af1, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2561,6 +2595,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2933017070437586809, guid: 1be1995ec8462e1469dbf70fde26bac6, type: 3}
       propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3324482885708106065, guid: 1be1995ec8462e1469dbf70fde26bac6, type: 3}
+      propertyPath: aiBuilding
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3324482885708106065, guid: 1be1995ec8462e1469dbf70fde26bac6, type: 3}
