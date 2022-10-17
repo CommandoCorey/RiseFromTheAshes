@@ -33,9 +33,12 @@ public class AiPlayer : MonoBehaviour
     [Header("Info Panel")]
     [SerializeField] bool showInfoPanel;
     [SerializeField] GameObject infoPanel;
-    [SerializeField] TextMeshProUGUI steelAmount;
+    [SerializeField] TextMeshProUGUI steelCurrentAmount;
+    [SerializeField] TextMeshProUGUI steelMaxAmount;
+    [SerializeField] TextMeshProUGUI totalUnitAmount;
+    [SerializeField] TextMeshProUGUI maxUnitAmount;
     [SerializeField] Transform taskListPanel;
-    [SerializeField] TaskSetDisplay taskSetPanelPrefab;
+    [SerializeField] TaskSetDisplay taskSetPanelPrefab;    
 
     //[SerializeField] TextMeshProUGUI taskDescription;
     //[SerializeField] TextMeshProUGUI taskStatus;
@@ -44,6 +47,7 @@ public class AiPlayer : MonoBehaviour
     // private variables
     private ResourceManager resources;
     private int steel = 0;
+    private int maxSteel;
     private UnitController unit;
 
     private int unitsTrained = 0;
@@ -72,12 +76,11 @@ public class AiPlayer : MonoBehaviour
     {
         resources = ResourceManager.Instance;
         formations = FormationManager.Instance;
+        gameManager = GameManager.Instance;
 
         aiUnits = new List<UnitController>();
         unitGroup = new List<Transform>();
-        baysInConstruction = new List<Building>();
-
-        gameManager = FindObjectOfType<GameManager>();
+        baysInConstruction = new List<Building>();        
 
         activeTasks = new List<AiTask>();
 
@@ -97,7 +100,8 @@ public class AiPlayer : MonoBehaviour
         if (gameManager.State != GameState.Running)
             return;       
 
-        steel = resources.aiResources[0].currentAmount;
+        steel = resources.GetResource(ResourceType.Steel, true);
+        maxSteel = resources.GetResourceMax(ResourceType.Steel, true);
 
         // toggle info panel
         if (showInfoPanel)
@@ -173,7 +177,10 @@ public class AiPlayer : MonoBehaviour
 
     private void UpdateInfoPanel()
     {
-        steelAmount.text = steel.ToString();
+        steelCurrentAmount.text = steel.ToString();
+        steelMaxAmount.text = maxSteel.ToString();
+        totalUnitAmount.text = gameManager.UnitCountAi.ToString();
+        maxUnitAmount.text = gameManager.MaxUnitsAi.ToString();
 
         for(int i=0; i < tasksSchedule.Length; i++)
         {
@@ -228,6 +235,12 @@ public class AiPlayer : MonoBehaviour
         if(vehicleBays.Count == 0)
         {
             task.TaskStatus = "No vehicle bays in base";
+            return false;
+        }
+
+        if(gameManager.UnitCountAi >= gameManager.MaxUnitsAi)
+        {
+            task.TaskStatus = "Not enough space for more units";
             return false;
         }
 

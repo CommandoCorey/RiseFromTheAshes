@@ -60,7 +60,7 @@ public class VehicleBay : MonoBehaviour {
 			if (isBuilding && !building.aiBuilding) {
 				UnitDesc desc = currentUnitDesc;
 
-				float timeToBuild = desc.prefab.GetComponent<UnitController>().TimeToTrain;
+				float timeToBuild = desc.unit.TimeToTrain;
 
 				buildTimer += Time.deltaTime / timeToBuild;
 
@@ -68,7 +68,7 @@ public class VehicleBay : MonoBehaviour {
 
 				if (buildTimer >= 1.0f)
 				{
-					Instantiate(desc.prefab, spawnLocation.position, spawnLocation.rotation);
+					Instantiate(desc.unit, spawnLocation.position, spawnLocation.rotation);
 					buildProgress.gameObject.SetActive(false);
 
 					isBuilding = false;
@@ -85,6 +85,17 @@ public class VehicleBay : MonoBehaviour {
 			}
 		}
 	}
+
+	public void BuildUnit(UnitController unit)
+	{
+        ResourceManager.Instance.SpendSteel(unit.Cost);
+
+        PrepareBuild();
+        isBuilding = true;        
+        buildTimer = 0.0f;
+        
+        GameManager.Instance.IncreaseUnitCount(false);
+    }
 
 	private void OnDrawGizmosSelected()
 	{

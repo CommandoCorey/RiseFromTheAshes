@@ -5,11 +5,13 @@ using UnityEngine;
 
 public class ResourceBuilding : MonoBehaviour
 {
-    //public int ResourceToGain;
-    public ResourceType resourceToAdd;
-    public int quantityToAdd = 10;
-    public float timePerIncerement = 1;
-    public bool giveToAIPlayer = false;
+    public bool isHQ = false;
+
+    [SerializeField] ResourceType resourceToAdd;
+    [SerializeField] int maxQuantityIncrease = 0;
+    [SerializeField] public int quantityToAdd = 10;
+    [SerializeField] public float timePerIncerement = 1;
+    [SerializeField] public bool giveToAIPlayer = false;
 
     [Header("Floating Text Label")]
     public GameObject floatingLabel;
@@ -21,6 +23,8 @@ public class ResourceBuilding : MonoBehaviour
     private bool wasPaused = false;
     private bool generating = false;
 
+    private int currentAmount, maxAmount;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -28,29 +32,43 @@ public class ResourceBuilding : MonoBehaviour
         gameManager = FindObjectOfType<GameManager>();
         building = GetComponent<Building>();
 
-        if (gameObject.CompareTag("Headquarters"))
-            building.IsBuilding = false;
+        //if (gameObject.CompareTag("Headquarters"))
+            //building.IsBuilding = false;
 
-        if(gameManager.State == GameState.Running && !building.IsBuilding)
-            Invoke("IncrementResource", timePerIncerement);
+        //if(gameManager.State == GameState.Running && !building.IsBuilding)
+            //Invoke("IncrementResource", timePerIncerement);
+
+        resources.IncreaseResourceMax(resourceToAdd, maxQuantityIncrease, giveToAIPlayer);
     }
 
     // Update is called once per frame
     void Update()
-    {        
+    {
+        currentAmount = resources.GetResource(resourceToAdd, giveToAIPlayer);
+        maxAmount = resources.GetResourceMax(resourceToAdd, giveToAIPlayer);
+
+        if (currentAmount >= maxAmount)
+            return;
+
         if(!wasPaused && gameManager.State == GameState.Paused)
             wasPaused = true;
 
-        if(gameManager.State == GameState.Running && building.IsBuilt && !generating)
+        if(gameManager.State == GameState.Running && !generating)
         {
-            generating = true;
-            Invoke("IncrementResource", timePerIncerement);
+            if (building.IsBuilt || gameObject.CompareTag("Headquarters"))
+            {
+                generating = true;
+                Invoke("IncrementResource", timePerIncerement);
+            }
         }
 
-        if(wasPaused && gameManager.State == GameState.Running && building.IsBuilt)
+        if(wasPaused && gameManager.State == GameState.Running)
         {
-            Invoke("IncrementResource", timePerIncerement);
-            wasPaused = false;
+            if (building.IsBuilt || gameObject.CompareTag("Headquarters"))
+            {
+                Invoke("IncrementResource", timePerIncerement);
+                wasPaused = false;
+            }
         }
     }
 
@@ -67,8 +85,19 @@ public class ResourceBuilding : MonoBehaviour
             floatingLabel.GetComponent<FloatingResourceLabel>().Begin(quantityToAdd);
         }
 
-        if (gameManager.State == GameState.Running)
+
+        currentAmount = resources.GetResource(resourceToAdd, giveToAIPlayer);
+        maxAmount = resources.GetResourceMax(resourceToAdd, giveToAIPlayer);
+
+        // if reosources is not at maximum generate again
+        if (gameManager.State == GameState.Running && currentAmount < maxAmount)
+        {
             Invoke("IncrementResource", timePerIncerement);
+        }
+        else
+        {
+            generating = false;
+        }
     }
 
     private void HideLabel()

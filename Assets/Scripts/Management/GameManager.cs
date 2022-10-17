@@ -54,6 +54,7 @@ public class GameManager : MonoBehaviour
     private int unitCountPlayer = 0;
     private int unitCountAi = 0;
 
+
     static GameManager gameManager;
 
     // properties
@@ -99,7 +100,8 @@ public class GameManager : MonoBehaviour
         maxUnitsPlayer = startingMaxUnits;
         maxUnitsAi = startingMaxUnits;
 
-        maxUnitsText.text = maxUnitsPlayer.ToString();
+        if(maxUnitsText)
+            maxUnitsText.text = maxUnitsPlayer.ToString();
     }
 
     // Update is called once per frame
@@ -165,26 +167,50 @@ public class GameManager : MonoBehaviour
         marker.GetComponent<MeshRenderer>().enabled = true;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="layer"></param>
+    /// <param name="layerMask"></param>
+    /// <returns></returns>
     public bool IsLayerInMask(int layer, LayerMask layerMask)
     {
         return layerMask == (layerMask | (1 << layer));
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="clip"></param>
+    /// <param name="volumeScale"></param>
     public void PlaySound(AudioClip clip, float volumeScale)
     {
         audio.PlayOneShot(clip, volumeScale);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="prefab"></param>
+    /// <param name="position"></param>
     public void InstantiateParticles(ParticleSystem prefab, Vector3 position)
     {
         var particles = Instantiate(prefab.gameObject, position, Quaternion.identity);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="sprite"></param>
     public void SetCursor(CursorSprite sprite)
     {
         if(enableCursorChanges)
             Cursor.SetCursor(sprite.image, sprite.hotspot, CursorMode.ForceSoftware);
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
     public void ResetCursor()
     {
         if (enableCursorChanges)
@@ -203,6 +229,9 @@ public class GameManager : MonoBehaviour
         //GetComponent<AiManager>().enabled = !paused;
     }
 
+    /// <summary>
+    /// Returns the game to the main menu scene
+    /// </summary>
     public void LoadMainMenu()
     {
         Time.timeScale = 1.0f;
@@ -230,7 +259,7 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Removes one unit to the unit count
     /// </summary>
-    /// <param name="aiPlayer"> </param>
+    /// <param name="aiPlayer">Determines if the unit is an ai player unit</param>
     public void DecreaseUnitCount(bool aiPlayer)
     {
         if (aiPlayer)
@@ -248,8 +277,8 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Increases the maximum units by a specified amount
     /// </summary>
-    /// <param name="amount"></param>
-    /// <param name="aiPlayer"></param>
+    /// <param name="amount">The increase in unit capacity</param>
+    /// <param name="aiPlayer">determines whether or not the player is the human or the A.I.</param>
     public void IncreaseMaxUnits(int amount, bool aiPlayer)
     {
         if (aiPlayer)

@@ -4,6 +4,7 @@ using UnityEngine.EventSystems;
 using TMPro;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
+using System.Collections;
 
 [System.Serializable]
 public struct BuildItem
@@ -29,8 +30,10 @@ public class BuildMenu : MonoBehaviour
 
 	[SerializeField] GraphicRaycaster raycaster;
 	[SerializeField] EventSystem eventSystem;
+	[SerializeField] GameObject insufficientResourcesText;
+	[SerializeField] float notificationTimeout = 1;
 
-	static public BuildMenu Instance { get; private set; }
+    static public BuildMenu Instance { get; private set; }
 
 	void Awake() {
 		if (Instance != null && Instance != this) {
@@ -69,7 +72,7 @@ public class BuildMenu : MonoBehaviour
 			{
 				if (!hit.collider.gameObject.CompareTag("BuildMenu"))
 				{
-					Hide();
+					//Hide();
 				}
 			}
 		}
@@ -77,9 +80,30 @@ public class BuildMenu : MonoBehaviour
 
 	public void Build(in BuildItem item)
 	{
-		Building b = Instantiate(item.buildingPrefab, ghostBuilding.transform.position, ghostBuilding.transform.rotation);
-		ghostBuilding.gameObject.SetActive(false);
-		b.Build();
-		gameObject.SetActive(false);
+		// check the resource cost of the building
+		ResourceManager rm = ResourceManager.Instance;
+		int totalSteel = rm.GetResource(ResourceType.Steel);
+
+		if (totalSteel >= item.buildingPrefab.steelCost)
+		{
+			rm.SpendResource(ResourceType.Steel, item.buildingPrefab.steelCost);
+
+			Building b = Instantiate(item.buildingPrefab, ghostBuilding.transform.position, ghostBuilding.transform.rotation);
+			ghostBuilding.gameObject.SetActive(false);
+			b.Build();
+			insufficientResourcesText.SetActive(false);
+			Hide();
+		}
+		else
+        {
+			StartCoroutine(showErrorText());
+		}
 	}
+
+	private IEnumerator showErrorText()
+	{
+        insufficientResourcesText.SetActive(true);
+		yield return new WaitForSeconds(notificationTimeout);
+        insufficientResourcesText.SetActive(false);
+    }
 }
