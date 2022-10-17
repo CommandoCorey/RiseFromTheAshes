@@ -4,6 +4,7 @@ using UnityEngine.EventSystems;
 using TMPro;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
+using System.Collections;
 
 [System.Serializable]
 public struct BuildItem
@@ -30,8 +31,9 @@ public class BuildMenu : MonoBehaviour
 	[SerializeField] GraphicRaycaster raycaster;
 	[SerializeField] EventSystem eventSystem;
 	[SerializeField] GameObject insufficientResourcesText;
+	[SerializeField] float notificationTimeout = 1;
 
-	static public BuildMenu Instance { get; private set; }
+    static public BuildMenu Instance { get; private set; }
 
 	void Awake() {
 		if (Instance != null && Instance != this) {
@@ -70,7 +72,7 @@ public class BuildMenu : MonoBehaviour
 			{
 				if (!hit.collider.gameObject.CompareTag("BuildMenu"))
 				{
-					Hide();
+					//Hide();
 				}
 			}
 		}
@@ -90,11 +92,18 @@ public class BuildMenu : MonoBehaviour
 			ghostBuilding.gameObject.SetActive(false);
 			b.Build();
 			insufficientResourcesText.SetActive(false);
-			gameObject.SetActive(false);
+			Hide();
 		}
 		else
         {
-			insufficientResourcesText.SetActive(true);
+			StartCoroutine(showErrorText());
 		}
 	}
+
+	private IEnumerator showErrorText()
+	{
+        insufficientResourcesText.SetActive(true);
+		yield return new WaitForSeconds(notificationTimeout);
+        insufficientResourcesText.SetActive(false);
+    }
 }
