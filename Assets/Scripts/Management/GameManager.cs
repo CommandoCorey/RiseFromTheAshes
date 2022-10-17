@@ -1,6 +1,7 @@
 using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Timeline;
@@ -12,7 +13,7 @@ public enum GameState
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] int startingMaxUnits = 10;
+    [SerializeField] int startingMaxUnits = 20;
 
     [Range(0, 10)]
     public float timeScale = 1;
@@ -28,6 +29,10 @@ public class GameManager : MonoBehaviour
     public GameObject pauseDialog;
     public GameObject winDialog;
     public GameObject loseDialog;
+
+    [Header("Heads Up Display")]
+    public TextMeshProUGUI totalUnitsText;
+    public TextMeshProUGUI maxUnitsText;
 
     [Header("Cursors")]
     public bool enableCursorChanges;
@@ -46,9 +51,30 @@ public class GameManager : MonoBehaviour
     // private variables
     private int maxUnitsPlayer;
     private int maxUnitsAi;
+    private int unitCountPlayer = 0;
+    private int unitCountAi = 0;
+
+    static GameManager gameManager;
 
     // properties
-    public GameState State { get => state;}
+    static public GameManager Instance { get; private set; }
+    public GameState State { get => state; }
+    public int MaxUnitsPlayer { get => maxUnitsPlayer; }
+    public int MaxUnitsAi { get => maxUnitsAi; }
+    public int UnitCountPlayer { get => unitCountPlayer; }
+    public int UnitCountAi { get => unitCountAi; }
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(this);
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -57,7 +83,6 @@ public class GameManager : MonoBehaviour
             minimap.SetActive(true);
 
         marker.GetComponent<MeshRenderer>().enabled = false;
-
         audio = GetComponent<AudioSource>();
 
         // set cursor sizes
@@ -73,6 +98,8 @@ public class GameManager : MonoBehaviour
 
         maxUnitsPlayer = startingMaxUnits;
         maxUnitsAi = startingMaxUnits;
+
+        maxUnitsText.text = maxUnitsPlayer.ToString();
     }
 
     // Update is called once per frame
@@ -173,7 +200,7 @@ public class GameManager : MonoBehaviour
         GetComponent<SelectionManager>().enabled = !paused;
         GetComponent<ResourceManager>().enabled = !paused;
         GetComponent<BuildingManager>().enabled = !paused;
-     //   GetComponent<AiManager>().enabled = !paused;
+        //GetComponent<AiManager>().enabled = !paused;
     }
 
     public void LoadMainMenu()
@@ -181,6 +208,61 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1.0f;
         SceneManager.LoadScene(0);
     }
+    
+    /// <summary>
+    /// Add's one unit to the unit count
+    /// </summary>
+    /// <param name="aiPlayer"> </param>
+    public void IncreaseUnitCount(bool aiPlayer)
+    {
+        if (aiPlayer)
+        {
+            unitCountAi++;            
+        }
+        else
+        {
+            unitCountPlayer++;
+            totalUnitsText.text = unitCountPlayer.ToString();
+        }
+        
+    }
+
+    /// <summary>
+    /// Removes one unit to the unit count
+    /// </summary>
+    /// <param name="aiPlayer"> </param>
+    public void DecreaseUnitCount(bool aiPlayer)
+    {
+        if (aiPlayer)
+        {
+            unitCountAi--;
+        }
+        else
+        {
+            unitCountPlayer--;
+            totalUnitsText.text = unitCountPlayer.ToString();
+        }
+
+    }
+
+    /// <summary>
+    /// Increases the maximum units by a specified amount
+    /// </summary>
+    /// <param name="amount"></param>
+    /// <param name="aiPlayer"></param>
+    public void IncreaseMaxUnits(int amount, bool aiPlayer)
+    {
+        if (aiPlayer)
+        {
+            maxUnitsAi += amount;
+        }
+        else
+        {
+            maxUnitsPlayer += amount;
+            maxUnitsText.text = maxUnitsPlayer.ToString();
+        }
+    }
+
 }
 
 [System.Serializable]
