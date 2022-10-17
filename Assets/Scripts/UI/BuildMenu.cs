@@ -29,6 +29,7 @@ public class BuildMenu : MonoBehaviour
 
 	[SerializeField] GraphicRaycaster raycaster;
 	[SerializeField] EventSystem eventSystem;
+	[SerializeField] GameObject insufficientResourcesText;
 
 	static public BuildMenu Instance { get; private set; }
 
@@ -77,9 +78,23 @@ public class BuildMenu : MonoBehaviour
 
 	public void Build(in BuildItem item)
 	{
-		Building b = Instantiate(item.buildingPrefab, ghostBuilding.transform.position, ghostBuilding.transform.rotation);
-		ghostBuilding.gameObject.SetActive(false);
-		b.Build();
-		gameObject.SetActive(false);
+		// check the resource cost of the building
+		ResourceManager rm = ResourceManager.Instance;
+		int totalSteel = rm.GetResource(ResourceType.Steel);
+
+		if (totalSteel >= item.buildingPrefab.steelCost)
+		{
+			rm.SpendResource(ResourceType.Steel, item.buildingPrefab.steelCost);
+
+			Building b = Instantiate(item.buildingPrefab, ghostBuilding.transform.position, ghostBuilding.transform.rotation);
+			ghostBuilding.gameObject.SetActive(false);
+			b.Build();
+			insufficientResourcesText.SetActive(false);
+			gameObject.SetActive(false);
+		}
+		else
+        {
+			insufficientResourcesText.SetActive(true);
+		}
 	}
 }

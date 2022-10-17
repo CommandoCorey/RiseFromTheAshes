@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class ResourceBuilding : MonoBehaviour
 {
+    public bool isHQ = false;
+
     [SerializeField] ResourceType resourceToAdd;
     [SerializeField] int maxQuantityIncrease = 0;
     [SerializeField] public int quantityToAdd = 10;
@@ -30,11 +32,11 @@ public class ResourceBuilding : MonoBehaviour
         gameManager = FindObjectOfType<GameManager>();
         building = GetComponent<Building>();
 
-        if (gameObject.CompareTag("Headquarters"))
-            building.IsBuilding = false;
+        //if (gameObject.CompareTag("Headquarters"))
+            //building.IsBuilding = false;
 
-        if(gameManager.State == GameState.Running && !building.IsBuilding)
-            Invoke("IncrementResource", timePerIncerement);
+        //if(gameManager.State == GameState.Running && !building.IsBuilding)
+            //Invoke("IncrementResource", timePerIncerement);
 
         resources.IncreaseResourceMax(resourceToAdd, maxQuantityIncrease, giveToAIPlayer);
     }
@@ -51,16 +53,22 @@ public class ResourceBuilding : MonoBehaviour
         if(!wasPaused && gameManager.State == GameState.Paused)
             wasPaused = true;
 
-        if(gameManager.State == GameState.Running && building.IsBuilt && !generating)
+        if(gameManager.State == GameState.Running && !generating)
         {
-            generating = true;
-            Invoke("IncrementResource", timePerIncerement);
+            if (building.IsBuilt || gameObject.CompareTag("Headquarters"))
+            {
+                generating = true;
+                Invoke("IncrementResource", timePerIncerement);
+            }
         }
 
-        if(wasPaused && gameManager.State == GameState.Running && building.IsBuilt)
+        if(wasPaused && gameManager.State == GameState.Running)
         {
-            Invoke("IncrementResource", timePerIncerement);
-            wasPaused = false;
+            if (building.IsBuilt || gameObject.CompareTag("Headquarters"))
+            {
+                Invoke("IncrementResource", timePerIncerement);
+                wasPaused = false;
+            }
         }
     }
 
@@ -85,6 +93,10 @@ public class ResourceBuilding : MonoBehaviour
         if (gameManager.State == GameState.Running && currentAmount < maxAmount)
         {
             Invoke("IncrementResource", timePerIncerement);
+        }
+        else
+        {
+            generating = false;
         }
     }
 
