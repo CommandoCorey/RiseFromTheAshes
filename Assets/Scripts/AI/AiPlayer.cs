@@ -34,6 +34,8 @@ public class AiPlayer : MonoBehaviour
     [SerializeField] bool showInfoPanel;
     [SerializeField] GameObject infoPanel;
     [SerializeField] TextMeshProUGUI steelAmount;
+    [SerializeField] TextMeshProUGUI totalUnitAmount;
+    [SerializeField] TextMeshProUGUI maxUnitAmount;
     [SerializeField] Transform taskListPanel;
     [SerializeField] TaskSetDisplay taskSetPanelPrefab;
 
@@ -72,12 +74,11 @@ public class AiPlayer : MonoBehaviour
     {
         resources = ResourceManager.Instance;
         formations = FormationManager.Instance;
+        gameManager = GameManager.Instance;
 
         aiUnits = new List<UnitController>();
         unitGroup = new List<Transform>();
-        baysInConstruction = new List<Building>();
-
-        gameManager = FindObjectOfType<GameManager>();
+        baysInConstruction = new List<Building>();        
 
         activeTasks = new List<AiTask>();
 
@@ -174,6 +175,8 @@ public class AiPlayer : MonoBehaviour
     private void UpdateInfoPanel()
     {
         steelAmount.text = steel.ToString();
+        totalUnitAmount.text = gameManager.UnitCountAi.ToString();
+        maxUnitAmount.text = gameManager.MaxUnitsAi.ToString();
 
         for(int i=0; i < tasksSchedule.Length; i++)
         {
@@ -228,6 +231,12 @@ public class AiPlayer : MonoBehaviour
         if(vehicleBays.Count == 0)
         {
             task.TaskStatus = "No vehicle bays in base";
+            return false;
+        }
+
+        if(gameManager.UnitCountAi >= gameManager.MaxUnitsAi)
+        {
+            task.TaskStatus = "Not enough space for more units";
             return false;
         }
 
