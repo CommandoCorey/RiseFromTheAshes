@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class AttackState : State
 {
+    public float minAngle = 5;
+
     bool pointingAtTarget = false;
 
     private Quaternion lookRotation;
@@ -60,7 +62,7 @@ public class AttackState : State
         //Debug.Log("Enemy target detected");
 
         // check if turret is pointing at target
-        if (Quaternion.Angle(unit.turret.rotation, lookRotation) < 2)        
+        if (Quaternion.Angle(unit.turret.rotation, lookRotation) < minAngle)        
         {
             Debug.DrawLine(unit.turret.position, unit.AttackTarget.position, Color.yellow);
 
