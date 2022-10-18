@@ -23,6 +23,13 @@ public class UnitController : MonoBehaviour
     [SerializeField] int steelCost = 10;
     [SerializeField] int timeToTrain = 1;
 
+    float healTimer = 0.0f;
+
+    List<Material> materials;
+
+    MeshRenderer[] childMeshRenderers;
+    MeshRenderer myMeshRenderer;
+
     #region variable declartion
     [Header("Game Objects and Transforms")]
     public GameObject selectionHighlight;
@@ -165,6 +172,11 @@ public class UnitController : MonoBehaviour
         {
             UnitManager.Instance.UCRefs.AddLast(this);
         }
+
+        childMeshRenderers = GetComponentsInChildren<MeshRenderer>();
+        myMeshRenderer = GetComponent<MeshRenderer>();
+
+        PopulateMaterialRefs();
     }
 
 	// Update is called once per frame
@@ -205,6 +217,14 @@ public class UnitController : MonoBehaviour
                 RDTimer = 0.0f;
             }
         }
+
+        healTimer -= Time.deltaTime;
+
+        foreach (var mat in materials)
+		{
+            mat.SetColor("HealEffectColor", Color.blue);
+            mat.SetFloat("HealEffectIntensity", Mathf.Clamp(healTimer, 0.0f, 1.0f));
+		}
     }        
 
     /// <summary>
@@ -247,8 +267,10 @@ public class UnitController : MonoBehaviour
     {
         health += amount;
 
+        healTimer = 1.0f;
+
         // prevent health from going above maximum
-        Mathf.Clamp(health, 0.0f, maxHealth);
+        health = Mathf.Clamp(health, 0.0f, maxHealth);
     }
 
     /// <summary>
@@ -488,6 +510,30 @@ public class UnitController : MonoBehaviour
         bool aiPlayer = body.gameObject.layer == 7;
 
         gameManager.DecreaseUnitCount(aiPlayer);
+    }
+
+    void PopulateMaterialRefs()
+    {
+        materials = new List<Material>();
+
+        if (myMeshRenderer != null)
+        {
+            foreach (Material material in myMeshRenderer.materials)
+            {
+                materials.Add(material);
+            }
+        }
+
+        if (childMeshRenderers != null)
+        {
+            foreach (MeshRenderer childRenderer in childMeshRenderers)
+            {
+                foreach (Material childMaterial in childRenderer.materials)
+                {
+                    materials.Add(childMaterial);
+                }
+            }
+        }
     }
 
     private void OnDrawGizmos()
