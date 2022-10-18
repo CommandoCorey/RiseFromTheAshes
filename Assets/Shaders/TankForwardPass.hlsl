@@ -20,6 +20,9 @@ uniform sampler2D G_FOWOccludeMaskTexture;
 uniform float3 G_FogTopCorner;
 uniform float2 G_FogMaskSize;
 
+uniform float HealEffectIntensity;
+uniform float3 HealEffectColor;
+
 struct Attributes
 {
     float4 positionOS   : POSITION;
@@ -198,6 +201,8 @@ half4 LitPassFragment(Varyings input) : SV_Target
 
     color.rgb *= 1.0 - maskVal;
     color.a = 1.0 - maskVal;
+
+    color.rgb += (HealEffectIntensity * 0.2) * HealEffectColor;
 
     return color;
 }
