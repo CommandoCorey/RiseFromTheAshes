@@ -136,6 +136,8 @@ public class UnitController : MonoBehaviour
     public float DamagePerHit { get => damagePerHit; }
     public float AttackRate { get => attackRate; }
     public float AttackRange {  get => attackRange; }
+
+    public float DPS { get => damagePerHit / attackRate; }
    
     public bool IsInCombat { get {
             return State == UnitState.Attack || recentlyDamaged;
@@ -341,9 +343,9 @@ public class UnitController : MonoBehaviour
     }
 
     /// <summary>
-    /// 
+    /// Creates a formation position around a rally point and moves the unit there
     /// </summary>
-    /// <param name="point"></param>
+    /// <param name="point">the location of the rally point</param>
     public void MoveToRallyPoint(Vector3 point)
     {
         FormationManager formations = FormationManager.Instance;
