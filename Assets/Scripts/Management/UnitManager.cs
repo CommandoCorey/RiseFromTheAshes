@@ -118,7 +118,7 @@ public class UnitManager : MonoBehaviour
     #region public functions
 
     /// <summary>
-    /// 
+    /// Returns all units that are selected by the player
     /// </summary>
     /// <returns></returns>
     public List<UnitController> GetSelectedUnits()
@@ -180,16 +180,28 @@ public class UnitManager : MonoBehaviour
     public void RemoveFromSelection(GameObject unit)
     {
         selectedUnits.Remove(unit);
-    }
-    
+    }    
+
+    // Not currently used
+    /// <summary>
+    /// Returns all game objects with the tag "PlayerUnit"
+    /// </summary>
+    /// <returns>Array of game objects</returns>
     public GameObject[] GetPlayerUnits()
     {
         return GameObject.FindGameObjectsWithTag("PlayerUnit");
     }
 
+    // Not used anymore
+    /// <summary>
+    /// Returns all of the neigbhours units within a flock
+    /// </summary>
+    /// <param name="current">The current unit being checked around</param>
+    /// <param name="squad">the squad number that the current unit is within</param>
+    /// <returns>list of game objects</returns>
     public List<GameObject> GetNeighbourUnits(GameObject current, int squad)
     {
-        List<GameObject> neighbours = new List<GameObject> ();
+        List<GameObject> neighbours = new List<GameObject>();
         //var units = GameObject.FindGameObjectsWithTag("PlayerUnit");
 
         foreach (var unit in squads[squad])
@@ -202,8 +214,12 @@ public class UnitManager : MonoBehaviour
 
         return neighbours;
     }
-
-    public List<GameObject> GetMovingUnits(GameObject current)
+  
+    /// <summary>
+    /// Returns all of the player's units in the scene which are currently moving
+    /// </summary>
+    /// <returns></returns>
+    public List<GameObject> GetMovingUnits()
     {
         List<GameObject> movingUnits = new List<GameObject>();
         var units = GameObject.FindGameObjectsWithTag("PlayerUnit");
@@ -219,6 +235,12 @@ public class UnitManager : MonoBehaviour
         return movingUnits;
     }
 
+    // Not currently Used
+    /// <summary>
+    /// returns a list of all gem objects within a specified squad number
+    /// </summary>
+    /// <param name="squadNum"></param>
+    /// <returns></returns>
     public List<GameObject> GetUnitsInSquad(int squadNum)
     {
         return squads[squadNum];
@@ -376,8 +398,10 @@ public class UnitManager : MonoBehaviour
     }    
     #endregion
 
-    #region private functions 
-    // Not currently be using
+    #region private functions
+
+    // Not currently be using    
+    // check if all units within a specified are stationary
     private bool UnitsNotMoving(List<GameObject> units)
     {
         foreach(GameObject unit in units)
@@ -390,6 +414,8 @@ public class UnitManager : MonoBehaviour
     }
 
     // Not currently be using
+    
+    // returns all of the units that are currently moving within a specified squad
     private void CheckNeigboursMoving(int squadNum)
     {
         bool unitsStillMoving = false;

@@ -35,6 +35,7 @@ public class TrainUnitTask : AiTask
                 taskStatus = "Training unit";
                 return true;
             }
+
         }
         else if(FindObjectOfType<SimpleAiPlayer>())
         {
@@ -45,6 +46,7 @@ public class TrainUnitTask : AiTask
                 taskStatus = "Training unit";
                 return true;
             }
+
         }
         
         return false;

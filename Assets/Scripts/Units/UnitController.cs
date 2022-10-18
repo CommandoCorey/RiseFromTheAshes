@@ -153,6 +153,10 @@ public class UnitController : MonoBehaviour
         audio = body.GetComponent<AudioSource>();
         gameManager = GameObject.FindObjectOfType<GameManager>();
 
+        bool isAi = body.gameObject.layer == 7;
+
+        gameManager.IncreaseUnitCount(isAi);
+
         ChangeState(UnitState.Idle);
 
         if (UnitManager.Instance)
@@ -476,8 +480,12 @@ public class UnitController : MonoBehaviour
             UnitManager.Instance.UCRefs.Remove(this);
         }
 
-        if (unitGui != null)        
+        if (unitGui != null)
             unitGui.RemoveUnitFromSelection(this);
+
+        bool aiPlayer = body.gameObject.layer == 7;
+
+        gameManager.DecreaseUnitCount(aiPlayer);
     }
 
     private void OnDrawGizmos()

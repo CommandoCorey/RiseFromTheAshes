@@ -12,9 +12,10 @@ GameObject:
   - component: {fileID: 8616996035017279142}
   - component: {fileID: 3981456435352700010}
   - component: {fileID: 9082425498866683161}
+  - component: {fileID: 4608544230051843365}
   m_Layer: 8
   m_Name: HQ Player
-  m_TagString: Untagged
+  m_TagString: Headquarters
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
   m_StaticEditorFlags: 8
@@ -82,6 +83,25 @@ MonoBehaviour:
   HP: 0
   hitSounds: []
   hitVFX: []
+--- !u!114 &4608544230051843365
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4287867034258344001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a56b81af409a3304eb5cf94a79f81e0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isHQ: 0
+  resourceToAdd: 0
+  maxQuantityIncrease: 0
+  quantityToAdd: 5
+  timePerIncerement: 1
+  giveToAIPlayer: 0
+  floatingLabel: {fileID: 0}
 --- !u!1001 &2338490923970351894
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -1,15 +1,16 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System.Resources;
+using TMPro;
+using System.Collections;
 
 [System.Serializable]
 public class UnitDesc
 {
 	public string name;
-	public GameObject prefab;
-	public float timeToBuild;
+	public UnitController unit;
 	public Button buildButton;
-	public int steelCost;
 	[HideInInspector] public int index;
 }
 
@@ -19,6 +20,8 @@ public class VehicleBayBuildMenu : MonoBehaviour {
 
 	[SerializeField] List<UnitDesc> units = new List<UnitDesc>();
 	[SerializeField] Button cancelButton;
+	[SerializeField] TextMeshProUGUI errorNotification;
+	[SerializeField] float notificationTimeout = 1;
 
 	private void Awake()
 	{
@@ -40,12 +43,36 @@ public class VehicleBayBuildMenu : MonoBehaviour {
 		foreach (UnitDesc ud in units)
 		{
 			ud.buildButton.onClick.AddListener(() => {
-				currentVehicleBay.PrepareBuild();
-				currentVehicleBay.isBuilding = true;
-				//ResourceManager.Instance.SpendSteel(ud.steelCost);
-				currentVehicleBay.buildTimer = 0.0f;
-				currentVehicleBay.currentUnitDesc = ud;
-				Hide();
+
+				if (ResourceManager.Instance.GetResource(ResourceType.Steel) >= ud.unit.Cost)
+				{
+
+					if (GameManager.Instance.UnitCountPlayer < GameManager.Instance.MaxUnitsPlayer)
+					{
+						/*
+						currentVehicleBay.PrepareBuild();
+						currentVehicleBay.isBuilding = true;
+						ResourceManager.Instance.SpendSteel(ud.unit.Cost);
+						currentVehicleBay.buildTimer = 0.0f;*/
+						currentVehicleBay.BuildUnit(ud.unit);
+
+						currentVehicleBay.currentUnitDesc = ud;
+						Hide();						
+					}
+					else
+					{
+                        //Hide();
+                        // Display not enough room text
+						StartCoroutine(ShowNotification("Not enough space"));
+                    }
+
+				}
+				else
+				{
+                    // Display not enough steel text
+                    StartCoroutine(ShowNotification("Not enough steel"));
+                }
+
 			});
 		}
 
@@ -60,4 +87,14 @@ public class VehicleBayBuildMenu : MonoBehaviour {
 	{
 		gameObject.SetActive(false);
 	}
+
+	private IEnumerator ShowNotification(string message)
+	{
+		errorNotification.gameObject.SetActive(true);
+		errorNotification.text = message;
+
+        yield return new WaitForSeconds(notificationTimeout);
+
+        errorNotification.gameObject.SetActive(false);
+    }
 }

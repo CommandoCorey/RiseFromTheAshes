@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -15,6 +16,7 @@ public struct Resource
     public string name;
     public Image icon;
     public int startingAmount;
+    public int maxAmount;
 
     [HideInInspector]
     public int currentAmount;
@@ -22,11 +24,12 @@ public struct Resource
 
 public class ResourceManager : MonoBehaviour
 {
-    public Resource[] resources;
+    public Resource[] playerResources;
     public Resource[] aiResources;
 
     [Header("GUI Text")]
     public TextMeshProUGUI steelAmount;
+    public TextMeshProUGUI maxSteelAmount;
 
     static public ResourceManager Instance { get; set; }
 
@@ -45,25 +48,61 @@ public class ResourceManager : MonoBehaviour
 	// Start is called before the first frame update
 	void Start()
     {
-        for (int i = 0; i < resources.Length; i++)
-            resources[i].currentAmount = resources[i].startingAmount;
+        for (int i = 0; i < playerResources.Length; i++)
+            playerResources[i].currentAmount = playerResources[i].startingAmount;
     }
 
     // Update is called once per frame
     void Update()
     {
-      //  steelAmount.text = resources[0].currentAmount.ToString();
+        if(steelAmount && playerResources.Length > 0)
+            steelAmount.text = playerResources[0].currentAmount.ToString();
+
+        if(maxSteelAmount && playerResources.Length > 0)
+            maxSteelAmount.text = playerResources[0].maxAmount.ToString();
+    }   
+
+    /// <summary>
+    /// Rets the amount of resources from a specified resource type
+    /// </summary>
+    /// <param name="index">The location in the resources array</param>
+    /// <returns>The resource quantity</returns>
+    public int GetResource(ResourceType type, bool aiPlayer = false)
+    {
+        if (aiPlayer)
+            return aiResources[(int)type].currentAmount;
+        else
+            return playerResources[(int)type].currentAmount;
     }
 
     /// <summary>
-    /// Gets the amount of resources from a specified resource type
+    /// Returns the current maximum amount of a resource player has
     /// </summary>
-    /// <param name="index">The location in the resources array</param>
-    /// <returns>Integer value for the resource quantity</returns>
-    public int GetResource(ResourceType type)
+    /// <param name="type">The type of resource being used (Enumerator)</param>
+    /// <param name="aiPlayer">Determins it it is the human player's or ai player's resources</param>
+    /// <returns>The maximum resource qauntity</returns>
+    public int GetResourceMax(ResourceType type, bool aiPlayer = false)
     {
-        return resources[(int)type].currentAmount;
+        if(aiPlayer)
+            return aiResources[(int)type].maxAmount;
+        else
+            return playerResources[(int)type].maxAmount;
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="type"></param>
+    /// <param name="amount"></param>
+    /// <param name="aiPlayer"></param>
+    public void IncreaseResourceMaximum(ResourceType type, int amount, bool aiPlayer = false)
+    {
+        if (aiPlayer)
+            aiResources[(int)type].maxAmount += amount;
+        else
+            playerResources[(int)type].maxAmount += amount;
+    }
+
 
     /// <summary>
     /// Increases the resource quantity of given type by a specified amount
@@ -72,7 +111,7 @@ public class ResourceManager : MonoBehaviour
     /// <param name="amount">The quantity to add to the given resource</param>
     public void AddResource(ResourceType type, int amount)
     {
-        resources[(int)type].currentAmount += amount;
+        playerResources[(int)type].currentAmount += amount;
     }
 
     public void AddResourceToAI(ResourceType type, int amount)
@@ -86,12 +125,23 @@ public class ResourceManager : MonoBehaviour
     /// <param name="index">The location in the resources array</param>
     /// <param name="amount">The quantity of given resource type to spend</param>
     /// <returns>boolean value based on whether the player has enough of that resource type</returns>
-    public bool SpendResource(ResourceType type, int amount)
+    public bool SpendResource(ResourceType type, int amount, bool aiPlayer = false)
     {
-        if (resources[(int)type].currentAmount <= amount)
+        if (aiPlayer)
         {
-            resources[(int)type].currentAmount -= amount;
-            return true;
+            if (aiResources[(int)type].currentAmount <= amount)
+            {
+                aiResources[(int)type].currentAmount -= amount;
+                return true;
+            }
+        }
+        else
+        {
+            if (playerResources[(int)type].currentAmount <= amount)
+            {
+                playerResources[(int)type].currentAmount -= amount;
+                return true;
+            }
         }
 
         return false;
@@ -116,6 +166,20 @@ public class ResourceManager : MonoBehaviour
     }
 
     /// <summary>
+    /// Increases the maximim capacity of a specified resource
+    /// </summary>
+    /// <param name="type">steel amount</param>
+    /// <param name="amount">increase in the resource quantity</param>
+    /// <param name="aiPlayer"></param>
+    public void IncreaseResourceMax(ResourceType type, int amount, bool aiPlayer = false)
+    {
+        if(aiPlayer)
+            aiResources[(int)type].maxAmount += amount;
+        else
+            playerResources[(int) type].maxAmount += amount;
+    }
+
+    /// <summary>
     /// Reduces the quantity of units from the steel resource by a specified amount
     /// </summary>
     /// <param name="amount">The amount of units to remove from the steel resource</param>
@@ -124,7 +188,12 @@ public class ResourceManager : MonoBehaviour
     {
         return SpendResource(ResourceType.Steel, amount);
     }
-
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="amount"></param>
+    /// <returns></returns>
     public bool AiSpendSteel(int amount)
     {
         if (aiResources[0].currentAmount >= amount)

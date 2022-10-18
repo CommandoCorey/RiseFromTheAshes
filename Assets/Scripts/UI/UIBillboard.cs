@@ -11,8 +11,8 @@ public class UIBillboard : MonoBehaviour
 		var mainCamera = Camera.main;
  
 		Vector3 oldRotation = transform.rotation.eulerAngles;
-		transform.LookAt(invert ? -mainCamera.transform.position : mainCamera.transform.position);
+		transform.LookAt(mainCamera.transform.position);
 		Vector3 oldRotation2 = transform.rotation.eulerAngles;
-		transform.rotation = Quaternion.Euler(new Vector3(oldRotation2.x, oldRotation.y, oldRotation.z));
+		transform.rotation = Quaternion.Euler(new Vector3(invert ? -oldRotation2.x : oldRotation2.x, oldRotation.y, oldRotation.z));
 	}
 }

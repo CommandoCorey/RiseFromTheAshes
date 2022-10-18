@@ -265,10 +265,50 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2556454330987024688, guid: dbe899a70a4b9ef48860419015263fff, type: 3}
+      propertyPath: m_Name
+      value: '[Button] Cancel'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2900902859282993649, guid: dbe899a70a4b9ef48860419015263fff, type: 3}
+      propertyPath: m_Name
+      value: BuildMenu VehicleBay
+      objectReference: {fileID: 0}
+    - target: {fileID: 5797131366106254409, guid: dbe899a70a4b9ef48860419015263fff, type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 6353010725485534985, guid: dbe899a70a4b9ef48860419015263fff, type: 3}
       propertyPath: m_fontAsset
       value: 
       objectReference: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+    - target: {fileID: 7179809898554367921, guid: dbe899a70a4b9ef48860419015263fff, type: 3}
+      propertyPath: cancelButton
+      value: 
+      objectReference: {fileID: 779231833810636625}
+    - target: {fileID: 7179809898554367921, guid: dbe899a70a4b9ef48860419015263fff, type: 3}
+      propertyPath: units.Array.data[0].steelCost
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 7179809898554367921, guid: dbe899a70a4b9ef48860419015263fff, type: 3}
+      propertyPath: units.Array.data[1].steelCost
+      value: 300
+      objectReference: {fileID: 0}
+    - target: {fileID: 7179809898554367921, guid: dbe899a70a4b9ef48860419015263fff, type: 3}
+      propertyPath: units.Array.data[0].buildButton
+      value: 
+      objectReference: {fileID: 5055419767224260793}
+    - target: {fileID: 7179809898554367921, guid: dbe899a70a4b9ef48860419015263fff, type: 3}
+      propertyPath: units.Array.data[0].timeToBuild
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 7179809898554367921, guid: dbe899a70a4b9ef48860419015263fff, type: 3}
+      propertyPath: units.Array.data[1].buildButton
+      value: 
+      objectReference: {fileID: 861693673156638761}
+    - target: {fileID: 7179809898554367921, guid: dbe899a70a4b9ef48860419015263fff, type: 3}
+      propertyPath: units.Array.data[1].timeToBuild
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 8509728429801339908, guid: dbe899a70a4b9ef48860419015263fff, type: 3}
       propertyPath: m_Layer
       value: 5
@@ -285,6 +325,39 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2021548759869058383, guid: dbe899a70a4b9ef48860419015263fff, type: 3}
   m_PrefabInstance: {fileID: 3531450828412141385}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &779231833810636625 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4310605546848137240, guid: dbe899a70a4b9ef48860419015263fff, type: 3}
+  m_PrefabInstance: {fileID: 3531450828412141385}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5055419767224260793 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8586762154112215024, guid: dbe899a70a4b9ef48860419015263fff, type: 3}
+  m_PrefabInstance: {fileID: 3531450828412141385}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &861693673156638761 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4248972550902663008, guid: dbe899a70a4b9ef48860419015263fff, type: 3}
+  m_PrefabInstance: {fileID: 3531450828412141385}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &6518690885669787692
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -456,8 +529,8 @@ PrefabInstance:
   m_SourcePrefab: {fileID: 100100000, guid: 95507aabacf00d4419803318f17e5aec, type: 3}
 --- !u!114 &7021595132684825345 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4253294982966209325, guid: 95507aabacf00d4419803318f17e5aec, type: 3}
-  m_PrefabInstance: {fileID: 6518690885669787692}
+  m_CorrespondingSourceObject: {fileID: 5797131366106254408, guid: dbe899a70a4b9ef48860419015263fff, type: 3}
+  m_PrefabInstance: {fileID: 3531450828412141385}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
