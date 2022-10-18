@@ -68,7 +68,11 @@ public class VehicleBay : MonoBehaviour {
 
 				if (buildTimer >= 1.0f)
 				{
-					Instantiate(desc.unit, spawnLocation.position, spawnLocation.rotation);
+					var unit = Instantiate(desc.unit, spawnLocation.position, spawnLocation.rotation);
+
+					//Added by Paul
+					unit.MoveToRallyPoint(UnitManager.Instance.playerRallyPoint.position);
+
 					buildProgress.gameObject.SetActive(false);
 
 					isBuilding = false;

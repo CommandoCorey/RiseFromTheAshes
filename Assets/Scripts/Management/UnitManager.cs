@@ -10,6 +10,7 @@ public class UnitManager : MonoBehaviour
 {
     #region variable declaration
     public UnitGui gui;
+    public Transform playerRallyPoint;
 
     [Header("Layer Masks")]
     public LayerMask groundLayer;
@@ -20,8 +21,8 @@ public class UnitManager : MonoBehaviour
     List<GameObject> selectedUnits;
     SelectionManager selection;
 
-    [Header("Group Movement")]
-    [SerializeField] bool flockWhileMoving;
+    //[Header("Group Movement")]
+    //[SerializeField] bool flockWhileMoving;
 
     public float unitInCombatTimeout = 30.0f;
 
@@ -369,9 +370,9 @@ public class UnitManager : MonoBehaviour
 
                 var unit = selectedUnits[i].GetComponent<UnitController>();
 
-                if (flockWhileMoving)
-                    unit.ChangeState(UnitState.Flock, formationPositions[i]);
-                else
+                //if (flockWhileMoving)
+                    //unit.ChangeState(UnitState.Flock, formationPositions[i]);
+                //else
                     unit.ChangeState(UnitState.Moving, formationPositions[i]);
             }
 

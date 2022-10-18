@@ -321,9 +321,9 @@ public class UnitController : MonoBehaviour
     }
 
     /// <summary>
-    /// 
+    /// Creates a formation position around a rally point and moves the unit there
     /// </summary>
-    /// <param name="point"></param>
+    /// <param name="point">the location of the rally point</param>
     public void MoveToRallyPoint(Vector3 point)
     {
         FormationManager formations = FormationManager.Instance;
