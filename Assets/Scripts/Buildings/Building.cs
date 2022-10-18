@@ -165,4 +165,13 @@ public class Building : MonoBehaviour
 			Destroy(gameObject);
         }
 	}
+
+    public void OnDestroy()
+    {
+        if(gameObject.layer == 9) // AI building
+        {
+			AiPlayer.Instance.AddRebuildTask(this);
+        }
+
+    }
 }
