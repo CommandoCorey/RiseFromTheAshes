@@ -129,6 +129,8 @@ public class UnitController : MonoBehaviour
     public float DamagePerHit { get => damagePerHit; }
     public float AttackRate { get => attackRate; }
     public float AttackRange {  get => attackRange; }
+
+    public float DPS { get => damagePerHit / attackRate; }
    
     public bool IsInCombat { get {
             return State == UnitState.Attack || recentlyDamaged;
