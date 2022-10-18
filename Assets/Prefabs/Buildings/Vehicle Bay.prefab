@@ -84,6 +84,8 @@ MonoBehaviour:
   timeToBuild: 3
   maxHP: 500
   startAtMaxHP: 0
+  buildingDescription: Allows the construction of units. Units also heal when near
+    the building.
   aiBuilding: 0
   HP: 0
   hitSounds: []
@@ -110,10 +112,8 @@ MonoBehaviour:
     m_Bits: 0
   currentUnitDesc:
     name: 
-    prefab: {fileID: 0}
-    timeToBuild: 0
+    unit: {fileID: 0}
     buildButton: {fileID: 0}
-    steelCost: 0
     index: 0
   buildTimer: 0
   buildingIndex: 0
