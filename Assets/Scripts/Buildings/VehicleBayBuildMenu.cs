@@ -23,6 +23,16 @@ public class VehicleBayBuildMenu : MonoBehaviour {
 	[SerializeField] TextMeshProUGUI errorNotification;
 	[SerializeField] float notificationTimeout = 1;
 
+	[Header("Unit Info Panel")]
+	[SerializeField] GameObject infoPanel;
+	[SerializeField] TextMeshProUGUI unitName;
+	[SerializeField] TextMeshProUGUI cost;
+	[SerializeField] TextMeshProUGUI timeToBuild;
+	[SerializeField] TextMeshProUGUI maxHealth;
+	[SerializeField] TextMeshProUGUI attackRange;
+	[SerializeField] TextMeshProUGUI damagePerSecond;
+	[SerializeField] TextMeshProUGUI movementSpeed;
+
 	private void Awake()
 	{
 		if (Instance != null && Instance != this)
@@ -87,6 +97,30 @@ public class VehicleBayBuildMenu : MonoBehaviour {
 	{
 		gameObject.SetActive(false);
 	}
+
+	// Added by Paul
+	public void ShowUnitInfo(int number)
+    {
+		infoPanel.SetActive(true);
+
+		var unit = units[number].unit;
+
+		unitName.text = unit.Name;
+		cost.text = unit.Cost.ToString();
+		timeToBuild.text = unit.TimeToTrain.ToString();
+
+		maxHealth.text = unit.MaxHealth.ToString();
+		attackRange.text = unit.AttackRange.ToString();
+		damagePerSecond.text = unit.DPS.ToString();
+		movementSpeed.text = unit.Speed.ToString();
+	}
+
+	// Added by Paul
+	public void HideUnitInfo()
+    {
+		infoPanel.SetActive(false);
+	}
+
 
 	private IEnumerator ShowNotification(string message)
 	{

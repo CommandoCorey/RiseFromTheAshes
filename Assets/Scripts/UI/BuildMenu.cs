@@ -33,7 +33,14 @@ public class BuildMenu : MonoBehaviour
 	[SerializeField] GameObject insufficientResourcesText;
 	[SerializeField] float notificationTimeout = 1;
 
-    static public BuildMenu Instance { get; private set; }
+	[Header("Build Stats Text")]
+	[SerializeField] GameObject statsPanel;
+	[SerializeField] TextMeshProUGUI buildingName;
+	[SerializeField] TextMeshProUGUI resourceCost;
+	[SerializeField] TextMeshProUGUI buildTime;
+	[SerializeField] TextMeshProUGUI description;
+
+	static public BuildMenu Instance { get; private set; }
 
 	void Awake() {
 		if (Instance != null && Instance != this) {
@@ -76,6 +83,32 @@ public class BuildMenu : MonoBehaviour
 				}
 			}
 		}
+	}
+
+	// added by Paul
+	/// <summary>
+	/// Updates the value on the info panel to show the stats based on the button hovered over
+	/// </summary>
+	/// <param name="itemNumber">the index of the item in the buildItems array</param>
+	public void ShowBuildInfo(int itemNumber)
+    {
+		//Debug.Log("pointer entered button number" + itemNumber);
+		
+		statsPanel.SetActive(true);
+
+		var building = buildItems[itemNumber].buildingPrefab;
+
+		buildingName.text = buildItems[itemNumber].name;
+		resourceCost.text = building.steelCost.ToString();
+		buildTime.text = building.timeToBuild.ToString();
+		description.text = building.buildingDescription;
+	}
+	
+	// Added by Paul
+	public void HideBuildInfo()
+    {
+		//Debug.Log("Pointer exited button");
+		statsPanel.SetActive(false);
 	}
 
 	public void Build(in BuildItem item)

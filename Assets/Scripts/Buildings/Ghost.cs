@@ -3,6 +3,7 @@ using UnityEngine;
 public class Ghost : MonoBehaviour
 {
 	[SerializeField] Vector3 buildMenuOffset;
+	[SerializeField] LayerMask ghostBlockers;
 
 	public void ShowBuildMenu()
 	{
@@ -14,5 +15,16 @@ public class Ghost : MonoBehaviour
 	public void OnDrawGizmosSelected()
 	{
 		Gizmos.DrawSphere(transform.position + buildMenuOffset, 0.1f);
+	}
+
+	public void OnEnable()
+	{
+		var b = GetComponent<BoxCollider>().bounds;
+
+		var cols = Physics.OverlapBox(b.center, b.size, Quaternion.identity, ghostBlockers);
+		if (cols.Length > 0)
+		{
+			gameObject.SetActive(false);
+		}
 	}
 }

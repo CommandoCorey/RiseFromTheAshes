@@ -84,6 +84,8 @@ MonoBehaviour:
   timeToBuild: 3
   maxHP: 500
   startAtMaxHP: 0
+  buildingDescription: Allows the construction of units. Units also heal when near
+    the building.
   aiBuilding: 0
   HP: 0
   hitSounds: []
@@ -103,17 +105,15 @@ MonoBehaviour:
   spawnLocation: {fileID: 1007521924654814051}
   buildProgress: {fileID: 7021595132684825345}
   buildMenuOffset: {x: 0, y: 10, z: 0}
-  healUnitRadius: 10
-  healUnitPerSecond: 0
+  healUnitRadius: 20
+  healUnitPerSecond: 5
   unitLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   currentUnitDesc:
     name: 
-    prefab: {fileID: 0}
-    timeToBuild: 0
+    unit: {fileID: 0}
     buildButton: {fileID: 0}
-    steelCost: 0
     index: 0
   buildTimer: 0
   buildingIndex: 0
@@ -156,7 +156,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8733210577458148908}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: -7}
+  m_LocalPosition: {x: 0, y: 0.04, z: -3.14}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 3280850917285978550}

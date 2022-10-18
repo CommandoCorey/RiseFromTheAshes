@@ -22,6 +22,8 @@ public class VehicleBay : MonoBehaviour {
 	[HideInInspector] public int buildingIndex;
 	[HideInInspector] public bool isBuilding;
 
+	float healPulseTimer = 0.0f;
+
 	// properties
 	public bool IsTraining { get => isBuilding; set => isBuilding = value; }
 
@@ -68,20 +70,29 @@ public class VehicleBay : MonoBehaviour {
 
 				if (buildTimer >= 1.0f)
 				{
-					Instantiate(desc.unit, spawnLocation.position, spawnLocation.rotation);
+					var unit = Instantiate(desc.unit, spawnLocation.position, spawnLocation.rotation);
+
+					//Added by Paul
+					unit.MoveToRallyPoint(UnitManager.Instance.playerRallyPoint.position);
+
 					buildProgress.gameObject.SetActive(false);
 
 					isBuilding = false;
 				}
 			}
 
-			Collider[] overlapping = Physics.OverlapSphere(transform.position, healUnitRadius, unitLayer);
-			foreach (Collider o in overlapping)
+			healPulseTimer += Time.deltaTime;
+			if (healPulseTimer >= 1.0f)
 			{
-				UnitController uc;
-				if (!TryGetComponent(out uc)) { continue; }
+				healPulseTimer = 0.0f;
+				Collider[] overlapping = Physics.OverlapSphere(transform.position, healUnitRadius, unitLayer);
+				foreach (Collider o in overlapping)
+				{
+					UnitController uc;
+					if (!o.gameObject.GetComponent<Transform>().parent.TryGetComponent(out uc)) { continue; }
 
-				uc.Heal(Time.deltaTime * healUnitPerSecond);
+					uc.Heal(healUnitPerSecond);
+				}
 			}
 		}
 	}

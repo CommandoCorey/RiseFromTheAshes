@@ -5,9 +5,10 @@ public class Building : MonoBehaviour
 {
 	public string buildingName;
 	public int steelCost;
-	[SerializeField] float timeToBuild = 1.0f;
+	public float timeToBuild = 1.0f;
 	public float maxHP = 100.0f;
 	[SerializeField] bool startAtMaxHP = false;
+	public string buildingDescription;
 	public bool aiBuilding;
 
 	bool isBuilding;
@@ -15,6 +16,7 @@ public class Building : MonoBehaviour
 	float buildTimer;
 	public float HP;
 
+	[Header("Sound and Visual effects")]
     [SerializeField] AudioClip[] hitSounds;
 	[SerializeField] ParticleSystem[] hitVFX;
 
@@ -141,6 +143,17 @@ public class Building : MonoBehaviour
 		vehicleBay.Interact();
 	}
 
+	public void OnDie()
+	{
+		TriggerBuilding trigger;
+		if (TryGetComponent(out trigger))
+		{
+			trigger.OnDie();
+		}
+
+		Destroy(gameObject);
+	}
+
 	public void Interact()
 	{
 		TryVehicleBayInteract();
@@ -160,7 +173,7 @@ public class Building : MonoBehaviour
 		}
 
         if (HP <= 0.0f) {
-			Destroy(gameObject);
+			OnDie();
         }
 	}
 }
