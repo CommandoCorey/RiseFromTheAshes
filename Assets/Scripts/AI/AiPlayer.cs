@@ -12,6 +12,7 @@ public class TaskSet
 {
     public string description;
     public bool loopTaskSet;
+    public bool addRebuildTasks;
     public List<AiTask> tasks;
 
     public int TaskNum { get; set; } = 0;
@@ -28,6 +29,8 @@ public class AiPlayer : MonoBehaviour
 
     public Transform[] patrolRoute;
 
+    [Header("Ai Tasks")]
+    [SerializeField] AiStrategy playerStrategy;
     [SerializeField] int rebuiltSetNumber = 0;
     public TaskSet[] tasksSchedule;
 
@@ -88,6 +91,9 @@ public class AiPlayer : MonoBehaviour
         resources = ResourceManager.Instance;
         formations = FormationManager.Instance;
         gameManager = GameManager.Instance;
+
+        if (playerStrategy != null)
+            tasksSchedule = playerStrategy.tasksSchedule;
 
         aiUnits = new List<UnitController>();
         unitGroup = new List<Transform>();
@@ -304,8 +310,17 @@ public class AiPlayer : MonoBehaviour
         rebuildTask.autoSelectPlaeholder = true;
         rebuildTask.timeDelay = 0;
 
-        tasksSchedule[rebuiltSetNumber].tasks.Add(rebuildTask);
+        TaskSet taskSet = tasksSchedule[0];
+        foreach(TaskSet set in tasksSchedule)
+        {
+            if(set.addRebuildTasks)
+            {
+                taskSet = set;
+                break;
+            }
+        }
 
+        tasksSchedule[rebuiltSetNumber].tasks.Add(rebuildTask);
         SortTaskSet(tasksSchedule[rebuiltSetNumber]);
     }
 
