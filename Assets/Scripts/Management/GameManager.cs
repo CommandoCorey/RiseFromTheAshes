@@ -226,7 +226,7 @@ public class GameManager : MonoBehaviour
         GetComponent<SelectionManager>().enabled = !paused;
         GetComponent<ResourceManager>().enabled = !paused;
         GetComponent<BuildingManager>().enabled = !paused;
-        //GetComponent<AiManager>().enabled = !paused;
+        GetComponent<AiManager>().enabled = !paused;
     }
 
     /// <summary>
@@ -239,14 +239,15 @@ public class GameManager : MonoBehaviour
     }
     
     /// <summary>
-    /// Add's one unit to the unit count
+    /// Increase a player's unit count
     /// </summary>
-    /// <param name="aiPlayer"> </param>
-    public void IncreaseUnitCount(bool aiPlayer)
+    /// <param name="amount">the amount of unit points to be taken up</param>
+    /// <param name="aiPlayer">determines whether the</param>
+    public void IncreaseUnitCount(int amount, bool aiPlayer)
     {
         if (aiPlayer)
         {
-            unitCountAi++;            
+            unitCountAi++;
         }
         else
         {

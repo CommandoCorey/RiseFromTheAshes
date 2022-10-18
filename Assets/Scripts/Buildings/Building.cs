@@ -179,7 +179,7 @@ public class Building : MonoBehaviour
 
     public void OnDestroy()
     {
-        if(gameObject.layer == 9) // AI building
+        if(gameObject.layer == 9 && gameObject.tag != "Headquarters") // AI building
         {
 			AiPlayer.Instance.AddRebuildTask(this);
         }
