@@ -103,9 +103,7 @@ public class VehicleBay : MonoBehaviour {
 
         PrepareBuild();
         isBuilding = true;        
-        buildTimer = 0.0f;
-        
-        GameManager.Instance.IncreaseUnitCount(false);
+        buildTimer = 0.0f;       
     }
 
 	private void OnDrawGizmosSelected()

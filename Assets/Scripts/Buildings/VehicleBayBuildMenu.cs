@@ -14,7 +14,6 @@ public class UnitDesc
 	[HideInInspector] public int index;
 }
 
-
 public class VehicleBayBuildMenu : MonoBehaviour {
 	static public VehicleBayBuildMenu Instance { get; private set; }
 
@@ -27,7 +26,8 @@ public class VehicleBayBuildMenu : MonoBehaviour {
 	[SerializeField] GameObject infoPanel;
 	[SerializeField] TextMeshProUGUI unitName;
 	[SerializeField] TextMeshProUGUI cost;
-	[SerializeField] TextMeshProUGUI timeToBuild;
+    [SerializeField] TextMeshProUGUI spaceUsed;
+    [SerializeField] TextMeshProUGUI timeToBuild;
 	[SerializeField] TextMeshProUGUI maxHealth;
 	[SerializeField] TextMeshProUGUI attackRange;
 	[SerializeField] TextMeshProUGUI damagePerSecond;
@@ -56,8 +56,9 @@ public class VehicleBayBuildMenu : MonoBehaviour {
 
 				if (ResourceManager.Instance.GetResource(ResourceType.Steel) >= ud.unit.Cost)
 				{
+					int newUnitCount = GameManager.Instance.UnitCountPlayer + ud.unit.SpaceUsed;
 
-					if (GameManager.Instance.UnitCountPlayer < GameManager.Instance.MaxUnitsPlayer)
+                    if (newUnitCount < GameManager.Instance.MaxUnitsPlayer)
 					{
 						/*
 						currentVehicleBay.PrepareBuild();
@@ -109,6 +110,7 @@ public class VehicleBayBuildMenu : MonoBehaviour {
 		cost.text = unit.Cost.ToString();
 		timeToBuild.text = unit.TimeToTrain.ToString();
 
+		spaceUsed.text = unit.SpaceUsed.ToString();
 		maxHealth.text = unit.MaxHealth.ToString();
 		attackRange.text = unit.AttackRange.ToString();
 		damagePerSecond.text = unit.DPS.ToString();
@@ -120,7 +122,6 @@ public class VehicleBayBuildMenu : MonoBehaviour {
     {
 		infoPanel.SetActive(false);
 	}
-
 
 	private IEnumerator ShowNotification(string message)
 	{

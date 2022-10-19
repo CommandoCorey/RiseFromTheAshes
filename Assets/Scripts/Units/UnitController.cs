@@ -22,6 +22,7 @@ public class UnitController : MonoBehaviour
 
     [SerializeField] int steelCost = 10;
     [SerializeField] int timeToTrain = 1;
+    [SerializeField] int spaceUsed = 1;
 
     float healTimer = 0.0f;
 
@@ -127,6 +128,7 @@ public class UnitController : MonoBehaviour
     // unit stats
     public string Name { get => unitName; }
     public int Cost { get => steelCost; }
+    public int SpaceUsed { get => spaceUsed; }
     public float TimeToTrain { get => timeToTrain; }
     public float MaxHealth { get => maxHealth; }
     public float CurrentHealth {  get=> health; }
@@ -164,7 +166,7 @@ public class UnitController : MonoBehaviour
 
         bool isAi = body.gameObject.layer == 7;
 
-        gameManager.IncreaseUnitCount(isAi);
+        gameManager.IncreaseUnitCount(spaceUsed, isAi);
 
         ChangeState(UnitState.Idle);
 
