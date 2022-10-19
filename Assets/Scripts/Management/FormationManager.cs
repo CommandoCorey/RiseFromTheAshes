@@ -212,6 +212,7 @@ public class FormationManager : MonoBehaviour
         return formationPositions;
     }
 
+    // Not currently used
     public void AddRallyFormationPoint(Vector3 point, int player = 0)
     {
         if (player == 0)

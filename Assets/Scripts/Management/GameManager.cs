@@ -54,7 +54,6 @@ public class GameManager : MonoBehaviour
     private int unitCountPlayer = 0;
     private int unitCountAi = 0;
 
-
     static GameManager gameManager;
 
     // properties
@@ -291,6 +290,16 @@ public class GameManager : MonoBehaviour
             maxUnitsPlayer += amount;
             maxUnitsText.text = maxUnitsPlayer.ToString();
         }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public void MoveUnitRallyPoint()
+    {
+        GetComponent<SelectionManager>().enabled = false;
+
+        
     }
 
 }

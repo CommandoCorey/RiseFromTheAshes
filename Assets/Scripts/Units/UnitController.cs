@@ -227,7 +227,7 @@ public class UnitController : MonoBehaviour
             mat.SetColor("HealEffectColor", Color.blue);
             mat.SetFloat("HealEffectIntensity", Mathf.Clamp(healTimer, 0.0f, 1.0f));
 		}
-    }        
+    }
 
     /// <summary>
     /// Toggles the visibility of the unit selection highlight and health bar
@@ -354,7 +354,14 @@ public class UnitController : MonoBehaviour
         NavMeshAgent agent = body.GetComponent<NavMeshAgent>();
 
         agent.avoidancePriority -= formations.GetCurrentRallySize(1);
-        Vector3 formationPos = formations.GetRallyPosition(point, 1);
+
+        int player;
+        if (gameObject.layer == 7)
+            player = 1;
+        else
+            player = 0;
+
+        Vector3 formationPos = formations.GetRallyPosition(point, player);
 
         ChangeState(UnitState.Moving, formationPos);
     }
