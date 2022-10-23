@@ -37,7 +37,7 @@ public class UnitController : MonoBehaviour
     public Transform turret;
     public Transform firingPoint;
     public Transform body;
-    public Sprite guiIcon;    
+    public Sprite guiIcon;
 
     [Header("External Scripts")]
     public ProgressBar healthBar;
@@ -183,12 +183,9 @@ public class UnitController : MonoBehaviour
 
 	// Update is called once per frame
 	void Update()
-    {
-        if (healthBar)
-        {
+    {        
+        if (healthBar)        
             healthBar.progress = health / maxHealth;
-            healthBar.transform.position = body.position + healthBarOffset;
-        }
 
         if (health <= 0)
         {
@@ -227,6 +224,12 @@ public class UnitController : MonoBehaviour
             mat.SetColor("HealEffectColor", Color.blue);
             mat.SetFloat("HealEffectIntensity", Mathf.Clamp(healTimer, 0.0f, 1.0f));
 		}
+    }
+
+    private void LateUpdate()
+    {
+        transform.position = body.position;
+        body.localPosition = Vector3.zero;
     }
 
     /// <summary>
