@@ -5,6 +5,8 @@ public class Ghost : MonoBehaviour
 	[SerializeField] Vector3 buildMenuOffset;
 	[SerializeField] LayerMask ghostBlockers;
 
+	[HideInInspector] public Building child;
+
 	public void ShowBuildMenu()
 	{
 		BuildMenu.Instance.transform.position = transform.position + buildMenuOffset;
@@ -26,5 +28,10 @@ public class Ghost : MonoBehaviour
 		{
 			gameObject.SetActive(false);
 		}
+	}
+
+	public void OnDestroy()
+	{
+		if (child) { Destroy(child.gameObject); }
 	}
 }

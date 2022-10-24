@@ -22,6 +22,8 @@ public class Building : MonoBehaviour
 
     new AudioSource audio;
 
+	[HideInInspector] public Ghost ghost;
+
 	MeshRenderer[] childMeshRenderers;
 	MeshRenderer myMeshRenderer;
 
@@ -58,6 +60,12 @@ public class Building : MonoBehaviour
 		myMeshRenderer = GetComponent<MeshRenderer>();
 
 		PopulateMaterialRefs();
+
+		if (!startAtMaxHP)
+		{
+			HP = 0;
+			isBuilding = true;
+		}
 	}
 
 	void PopulateMaterialRefs()
@@ -149,6 +157,12 @@ public class Building : MonoBehaviour
 		if (TryGetComponent(out trigger))
 		{
 			trigger.OnDie();
+		}
+
+		if (ghost)
+		{
+			ghost.gameObject.SetActive(true);
+			ghost.child = null;
 		}
 
 		Destroy(gameObject);
