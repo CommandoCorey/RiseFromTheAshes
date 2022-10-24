@@ -101,6 +101,8 @@ Shader "Hidden/FogImperm"
 				float depth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, sampler_CameraDepthTexture, i.uv);
 				depth = ComputeWorldSpacePosition(i.uv, depth, UNITY_MATRIX_I_VP).y;
 
+				return col;
+
 				if (hitPoint.y < depth) {
 					return col;
 				}

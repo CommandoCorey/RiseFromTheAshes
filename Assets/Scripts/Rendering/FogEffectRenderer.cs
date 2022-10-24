@@ -118,6 +118,7 @@ class FogEffectPass : ScriptableRenderPass
 		impermMaterial.SetTexture("_MainDepth", Camera.main.activeTexture, RenderTextureSubElement.Depth);
 
 		Shader.SetGlobalTexture("G_FOWOccludeMaskTexture", mask);
+		Shader.SetGlobalTexture("G_FOWPermMaskTexture", mask);
 		Shader.SetGlobalVector("G_FogTopCorner", FOWManager.Instance.imperm.transform.position);
 		Shader.SetGlobalVector("G_FogMaskSize", FOWManager.Instance.imperm.GetMaskExtentf());
 
