@@ -10,7 +10,7 @@ public class UnitGui : MonoBehaviour
 {
     public enum ActionChosen
     {
-        Null, Move, Attack, Halt
+        Null, Move, Attack, Halt, MoveRallyPoint
     }
 
     public GameManager gameManager;
@@ -26,6 +26,7 @@ public class UnitGui : MonoBehaviour
     public Button moveButton;
     public Button attackButton;
     public Button haltButton;
+    public Button setRallyPointButton;
 
     [Header("Unit Stats")]    
     public Image thumbnail;
@@ -52,7 +53,7 @@ public class UnitGui : MonoBehaviour
     {
         unitIcons = new List<GameObject>();
         selectedUnits = new List<UnitController>();
-        unitManager = GameObject.FindObjectOfType<UnitManager>();
+        unitManager = UnitManager.Instance;
         selectionManager = GameObject.FindObjectOfType<SelectionManager>();
     }
 
@@ -62,11 +63,13 @@ public class UnitGui : MonoBehaviour
         UpdateUnitHealth();
 
         // check if mouse clicks on environment while an action is chosen
-        if(Input.GetMouseButtonUp(0) && ButtonClicked != ActionChosen.Null && !EventSystem.current.IsPointerOverGameObject())
+        if(Input.GetMouseButtonUp(0) && ButtonClicked != ActionChosen.Null && 
+            !EventSystem.current.IsPointerOverGameObject())
         {
             RaycastHit hitInfo;
 
-            if(ButtonClicked == ActionChosen.Move && Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo))
+            if(ButtonClicked == ActionChosen.Move && 
+                Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo))
             {
                 unitManager.MoveUnits(hitInfo);
 
@@ -76,7 +79,8 @@ public class UnitGui : MonoBehaviour
 
                 ButtonClicked = ActionChosen.Null;
             }
-            else if(ButtonClicked == ActionChosen.Attack && Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo))
+            else if(ButtonClicked == ActionChosen.Attack && 
+                Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo))
             {
                 bool attackSuccess = unitManager.AttackTarget(hitInfo.transform);
 
@@ -95,9 +99,28 @@ public class UnitGui : MonoBehaviour
             {
                 unitManager.HaltUnitSelection();
             }
-            
-            selectionManager.enabled = true;
-            
+            if (ButtonClicked == ActionChosen.MoveRallyPoint && 
+                Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo))
+            {
+                int layer = hitInfo.transform.gameObject.layer;
+
+                if (layer == 3 || layer == 6)
+                {
+                    unitManager.SetPlayerRallyPointPosition(hitInfo.point);
+                }
+                else
+                {
+                    // display error message
+                }
+
+                // reset cursor and button
+                gameManager.ResetCursor();
+                setRallyPointButton.interactable = true;
+
+                ButtonClicked = ActionChosen.Null; 
+            }
+
+            selectionManager.enabled = true;            
         }
 
         if (Input.GetMouseButtonUp(1) && ButtonClicked != ActionChosen.Null)
@@ -106,12 +129,11 @@ public class UnitGui : MonoBehaviour
             EnableActionButtons();
             ButtonClicked = ActionChosen.Null;
 
-            selectionManager.enabled = true;
+            selectionManager.enabled = true;            
         }
     }
 
     #region private functions
-
     private void UpdateUnitHealth()
     {
         try { 
@@ -183,6 +205,7 @@ public class UnitGui : MonoBehaviour
         moveButton.interactable = true;
         attackButton.interactable = true;
         haltButton.interactable = true;
+        setRallyPointButton.interactable = true;
     }
 
     #endregion
@@ -225,6 +248,7 @@ public class UnitGui : MonoBehaviour
         moveButton.interactable = false;
         attackButton.interactable = true;
         haltButton.interactable = true;
+        setRallyPointButton.interactable = true;
 
         gameManager.SetCursor(gameManager.moveCursor);
     }
@@ -239,6 +263,7 @@ public class UnitGui : MonoBehaviour
         attackButton.interactable = false;
         moveButton.interactable = true;
         haltButton.interactable = true;
+        setRallyPointButton.interactable = true;
 
         gameManager.SetCursor(gameManager.attackCursor);
     }
@@ -253,8 +278,26 @@ public class UnitGui : MonoBehaviour
 
         moveButton.interactable = true;
         attackButton.interactable = true;
+        setRallyPointButton.interactable = true;
 
         gameManager.SetCursor(gameManager.defaultCursor);
+    }
+
+    /// <summary>
+    /// Handles the clicking of the set rally point button
+    /// </summary>
+    public void SetMoveRallyPointMode()
+    {
+        ButtonClicked = ActionChosen.MoveRallyPoint;
+
+        selectionManager.enabled = false;
+
+        setRallyPointButton.interactable = false;
+        attackButton.interactable = true;
+        moveButton.interactable = true;
+        haltButton.interactable = true;
+
+        gameManager.SetCursor(gameManager.moveCursor);
     }
 
     /// <summary>

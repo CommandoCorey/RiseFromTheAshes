@@ -37,7 +37,7 @@ public class UnitController : MonoBehaviour
     public Transform turret;
     public Transform firingPoint;
     public Transform body;
-    public Sprite guiIcon;    
+    public Sprite guiIcon;
 
     [Header("External Scripts")]
     public ProgressBar healthBar;
@@ -96,6 +96,7 @@ public class UnitController : MonoBehaviour
     private Vector3 healthBarOffset;
     private new AudioSource audio;
     private GameManager gameManager;
+    private int rallyNumber;
 
     // added by George
     bool recentlyDamaged;
@@ -145,6 +146,9 @@ public class UnitController : MonoBehaviour
             return State == UnitState.Attack || recentlyDamaged;
         }
     }
+
+    public bool ReachedRallyPoint { get; internal set; } = false;
+    public int RallyNumber { get => rallyNumber; }
     #endregion
 
     /*
@@ -168,7 +172,8 @@ public class UnitController : MonoBehaviour
 
         gameManager.IncreaseUnitCount(spaceUsed, isAi);
 
-        ChangeState(UnitState.Idle);
+        if(ReachedRallyPoint)
+            ChangeState(UnitState.Idle);
 
         if (UnitManager.Instance)
         {
@@ -183,12 +188,9 @@ public class UnitController : MonoBehaviour
 
 	// Update is called once per frame
 	void Update()
-    {
-        if (healthBar)
-        {
+    {        
+        if (healthBar)        
             healthBar.progress = health / maxHealth;
-            healthBar.transform.position = body.position + healthBarOffset;
-        }
 
         if (health <= 0)
         {
@@ -227,7 +229,13 @@ public class UnitController : MonoBehaviour
             mat.SetColor("HealEffectColor", Color.blue);
             mat.SetFloat("HealEffectIntensity", Mathf.Clamp(healTimer, 0.0f, 1.0f));
 		}
-    }        
+    }
+
+    private void LateUpdate()
+    {
+        transform.position = body.position;
+        body.localPosition = Vector3.zero;
+    }
 
     /// <summary>
     /// Toggles the visibility of the unit selection highlight and health bar
@@ -354,7 +362,14 @@ public class UnitController : MonoBehaviour
         NavMeshAgent agent = body.GetComponent<NavMeshAgent>();
 
         agent.avoidancePriority -= formations.GetCurrentRallySize(1);
-        Vector3 formationPos = formations.GetRallyPosition(point, 1);
+
+        int player;
+        if (gameObject.layer == 7)
+            player = 1;
+        else
+            player = 0;
+
+        Vector3 formationPos = formations.GetRallyPosition(point, player, ref rallyNumber);
 
         ChangeState(UnitState.Moving, formationPos);
     }

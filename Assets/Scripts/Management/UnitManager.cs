@@ -292,6 +292,16 @@ public class UnitManager : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Moves the player's rally point to a new location
+    /// </summary>
+    /// <param name="position">The new location of for the rally point</param>
+    public void SetPlayerRallyPointPosition(Vector3 position)
+    {
+        formations.ClearRallyFormation(0);
+        playerRallyPoint.position = new Vector3(position.x, 0, position.z);
+    }
+
     //------------------
     // Not used anymore
     //------------------

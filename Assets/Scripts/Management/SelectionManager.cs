@@ -158,7 +158,7 @@ public class SelectionManager : MonoBehaviour
                 {
                     Ray ray = Camera.main.ScreenPointToRay(corner);
 
-                    if (Physics.Raycast(ray, out hit, 50000.0f))// (1 << 8)))
+                    if (Physics.Raycast(ray, out hit, 1000000.0f))// (1 << 8)))
                     {
                         verts[i] = new Vector3(hit.point.x, hit.point.y, hit.point.z);                        
                         Debug.DrawLine(Camera.main.ScreenToWorldPoint(corner), hit.point, Color.red, 1.0f);
