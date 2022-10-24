@@ -102,7 +102,9 @@ public class UnitGui : MonoBehaviour
             if (ButtonClicked == ActionChosen.MoveRallyPoint && 
                 Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo))
             {
-                if (hitInfo.transform.gameObject.layer == 3)
+                int layer = hitInfo.transform.gameObject.layer;
+
+                if (layer == 3 || layer == 6)
                 {
                     unitManager.SetPlayerRallyPointPosition(hitInfo.point);
                 }
