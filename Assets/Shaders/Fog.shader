@@ -99,7 +99,7 @@ Shader "Hidden/Fog"
 				depth = ComputeWorldSpacePosition(i.uv, depth, UNITY_MATRIX_I_VP).y;
 
 				if (hitPoint.y < depth) {
-					//return col;
+					return col;
 				}
 
 				int maxSamples = min(_Samples, 32);
