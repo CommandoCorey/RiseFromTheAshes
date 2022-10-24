@@ -111,6 +111,7 @@ public class AiPlayer : MonoBehaviour
             taskDisplays[i].taskSetNumber.text = "Task Set " + i + ":";
         }
 
+        resources.AddResourceToAI(ResourceType.Steel, 300);
     }
 
     // Update is called once per frame
