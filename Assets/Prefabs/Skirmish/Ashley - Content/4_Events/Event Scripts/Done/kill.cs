@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Move_Object : MonoBehaviour
+public class kill : MonoBehaviour
 {
     [SerializeField] LayerMask unitLayerMask;
 
@@ -10,14 +10,22 @@ public class Move_Object : MonoBehaviour
 
     BoxCollider bc;
 
+    public List<GameObject> KillObjects = new List<GameObject>();
+    public GameObject Remove;
+
+    // Start is called before the first frame update
     void MyOnTrigger(Collider other)
     {
         //entering the trigger
-        Debug.Log("Moving Object");
-        
+        Debug.Log("Object Died");
+        foreach (var g in KillObjects)
+        {
+            Destroy(gameObject);
+        }
+
+        Remove.SetActive(false);
 
     }
-
     private void OnEnable()
     {
         bc = GetComponent<BoxCollider>();

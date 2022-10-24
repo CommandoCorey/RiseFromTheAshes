@@ -96,6 +96,7 @@ public class UnitController : MonoBehaviour
     private Vector3 healthBarOffset;
     private new AudioSource audio;
     private GameManager gameManager;
+    private int rallyNumber;
 
     // added by George
     bool recentlyDamaged;
@@ -145,6 +146,9 @@ public class UnitController : MonoBehaviour
             return State == UnitState.Attack || recentlyDamaged;
         }
     }
+
+    public bool ReachedRallyPoint { get; internal set; } = false;
+    public int RallyNumber { get => rallyNumber; }
     #endregion
 
     /*
@@ -168,7 +172,8 @@ public class UnitController : MonoBehaviour
 
         gameManager.IncreaseUnitCount(spaceUsed, isAi);
 
-        ChangeState(UnitState.Idle);
+        if(ReachedRallyPoint)
+            ChangeState(UnitState.Idle);
 
         if (UnitManager.Instance)
         {
@@ -364,7 +369,7 @@ public class UnitController : MonoBehaviour
         else
             player = 0;
 
-        Vector3 formationPos = formations.GetRallyPosition(point, player);
+        Vector3 formationPos = formations.GetRallyPosition(point, player, ref rallyNumber);
 
         ChangeState(UnitState.Moving, formationPos);
     }

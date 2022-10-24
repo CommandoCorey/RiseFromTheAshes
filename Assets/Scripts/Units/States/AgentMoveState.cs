@@ -48,6 +48,9 @@ public class AgentMoveState : State
             {
                 agent.isStopped = true;
                 unit.ChangeState(UnitState.Idle);
+
+                if(!unit.ReachedRallyPoint)
+                    unit.ReachedRallyPoint = true;
             }
         }
 
@@ -73,6 +76,11 @@ public class AgentMoveState : State
         targetPos = position;
         agent.SetDestination(targetPos);
         agent.isStopped = false;
+
+        bool isAi = gameObject.layer == 7;
+
+        if(unit.ReachedRallyPoint)
+            FormationManager.Instance.RemovePositionFromRally(unit.RallyNumber, isAi);
 
         // plays random move sound
         AudioSource audio = unit.body.GetComponent<AudioSource>();
