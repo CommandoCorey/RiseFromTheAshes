@@ -129,7 +129,7 @@ public class ResourceManager : MonoBehaviour
     {
         if (aiPlayer)
         {
-            if (aiResources[(int)type].currentAmount <= amount)
+            if (aiResources[(int)type].currentAmount >= amount)
             {
                 aiResources[(int)type].currentAmount -= amount;
                 return true;
@@ -137,7 +137,7 @@ public class ResourceManager : MonoBehaviour
         }
         else
         {
-            if (playerResources[(int)type].currentAmount <= amount)
+            if (playerResources[(int)type].currentAmount >= amount)
             {
                 playerResources[(int)type].currentAmount -= amount;
                 return true;

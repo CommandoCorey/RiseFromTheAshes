@@ -115,18 +115,16 @@ public class BuildMenu : MonoBehaviour
 	{
 		// check the resource cost of the building
 		ResourceManager rm = ResourceManager.Instance;
-		int totalSteel = rm.GetResource(ResourceType.Steel);
 
-		if (totalSteel >= item.buildingPrefab.steelCost)
+		if (rm.SpendResource(ResourceType.Steel, item.buildingPrefab.steelCost))
 		{
-			rm.SpendResource(ResourceType.Steel, item.buildingPrefab.steelCost);
-
 			Building b = Instantiate(item.buildingPrefab, ghostBuilding.transform.position, ghostBuilding.transform.rotation);
 			ghostBuilding.child = b;
 			b.ghost = ghostBuilding;
 			ghostBuilding.gameObject.SetActive(false);
 			b.Build();
 			insufficientResourcesText.SetActive(false);
+
 			Hide();
 		}
 		else
