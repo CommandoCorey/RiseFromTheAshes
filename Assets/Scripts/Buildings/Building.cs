@@ -168,7 +168,10 @@ public class Building : MonoBehaviour
 		if (gameObject.layer == 9 && // AI building layer
 		    gameObject.tag != "Headquarters")
 		{
-			AiPlayer.Instance.AddRebuildTask(this);
+			AiPlayer aiPlayer = AiPlayer.Instance;
+
+			if(aiPlayer != null)
+				aiPlayer.AddRebuildTask(this);
 		}
 
 		Destroy(gameObject);

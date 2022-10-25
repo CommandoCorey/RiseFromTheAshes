@@ -77,7 +77,8 @@ public class IdleState : State
     private void OnDrawGizmos()
     {
 #if UNITY_EDITOR
-        UnityEditor.Handles.Label(unit.body.position + Vector3.up * 1, "Idle");
+        if(unit != null)
+            UnityEditor.Handles.Label(unit.body.position + Vector3.up * 1, "Idle");
 #endif
     }
 

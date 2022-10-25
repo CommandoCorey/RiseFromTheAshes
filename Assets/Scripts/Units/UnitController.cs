@@ -178,7 +178,13 @@ public class UnitController : MonoBehaviour
 
         gameManager.IncreaseUnitCount(spaceUsed, isAi);
 
-        if(ReachedRallyPoint)
+        
+        idleState = GetComponent<IdleState>();
+
+        if(idleState != null)
+            State = UnitState.Idle;
+
+        if (ReachedRallyPoint)
             ChangeState(UnitState.Idle);
 
         if (UnitManager.Instance)

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TurretBuilding : Building
+public class TurretBuilding : MonoBehaviour
 {
     enum TurretState
     {
@@ -16,14 +16,19 @@ public class TurretBuilding : Building
     public ParticleSystem fireParticles;
 
     [Header("Stats")]
-    [SerializeField] 
+    [SerializeField][Range(1, 100)]
     float detectionRadius = 10;
-    [SerializeField] 
-    float aimSpeed = 0.5f;
-    [SerializeField]
+    [SerializeField][Range(1, 100)]
+    float aimSpeed = 30;
+    [SerializeField][Range(1, 100)]
     float damagePerShot = 10;
-    [SerializeField]
+    [SerializeField][Range(0.1f, 10)]
     float fireRate = 1;
+    [SerializeField][Range(-180, 180)]
+    float defaultAimAngle = 90;
+
+    //[SerializeField]
+    Vector3 defaultAimDirection;
 
     [Header("Layers")]
     [SerializeField] LayerMask enemyLayer;
@@ -40,7 +45,8 @@ public class TurretBuilding : Building
     // Start is called before the first frame update
     void Start()
     {
-        
+        defaultAimDirection.x = Mathf.Cos(defaultAimAngle * Mathf.Deg2Rad);
+        defaultAimDirection.z = Mathf.Sin(defaultAimAngle * Mathf.Deg2Rad);
     }
 
     // Update is called once per frame
@@ -71,6 +77,14 @@ public class TurretBuilding : Building
             target = GetClosestEnemy(unitsInRange);
             //Debug.Log("Aiming");
             state = TurretState.Aiming;
+            return;
+        }
+
+        lookRotation = Quaternion.LookRotation(defaultAimDirection);
+
+        if (turret.rotation != lookRotation)
+        {            
+            turret.rotation = Quaternion.RotateTowards(turret.rotation, lookRotation, aimSpeed * Time.deltaTime);
         }
     }
 
@@ -87,20 +101,30 @@ public class TurretBuilding : Building
             state = TurretState.Firing;
             Invoke("Fire", fireRate);
         }
+
+        if(Vector3.Distance(transform.position, target.position) > detectionRadius)
+        {
+            state = TurretState.Searching;
+        }
     }
 
     private void Fire()
     {
-        if (Physics.Raycast(firingPoint.position, turret.forward, out RaycastHit hit, 30) && hit.transform == target)
+        if (Physics.Raycast(firingPoint.position, turret.forward, out RaycastHit hit, 30))
         {
-            target.GetComponentInParent<UnitController>().TakeDamage(damagePerShot, hit.point);
-            Invoke("Fire", fireRate);
+            if (hit.transform == target)
+            {
+                Instantiate(fireParticles, firingPoint.position, firingPoint.rotation, transform);
+                target.GetComponentInParent<UnitController>().TakeDamage(damagePerShot, hit.point);
+                Invoke("Fire", fireRate);
+
+                return;
+            }
         }
-        else
-        {
-            state = TurretState.Searching;
-            //Debug.Log("Searching");
-        }
+
+        state = TurretState.Searching;
+        //Debug.Log("Searching");
+        
     }
 
     // Searches through all detected enemies in the overlap sphere and returns the transform
