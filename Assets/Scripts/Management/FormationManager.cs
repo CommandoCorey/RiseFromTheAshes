@@ -253,19 +253,26 @@ public class FormationManager : MonoBehaviour
             aiRallyFormation.Clear();
     }
 
+
     /// <summary>
     /// 
     /// </summary>
     /// <param name="rallyPoint"></param>
+    /// <param name="origin"></param>
     /// <param name="player"></param>
+    /// <param name="rallyNumber"></param>
     /// <returns></returns>
-    public Vector3 GetRallyPosition(Vector3 rallyPoint, int player, ref int rallyNumber)
+    public Vector3 GetRallyPosition(Vector3 rallyPoint, Vector3 origin, int player, ref int rallyNumber)
     {
+        Vector3 moveDirection = (rallyPoint - origin).normalized;
+
+        //Debug.DrawLine(origin, rallyPoint, Color.yellow, 3.0f);
+
         if (player == 0) // Human player
-            return GetNextFormationPoint(rallyPoint, ref rallyNumber);
+            return GetNextFormationPoint(rallyPoint, moveDirection, ref rallyNumber);
 
         else if (player == 1) // Ai player
-            return GetNextFormationPoint(rallyPoint, ref rallyNumber);
+            return GetNextFormationPoint(rallyPoint, moveDirection, ref rallyNumber);
 
         else
             return rallyPoint;
@@ -290,12 +297,12 @@ public class FormationManager : MonoBehaviour
     /// <param name="aiPlayer"></param>
     public void RemovePositionFromRally(int positionNum, bool aiPlayer)
     {
-        if (aiPlayer)
+        if (aiPlayer && aiRallyFormation.Count > 0)
         {
             Debug.Log("Ai unit has moved from position: " + aiRallyFormation[positionNum]);
             aiRallyFormation.Remove(aiRallyFormation[positionNum]);
         }
-        else
+        else if(!aiPlayer && playerRallyFormation.Count > 0)
         {
             Debug.Log("Player unit has moved from position: " + playerRallyFormation[positionNum]);
             playerRallyFormation.Remove(playerRallyFormation[positionNum]);
@@ -303,12 +310,16 @@ public class FormationManager : MonoBehaviour
     }
 
     #region private functions
-    private Vector3 GetNextFormationPoint(Vector3 centerPoint, ref int rallyNumber)
+    private Vector3 GetNextFormationPoint(Vector3 centerPoint, Vector3 direction, ref int rallyNumber)
     {
         int unitsOnLeft = 0;
         int unitsOnRight = 0;
 
         playerRallyPosition = centerPoint;
+
+        Vector3 offsetDirection = GetRightAngle(direction);
+
+        Debug.DrawLine(centerPoint, centerPoint + (offsetDirection * 10), Color.red, 3.0f);
 
         for (int row = 0; row < maxRows; row++)
         {
@@ -330,12 +341,17 @@ public class FormationManager : MonoBehaviour
                 if (col % 2 == 0) // check odd or even
                 {
                     unitsOnRight++;
-                    playerRallyPosition.x = centerPoint.x + spaceBetweenUnits * unitsOnRight;
+                    //playerRallyPosition.x = centerPoint.x + spaceBetweenUnits * unitsOnRight;
+                    Vector3 offset = offsetDirection * unitsOnRight * spaceBetweenUnits;
+
+                    playerRallyPosition = centerPoint + offset;
                 }
                 else
                 {
                     unitsOnLeft++;
-                    playerRallyPosition.x = centerPoint.x - spaceBetweenUnits * unitsOnLeft;
+                    Vector3 offset = offsetDirection * unitsOnLeft * spaceBetweenUnits;
+                    //playerRallyPosition.x = centerPoint.x - spaceBetweenUnits * unitsOnLeft;
+                    playerRallyPosition = centerPoint - offset;
                 }
             }
 

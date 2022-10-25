@@ -97,6 +97,7 @@ public class UnitController : MonoBehaviour
     private new AudioSource audio;
     private GameManager gameManager;
     private int rallyNumber;
+    private Vector3 spawnPos;
 
     // added by George
     bool recentlyDamaged;
@@ -157,12 +158,17 @@ public class UnitController : MonoBehaviour
         this.waypoints = waypoints;
     }*/
 
+    private void Awake()
+    {
+        spawnPos = transform.position;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-    	health = maxHealth;
+    	health = maxHealth;        
 
-        if(healthBar)
+        if (healthBar)
             healthBarOffset = healthBar.transform.parent.localPosition;
 
         audio = body.GetComponent<AudioSource>();
@@ -369,7 +375,9 @@ public class UnitController : MonoBehaviour
         else
             player = 0;
 
-        Vector3 formationPos = formations.GetRallyPosition(point, player, ref rallyNumber);
+        Debug.DrawLine(spawnPos, point, Color.yellow, 3.0f);
+
+        Vector3 formationPos = formations.GetRallyPosition(point, spawnPos, player, ref rallyNumber);
 
         ChangeState(UnitState.Moving, formationPos);
     }
