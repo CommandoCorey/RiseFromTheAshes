@@ -28,23 +28,29 @@ public class FOW : MonoBehaviour {
 	byte[] FOWMask;
 	byte[] maskTextureData;
 
-	static float[] ShiftedPoints(float[] points, Vector3 amount)
+	float[] ShiftedPoints(float[] points, Vector3 amount)
 	{
 		float[] r = new float[points.Length];
 
 		for (int i = 0; i < points.Length; i += 3) {
-			r[i + 0] = points[i + 0] + amount.x;
-			r[i + 1] = points[i + 1] + amount.y;
-			r[i + 2] = points[i + 2] + amount.z;
+			r[i + 0] = points[i + 0] + amount.x * noiseResolution.x;
+			r[i + 1] = points[i + 1] + amount.y * noiseResolution.y;
+			r[i + 2] = points[i + 2] + amount.z * noiseResolution.z;
 		}
 
 		return r;
 	}
 
-	ComputeBuffer GenPointComputeBuffer(int count, out int resultCount) {
-		int computePointCount = count * 7;
+	void GenPoints(float[] CPUPoints, ComputeBuffer points, ref int offset, Vector3 shift)
+	{
+		points.SetData(ShiftedPoints(CPUPoints, shift), 0, offset, CPUPoints.Length);
+		offset += CPUPoints.Length;
+	}
 
-		ComputeBuffer points = new ComputeBuffer(computePointCount, sizeof(float) * 3);
+	ComputeBuffer GenPointComputeBuffer(int count, out int resultCount) {
+		int computePointCount = count * 23;
+
+		ComputeBuffer points = new ComputeBuffer(computePointCount * 3, sizeof(float));
 		float[] CPUPoints = new float[count * 3];
 		for (int i = 0; i < count * 3; i += 3)
 		{
@@ -53,14 +59,37 @@ public class FOW : MonoBehaviour {
 			CPUPoints[i + 2] = Random.Range(0, noiseResolution.z - 1);
 		}
 
+		int offset = 0;
+
 		/* Tile the noise by copying the points to each of the faces of the boundry. */
-		points.SetData(CPUPoints, 0, 0, count * 3);
-		points.SetData(ShiftedPoints(CPUPoints, new Vector3( noiseResolution.x, 0.0f, 0.0f)), 0, count * 3 * 1, count * 3);
-		points.SetData(ShiftedPoints(CPUPoints, new Vector3(-noiseResolution.x, 0.0f, 0.0f)), 0, count * 3 * 2, count * 3);
-		points.SetData(ShiftedPoints(CPUPoints, new Vector3(0.0f,  noiseResolution.y, 0.0f)), 0, count * 3 * 3, count * 3);
-		points.SetData(ShiftedPoints(CPUPoints, new Vector3(0.0f, -noiseResolution.y, 0.0f)), 0, count * 3 * 4, count * 3);
-		points.SetData(ShiftedPoints(CPUPoints, new Vector3(0.0f, 0.0f, -noiseResolution.z)), 0, count * 3 * 6, count * 3);
-		points.SetData(ShiftedPoints(CPUPoints, new Vector3(0.0f, 0.0f,  noiseResolution.z)), 0, count * 3 * 5, count * 3);
+		GenPoints(CPUPoints, points, ref offset, new Vector3(0.0f, 0.0f, 0.0f));
+
+		GenPoints(CPUPoints, points, ref offset, new Vector3(-1.0f,  0.0f,  0.0f));
+		GenPoints(CPUPoints, points, ref offset, new Vector3( 1.0f,  0.0f,  0.0f));
+		GenPoints(CPUPoints, points, ref offset, new Vector3( 0.0f, -1.0f,  0.0f));
+		GenPoints(CPUPoints, points, ref offset, new Vector3( 0.0f,  1.0f,  0.0f));
+		GenPoints(CPUPoints, points, ref offset, new Vector3( 0.0f,  0.0f, -1.0f));
+		GenPoints(CPUPoints, points, ref offset, new Vector3( 0.0f,  0.0f,  1.0f));
+
+		GenPoints(CPUPoints, points, ref offset, new Vector3( 0.0f, -1.0f, -1.0f));
+		GenPoints(CPUPoints, points, ref offset, new Vector3( 0.0f, -1.0f,  1.0f));
+		GenPoints(CPUPoints, points, ref offset, new Vector3( 1.0f, -1.0f,  0.0f));
+		GenPoints(CPUPoints, points, ref offset, new Vector3(-1.0f, -1.0f,  0.0f));
+
+		GenPoints(CPUPoints, points, ref offset, new Vector3( 0.0f,  1.0f, -1.0f));
+		GenPoints(CPUPoints, points, ref offset, new Vector3( 0.0f,  1.0f,  1.0f));
+		GenPoints(CPUPoints, points, ref offset, new Vector3( 1.0f,  1.0f,  0.0f));
+		GenPoints(CPUPoints, points, ref offset, new Vector3(-1.0f,  1.0f,  0.0f));
+
+		GenPoints(CPUPoints, points, ref offset, new Vector3( 1.0f, -1.0f, -1.0f));
+		GenPoints(CPUPoints, points, ref offset, new Vector3( 1.0f, -1.0f,  1.0f));
+		GenPoints(CPUPoints, points, ref offset, new Vector3(-1.0f, -1.0f, -1.0f));
+		GenPoints(CPUPoints, points, ref offset, new Vector3(-1.0f, -1.0f,  1.0f));
+
+		GenPoints(CPUPoints, points, ref offset, new Vector3( 1.0f,  1.0f, -1.0f));
+		GenPoints(CPUPoints, points, ref offset, new Vector3( 1.0f,  1.0f,  1.0f));
+		GenPoints(CPUPoints, points, ref offset, new Vector3(-1.0f,  1.0f, -1.0f));
+		GenPoints(CPUPoints, points, ref offset, new Vector3(-1.0f,  1.0f,  1.0f));
 
 		resultCount = computePointCount;
 
@@ -107,7 +136,7 @@ public class FOW : MonoBehaviour {
 			noiseGenShader.SetBuffer(0, "DetailPoints", detailPoints);
 			noiseGenShader.SetInt("DetailPointCount", detailPointCount);
 
-			noiseGenShader.SetFloat("ValueDivisor", Vector3Int.Distance(Vector3Int.zero, noiseResolution));
+			noiseGenShader.SetFloat("ValueDivisor", noiseResolution.magnitude);
 			noiseGenShader.Dispatch(0, noiseResolution.x / 8, noiseResolution.y / 8, noiseResolution.z / 8);
 
 			mainPoints.Release();
