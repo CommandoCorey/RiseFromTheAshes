@@ -93,7 +93,7 @@ public class AiPlayer : MonoBehaviour
         gameManager = GameManager.Instance;
 
         if (playerStrategy != null)
-            tasksSchedule = playerStrategy.tasksSchedule;
+            tasksSchedule = (TaskSet[]) playerStrategy.Clone();
 
         aiUnits = new List<UnitController>();
         unitGroup = new List<Transform>();
@@ -102,6 +102,12 @@ public class AiPlayer : MonoBehaviour
         activeTasks = new List<AiTask>();
 
         SortTasks();
+
+        foreach (TaskSet set in tasksSchedule)
+        {
+            set.TaskNum = 0;
+            set.ReadyToPerform = true;
+        }
 
         // instantiate task sets on info panel
         taskDisplays = new List<TaskSetDisplay>();
@@ -167,6 +173,8 @@ public class AiPlayer : MonoBehaviour
     {
         foreach (TaskSet set in tasksSchedule)
         {
+            RemoveNullTasks(set.tasks);
+
             var sortedTasks = from t in set.tasks
                               orderby t.priorityScore descending
                               select t;
@@ -178,11 +186,29 @@ public class AiPlayer : MonoBehaviour
     // sorts tasks in a specific task set by highest to lowst priority score
     private void SortTaskSet(TaskSet set)
     {
+        RemoveNullTasks(set.tasks);
+
         var sortedTasks = from t in set.tasks
                           orderby t.priorityScore descending
                           select t;
 
         set.tasks = sortedTasks.ToList();
+    }
+
+
+    // checks if any taks in a set is null and if they are, removes them
+    private void RemoveNullTasks(List<AiTask> tasks)
+    {
+        foreach(AiTask task in tasks)
+        {
+            if(task == null)
+            {
+                tasks.Remove(task);
+                RemoveNullTasks(tasks);
+                return;
+            }
+
+        }
     }
 
     private IEnumerator PerformNextTask(TaskSet set)

@@ -1,10 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static UnityEngine.UI.CanvasScaler;
 
 
-public abstract class AiTask : ScriptableObject
+public abstract class AiTask : ScriptableObject, ICloneable
 {
     public float timeDelay;
     public int priorityScore = 10;
@@ -21,5 +22,8 @@ public abstract class AiTask : ScriptableObject
     // abstract functions
     public abstract int GetSteelCost();
     public abstract bool PerformTask();
-    public abstract bool IsComplete();    
+    public abstract bool IsComplete();
+
+    public abstract object Clone();
+
 }

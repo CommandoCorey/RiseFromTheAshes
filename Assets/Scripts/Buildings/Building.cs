@@ -165,6 +165,12 @@ public class Building : MonoBehaviour
 			ghost.child = null;
 		}
 
+		if (gameObject.layer == 9 && // AI building layer
+		    gameObject.tag != "Headquarters")
+		{
+			AiPlayer.Instance.AddRebuildTask(this);
+		}
+
 		Destroy(gameObject);
 	}
 
@@ -191,12 +197,4 @@ public class Building : MonoBehaviour
         }
 	}
 
-    public void OnDestroy()
-    {
-        if(gameObject.layer == 9 && gameObject.tag != "Headquarters") // AI building
-        {
-			AiPlayer.Instance.AddRebuildTask(this);
-        }
-
-    }
 }
