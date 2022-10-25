@@ -19,6 +19,7 @@ public class Building : MonoBehaviour
 	[Header("Sound and Visual effects")]
     [SerializeField] AudioClip[] hitSounds;
 	[SerializeField] ParticleSystem[] hitVFX;
+	[SerializeField] Transform[] damagedVFX;
 
     new AudioSource audio;
 
@@ -28,6 +29,10 @@ public class Building : MonoBehaviour
 	MeshRenderer myMeshRenderer;
 
 	List<Material> materials;
+
+	// Added by Paul
+	private bool damageEffectOn = false;
+	private GameObject damagedEffect;
 
 	public bool IsBuilt {
 		get {
@@ -194,6 +199,25 @@ public class Building : MonoBehaviour
 			var go = Instantiate(hitVFX[Random.Range(0, hitVFX.Length - 1)], hitPoint, Quaternion.identity);
 			Destroy(go.gameObject, 3.0f);
 		}
+
+		// turn of fire if healh is below 50%
+		if(!damageEffectOn && HP <= maxHP/2)
+        {
+			int randomPick = Random.Range(0, damagedVFX.Length - 1);
+
+			damagedEffect = damagedVFX[randomPick].gameObject;
+			damagedEffect.SetActive(true);
+
+			damageEffectOn = true;
+		}
+		else if(damageEffectOn && damagedEffect.activeInHierarchy && HP > maxHP/2)
+        {
+			damagedEffect.SetActive(false);
+			damageEffectOn = false;
+
+			damagedEffect = null;
+        }
+
 
         if (HP <= 0.0f) {
 			OnDie();

@@ -56,6 +56,10 @@ MonoBehaviour:
   HP: 0
   hitSounds: []
   hitVFX: []
+  damagedVFX:
+  - {fileID: 3441232015321716885, guid: dda7c36a9ae284b449b4fa2aa45aba06, type: 3}
+  - {fileID: 5373696959779709166, guid: 1b156d6615022d3458e81b29eeb0f5fc, type: 3}
+  - {fileID: 4906872628957580441, guid: 52ea717c7a79b1a429eea1ecea9428fb, type: 3}
   ghost: {fileID: 0}
 --- !u!114 &4999239961471015108
 MonoBehaviour:
@@ -69,10 +73,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba5770ddb47e1bb4eba75cd6dff05570, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  turret: {fileID: 8477104760141990366}
-  gun: {fileID: 8477104760141990366}
+  turretGun: {fileID: 8477104760141990366}
   firingPoint: {fileID: 416348422370157175}
-  fireParticles: {fileID: 6122729733747261527, guid: 537757cdc640b964ea07bc66dfdedfb4, type: 3}
+  fireEffect: {fileID: 6122729733747261526, guid: 537757cdc640b964ea07bc66dfdedfb4, type: 3}
   detectionRadius: 20
   aimSpeed: 30
   damagePerShot: 20
