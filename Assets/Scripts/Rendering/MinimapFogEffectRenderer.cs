@@ -61,12 +61,16 @@ class MinimapFogEffect : ScriptableRenderPass
 		}
 #endif
 
-		fogMaterial.SetTexture("_MaskTex", FOWManager.Instance.perm.MaskToTexture());
-		fogMaterial.SetVector("_FogTopCorner", FOWManager.Instance.perm.transform.position);
+		fogMaterial.SetVector("_PermTopCorner", FOWManager.Instance.perm.transform.position);
+		fogMaterial.SetVector("_ImpermTopCorner", FOWManager.Instance.imperm.transform.position);
+		fogMaterial.SetVector("_PermMaskSize", FOWManager.Instance.perm.GetMaskExtentf());
+		fogMaterial.SetVector("_ImpermMaskSize", FOWManager.Instance.imperm.GetMaskExtentf());
+		fogMaterial.SetFloat("_PermHeight", FOWManager.Instance.perm.transform.position.y);
+		fogMaterial.SetFloat("_ImpermHeight", FOWManager.Instance.imperm.transform.position.y);
 
 		RenderTexture mask = FOWManager.Instance.imperm.MaskToTexture();
 
-		CommandBuffer cmd = CommandBufferPool.Get("fogEffectCmdBuffer");
+		CommandBuffer cmd = CommandBufferPool.Get("minimapFogEffectCmdBuffer");
 		cmd.Clear();
 
 		Blit(cmd, src, dst, fogMaterial);

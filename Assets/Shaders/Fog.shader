@@ -129,9 +129,7 @@ Shader "Hidden/Fog"
 						light -= noise * 0.01 * (_Height - p.y);
 						light = max(0.04, light);
 
-						if (p.y > depth) {
-							density += max(0.1, noise - _Threshold);
-						}
+						density += max(0.1, noise - _Threshold);
 					}
 				}
 
@@ -148,7 +146,7 @@ Shader "Hidden/Fog"
 				float4 fogColour = (1.0 - density) * _FogColour * light;
 				fogColour.a = 1.0;
 
-				return ((maskVal >= 1.0) ? float4(0.0, 0.0, 0.0, 1.0) : col) * density + fogColour;
+				return ((1.0 - maskVal) * col) * density + fogColour;
 			}
 			ENDHLSL
 		}
