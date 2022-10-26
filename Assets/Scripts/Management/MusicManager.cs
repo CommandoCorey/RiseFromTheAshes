@@ -41,16 +41,22 @@ public class MusicManager : MonoBehaviour {
 	{
 		fading = false;
 
-		normalAS = gameObject.AddComponent<AudioSource>();
-		normalAS.loop = true;
-		normalAS.clip = GetRandomNormalST();
-		normalAS.volume = 1.0f;
-		normalAS.Play();
+		if (normalSTs.Count > 0)
+		{
+			normalAS = gameObject.AddComponent<AudioSource>();
+			normalAS.loop = true;
+			normalAS.clip = GetRandomNormalST();
+			normalAS.volume = 1.0f;
+			normalAS.Play();
+		}
 
-		combatAS = gameObject.AddComponent<AudioSource>();
-		combatAS.loop = true;
-		combatAS.clip = GetRandomCombatST();
-		combatAS.volume = 0.0f;
+		if (combatSTs.Count > 0)
+		{
+			combatAS = gameObject.AddComponent<AudioSource>();
+			combatAS.loop = true;
+			combatAS.clip = GetRandomCombatST();
+			combatAS.volume = 0.0f;
+		}
 	}
 
 	private void Update()
@@ -86,14 +92,17 @@ public class MusicManager : MonoBehaviour {
 	}
 
 	public void ChangeState(State s) {
+		
 		if (s != state) {
 			if (s == State.Normal && state == State.Combat)
 			{
-				ChangeToNormal();
+				if(normalSTs.Count > 0)
+					ChangeToNormal();
 			}
 			else
 			{
-				ChangeToCombat();
+				if(combatSTs.Count > 0)
+					ChangeToCombat();
 			}
 		}
 

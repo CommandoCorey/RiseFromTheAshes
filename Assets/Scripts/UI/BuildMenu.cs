@@ -3,7 +3,6 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
 using System.Collections.Generic;
-using UnityEngine.EventSystems;
 using System.Collections;
 
 [System.Serializable]

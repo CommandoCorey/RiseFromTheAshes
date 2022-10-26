@@ -45,7 +45,7 @@ public class UIFOWOccluded : MonoBehaviour
 		{
 			f = FOWManager.Instance.imperm;
         }
-        catch (Exception e)
+        catch (Exception)
         {
             //Debug.Log("Fog of war not in scene");
             f = null;

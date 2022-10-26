@@ -23,7 +23,7 @@ public class IdleState : State
             audio.Stop();
     }
 
-    void Update()
+    protected override void Update()
     {
         if (!unit.autoAttack)
             return;

@@ -22,7 +22,6 @@ public class FormationManager : MonoBehaviour
     private List<Vector3> searchedPositions = new List<Vector3>();
 
     private Vector3 playerRallyPosition = new Vector3();
-    private Vector3 playerPrevRallyPosition = new Vector3();
 
     private Vector3 aiRallyPosition = new Vector3();
     private int playerId = 0;

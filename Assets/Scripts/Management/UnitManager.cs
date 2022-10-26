@@ -34,8 +34,6 @@ public class UnitManager : MonoBehaviour
     private Vector3 point;
     new AudioSource audio;
 
-    bool anythingInCombat;
-
     // external scripts
     private GameManager gameManager;
     private FormationManager formations;
@@ -67,8 +65,6 @@ public class UnitManager : MonoBehaviour
         squads = new List<List<GameObject>>();
 
         formations = FormationManager.Instance;
-
-        anythingInCombat = false;
     }
 
     // Update is called once per frame

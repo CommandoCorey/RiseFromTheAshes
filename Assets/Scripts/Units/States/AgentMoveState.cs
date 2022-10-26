@@ -18,7 +18,7 @@ public class AgentMoveState : State
     private GameManager gameManager;
 
     // Start is called before the first frame update
-    void Awake()
+    protected override void Awake()
     {
         base.Awake();
 
@@ -33,7 +33,7 @@ public class AgentMoveState : State
     }
 
     // Update is called once per frame
-    void Update()
+    protected override void Update()
     {
         agent.enabled = (gameManager.State == GameState.Running);
 

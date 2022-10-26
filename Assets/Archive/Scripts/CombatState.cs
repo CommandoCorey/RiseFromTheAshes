@@ -18,7 +18,7 @@ public class CombatState : State
     private Vector3 initialRotation;
     //private Quaternion initialRotation;
 
-    private new AgentMovement agent;
+    private AgentMovement agent;
     private SeekBehaviour seek;
     private CombatMode state = CombatMode.Search;
 
@@ -59,7 +59,7 @@ public class CombatState : State
     }
 
     // Update is called once per frame
-    void Update()
+    protected override void Update()
     {
         if(target != null)
             directionToTarget = (target.position - transform.position).normalized;
@@ -177,7 +177,7 @@ public class CombatState : State
    
     // Searches through all detected enemies in the overlap sphere and returns the transform
     // of the one that is the closest
-    private Transform GetClosestEnemy(Collider[] enemies, Transform current = null)
+    /*private new Transform GetClosestEnemy(Collider[] enemies, Transform current = null)
     {
         Transform closest;
         float shortestDistance;
@@ -204,7 +204,7 @@ public class CombatState : State
         }
 
         return closest;
-    }
+    }*/
 
 
     private void MoveTowardsTarget()
