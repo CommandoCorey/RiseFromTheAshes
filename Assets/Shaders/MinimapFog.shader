@@ -74,7 +74,7 @@ Shader "Hidden/MinimapFog"
 					return dot((centre - origin), normal) / denom;
 				}
 				return 0.0;
-			}
+			} 
 
 			float4 frag(v2f i) : SV_Target
 			{
