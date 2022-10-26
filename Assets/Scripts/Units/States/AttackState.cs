@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class AttackState : State
-{
-    public float minAngle = 5;
-
+{    
     bool pointingAtTarget = false;
 
     private Quaternion lookRotation;
@@ -29,11 +27,7 @@ public class AttackState : State
     {
         if (unit.AttackTarget == null)
         {
-            //if (unit.UnitHalt)
-                unit.ChangeState(UnitState.Idle);
-            //else
-                //unit.ChangeState(UnitState.Follow);
-
+            unit.ChangeState(UnitState.Idle);
             return;
         }
 
@@ -62,12 +56,11 @@ public class AttackState : State
         //Debug.Log("Enemy target detected");
 
         // check if turret is pointing at target
-        if (Quaternion.Angle(unit.turret.rotation, lookRotation) < minAngle)        
+        if (Quaternion.Angle(unit.turret.rotation, lookRotation) < unit.MinAngle)        
         {
+            unit.turret.rotation = lookRotation;
+
             Debug.DrawLine(unit.turret.position, unit.AttackTarget.position, Color.yellow);
-
-            // change to combat music
-
 
             Invoke("DealDamage", unit.AttackRate);
             pointingAtTarget = true;
@@ -76,7 +69,7 @@ public class AttackState : State
         else
         {
             // find the vector pointing from our position to the target
-            direction = (unit.AttackTarget.position - unit.turret.position).normalized;
+            direction = (unit.AttackTarget.position - unit.body.position).normalized;
         }
 
         //create the rotation we need to be in to look at the target

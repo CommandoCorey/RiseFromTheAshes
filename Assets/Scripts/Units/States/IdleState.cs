@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.UI.CanvasScaler;
 
 public class IdleState : State
 {    
@@ -39,9 +40,9 @@ public class IdleState : State
             {
                 unit.AttackTarget = enemiesInRange[0].gameObject.transform;
 
-                if (gameObject.tag == "PlayerUnit")
-                    unit.ChangeState(UnitState.Attack);
-                else if (gameObject.tag == "NavMesh Agent")
+                //if (gameObject.tag == "PlayerUnit")
+                    //unit.ChangeState(UnitState.Attack);
+                //else if (gameObject.tag == "NavMesh Agent")
                     unit.ChangeState(UnitState.Follow);
             }
             else
@@ -50,16 +51,16 @@ public class IdleState : State
 
                 if(!ObstacleInWay(directionToTarget))
                 {
-                    if (gameObject.tag == "PlayerUnit")
-                        unit.ChangeState(UnitState.Attack);
-                    else
+                    //if (gameObject.tag == "PlayerUnit")
+                        //unit.ChangeState(UnitState.Attack);
+                    //else
                         unit.ChangeState(UnitState.Follow);
                 }
             }
         }
-        else if(unit.turret.localRotation != unit.transform.rotation )
+        else if(unit.turret.rotation != unit.body.rotation)
         {
-            unit.turret.rotation = Quaternion.RotateTowards(unit.turret.rotation, unit.transform.rotation, 
+            unit.turret.rotation = Quaternion.RotateTowards(unit.turret.rotation, unit.body.rotation, 
                 Time.deltaTime * unit.TurretRotationSpeed);
         }
 

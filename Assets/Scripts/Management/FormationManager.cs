@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,15 +17,16 @@ public class FormationManager : MonoBehaviour
     int maxRows = 1000;
 
     List<Vector3> formationPositions = new List<Vector3>();
-    private List<Vector3> playerRallyFormation = new List<Vector3>();
-    private List<Vector3> aiRallyFormation = new List<Vector3>();
+    private Dictionary<int, Vector3> playerRallyFormation = new Dictionary<int, Vector3>();
+    private Dictionary<int, Vector3> aiRallyFormation = new Dictionary<int, Vector3>();
     private List<Vector3> searchedPositions = new List<Vector3>();
 
     private Vector3 playerRallyPosition = new Vector3();
     private Vector3 playerPrevRallyPosition = new Vector3();
 
     private Vector3 aiRallyPosition = new Vector3();
-
+    private int playerId = 0;
+    private int enemyId = 0;
 
     [Header("Gizmos")]
     public bool showFormationPositions = false;
@@ -72,13 +74,6 @@ public class FormationManager : MonoBehaviour
         int unitsOnLeft = 0;
         int unitsOnRight = 0;
         int unitsPlaced = 0;
-
-        // make sure an object with the ground tag exists
-        if (!GameObject.FindWithTag("Ground"))
-        {
-            Debug.LogError("The ground object has not been tagged");
-            return formationPositions;
-        }
 
         for (int row = 0; row < maxRows; row++)
         {
@@ -219,21 +214,12 @@ public class FormationManager : MonoBehaviour
         return formationPositions;
     }
 
-    // Not currently used
-    public void AddRallyFormationPoint(Vector3 point, int player = 0)
-    {
-        if (player == 0)
-            playerRallyFormation.Add(point);
-        else if (player == 1)
-            aiRallyFormation.Add(point);
-    }
-
     /// <summary>
     /// 
     /// </summary>
     /// <param name="player"></param>
     /// <returns></returns>
-    public List<Vector3> GetRallyFormation(int player = 0)
+    public Dictionary<int, Vector3> GetRallyFormation(int player = 0)
     {
         if (player == 0)
             return playerRallyFormation;
@@ -248,9 +234,15 @@ public class FormationManager : MonoBehaviour
     public void ClearRallyFormation(int player = 0)
     {
         if (player == 0)
+        {
             playerRallyFormation.Clear();
+            playerId = 0;
+        }
         else
+        {
             aiRallyFormation.Clear();
+            enemyId = 0;
+        }
     }
 
 
@@ -262,20 +254,16 @@ public class FormationManager : MonoBehaviour
     /// <param name="player"></param>
     /// <param name="rallyNumber"></param>
     /// <returns></returns>
-    public Vector3 GetRallyPosition(Vector3 rallyPoint, Vector3 origin, int player, ref int rallyNumber)
+    public Vector3 GetRallyPosition(Vector3 rallyPoint, Vector3 origin, bool aiPlayer, ref int rallyNumber)
     {
         Vector3 moveDirection = (rallyPoint - origin).normalized;
 
         //Debug.DrawLine(origin, rallyPoint, Color.yellow, 3.0f);
 
-        if (player == 0) // Human player
-            return GetNextFormationPoint(rallyPoint, moveDirection, ref rallyNumber);
-
-        else if (player == 1) // Ai player
-            return GetNextFormationPoint(rallyPoint, moveDirection, ref rallyNumber);
-
+        if (aiPlayer) // Ai player
+            return GetNextAiFormationPoint(rallyPoint, moveDirection, ref rallyNumber);
         else
-            return rallyPoint;
+            return GetNextFormationPoint(rallyPoint, moveDirection, ref rallyNumber);
     }
 
     // used for agent priorities
@@ -297,15 +285,28 @@ public class FormationManager : MonoBehaviour
     /// <param name="aiPlayer"></param>
     public void RemovePositionFromRally(int positionNum, bool aiPlayer)
     {
-        if (aiPlayer && aiRallyFormation.Count > 0)
+        try
         {
-            Debug.Log("Ai unit has moved from position: " + aiRallyFormation[positionNum]);
-            aiRallyFormation.Remove(aiRallyFormation[positionNum]);
+            if (aiPlayer && aiRallyFormation.Count > 0)
+            {
+                //Debug.Log("Ai unit has moved from position: " + aiRallyFormation[positionNum]);
+                aiRallyFormation.Remove(positionNum);
+
+                if (aiRallyFormation.Count == 0)
+                    enemyId = 0;
+            }
+            else if (!aiPlayer && playerRallyFormation.Count > 0)
+            {
+                //Debug.Log("Player unit has moved from position: " + playerRallyFormation[positionNum]);
+                playerRallyFormation.Remove(positionNum);
+
+                if (aiRallyFormation.Count == 0)
+                    playerId = 0;
+            }
         }
-        else if(!aiPlayer && playerRallyFormation.Count > 0)
+        catch(Exception e)
         {
-            Debug.Log("Player unit has moved from position: " + playerRallyFormation[positionNum]);
-            playerRallyFormation.Remove(playerRallyFormation[positionNum]);
+            Debug.LogException(e);
         }
     }
 
@@ -329,10 +330,10 @@ public class FormationManager : MonoBehaviour
                     out RaycastHit hitInfo))
                 {
                     if (hitInfo.transform.gameObject.layer == 3 && // ground layer
-                        !playerRallyFormation.Contains(hitInfo.point)) 
+                        !playerRallyFormation.ContainsValue(hitInfo.point)) 
                     {
-                        playerRallyFormation.Add(hitInfo.point);
-                        rallyNumber = playerRallyFormation.Count - 1;
+                        rallyNumber = playerId;
+                        playerRallyFormation.Add(playerId++, hitInfo.point);                        
 
                         return hitInfo.point;
                     }
@@ -362,15 +363,74 @@ public class FormationManager : MonoBehaviour
             unitsOnRight = 0;
         }
 
-        //formation.Add(newPos);
         Debug.LogError("Max rows exceeded. Could not find a valid rally formation position.");
 
-        playerRallyFormation.Add(centerPoint);
-        rallyNumber = playerRallyFormation.Count - 1;
+        rallyNumber = playerId;
+        playerRallyFormation.Add(playerId++, centerPoint);        
 
         return centerPoint;
     }
 
+    private Vector3 GetNextAiFormationPoint(Vector3 centerPoint, Vector3 direction, ref int rallyNumber)
+    {
+        int unitsOnLeft = 0;
+        int unitsOnRight = 0;
+
+        aiRallyPosition = centerPoint;
+
+        Vector3 offsetDirection = GetRightAngle(direction);
+
+        Debug.DrawLine(centerPoint, centerPoint + (offsetDirection * 10), Color.red, 3.0f);
+
+        for (int row = 0; row < maxRows; row++)
+        {
+            for (int col = 0; col < maxUnitsPerRow; col++)
+            {
+                if (Physics.Raycast(playerRallyPosition + Vector3.up * 2, Vector3.down,
+                    out RaycastHit hitInfo))
+                {
+                    if (hitInfo.transform.gameObject.layer == 3 && // ground layer
+                        !aiRallyFormation.ContainsValue(hitInfo.point))
+                    {
+                        aiRallyFormation.Add(enemyId++, hitInfo.point);
+                        rallyNumber = aiRallyFormation.Count - 1;
+
+                        return hitInfo.point;
+                    }
+                }
+
+                if (col % 2 == 0) // check odd or even
+                {
+                    unitsOnRight++;
+                    Vector3 offset = offsetDirection * unitsOnRight * spaceBetweenUnits;
+
+                    aiRallyPosition = centerPoint + offset;
+                }
+                else
+                {
+                    unitsOnLeft++;
+                    Vector3 offset = offsetDirection * unitsOnLeft * spaceBetweenUnits;
+                    aiRallyPosition = centerPoint - offset;
+                }
+            }
+
+            aiRallyPosition.x = centerPoint.x;
+            aiRallyPosition.z += spaceBetweenUnits;
+
+            unitsOnLeft = 0;
+            unitsOnRight = 0;
+        }
+
+        Debug.LogError("Max rows exceeded. Could not find a valid rally formation position.");
+
+        aiRallyFormation.Add(enemyId++, centerPoint);
+        rallyNumber = aiRallyFormation.Count - 1;
+
+        return centerPoint;
+    }
+
+    // Checks if the player clicked outside of the map by
+    // seeing if a raycase hit anything
     private bool IsOutOfBounds(Vector3 position)
     {
         if (Physics.Raycast(position + Vector3.up * 10, Vector3.down, 10))
@@ -379,6 +439,7 @@ public class FormationManager : MonoBehaviour
         return true;
     }
 
+    // Take a vector and returns another vector that is a right-angle to it
     private Vector3 GetRightAngle(Vector3 current)
     {
         Vector3 newVector;
@@ -446,14 +507,12 @@ public class FormationManager : MonoBehaviour
         // shows the rally point position of each unit spawned from an a.i. vehicle bay
         if (aiRallyFormation != null && showAiRallyPositions)
         {
-            foreach (Vector3 position in aiRallyFormation)
+            foreach (Vector3 position in aiRallyFormation.Values)
             {
                 Gizmos.color = Color.green;
                 Gizmos.DrawWireSphere(position + Vector3.up * 0.5f, 1);
             }
         }
-
-
 
         /*
         if (searchedPositions != null)

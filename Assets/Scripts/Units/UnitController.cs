@@ -53,8 +53,12 @@ public class UnitController : MonoBehaviour
     float attackRate = 1.0f;
     [SerializeField][Range(1, 100)]
     float attackRange = 20.0f;
+
+    [Header("Turret Rotation")]
     [SerializeField][Range(1, 100)]
     float turretRotationSpeed = 1.0f;
+    [SerializeField][Range(0, 10)]
+    float minAngleBeforeFiring = 1;
 
     [Header("Enemy Detection")]
     [Range(1, 100)]
@@ -96,7 +100,7 @@ public class UnitController : MonoBehaviour
     private Vector3 healthBarOffset;
     private new AudioSource audio;
     private GameManager gameManager;
-    private int rallyNumber;
+    private int rallyId = 0;
     private Vector3 spawnPos;
 
     // added by George
@@ -140,6 +144,7 @@ public class UnitController : MonoBehaviour
     public float DamagePerHit { get => damagePerHit; }
     public float AttackRate { get => attackRate; }
     public float AttackRange {  get => attackRange; }
+    public float MinAngle { get => minAngleBeforeFiring; }
 
     public float DPS { get => damagePerHit / attackRate; }
    
@@ -149,7 +154,7 @@ public class UnitController : MonoBehaviour
     }
 
     public bool ReachedRallyPoint { get; internal set; } = false;
-    public int RallyNumber { get => rallyNumber; }
+    public int RallyId { get => rallyId; }
     #endregion
 
     /*
@@ -177,7 +182,6 @@ public class UnitController : MonoBehaviour
         bool isAi = body.gameObject.layer == 7;
 
         gameManager.IncreaseUnitCount(spaceUsed, isAi);
-
         
         idleState = GetComponent<IdleState>();
 
@@ -375,15 +379,11 @@ public class UnitController : MonoBehaviour
 
         agent.avoidancePriority -= formations.GetCurrentRallySize(1);
 
-        int player;
-        if (gameObject.layer == 7)
-            player = 1;
-        else
-            player = 0;
+        bool isAi = gameObject.layer == 7;
 
         Debug.DrawLine(spawnPos, point, Color.yellow, 3.0f);
 
-        Vector3 formationPos = formations.GetRallyPosition(point, spawnPos, player, ref rallyNumber);
+        Vector3 formationPos = formations.GetRallyPosition(point, spawnPos, isAi, ref rallyId);
 
         ChangeState(UnitState.Moving, formationPos);
     }
@@ -543,6 +543,7 @@ public class UnitController : MonoBehaviour
         gameManager.DecreaseUnitCount(aiPlayer);
     }
 
+    // Added by George
     void PopulateMaterialRefs()
     {
         materials = new List<Material>();

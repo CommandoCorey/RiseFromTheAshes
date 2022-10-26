@@ -79,8 +79,11 @@ public class AgentMoveState : State
 
         bool isAi = gameObject.layer == 7;
 
-        if(unit.ReachedRallyPoint)
-            FormationManager.Instance.RemovePositionFromRally(unit.RallyNumber, isAi);
+        if (unit.ReachedRallyPoint)
+        {
+            FormationManager.Instance.RemovePositionFromRally(unit.RallyId, isAi);
+            unit.ReachedRallyPoint = false;
+        }
 
         // plays random move sound
         AudioSource audio = unit.body.GetComponent<AudioSource>();
