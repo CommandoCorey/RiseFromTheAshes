@@ -18,7 +18,7 @@ public class MainMenu : MonoBehaviour
     public void LoadSceneLevel1()
     {
         Debug.Log("Loading...");
-        SceneManager.LoadScene("Level 1 (Beta)");
+        SceneManager.LoadScene(1);
     }
     public void LoadSceneL1()
     {

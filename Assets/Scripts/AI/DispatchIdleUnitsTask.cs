@@ -22,6 +22,18 @@ public class DispatchIdleUnitsTask : AiTask
         get => "Sending units to player's base";
     }
 
+    public override object Clone()
+    {
+        var clonedTask = new DispatchIdleUnitsTask();
+
+        clonedTask.armoredFightingVehciels = armoredFightingVehciels;
+        clonedTask.halftracks = halftracks;
+        clonedTask.mainBattleTanks = mainBattleTanks;
+        clonedTask.recconaissanceVehicles= recconaissanceVehicles;
+
+        return clonedTask;
+    }
+
     public override int GetSteelCost() { return 0; }
 
     public override bool PerformTask()
@@ -97,4 +109,5 @@ public class DispatchIdleUnitsTask : AiTask
     {
         return false;
     }
+    
 }

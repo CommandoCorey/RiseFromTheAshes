@@ -46,11 +46,51 @@ Shader "Hidden/MinimapFog"
 			}
 
 			sampler2D _MainTex;
-			sampler2D _MaskTex;
+			sampler2D G_FOWOccludeMaskTexture;
+			sampler2D G_FOWPermMaskTexture;
+
+			uniform float4 _PermTopCorner;
+			uniform float4 _ImpermTopCorner;
+
+			uniform float2 _PermMaskSize;
+			uniform float2 _ImpermMaskSize;
+
+			uniform float _PermHeight;
+			uniform float _ImpermHeight;
+
+			float2 worldPosToFogMaskPosPerm(float3 worldPos) {
+				float3 p = worldPos - _PermTopCorner;
+				return p.xz;
+			}
+
+			float2 worldPosToFogMaskPosImperm(float3 worldPos) {
+				float3 p = worldPos - _ImpermTopCorner;
+				return p.xz;
+			}
+
+			float rayVSPlane(float3 centre, float3 normal, float3 origin, float3 dir) {
+				float denom = dot(normal, dir);
+				if (abs(denom) > 0.0001) {
+					return dot((centre - origin), normal) / denom;
+				}
+				return 0.0;
+			} 
 
 			float4 frag(v2f i) : SV_Target
 			{
-				return float4(1.0 - tex2D(_MainTex, i.uv).rgb, 1.0);
+				float3 rayOrigin = _WorldSpaceCameraPos;
+				float3 rayDirection = normalize(i.viewVector);
+				float dist = rayVSPlane(float3(0.0, _PermHeight, 0.0), float3(0.0, 1.0, 0.0), rayOrigin, rayDirection);
+				float3 hitPoint = rayOrigin + rayDirection * dist;
+
+				float2 hitPointMaskSpace = worldPosToFogMaskPosPerm(hitPoint);
+				hitPointMaskSpace /= _PermMaskSize;
+
+				hitPointMaskSpace = clamp(hitPointMaskSpace, 0.0, 1.0);
+
+				float maskVal = tex2D(G_FOWPermMaskTexture, hitPointMaskSpace).r;
+
+				return float4(tex2D(_MainTex, i.uv).rgb * (1.0 - maskVal), 1.0);
 
 			}
 			ENDHLSL

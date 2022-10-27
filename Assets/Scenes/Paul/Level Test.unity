@@ -141,6 +141,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buildMenuOffset: {x: 0, y: 0, z: 0}
+  ghostBlockers:
+    serializedVersion: 2
+    m_Bits: 0
+  child: {fileID: 0}
 --- !u!114 &54562817
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -706,6 +710,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buildMenuOffset: {x: 0, y: 0, z: 0}
+  ghostBlockers:
+    serializedVersion: 2
+    m_Bits: 0
+  child: {fileID: 0}
 --- !u!114 &218447467
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -734,6 +742,10 @@ PrefabInstance:
     - target: {fileID: 3280850917285978546, guid: dcb65805abc30304392b6086a98749a0, type: 3}
       propertyPath: m_Name
       value: AI VehicleBay
+      objectReference: {fileID: 0}
+    - target: {fileID: 3280850917285978546, guid: dcb65805abc30304392b6086a98749a0, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3280850917285978550, guid: dcb65805abc30304392b6086a98749a0, type: 3}
       propertyPath: m_RootOrder
@@ -966,6 +978,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buildMenuOffset: {x: 0, y: 0, z: 0}
+  ghostBlockers:
+    serializedVersion: 2
+    m_Bits: 0
+  child: {fileID: 0}
 --- !u!114 &693855930
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1028,6 +1044,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buildMenuOffset: {x: 0, y: 0, z: 0}
+  ghostBlockers:
+    serializedVersion: 2
+    m_Bits: 0
+  child: {fileID: 0}
 --- !u!114 &717926071
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1121,6 +1141,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buildMenuOffset: {x: 0, y: 0, z: 0}
+  ghostBlockers:
+    serializedVersion: 2
+    m_Bits: 0
+  child: {fileID: 0}
 --- !u!114 &808430204
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1444,6 +1468,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buildMenuOffset: {x: 0, y: 0, z: 0}
+  ghostBlockers:
+    serializedVersion: 2
+    m_Bits: 0
+  child: {fileID: 0}
 --- !u!114 &1019141602
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1458,17 +1486,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   permRadius: 10
   impermRadius: 5
---- !u!114 &1040093535 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 279892928825702706, guid: dcb65805abc30304392b6086a98749a0, type: 3}
-  m_PrefabInstance: {fileID: 271201372}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dd97b7ab22767f847b9291c16f6039de, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1071020365 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6120713898882286909, guid: 3f901df25b199e54e9474207918e6965, type: 3}
@@ -1860,6 +1877,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buildMenuOffset: {x: 0, y: 0, z: 0}
+  ghostBlockers:
+    serializedVersion: 2
+    m_Bits: 0
+  child: {fileID: 0}
 --- !u!114 &1381956852
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9279,7 +9300,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1905639057
 Transform:
   m_ObjectHideFlags: 0
@@ -9813,6 +9834,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buildMenuOffset: {x: 0, y: 0, z: 0}
+  ghostBlockers:
+    serializedVersion: 2
+    m_Bits: 0
+  child: {fileID: 0}
 --- !u!114 &2021851282
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10187,6 +10212,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3892714476971548615, guid: 9b0794ed9f391a843bde4c3675787aee, type: 3}
+      propertyPath: playerStrategy
+      value: 
+      objectReference: {fileID: 11400000, guid: 603e8c44534a1714a8fea60ed83b63c0, type: 2}
+    - target: {fileID: 3892714476971548615, guid: 9b0794ed9f391a843bde4c3675787aee, type: 3}
       propertyPath: taskSetPanelPrefab
       value: 
       objectReference: {fileID: 7718293745426501683, guid: fb7fb22461a400f4386a16da0e74e070, type: 3}
@@ -10196,7 +10225,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3892714476971548615, guid: 9b0794ed9f391a843bde4c3675787aee, type: 3}
       propertyPath: vehicleBays.Array.size
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3892714476971548615, guid: 9b0794ed9f391a843bde4c3675787aee, type: 3}
       propertyPath: tasksSchedule.Array.size
@@ -10217,7 +10246,11 @@ PrefabInstance:
     - target: {fileID: 3892714476971548615, guid: 9b0794ed9f391a843bde4c3675787aee, type: 3}
       propertyPath: vehicleBays.Array.data[0]
       value: 
-      objectReference: {fileID: 1040093535}
+      objectReference: {fileID: 0}
+    - target: {fileID: 3892714476971548615, guid: 9b0794ed9f391a843bde4c3675787aee, type: 3}
+      propertyPath: buildingPlaceholders.Array.size
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 3892714476971548615, guid: 9b0794ed9f391a843bde4c3675787aee, type: 3}
       propertyPath: buildingPlaceholders.Array.data[0]
       value: 
@@ -10264,7 +10297,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3892714476971548615, guid: 9b0794ed9f391a843bde4c3675787aee, type: 3}
       propertyPath: tasksSchedule.Array.data[0].tasks.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3892714476971548615, guid: 9b0794ed9f391a843bde4c3675787aee, type: 3}
       propertyPath: tasksSchedule.Array.data[1].tasks.Array.size
@@ -10277,7 +10310,7 @@ PrefabInstance:
     - target: {fileID: 3892714476971548615, guid: 9b0794ed9f391a843bde4c3675787aee, type: 3}
       propertyPath: tasksSchedule.Array.data[0].tasks.Array.data[0]
       value: 
-      objectReference: {fileID: 11400000, guid: 1e63546794e62c34696df0787f29b772, type: 2}
+      objectReference: {fileID: 11400000, guid: 52972dab28eec7a46a5bad7651046b8e, type: 2}
     - target: {fileID: 3892714476971548615, guid: 9b0794ed9f391a843bde4c3675787aee, type: 3}
       propertyPath: tasksSchedule.Array.data[0].tasks.Array.data[1]
       value: 

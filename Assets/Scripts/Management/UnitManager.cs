@@ -34,8 +34,6 @@ public class UnitManager : MonoBehaviour
     private Vector3 point;
     new AudioSource audio;
 
-    bool anythingInCombat;
-
     // external scripts
     private GameManager gameManager;
     private FormationManager formations;
@@ -67,8 +65,6 @@ public class UnitManager : MonoBehaviour
         squads = new List<List<GameObject>>();
 
         formations = FormationManager.Instance;
-
-        anythingInCombat = false;
     }
 
     // Update is called once per frame
@@ -81,18 +77,15 @@ public class UnitManager : MonoBehaviour
 
         // move units when right mouse buttons is clicked
         if (Input.GetMouseButtonUp(1) && gui.ButtonClicked == UnitGui.ActionChosen.Null)
-        {          
-            // check if the cursor is over the a UI element
-            if (EventSystem.current.IsPointerOverGameObject())                
-            {
-                //Debug.Log("Clicked on GUI");
-                return;
-            }
-
+        {         
             Ray ray = Camera.main.ScreenPointToRay(point);
 
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo) && selection.Units.Count > 0)
-                MoveUnits(hitInfo);
+            {
+                // check if the cursor is over the a UI element
+                //if (!EventSystem.current.IsPointerOverGameObject())
+                    MoveUnits(hitInfo);
+            }
         }
         DoTheMusic();
     }

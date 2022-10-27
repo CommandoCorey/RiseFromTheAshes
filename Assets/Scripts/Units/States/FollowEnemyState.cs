@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 public class FollowEnemyState : State
 {
-    private new NavMeshAgent agent;
+    private NavMeshAgent agent;
     private new Vector3 directionToTarget;
 
     // Start is called before the first frame update
@@ -19,7 +19,7 @@ public class FollowEnemyState : State
     }
 
     // Update is called once per frame
-    void Update()
+    protected override void Update()
     {
         if (target == null || unit.UnitHalt)        
             return;
@@ -42,7 +42,7 @@ public class FollowEnemyState : State
         {
             directionToTarget = (unit.AttackTarget.position - unit.body.position).normalized;
 
-            agent.SetDestination(unit.AttackTarget.position - directionToTarget * unit.AttackRange);
+            agent.SetDestination(unit.AttackTarget.position + directionToTarget * unit.AttackRange);
 
             // check that the line of sight is vacant and we are in attack range
             if (!ObstacleInWay(directionToTarget) &&
@@ -56,7 +56,7 @@ public class FollowEnemyState : State
 
     // Searches through all detected enemies in the overlap sphere and returns the transform
     // of the one that is the closest
-    private Transform GetClosestEnemy(Collider[] enemies, Transform current = null)
+    /*private Transform GetClosestEnemy(Collider[] enemies, Transform current = null)
     {
         Transform closest = null;
         float shortestDistance = float.MaxValue;
@@ -83,7 +83,7 @@ public class FollowEnemyState : State
         }
 
         return closest;
-    }
+    }*/
 
     private void OnDrawGizmos()
     {
