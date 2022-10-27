@@ -15,49 +15,19 @@ public class MainMenu : MonoBehaviour
         UnityEditor.EditorApplication.isPlaying = false;
 #endif
     }
-    public void LoadSceneLevel1()
+    public void LoadScene1()
     {
         Debug.Log("Loading...");
         SceneManager.LoadScene(1);
     }
-    public void LoadSceneL1()
+    public void LoadScene2()
     {
         Debug.Log("Loading...");
-        SceneManager.LoadScene("");
+        SceneManager.LoadScene(2);
     }
-    public void LoadSceneL2()
+    public void LoadScene3()
     {
         Debug.Log("Loading...");
-        SceneManager.LoadScene("");
-    }
-    public void LoadSceneL3()
-    {
-        Debug.Log("Loading...");
-        SceneManager.LoadScene("");
-    }
-    public void LoadSceneL4()
-    {
-        Debug.Log("Loading...");
-        SceneManager.LoadScene("");
-    }
-    public void LoadSceneInsertHere1()
-    {
-        Debug.Log("Loading...");
-        SceneManager.LoadScene("TE_1_Controller");
-    }
-    public void LoadSceneInsertHere2()
-    {
-        Debug.Log("Loading...");
-        SceneManager.LoadScene("TE_2_Buildings");
-    }
-    public void LoadSceneInsertHere3()
-    {
-        Debug.Log("Loading...");
-        SceneManager.LoadScene("3_Test Environment");
-    }
-    public void LoadSceneInsertHere4()
-    {
-        Debug.Log("Loading...");
-        SceneManager.LoadScene("Building_Test");
+        SceneManager.LoadScene(3);
     }
 }
