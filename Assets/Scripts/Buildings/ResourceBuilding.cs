@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class ResourceBuilding : MonoBehaviour
 {
-    public bool isHQ = false;
-
     [SerializeField] ResourceType resourceToAdd;
     [SerializeField] int maxQuantityIncrease = 0;
     [SerializeField] public int quantityToAdd = 10;

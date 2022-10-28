@@ -6,7 +6,6 @@ using UnityEngine.EventSystems;
 public class SelectionManager : MonoBehaviour
 {
     public LayerMask selectionLayer;
-    [SerializeField][Range(4, 50)]
     public bool drawDebugBox = true;
     public UnitGui gui; // used to update unit icons
 
