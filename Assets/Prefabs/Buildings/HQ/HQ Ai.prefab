@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 7668762945167838999}
   - component: {fileID: 3451510774266972748}
   m_Layer: 9
-  m_Name: HQ Enemy
+  m_Name: HQ Ai
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
@@ -100,8 +100,10 @@ MonoBehaviour:
   buildingDescription: 
   aiBuilding: 0
   HP: 0
+  selectionHighlight: {fileID: 8050166828473184920}
   hitSounds: []
   hitVFX: []
+  damagedVFX: []
   ghost: {fileID: 0}
 --- !u!114 &3451510774266972748
 MonoBehaviour:
@@ -115,7 +117,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a56b81af409a3304eb5cf94a79f81e0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isHQ: 0
   resourceToAdd: 0
   maxQuantityIncrease: 0
   quantityToAdd: 10
@@ -425,5 +426,10 @@ PrefabInstance:
 --- !u!4 &5380051637689768777 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3515693884013531899, guid: 6cc16560caae9e142a5a0d05baec676c, type: 3}
+  m_PrefabInstance: {fileID: 8819042580108020146}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &8050166828473184920 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1573014748648504106, guid: 6cc16560caae9e142a5a0d05baec676c, type: 3}
   m_PrefabInstance: {fileID: 8819042580108020146}
   m_PrefabAsset: {fileID: 0}

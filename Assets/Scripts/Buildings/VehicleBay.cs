@@ -55,6 +55,11 @@ public class VehicleBay : MonoBehaviour {
 		}
 	}
 
+	public void HideMenu()
+	{
+        VehicleBayBuildMenu.Instance.gameObject.SetActive(false);
+    }
+
 	public void Update()
 	{
 		if (building.IsBuilt)

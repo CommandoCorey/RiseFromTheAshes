@@ -6,6 +6,8 @@ using UnityEngine.EventSystems;
 public class SelectionManager : MonoBehaviour
 {
     public LayerMask selectionLayer;
+    public LayerMask buildingSelectionLayer;
+
     public bool drawDebugBox = true;
     public UnitGui gui; // used to update unit icons
 
@@ -14,6 +16,8 @@ public class SelectionManager : MonoBehaviour
     RaycastHit hit;
 
     bool dragSelect; // defines whether or not to show a box on screen
+
+    Building selectedBuilding;
 
     //Collider variables
     //==================
@@ -34,6 +38,8 @@ public class SelectionManager : MonoBehaviour
     private UnitManager unitManager;
 
     // properties
+    public static SelectionManager Instance { get; private set; }
+
     public List<GameObject> Units
     {
         get {
@@ -66,6 +72,18 @@ public class SelectionManager : MonoBehaviour
         }
     }
 
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(this);
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -100,6 +118,7 @@ public class SelectionManager : MonoBehaviour
         //3. when mouse button comes up
         if (Input.GetMouseButtonUp(0))
         {
+
             if (dragSelect == false) //single select
             {
                 Ray ray = Camera.main.ScreenPointToRay(p1);
@@ -109,6 +128,14 @@ public class SelectionManager : MonoBehaviour
                 {
                     Debug.Log("Hit: " + hit.transform.name + " at " + hit.point);
                 }*/
+
+                // clear the building selection if the player clicked on something other than the building
+                if (Physics.Raycast(ray, out hit, 50000.0f))
+                {
+                    if (1 << hit.transform.gameObject.layer != buildingSelectionLayer.value &&
+                        hit.transform.gameObject.layer != 5) // UI layer
+                        ClearBuildingSelection();
+                }
 
                 // dont select anything if the GUI is clicked
                 if (EventSystem.current.IsPointerOverGameObject())
@@ -265,6 +292,27 @@ public class SelectionManager : MonoBehaviour
         selectedTable.Clear(); // clears the whole dictionary
 
         gui.ClearUnitSelection();
+    }
+
+    public void SetSelectedBuilding(Building building)
+    {
+        ClearBuildingSelection();
+        selectedBuilding = building;
+        selectedBuilding.selectionHighlight.SetActive(true);
+    }
+
+    public void ClearBuildingSelection()
+    {
+        if (selectedBuilding != null)
+        {
+            selectedBuilding.selectionHighlight.SetActive(false);
+
+            var vehiclebay = selectedBuilding.GetComponent<VehicleBay>();
+            if (vehiclebay != null)
+                vehiclebay.HideMenu();
+
+            selectedBuilding = null;
+        }
     }
 
     // create a bounding vox (4 corners in order) from the start and end mouse position

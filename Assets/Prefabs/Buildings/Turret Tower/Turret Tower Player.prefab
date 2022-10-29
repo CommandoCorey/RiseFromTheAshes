@@ -55,8 +55,10 @@ MonoBehaviour:
   buildingDescription: 
   aiBuilding: 0
   HP: 0
+  selectionHighlight: {fileID: 0}
   hitSounds: []
   hitVFX: []
+  damagedVFX: []
   ghost: {fileID: 0}
 --- !u!114 &4999239961471015108
 MonoBehaviour:
@@ -70,10 +72,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba5770ddb47e1bb4eba75cd6dff05570, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  turret: {fileID: 7317828048246081985}
-  gun: {fileID: 7317828048246081985}
+  turretGun: {fileID: 7317828048246081985}
   firingPoint: {fileID: 1580119860123968104}
-  fireParticles: {fileID: 6122729733747261527, guid: 537757cdc640b964ea07bc66dfdedfb4, type: 3}
+  fireEffect: {fileID: 5239530127040269286}
   detectionRadius: 20
   aimSpeed: 30
   damagePerShot: 20
@@ -82,7 +83,7 @@ MonoBehaviour:
   enemyLayer:
     serializedVersion: 2
     m_Bits: 128
-  showDetectionRadius: 1
+  showDetectionRadius: 0
 --- !u!114 &3495024431569002384
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -218,5 +219,10 @@ Transform:
 --- !u!4 &1580119860123968104 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6341171571076371148, guid: b8655744b8d78ae45b1a02fec5ab084e, type: 3}
+  m_PrefabInstance: {fileID: 5615403067096346788}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &5239530127040269286 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 386016222587386690, guid: b8655744b8d78ae45b1a02fec5ab084e, type: 3}
   m_PrefabInstance: {fileID: 5615403067096346788}
   m_PrefabAsset: {fileID: 0}

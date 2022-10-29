@@ -16,6 +16,8 @@ public class Building : MonoBehaviour
 	float buildTimer;
 	public float HP;
 
+	public GameObject selectionHighlight;
+
 	[Header("Sound and Visual effects")]
     [SerializeField] AudioClip[] hitSounds;
 	[SerializeField] ParticleSystem[] hitVFX;
@@ -153,6 +155,9 @@ public class Building : MonoBehaviour
 
 		if (vehicleBay == null) { return; }
 
+		if (gameObject.layer != 8) // Aded by Paul
+			return;
+
 		vehicleBay.Interact();
 	}
 
@@ -184,7 +189,13 @@ public class Building : MonoBehaviour
 
 	public void Interact()
 	{
-		TryVehicleBayInteract();
+		// turn on selection highlight if player building
+		if (gameObject.layer == 8)
+		{
+			SelectionManager.Instance.SetSelectedBuilding(this);
+		}
+
+        TryVehicleBayInteract();
 	}
 
 	public void TakeDamage(Vector3 hitPoint, float amount) {
