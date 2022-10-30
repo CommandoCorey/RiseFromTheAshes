@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2311962323558722943}
   - component: {fileID: -112311553550730476}
-  - component: {fileID: 1978932951235730149}
   - component: {fileID: 1312286936267064975}
   - component: {fileID: 7053429340730108353}
   - component: {fileID: 3298764268007567521}
@@ -51,22 +50,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 12, y: 3, z: 12}
   m_Center: {x: 0, y: 1.5, z: 0}
---- !u!208 &1978932951235730149
-NavMeshObstacle:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5288815935731700176}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Shape: 1
-  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
-  m_MoveThreshold: 0.1
-  m_Carve: 1
-  m_CarveOnlyStationary: 1
-  m_Center: {x: 0, y: 0, z: 0}
-  m_TimeToStationary: 0.5
 --- !u!114 &1312286936267064975
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -80,11 +63,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buildingName: Factory
-  steelCost: 300
-  timeToBuild: 25
+  steelCost: 100
+  timeToBuild: 20
   maxHP: 500
   startAtMaxHP: 0
-  buildingDescription: Generates 25 steel every 2 seconds. Increases maximum steel
+  buildingDescription: Generates 25 steel every 3 seconds. Increases maximum steel
     capacity by 100.
   aiBuilding: 0
   HP: 0
@@ -107,10 +90,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceToAdd: 0
   maxQuantityIncrease: 100
-  quantityToAdd: 5
+  quantityToAdd: 25
   timePerIncerement: 3
   giveToAIPlayer: 0
-  floatingLabel: {fileID: 7589310751152169536}
+  floatingLabel: {fileID: 0}
 --- !u!114 &3298764268007567521
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -310,16 +293,12 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7152113959842794731, guid: b5573de3b0cda95409e5818acefbd28b, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: b5573de3b0cda95409e5818acefbd28b, type: 3}
 --- !u!4 &3833715701354517635 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8059428460141623537, guid: b5573de3b0cda95409e5818acefbd28b, type: 3}
-  m_PrefabInstance: {fileID: 6551839593006165106}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &7589310751152169536 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3728534702211108402, guid: b5573de3b0cda95409e5818acefbd28b, type: 3}
   m_PrefabInstance: {fileID: 6551839593006165106}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &9044155283094692314
