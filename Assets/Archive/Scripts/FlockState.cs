@@ -8,7 +8,7 @@ public class FlockState : State
 {
     UnitManager unitManager;
     new UnitController unit;
-    new AgentMovement agent;
+    AgentMovement agent;
     Steering steer;
     BehaviourManager behaviours;
     
@@ -109,7 +109,7 @@ public class FlockState : State
     }
 
     // Update is called once per frame
-    void Update()
+    protected override void Update()
     {
         //decelerationDistance = GetDecelerateDistance();
 

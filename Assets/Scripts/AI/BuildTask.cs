@@ -22,6 +22,18 @@ public class BuildTask : AiTask
         get => "Constructing " + buildingToConstruct.buildingName + "... ";
     }
 
+    public override object Clone()
+    {
+        var clonedTask = new BuildTask();
+
+        clonedTask.buildingToConstruct = buildingToConstruct;
+        clonedTask.autoSelectPlaeholder= autoSelectPlaeholder;
+        clonedTask.placeholderNumber = placeholderNumber;
+        clonedTask.instance = instance;
+
+        return clonedTask;
+    }
+
     public override int GetSteelCost()
     {
         return buildingToConstruct.steelCost;
@@ -88,4 +100,5 @@ public class BuildTask : AiTask
     {
         return instance.IsBuilding == false;
     }
+    
 }

@@ -12,6 +12,14 @@ public class PatrolTask : DispatchWaveTask
     public override string TaskDescription { get => name; }
     public override string ActiveTaskDescription { get => name; }
 
+    public override object Clone()
+    {
+        var clonedTask = (PatrolTask) base.Clone();
+
+        clonedTask.routeNumber = routeNumber;
+        return clonedTask;
+    }
+
     public override int GetSteelCost()
     {
         return 0;

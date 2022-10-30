@@ -31,6 +31,13 @@ public class DispatchWaveTask : AiTask
         get => "Sending wave to player's base";
     }
 
+    public override object Clone()
+    {
+        var clonedTask = new DispatchWaveTask();
+        clonedTask.enemyWave = enemyWave;
+        return clonedTask;
+    }
+
     public override int GetSteelCost() { return 0; }
 
     public override bool PerformTask()
@@ -124,4 +131,5 @@ public class DispatchWaveTask : AiTask
     {
         return true;
     }
+    
 }

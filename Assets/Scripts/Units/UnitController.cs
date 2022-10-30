@@ -37,7 +37,7 @@ public class UnitController : MonoBehaviour
     public Transform turret;
     public Transform firingPoint;
     public Transform body;
-    public Sprite guiIcon;    
+    public Sprite guiIcon;
 
     [Header("External Scripts")]
     public ProgressBar healthBar;
@@ -53,8 +53,12 @@ public class UnitController : MonoBehaviour
     float attackRate = 1.0f;
     [SerializeField][Range(1, 100)]
     float attackRange = 20.0f;
+
+    [Header("Turret Rotation")]
     [SerializeField][Range(1, 100)]
     float turretRotationSpeed = 1.0f;
+    [SerializeField][Range(0, 10)]
+    float minAngleBeforeFiring = 1;
 
     [Header("Enemy Detection")]
     [Range(1, 100)]
@@ -96,6 +100,8 @@ public class UnitController : MonoBehaviour
     private Vector3 healthBarOffset;
     private new AudioSource audio;
     private GameManager gameManager;
+    private int rallyId = 0;
+    private Vector3 spawnPos;
 
     // added by George
     bool recentlyDamaged;
@@ -138,6 +144,7 @@ public class UnitController : MonoBehaviour
     public float DamagePerHit { get => damagePerHit; }
     public float AttackRate { get => attackRate; }
     public float AttackRange {  get => attackRange; }
+    public float MinAngle { get => minAngleBeforeFiring; }
 
     public float DPS { get => damagePerHit / attackRate; }
    
@@ -145,6 +152,9 @@ public class UnitController : MonoBehaviour
             return State == UnitState.Attack || recentlyDamaged;
         }
     }
+
+    public bool ReachedRallyPoint { get; internal set; } = false;
+    public int RallyId { get => rallyId; }
     #endregion
 
     /*
@@ -153,12 +163,17 @@ public class UnitController : MonoBehaviour
         this.waypoints = waypoints;
     }*/
 
+    private void Awake()
+    {
+        spawnPos = transform.position;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-    	health = maxHealth;
+    	health = maxHealth;        
 
-        if(healthBar)
+        if (healthBar)
             healthBarOffset = healthBar.transform.parent.localPosition;
 
         audio = body.GetComponent<AudioSource>();
@@ -167,8 +182,14 @@ public class UnitController : MonoBehaviour
         bool isAi = body.gameObject.layer == 7;
 
         gameManager.IncreaseUnitCount(spaceUsed, isAi);
+        
+        idleState = GetComponent<IdleState>();
 
-        ChangeState(UnitState.Idle);
+        if(idleState != null)
+            State = UnitState.Idle;
+
+        if (ReachedRallyPoint)
+            ChangeState(UnitState.Idle);
 
         if (UnitManager.Instance)
         {
@@ -183,12 +204,9 @@ public class UnitController : MonoBehaviour
 
 	// Update is called once per frame
 	void Update()
-    {
-        if (healthBar)
-        {
+    {        
+        if (healthBar)        
             healthBar.progress = health / maxHealth;
-            healthBar.transform.position = body.position + healthBarOffset;
-        }
 
         if (health <= 0)
         {
@@ -227,7 +245,13 @@ public class UnitController : MonoBehaviour
             mat.SetColor("HealEffectColor", Color.blue);
             mat.SetFloat("HealEffectIntensity", Mathf.Clamp(healTimer, 0.0f, 1.0f));
 		}
-    }        
+    }
+
+    private void LateUpdate()
+    {
+        transform.position = body.position;
+        body.localPosition = Vector3.zero;
+    }
 
     /// <summary>
     /// Toggles the visibility of the unit selection highlight and health bar
@@ -354,7 +378,12 @@ public class UnitController : MonoBehaviour
         NavMeshAgent agent = body.GetComponent<NavMeshAgent>();
 
         agent.avoidancePriority -= formations.GetCurrentRallySize(1);
-        Vector3 formationPos = formations.GetRallyPosition(point, 1);
+
+        bool isAi = gameObject.layer == 7;
+
+        Debug.DrawLine(spawnPos, point, Color.yellow, 3.0f);
+
+        Vector3 formationPos = formations.GetRallyPosition(point, spawnPos, isAi, ref rallyId);
 
         ChangeState(UnitState.Moving, formationPos);
     }
@@ -514,6 +543,7 @@ public class UnitController : MonoBehaviour
         gameManager.DecreaseUnitCount(aiPlayer);
     }
 
+    // Added by George
     void PopulateMaterialRefs()
     {
         materials = new List<Material>();

@@ -19,6 +19,14 @@ public class TrainUnitTask : AiTask
         get => "Training " + unitToTrain.Name + "... ";
     }
 
+    public override object Clone()
+    {
+        var clonedTask = new TrainUnitTask();
+        clonedTask.unitToTrain = unitToTrain;
+
+        return clonedTask;
+    }
+
     public override int GetSteelCost()
     {
         return unitToTrain.Cost;
@@ -56,4 +64,5 @@ public class TrainUnitTask : AiTask
     {
         return UnitTrained;
     }
+    
 }

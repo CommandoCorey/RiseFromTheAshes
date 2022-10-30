@@ -10,16 +10,15 @@ public class PatrolState : State
     private int waypointNum = 0;
     private Vector3 waypoint;
     private NavMeshAgent agent;
-    private UnitController unit;
 
-    void Awake()
+    protected override void Awake()
     {        
         unit = GetComponent<UnitController>();
         agent = unit.body.GetComponent<NavMeshAgent>();
     }
 
     // Update is called once per frame
-    void Update()
+    protected override void Update()
     {
         // if we are at the wapoint move to the next one
         if(Vector3.Distance(unit.body.position, waypoint) < 0.2f)
