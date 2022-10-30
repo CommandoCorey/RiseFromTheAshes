@@ -32,6 +32,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 616207086157588579}
+  - {fileID: 789998665214316956}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -47,15 +48,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ce1311378444314781025cff0c15cca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildingName: 
+  buildingName: Turret Tower
   steelCost: 0
-  timeToBuild: 1
+  timeToBuild: 20
   maxHP: 300
   startAtMaxHP: 0
-  buildingDescription: 
+  buildingDescription: A defensive tower the fires at any enemy that comes in range
   aiBuilding: 0
   HP: 0
-  selectionHighlight: {fileID: 0}
+  selectionHighlight: {fileID: 1837746572495113689}
   hitSounds: []
   hitVFX: []
   damagedVFX: []
@@ -221,8 +222,75 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6341171571076371148, guid: b8655744b8d78ae45b1a02fec5ab084e, type: 3}
   m_PrefabInstance: {fileID: 5615403067096346788}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1837746572495113689 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6083544592381771133, guid: b8655744b8d78ae45b1a02fec5ab084e, type: 3}
+  m_PrefabInstance: {fileID: 5615403067096346788}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5239530127040269286 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 386016222587386690, guid: b8655744b8d78ae45b1a02fec5ab084e, type: 3}
   m_PrefabInstance: {fileID: 5615403067096346788}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &6772063901941040401
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 4999239961471015111}
+    m_Modifications:
+    - target: {fileID: 6272836589082170509, guid: 034af8a138aaac94f8d541fc6f234da9, type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6272836589082170509, guid: 034af8a138aaac94f8d541fc6f234da9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6272836589082170509, guid: 034af8a138aaac94f8d541fc6f234da9, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6272836589082170509, guid: 034af8a138aaac94f8d541fc6f234da9, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6272836589082170509, guid: 034af8a138aaac94f8d541fc6f234da9, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6272836589082170509, guid: 034af8a138aaac94f8d541fc6f234da9, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6272836589082170509, guid: 034af8a138aaac94f8d541fc6f234da9, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6272836589082170509, guid: 034af8a138aaac94f8d541fc6f234da9, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6272836589082170509, guid: 034af8a138aaac94f8d541fc6f234da9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6272836589082170509, guid: 034af8a138aaac94f8d541fc6f234da9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6272836589082170509, guid: 034af8a138aaac94f8d541fc6f234da9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6272836589082170511, guid: 034af8a138aaac94f8d541fc6f234da9, type: 3}
+      propertyPath: m_Name
+      value: Building UI
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 034af8a138aaac94f8d541fc6f234da9, type: 3}
+--- !u!4 &789998665214316956 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6272836589082170509, guid: 034af8a138aaac94f8d541fc6f234da9, type: 3}
+  m_PrefabInstance: {fileID: 6772063901941040401}
   m_PrefabAsset: {fileID: 0}

@@ -41,9 +41,13 @@ public class TurretBuilding : MonoBehaviour
     private Vector3 faceDirection;
     private Quaternion lookRotation;
 
+    private Building building;
+
     // Start is called before the first frame update
     void Start()
     {
+        building = GetComponent<Building>();
+
         defaultAimDirection.x = Mathf.Cos(defaultAimAngle * Mathf.Deg2Rad);
         defaultAimDirection.z = Mathf.Sin(defaultAimAngle * Mathf.Deg2Rad);
     }
@@ -51,6 +55,9 @@ public class TurretBuilding : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!building.IsBuilt)
+            return;
+
         switch(state)
         {
             case TurretState.Searching: SearchForUnits(); break;

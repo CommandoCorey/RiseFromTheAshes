@@ -33,8 +33,8 @@ public class ResourceBuilding : MonoBehaviour
         //if (gameObject.CompareTag("Headquarters"))
             //building.IsBuilding = false;
 
-        //if(gameManager.State == GameState.Running && !building.IsBuilding)
-            //Invoke("IncrementResource", timePerIncerement);
+        if(gameManager.State == GameState.Running && !building.IsBuilding)
+            Invoke("IncrementResource", timePerIncerement);
 
         resources.IncreaseResourceMax(resourceToAdd, maxQuantityIncrease, giveToAIPlayer);
     }
@@ -77,12 +77,11 @@ public class ResourceBuilding : MonoBehaviour
         else
             resources.AddResource(resourceToAdd, quantityToAdd);
 
-        if (floatingLabel)
+        if (floatingLabel && gameObject.layer == 8) // player building layer
         {
             floatingLabel.SetActive(true);
-            floatingLabel.GetComponent<FloatingResourceLabel>().Begin(quantityToAdd);
+            floatingLabel.GetComponent<FloatingResourceLabel>().Begin(quantityToAdd, timePerIncerement);
         }
-
 
         currentAmount = resources.GetResource(resourceToAdd, giveToAIPlayer);
         maxAmount = resources.GetResourceMax(resourceToAdd, giveToAIPlayer);

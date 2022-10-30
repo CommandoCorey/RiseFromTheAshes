@@ -212,7 +212,7 @@ public class Building : MonoBehaviour
 		}
 
 		// turn of fire if healh is below 50%
-		if(!damageEffectOn && HP <= maxHP/2)
+		if(!damageEffectOn && HP <= maxHP/2 && damagedVFX.Length > 0)
         {
 			int randomPick = Random.Range(0, damagedVFX.Length - 1);
 
