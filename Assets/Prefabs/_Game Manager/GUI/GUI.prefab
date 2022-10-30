@@ -2018,10 +2018,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5307310220468627914}
+  - component: {fileID: 5307310220468627915}
   - component: {fileID: 5307310220468627913}
   - component: {fileID: 5307310220468627912}
   - component: {fileID: 5307310220468627895}
-  - component: {fileID: 5307310220468627915}
   m_Layer: 5
   m_Name: GUI
   m_TagString: Untagged
@@ -2054,6 +2054,35 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &5307310220468627915
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5307310220468627894}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 876799da492fe0a4e8f89c398729f500, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameManager: {fileID: 0}
+  buttonPanel: {fileID: 2440345671499239623}
+  unitPanal: {fileID: 7197114944261208704}
+  unitInfoPanel: {fileID: 8347986948153304020}
+  unitIconPrefab: {fileID: 1784479049408504711, guid: 36f194fa28352c542893de2f38034ec2, type: 3}
+  alertMessage: {fileID: 1439913896}
+  moveButton: {fileID: 2267441408249811475}
+  attackButton: {fileID: 1478007388426249063}
+  haltButton: {fileID: 6396343841564803853}
+  setRallyPointButton: {fileID: 4409422119971796044}
+  thumbnail: {fileID: 504221799230794064}
+  unitName: {fileID: 8891171308878265804}
+  currentHealth: {fileID: 8523457356965994860}
+  maxHealth: {fileID: 5233049504855180574}
+  range: {fileID: 6544213415053855345}
+  damagePerSecond: {fileID: 1940619496063347507}
+  movementSpeed: {fileID: 8874413844465835272}
 --- !u!223 &5307310220468627913
 Canvas:
   m_ObjectHideFlags: 0
@@ -2115,35 +2144,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &5307310220468627915
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5307310220468627894}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 876799da492fe0a4e8f89c398729f500, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gameManager: {fileID: 0}
-  buttonPanel: {fileID: 2440345671499239623}
-  unitPanal: {fileID: 7197114944261208704}
-  unitInfoPanel: {fileID: 8347986948153304020}
-  unitIconPrefab: {fileID: 1784479049408504711, guid: 36f194fa28352c542893de2f38034ec2, type: 3}
-  alertMessage: {fileID: 1439913896}
-  moveButton: {fileID: 2267441408249811475}
-  attackButton: {fileID: 1478007388426249063}
-  haltButton: {fileID: 6396343841564803853}
-  setRallyPointButton: {fileID: 4409422119971796044}
-  thumbnail: {fileID: 504221799230794064}
-  unitName: {fileID: 8891171308878265804}
-  currentHealth: {fileID: 8523457356965994860}
-  maxHealth: {fileID: 5233049504855180574}
-  range: {fileID: 6544213415053855345}
-  damagePerSecond: {fileID: 1940619496063347507}
-  movementSpeed: {fileID: 8874413844465835272}
 --- !u!1 &5394315621640900506
 GameObject:
   m_ObjectHideFlags: 0
