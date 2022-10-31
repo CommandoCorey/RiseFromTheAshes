@@ -24,18 +24,21 @@ public class FollowEnemyState : State
         if (target == null || unit.UnitHalt)        
             return;
 
-        // check if there is a closer target
-        var unitsInRange = GetEnemiesInRange();
-        var closest = GetClosestEnemy(unitsInRange.ToArray(), unit.AttackTarget);
+        // check if there is a closer target if auto attacking
+        if (!unit.AttackOrderGiven)
+        {            
+            var unitsInRange = GetEnemiesInRange();
+            var closest = GetClosestEnemy(unitsInRange.ToArray(), unit.AttackTarget);
 
-        if (closest && closest != unit.AttackTarget) // closest enemy was found
-        {
-            unit.AttackTarget = closest;
+            if (closest && closest != unit.AttackTarget) // closest enemy was found
+            {
+                unit.AttackTarget = closest;
 
-            // update path
-            agent.SetDestination(unit.AttackTarget.position);
+                // update path
+                agent.SetDestination(unit.AttackTarget.position);
 
-            HandleEnemyInRange();
+                HandleEnemyInRange();
+            }
         }
 
         if (unit.AttackTarget != null)
@@ -52,6 +55,11 @@ public class FollowEnemyState : State
                 unit.ChangeState(UnitState.Attack);
             }
         }
+    }
+
+    private void OnDestroy()
+    {
+        unit.AttackOrderGiven = false;
     }
 
     private void OnDrawGizmos()

@@ -84,13 +84,23 @@ public class UnitManager : MonoBehaviour
             {
                 // check if the cursor is over the a UI element
                 //if (!EventSystem.current.IsPointerOverGameObject())
+                int layer = hitInfo.transform.gameObject.layer;
+
+                if (layer == 7 || layer == 9) // enemy layers
+                {
+                    AttackTarget(hitInfo.transform);
+                }
+                else
+                {
                     MoveUnits(hitInfo);
+                }
             }
         }
         DoTheMusic();
     }
     #endregion
 
+    // Added byt George
     void DoTheMusic() {
 
         /* Bit slow. I guess. I am tired. */
@@ -241,20 +251,36 @@ public class UnitManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Causes all units in selection to enter their attack a target
+    /// Causes all units in selection to enter their attack a target.
+    /// Used with player units only
     /// </summary>
     /// <param name="target">The game object that the use clicked on</param>
     /// <returns>True or false value based on whether the object is valid</returns>
     public bool AttackTarget(Transform target)
     {
-        // check if the target's layer is one of the enemy layers
-        if(enemyLayers == (enemyLayers | (1 << target.gameObject.layer)))
+        if (target.gameObject.layer == 7) // Ai Unit
         {
-            foreach(var unit in selectedUnits)
+            target.root.GetComponent<UnitController>().selectionHighlight.SetActive(true);
+            target.root.GetComponent<FlashSelection>().enabled = true;
+        }
+        else if (target.gameObject.layer == 9) // Ai Building
+        {
+            target.GetComponent<Building>().selectionHighlight.SetActive(true);
+            target.root.GetComponent<FlashSelection>().enabled = true;
+        }
+
+        // check if the target's layer is one of the enemy layers
+        if (enemyLayers == (enemyLayers | (1 << target.gameObject.layer)))
+        {
+            foreach(var unitObject in selectedUnits)
             {
-                var controller = unit.GetComponent<UnitController>();
-                controller.AttackTarget = target;
-                controller.ChangeState(UnitState.Attack, target.position);
+                var unit = unitObject.GetComponent<UnitController>();
+                unit.AttackTarget = target;
+                unit.AttackOrderGiven = true;
+
+                // if the unit is not already in follow enemy state then swith state
+                if(unit.State != UnitState.Follow)
+                    unit.ChangeState(UnitState.Follow, target.position);
             }
 
             return true;
@@ -389,7 +415,7 @@ public class UnitManager : MonoBehaviour
 
             //unit.GetComponent<SeekState>().MoveTo(hitInfo.point);
         }
-    }       
+    }    
 
     /// <summary>
     /// Removes a specifed unit from a moving group
@@ -403,7 +429,6 @@ public class UnitManager : MonoBehaviour
     #endregion
 
     #region private functions
-
     // Not currently be using    
     // check if all units within a specified are stationary
     private bool UnitsNotMoving(List<GameObject> units)
