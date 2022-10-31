@@ -54,37 +54,6 @@ public class FollowEnemyState : State
         }
     }
 
-    // Searches through all detected enemies in the overlap sphere and returns the transform
-    // of the one that is the closest
-    /*private Transform GetClosestEnemy(Collider[] enemies, Transform current = null)
-    {
-        Transform closest = null;
-        float shortestDistance = float.MaxValue;
-
-        if (current != null)
-        {
-            closest = current;
-            shortestDistance = Vector3.Distance(unit.body.position, current.position);
-        }
-        else if (enemies.Length > 0)
-        {
-            closest = enemies[0].transform;
-            shortestDistance = Vector3.Distance(unit.body.position, enemies[0].transform.position);
-        }
-
-        foreach (Collider enemy in enemies)
-        {
-            float distance = Vector3.Distance(unit.body.position, enemy.transform.position);
-            if (distance < shortestDistance)
-            {
-                shortestDistance = distance;
-                closest = enemy.transform;
-            }
-        }
-
-        return closest;
-    }*/
-
     private void OnDrawGizmos()
     {
         // Draw line to enemy
