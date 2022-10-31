@@ -1,5 +1,19 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &1033506902364989298
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9105666644610197099}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40eb759e8017aaf44af68486a3b1e647, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fadeSpeed: 8
+  iterations: 3
 --- !u!1001 &445566386463009861
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -457,7 +471,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8679329102041598510, guid: ebe50dbf528cd0e48ad2814f238f8f29, type: 3}
       propertyPath: m_Name
-      value: AFV - Armored Fighting Vehicle Variant Red
+      value: AFV - Armored Fighting Vehicle Red
       objectReference: {fileID: 0}
     - target: {fileID: 8679329102041598510, guid: ebe50dbf528cd0e48ad2814f238f8f29, type: 3}
       propertyPath: m_Layer
@@ -484,10 +498,6 @@ PrefabInstance:
       value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 8997548830578781400, guid: ebe50dbf528cd0e48ad2814f238f8f29, type: 3}
-      propertyPath: selectionHighlight
-      value: 
-      objectReference: {fileID: 6669772882963392871}
-    - target: {fileID: 8997548830578781400, guid: ebe50dbf528cd0e48ad2814f238f8f29, type: 3}
       propertyPath: showDetectionRadius
       value: 1
       objectReference: {fileID: 0}
@@ -511,11 +521,12 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 7
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5359893697614109029, guid: ebe50dbf528cd0e48ad2814f238f8f29, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: ebe50dbf528cd0e48ad2814f238f8f29, type: 3}
---- !u!1 &6669772882963392871 stripped
+--- !u!1 &9105666644610197099 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 6530557412702389538, guid: ebe50dbf528cd0e48ad2814f238f8f29, type: 3}
+  m_CorrespondingSourceObject: {fileID: 8679329102041598510, guid: ebe50dbf528cd0e48ad2814f238f8f29, type: 3}
   m_PrefabInstance: {fileID: 445566386463009861}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &6260149169505160074

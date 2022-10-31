@@ -1,5 +1,19 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &3092047008011175281
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8111638073337904198}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40eb759e8017aaf44af68486a3b1e647, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fadeSpeed: 8
+  iterations: 3
 --- !u!1001 &531332481378429607
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -66,6 +80,10 @@ PrefabInstance:
     - target: {fileID: 1431580940622539887, guid: 352daa70bd63fa2479424b0de467a781, type: 3}
       propertyPath: m_Layer
       value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1502671828623257943, guid: 352daa70bd63fa2479424b0de467a781, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1590411528025143964, guid: 352daa70bd63fa2479424b0de467a781, type: 3}
       propertyPath: m_Layer
@@ -285,7 +303,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8632837304087926497, guid: 352daa70bd63fa2479424b0de467a781, type: 3}
       propertyPath: m_Name
-      value: APHT - Half Track Variant Red
+      value: APHT - Half Track Red
       objectReference: {fileID: 0}
     - target: {fileID: 8632837304087926497, guid: 352daa70bd63fa2479424b0de467a781, type: 3}
       propertyPath: m_Layer
@@ -306,10 +324,6 @@ PrefabInstance:
     - target: {fileID: 8924296544527421054, guid: 352daa70bd63fa2479424b0de467a781, type: 3}
       propertyPath: showAttackRange
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8924296544527421054, guid: 352daa70bd63fa2479424b0de467a781, type: 3}
-      propertyPath: selectionHighlight
-      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 8924296544527421054, guid: 352daa70bd63fa2479424b0de467a781, type: 3}
       propertyPath: showDetectionRadius
@@ -369,3 +383,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 352daa70bd63fa2479424b0de467a781, type: 3}
+--- !u!1 &8111638073337904198 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8632837304087926497, guid: 352daa70bd63fa2479424b0de467a781, type: 3}
+  m_PrefabInstance: {fileID: 531332481378429607}
+  m_PrefabAsset: {fileID: 0}
