@@ -129,7 +129,7 @@ public class UnitController : MonoBehaviour
     public bool UnitHalt { get; set; } = false;
     public bool IsBuilt { get; set; } = false;
     public bool MovingToBase { get; set; } = false;
-
+    public bool AttackOrderGiven { get; set; } = false;
 
     // unit stats
     public string Name { get => unitName; }
@@ -239,7 +239,7 @@ public class UnitController : MonoBehaviour
         }
 
         healTimer -= Time.deltaTime;
-
+        
         foreach (var mat in materials)
 		{
             mat.SetColor("HealEffectColor", Color.blue);

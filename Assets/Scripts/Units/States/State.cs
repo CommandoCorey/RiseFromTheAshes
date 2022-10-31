@@ -35,6 +35,7 @@ public abstract class State : MonoBehaviour
         if (enemiesInRange.Count > 0)
         {
             unit.AttackTarget = GetClosestEnemy(enemiesInRange.ToArray());
+
             HandleEnemyInRange();
         }
     }
@@ -95,6 +96,8 @@ public abstract class State : MonoBehaviour
 
     protected void HandleEnemyInRange()
     {
+        directionToTarget = (unit.AttackTarget.position - transform.position).normalized;
+
         if (ObstacleInWay(directionToTarget) && !unit.UnitHalt)
         {
             //pathToTarget = agent.CreatePath(target.position);
@@ -103,7 +106,7 @@ public abstract class State : MonoBehaviour
         }
         else if (Vector3.Distance(unit.body.position, unit.AttackTarget.position) <= unit.AttackRange)
         {
-            unit.ChangeState(UnitState.Idle);
+            unit.ChangeState(UnitState.Attack);
         }
         else if (!unit.UnitHalt)
         {
