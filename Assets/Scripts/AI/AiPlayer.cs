@@ -124,7 +124,7 @@ public class AiPlayer : MonoBehaviour
     void Update()
     {
         if (gameManager.State != GameState.Running)
-            return;       
+            return;
 
         steel = resources.GetResource(ResourceType.Steel, true);
         maxSteel = resources.GetResourceMax(ResourceType.Steel, true);
@@ -155,16 +155,20 @@ public class AiPlayer : MonoBehaviour
         }
 
         // check if vehicle bays in construction have finished building
-        foreach(Building v in baysInConstruction)
+        foreach (Building v in baysInConstruction)
         {
-            if(v.IsBuilt)
+            if (v.IsBuilt)
             {
                 vehicleBays.Add(v.GetComponent<VehicleBay>());
                 baysInConstruction.Remove(v);
                 return;
             }
         }
-        
+
+        if (Input.GetKeyDown(KeyCode.Tilde))
+		{
+            infoPanel.SetActive(!infoPanel.activeSelf);
+		}
     }
 
     #region private functions
