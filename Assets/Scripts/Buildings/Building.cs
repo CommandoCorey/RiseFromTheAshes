@@ -21,7 +21,10 @@ public class Building : MonoBehaviour
 	[Header("Sound and Visual effects")]
     [SerializeField] AudioClip[] hitSounds;
 	[SerializeField] ParticleSystem[] hitVFX;
+	[SerializeField] ParticleSystem[] destroyEffects;
 	[SerializeField] Transform[] damagedVFX;
+
+	
 
     new AudioSource audio;
 
@@ -182,6 +185,12 @@ public class Building : MonoBehaviour
 
 			if(aiPlayer != null)
 				aiPlayer.AddRebuildTask(this);
+		}
+
+		if (destroyEffects.Length > 0)
+		{
+			int random = Random.Range(0, destroyEffects.Length - 1);
+			Instantiate(destroyEffects[random], transform.position, Quaternion.identity);
 		}
 
 		Destroy(gameObject);
