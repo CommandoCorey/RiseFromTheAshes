@@ -272,11 +272,15 @@ public class UnitManager : MonoBehaviour
         // check if the target's layer is one of the enemy layers
         if (enemyLayers == (enemyLayers | (1 << target.gameObject.layer)))
         {
-            foreach(var unit in selectedUnits)
+            foreach(var unitObject in selectedUnits)
             {
-                var controller = unit.GetComponent<UnitController>();
-                controller.AttackTarget = target;
-                controller.ChangeState(UnitState.Follow, target.position);
+                var unit = unitObject.GetComponent<UnitController>();
+                unit.AttackTarget = target;
+                unit.AttackOrderGiven = true;
+
+                // if the unit is not already in follow enemy state then swith state
+                if(unit.State != UnitState.Follow)
+                    unit.ChangeState(UnitState.Follow, target.position);
             }
 
             return true;
