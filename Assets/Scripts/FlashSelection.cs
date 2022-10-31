@@ -23,7 +23,11 @@ public class FlashSelection : MonoBehaviour
     {
         this.enabled = false;
 
-        selectionHighlight = GetComponent<UnitController>().selectionHighlight;
+        if (gameObject.layer == 7) // AI Unit
+            selectionHighlight = GetComponent<UnitController>().selectionHighlight;
+        else if(gameObject.layer == 9) // Ai Building
+            selectionHighlight = GetComponent<Building>().selectionHighlight;
+
         selectionHighlight.SetActive(true);
 
         sprite = selectionHighlight.GetComponentInChildren<SpriteRenderer>();
@@ -67,15 +71,10 @@ public class FlashSelection : MonoBehaviour
 
         if(curIteration == iterations)
         {
-            this.enabled = false;
             curIteration = 0;
+            selectionHighlight.SetActive(false);
+            this.enabled = false;            
         }
-    }
-
-    public void Begin()
-    {
-        renderColor = selectionHighlight.GetComponent<SpriteRenderer>().color;
-        renderColor.a = alpha;
     }
 
 }

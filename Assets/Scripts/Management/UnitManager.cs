@@ -266,6 +266,7 @@ public class UnitManager : MonoBehaviour
         else if (target.gameObject.layer == 9) // Ai Building
         {
             target.GetComponent<Building>().selectionHighlight.SetActive(true);
+            target.root.GetComponent<FlashSelection>().enabled = true;
         }
 
         // check if the target's layer is one of the enemy layers

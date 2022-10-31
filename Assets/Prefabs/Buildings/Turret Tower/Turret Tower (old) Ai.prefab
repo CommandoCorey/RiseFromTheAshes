@@ -515,8 +515,9 @@ GameObject:
   - component: {fileID: -8871995171229061636}
   - component: {fileID: 4999239961471015108}
   - component: {fileID: 4764413774497962118}
+  - component: {fileID: -1010756113881614301}
   m_Layer: 9
-  m_Name: Turret Tower Ai
+  m_Name: Turret Tower (old) Ai
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -558,7 +559,7 @@ MonoBehaviour:
   buildingDescription: A defensive tower the fires at any enemy that comes in range
   aiBuilding: 0
   HP: 0
-  selectionHighlight: {fileID: 6672427012931405952}
+  selectionHighlight: {fileID: 2999952461720875885}
   hitSounds: []
   hitVFX: []
   damagedVFX: []
@@ -600,6 +601,20 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 6.659364, y: 3.994317, z: 8.33659}
   m_Center: {x: 0.00000023841858, y: 2.0630946, z: -1.497158}
+--- !u!114 &-1010756113881614301
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4999239961471015109}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40eb759e8017aaf44af68486a3b1e647, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fadeSpeed: 8
+  iterations: 3
 --- !u!1001 &6757501008348901563
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -619,6 +634,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 9
       objectReference: {fileID: 0}
+    - target: {fileID: 3786822818600775674, guid: b8655744b8d78ae45b1a02fec5ab084e, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4236458347994541555, guid: b8655744b8d78ae45b1a02fec5ab084e, type: 3}
       propertyPath: m_Layer
       value: 9
@@ -627,6 +646,10 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 189b702ebeecbd245a554ae5d6a4dcad, type: 2}
+    - target: {fileID: 4539413651286615606, guid: b8655744b8d78ae45b1a02fec5ab084e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4999239961471015109, guid: b8655744b8d78ae45b1a02fec5ab084e, type: 3}
       propertyPath: m_Name
       value: Turret Tower
@@ -691,31 +714,47 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 9
       objectReference: {fileID: 0}
+    - target: {fileID: 7330469779150006725, guid: b8655744b8d78ae45b1a02fec5ab084e, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.1215
+      objectReference: {fileID: 0}
+    - target: {fileID: 7330469779150006725, guid: b8655744b8d78ae45b1a02fec5ab084e, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.1215
+      objectReference: {fileID: 0}
+    - target: {fileID: 7330469779150006725, guid: b8655744b8d78ae45b1a02fec5ab084e, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.1215
+      objectReference: {fileID: 0}
     - target: {fileID: 7852995926805873528, guid: b8655744b8d78ae45b1a02fec5ab084e, type: 3}
       propertyPath: m_Layer
       value: 9
       objectReference: {fileID: 0}
+    - target: {fileID: 8387549152385729494, guid: b8655744b8d78ae45b1a02fec5ab084e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 6015106103082739701, guid: b8655744b8d78ae45b1a02fec5ab084e, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: b8655744b8d78ae45b1a02fec5ab084e, type: 3}
+--- !u!4 &8477104760141990366 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2910396837187008869, guid: b8655744b8d78ae45b1a02fec5ab084e, type: 3}
+  m_PrefabInstance: {fileID: 6757501008348901563}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1776574529729996924 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4999239961471015111, guid: b8655744b8d78ae45b1a02fec5ab084e, type: 3}
   m_PrefabInstance: {fileID: 6757501008348901563}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &6672427012931405952 stripped
+--- !u!1 &2999952461720875885 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 98602387694270523, guid: b8655744b8d78ae45b1a02fec5ab084e, type: 3}
+  m_CorrespondingSourceObject: {fileID: 8387549152385729494, guid: b8655744b8d78ae45b1a02fec5ab084e, type: 3}
   m_PrefabInstance: {fileID: 6757501008348901563}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &416348422370157175 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6341171571076371148, guid: b8655744b8d78ae45b1a02fec5ab084e, type: 3}
-  m_PrefabInstance: {fileID: 6757501008348901563}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &8477104760141990366 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2910396837187008869, guid: b8655744b8d78ae45b1a02fec5ab084e, type: 3}
   m_PrefabInstance: {fileID: 6757501008348901563}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8173001010249626703
