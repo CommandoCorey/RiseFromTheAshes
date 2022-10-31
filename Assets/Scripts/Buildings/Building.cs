@@ -134,6 +134,12 @@ public class Building : MonoBehaviour
 			}
 
 			if (IsBuilt) {
+				Outpost o;
+				if (TryGetComponent(out o))
+				{
+					o.OnBuilt();
+				}
+
 				isBuilding = false;
 			}
 		}
