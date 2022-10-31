@@ -46,6 +46,7 @@ GameObject:
   - component: {fileID: 7053429340730108353}
   - component: {fileID: 3298764268007567521}
   - component: {fileID: 188239416831121785}
+  - component: {fileID: 4613573641483840469}
   m_Layer: 0
   m_Name: Factory
   m_TagString: Untagged
@@ -67,7 +68,6 @@ Transform:
   - {fileID: 6536357914665376627}
   - {fileID: 4292006169086223297}
   - {fileID: 7506554125716824554}
-  - {fileID: 4292006169086223297}
   - {fileID: 5228454057187290795}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -106,8 +106,17 @@ MonoBehaviour:
     capacity by 100.
   aiBuilding: 0
   HP: 0
-  selectionHighlight: {fileID: 4292112486065280486}
-  hitSounds: []
+  selectionHighlight: {fileID: 0}
+  hitSounds:
+  - clip: {fileID: 8300000, guid: 650e05b04e841814bb114354d5d09252, type: 3}
+    volumeScale: 0.5
+  - clip: {fileID: 8300000, guid: bb6dcd82c2325ed4ea4029144c00061e, type: 3}
+    volumeScale: 0.5
+  - clip: {fileID: 8300000, guid: a185a70575a8e1c44a4273772865504a, type: 3}
+    volumeScale: 0.5
+  destroySounds:
+  - clip: {fileID: 8300000, guid: 57da73a0a2b86f14dafcff35194b943c, type: 3}
+    volumeScale: 1
   hitVFX:
   - {fileID: 4119108375505451554, guid: 68ec58ae1d281a34eb79565561680e98, type: 3}
   destroyEffects:
@@ -165,6 +174,102 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 1
   m_Center: {x: 0, y: 0, z: 0}
   m_TimeToStationary: 0.5
+--- !u!82 &4613573641483840469
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5288815935731700176}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &6545479969108185945
 GameObject:
   m_ObjectHideFlags: 0
@@ -517,11 +622,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e45454b1e4e73454bb17c98ae49c6dc9, type: 3}
---- !u!1 &4292112486065280486 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4365779739516481214, guid: e45454b1e4e73454bb17c98ae49c6dc9, type: 3}
-  m_PrefabInstance: {fileID: 506364798922570584}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7506554125716824554 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8010315143446698674, guid: e45454b1e4e73454bb17c98ae49c6dc9, type: 3}

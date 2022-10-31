@@ -18,8 +18,12 @@ public class Building : MonoBehaviour
 
 	public GameObject selectionHighlight;
 
-	[Header("Sound and Visual effects")]
-    [SerializeField] AudioClip[] hitSounds;
+	[Header("Sound Effects")]
+    [SerializeField] SoundEffect[] hitSounds;
+	[SerializeField] SoundEffect[] destroySounds;
+
+	[Header("Visual Effects")]
+
 	[SerializeField] ParticleSystem[] hitVFX;
 	[SerializeField] ParticleSystem[] destroyEffects;
 	[SerializeField] Transform[] damagedVFX;
@@ -187,6 +191,14 @@ public class Building : MonoBehaviour
 				aiPlayer.AddRebuildTask(this);
 		}
 
+		if(destroySounds.Length > 0)
+        {
+			int random = Random.Range(0, destroySounds.Length);
+
+			GameManager.Instance.PlaySound(destroySounds[random].clip, 
+									      destroySounds[random].volumeScale);
+        }
+
 		if (destroyEffects.Length > 0)
 		{
 			int random = Random.Range(0, destroyEffects.Length - 1);
@@ -211,7 +223,8 @@ public class Building : MonoBehaviour
 		HP -= amount;
 
         if (hitSounds.Length > 0) {
-            audio.PlayOneShot(hitSounds[Random.Range(0, hitSounds.Length - 1)], 0.5f);
+            audio.PlayOneShot(hitSounds[Random.Range(0, hitSounds.Length - 1)].clip,
+				hitSounds[Random.Range(0, hitSounds.Length - 1)].volumeScale);
         }
 
 		if (hitVFX.Length > 0)
