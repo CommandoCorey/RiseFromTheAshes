@@ -14,7 +14,7 @@ public enum ResourceType
 public struct Resource
 {
     public string name;
-    public Image icon;
+    public Sprite icon;
     public int startingAmount;
     public int maxAmount;
 

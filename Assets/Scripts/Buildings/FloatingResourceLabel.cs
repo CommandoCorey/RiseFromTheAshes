@@ -12,8 +12,8 @@ public class FloatingResourceLabel : MonoBehaviour
 
     [Range(0, 100)]
     [SerializeField] float raiseSpeed = 50;
-    [Range(0, 10)]
-    [SerializeField] float activeTime = 1;
+    //[Range(0, 10)][SerializeField]
+    float activeTime = 1;
     [Range(0, 1)]
     [SerializeField] float fadeInSpeed = 1;
 
@@ -53,8 +53,9 @@ public class FloatingResourceLabel : MonoBehaviour
 
     }
 
-    public void Begin(int amount)
+    public void Begin(int amount, float timePerIncrement)
     {
+        activeTime = timePerIncrement;
         amountLabel.text = amount.ToString();
         moving = true;
         Invoke("Reset", activeTime);

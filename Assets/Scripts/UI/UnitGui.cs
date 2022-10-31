@@ -44,6 +44,7 @@ public class UnitGui : MonoBehaviour
     private UnitManager unitManager;
     private SelectionManager selectionManager;
     private UnitController unitOnPanel = null;
+    private Building selectedBuilding = null;
 
     // properties
     public ActionChosen ButtonClicked { get; set; } = ActionChosen.Null;
@@ -417,8 +418,7 @@ public class UnitGui : MonoBehaviour
         selectedUnits.Clear();
 
         buttonPanel.SetActive(false);
-    }
-    
+    } 
     #endregion
 
 }

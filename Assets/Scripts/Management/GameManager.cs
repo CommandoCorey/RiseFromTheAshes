@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Dialogs")]
     public GameObject pauseDialog;
+    public GameObject GUI;
     public GameObject winDialog;
     public GameObject loseDialog;
 
@@ -219,6 +220,7 @@ public class GameManager : MonoBehaviour
     public void TogglePause(bool paused)
     {
         pauseDialog.SetActive(paused);
+        GUI.SetActive(!paused);
 
         // disable all other scripts on the game manageer
         GetComponent<UnitManager>().enabled = !paused;

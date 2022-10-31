@@ -8,7 +8,7 @@ public class BuildingHUD : MonoBehaviour
 
 	private void Start()
 	{
-		building = transform.root.GetComponent<Building>();
+		building = transform.parent.GetComponent<Building>();
 
 		if (building == null)
 		{
