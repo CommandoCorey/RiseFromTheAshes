@@ -10,7 +10,6 @@ public enum UnitState
 {
     Idle,    
     Moving,
-    Flock,
     Follow,
     Attack,
     Patrol
@@ -245,7 +244,12 @@ public class UnitController : MonoBehaviour
             mat.SetColor("HealEffectColor", Color.blue);
             mat.SetFloat("HealEffectIntensity", Mathf.Clamp(healTimer, 0.0f, 1.0f));
 		}
-    }
+
+
+        // Check for outpost ghosts the unit is A.I. controlled
+        if (gameObject.layer == 7)
+            SearchForOutposts();
+    }    
 
     private void LateUpdate()
     {
@@ -464,6 +468,28 @@ public class UnitController : MonoBehaviour
     private int RandomPick(Object[] array)
     {
         return Random.Range(0, array.Length - 1);
+    }
+
+    //------------------------------------------------------------------
+    // Checks if there is an outpost placeholder in detection range that
+    // the AiPlayer has not already found
+    // If there is the Aiplayer adds it to the outpost placeholder list
+    //------------------------------------------------------------------
+    private void SearchForOutposts()
+    {
+        var aiPlayer = AiPlayer.Instance;
+        var ghostBuildings = Physics.OverlapSphere(transform.position, detectionRadius, 22); // 22 = buildable layer
+
+        foreach(Collider ghost in ghostBuildings)
+        {
+            // check that the placeholder is an outpost placeholder and that
+            // the ai player does not already have it
+            if(ghost.gameObject.tag == "Outpost" && 
+                !aiPlayer.HasOutpostGhost(ghost.transform))
+            {
+                aiPlayer.AddOutpost(ghost.transform);
+            }
+        }
     }
 
     // Removes unit from lists in unit manager and GUI once it is destroyed

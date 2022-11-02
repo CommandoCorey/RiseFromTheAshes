@@ -203,7 +203,7 @@ public class UnitManager : MonoBehaviour
     /// <param name="current">The current unit being checked around</param>
     /// <param name="squad">the squad number that the current unit is within</param>
     /// <returns>list of game objects</returns>
-    public List<GameObject> GetNeighbourUnits(GameObject current, int squad)
+    /*public List<GameObject> GetNeighbourUnits(GameObject current, int squad)
     {
         List<GameObject> neighbours = new List<GameObject>();
         //var units = GameObject.FindGameObjectsWithTag("PlayerUnit");
@@ -237,7 +237,7 @@ public class UnitManager : MonoBehaviour
         }
 
         return movingUnits;
-    }
+    }*/
 
     // Not currently Used
     /// <summary>
@@ -431,7 +431,7 @@ public class UnitManager : MonoBehaviour
     #region private functions
     // Not currently be using    
     // check if all units within a specified are stationary
-    private bool UnitsNotMoving(List<GameObject> units)
+    /*private bool UnitsNotMoving(List<GameObject> units)
     {
         foreach(GameObject unit in units)
         {
@@ -457,7 +457,7 @@ public class UnitManager : MonoBehaviour
 
         if (!unitsStillMoving)
             squads.RemoveAt(squadNum);
-    }
+    }*/
     #endregion
 
     private void OnDrawGizmos()
