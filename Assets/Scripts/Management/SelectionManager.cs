@@ -138,11 +138,11 @@ public class SelectionManager : MonoBehaviour
                 }
 
                 // dont select anything if the GUI is clicked
-                if (EventSystem.current.IsPointerOverGameObject())
+                /*if (EventSystem.current.IsPointerOverGameObject())
                 {
                     //Debug.Log("Clicked on GUI");
                     return;
-                }
+                }*/
 
                 if (Physics.Raycast(ray, out hit, 50000.0f, selectionLayer))
                 {
@@ -261,6 +261,8 @@ public class SelectionManager : MonoBehaviour
                 //Debug.Log("Added " + id + " to selected dict");
             }
         }
+
+        gui.EnableActionButtons(); // turns on move, attack and halt
     }
 
     /// <summary>
@@ -292,6 +294,8 @@ public class SelectionManager : MonoBehaviour
         selectedTable.Clear(); // clears the whole dictionary
 
         gui.ClearUnitSelection();
+
+        gui.DisableActionButtons();
     }
 
     public void SetSelectedBuilding(Building building)
