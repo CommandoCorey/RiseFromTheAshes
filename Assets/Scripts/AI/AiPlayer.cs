@@ -22,11 +22,12 @@ public class TaskSet
 public class AiPlayer : MonoBehaviour
 {
     public Transform playerBase;
+    public Transform[] outposts;
     public Transform rallyPoint;
     [SerializeField] List<Transform> buildingPlaceholders;
+    [SerializeField] List<Transform> outpostPlaceHolders;
 
     public List<VehicleBay> vehicleBays;
-
     public Transform[] patrolRoute;
 
     [Header("Ai Tasks")]
@@ -353,6 +354,20 @@ public class AiPlayer : MonoBehaviour
 
         tasksSchedule[rebuiltSetNumber].tasks.Add(rebuildTask);
         SortTaskSet(tasksSchedule[rebuiltSetNumber]);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="units"></param>
+    /// <param name="number">The index in the list of outposts to use</param>
+    public void SendToOutpost(List<Transform> units, int number)
+    {
+        foreach (Transform t in units)
+        {
+            var unit = t.GetComponent<UnitController>();
+            unit.ChangeState(UnitState.Moving, outposts[number].position);
+        }
     }
 
     /// <summary>
