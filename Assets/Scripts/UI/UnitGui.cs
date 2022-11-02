@@ -35,7 +35,11 @@ public class UnitGui : MonoBehaviour
     public TextMeshProUGUI maxHealth;
     public TextMeshProUGUI range;
     public TextMeshProUGUI damagePerSecond;
-    public TextMeshProUGUI movementSpeed;    
+    public TextMeshProUGUI movementSpeed;
+
+    [Header("Button Tooltip")]
+    public GameObject tooltipObject;
+    public TextMeshProUGUI tooltipText;
 
     // private variables
     private List<UnitController> selectedUnits;
@@ -56,6 +60,10 @@ public class UnitGui : MonoBehaviour
         selectedUnits = new List<UnitController>();
         unitManager = UnitManager.Instance;
         selectionManager = GameObject.FindObjectOfType<SelectionManager>();
+
+        DisableActionButtons();
+
+        tooltipObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -127,7 +135,10 @@ public class UnitGui : MonoBehaviour
         if (Input.GetMouseButtonUp(1) && ButtonClicked != ActionChosen.Null)
         {
             gameManager.ResetCursor();
-            EnableActionButtons();
+
+            if(selectedUnits.Count > 0)
+                EnableActionButtons();
+
             ButtonClicked = ActionChosen.Null;
 
             selectionManager.enabled = true;            
@@ -200,18 +211,55 @@ public class UnitGui : MonoBehaviour
         alertMessage.gameObject.SetActive(false);
     }
 
-    // Makes all the buttons on the action button panel interactable
-    private void EnableActionButtons()
+    /// <summary>
+    /// Makes all the buttons on the action button panel interactable
+    /// </summary>
+    public void EnableActionButtons()
     {
+        moveButton.gameObject.SetActive(true);
+        attackButton.gameObject.SetActive(true);
+        haltButton.gameObject.SetActive(true);
+
         moveButton.interactable = true;
         attackButton.interactable = true;
         haltButton.interactable = true;
         setRallyPointButton.interactable = true;
     }
 
+    /// <summary>
+    /// Sets the move button, attack button and halt button to be non-interactable
+    /// </summary>
+    public void DisableActionButtons()
+    {
+        moveButton.interactable = false;
+        attackButton.interactable = false;
+        haltButton.interactable = false;
+
+        moveButton.gameObject.SetActive(false);
+        attackButton.gameObject.SetActive(false);
+        haltButton.gameObject.SetActive(false);
+    }    
+
     #endregion
 
     #region public functions
+    /// <summary>
+    /// Displays the tooltip message and sets the text on it
+    /// </summary>
+    /// <param name="tooltipMessage"></param>
+    public void ShowTooltip(string text)
+    {
+        tooltipObject.SetActive(true);
+        tooltipText.text = text;
+    }
+
+    /// <summary>
+    /// Hide tooltip message
+    /// </summary>
+    public void HideTooltip()
+    {
+        tooltipObject.SetActive(false);
+    }
 
     /// <summary>
     /// Removes all information form gui to do with one particular unit
@@ -226,7 +274,7 @@ public class UnitGui : MonoBehaviour
         else if (unitInfoPanel.activeInHierarchy && unit == unitOnPanel)
         {
             unitInfoPanel.SetActive(false);
-            buttonPanel.SetActive(false);
+            //buttonPanel.SetActive(false);
         }
 
         selectedUnits.Remove(unit);
@@ -234,7 +282,7 @@ public class UnitGui : MonoBehaviour
         // turn off the buttons panel is all selected untis are destroted
         if (selectedUnits.Count < 1)
         {
-            buttonPanel.SetActive(false);
+            //buttonPanel.SetActive(false);
         }
     }
 
@@ -293,10 +341,14 @@ public class UnitGui : MonoBehaviour
 
         selectionManager.enabled = false;
 
-        setRallyPointButton.interactable = false;
-        attackButton.interactable = true;
-        moveButton.interactable = true;
-        haltButton.interactable = true;
+        //setRallyPointButton.interactable = false;
+
+        if (selectedUnits.Count > 0)
+        {
+            attackButton.interactable = true;
+            moveButton.interactable = true;
+            haltButton.interactable = true;
+        }
 
         gameManager.SetCursor(gameManager.moveCursor);
     }
@@ -317,8 +369,8 @@ public class UnitGui : MonoBehaviour
             //return;
         }
 
-        if(selection.Count > 0)
-            buttonPanel.SetActive(true);
+        //if(selection.Count > 0)
+            //buttonPanel.SetActive(true);
 
         // generate new icons
         for (int i=0; i < selection.Count; i++)
@@ -376,7 +428,7 @@ public class UnitGui : MonoBehaviour
 
         DisplayUnitStats(unit);
 
-        buttonPanel.SetActive(true);
+        //buttonPanel.SetActive(true);
 
         // update the unit manager
         var unitManager = GameObject.FindObjectOfType<UnitManager>();
@@ -417,7 +469,7 @@ public class UnitGui : MonoBehaviour
         unitIcons.Clear();
         selectedUnits.Clear();
 
-        buttonPanel.SetActive(false);
+        //buttonPanel.SetActive(false);
     } 
     #endregion
 

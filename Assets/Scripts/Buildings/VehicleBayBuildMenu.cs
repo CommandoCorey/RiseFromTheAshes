@@ -21,6 +21,8 @@ public class VehicleBayBuildMenu : MonoBehaviour {
 	[SerializeField] Button cancelButton;
 	[SerializeField] TextMeshProUGUI errorNotification;
 	[SerializeField] float notificationTimeout = 1;
+	
+	[SerializeField] bool hideOnConstructUnit = false;
 
 	[Header("Unit Info Panel")]
 	[SerializeField] GameObject infoPanel;
@@ -68,7 +70,10 @@ public class VehicleBayBuildMenu : MonoBehaviour {
 						currentVehicleBay.BuildUnit(ud.unit);
 
 						currentVehicleBay.currentUnitDesc = ud;
-						Hide();						
+						
+						if (hideOnConstructUnit) {
+							Hide();
+						}
 					}
 					else
 					{
