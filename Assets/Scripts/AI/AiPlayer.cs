@@ -487,7 +487,7 @@ public class AiPlayer : MonoBehaviour
 
         Debug.Log("Dispatching Units");
         return true;
-    } 
+    }
 
     public Transform GetPlaceholder(int number)
     {
@@ -503,6 +503,11 @@ public class AiPlayer : MonoBehaviour
             return buildingPlaceholders[number];
 
         return buildingPlaceholders[0];
+    }
+
+    public bool HasOutpostGhost(Transform transform)
+    {
+        return outpostPlaceholders.Contains(transform);
     }
 
     public Transform[] GetIdleUnits()
