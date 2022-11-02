@@ -27,7 +27,7 @@ public class AiPlayer : MonoBehaviour
 
     public List<VehicleBay> vehicleBays;
 
-    public Transform[] waypoints;
+    public Transform[] patrolRoute;
 
     [Header("Ai Tasks")]
     [SerializeField] AiStrategy playerStrategy;
@@ -47,9 +47,6 @@ public class AiPlayer : MonoBehaviour
     //[SerializeField] TextMeshProUGUI taskDescription;
     //[SerializeField] TextMeshProUGUI taskStatus;
     [SerializeField] TextMeshProUGUI activeTaskList;
-
-    [Header("Gizmos")]
-    bool showFormationPositions = false;
 
     // private variables
     private ResourceManager resources;
@@ -370,21 +367,7 @@ public class AiPlayer : MonoBehaviour
             unit.ChangeState(UnitState.Patrol);
 
             var patrolState = unit.GetComponent<PatrolState>();
-            patrolState.SetPatrolRoute(waypoints);
-        }
-    }
-
-    /// <summary>
-    /// Sends a group of units to a specified waypoint
-    /// </summary>
-    /// <param name="units">The list of unit transforms to move</param>
-    /// <param name="waypointNumber">the index in the waypoints array to move towards</param>
-    public void SendToWaypoint(List<Transform> units, int waypointNumber)
-    {
-        foreach (Transform t in units)
-        {
-            var unit = t.GetComponent<UnitController>();
-            unit.ChangeState(UnitState.Moving, waypoints[waypointNumber].position);
+            patrolState.SetPatrolRoute(patrolRoute);
         }
     }
 
@@ -505,7 +488,7 @@ public class AiPlayer : MonoBehaviour
     private void OnDrawGizmos()
     {
         // draws the fromation positions that each unit will finish at
-        if (showFormationPositions && formationPositions.Count > 0)
+        if (formationPositions != null)
         {
             foreach (Vector3 position in formationPositions)
             {

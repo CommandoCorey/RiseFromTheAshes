@@ -338,8 +338,6 @@ public class FormationManager : MonoBehaviour
                     }
                 }
 
-                searchedPositions.Add(playerRallyPosition);
-
                 if (col % 2 == 0) // check odd or even
                 {
                     unitsOnRight++;
@@ -383,14 +381,11 @@ public class FormationManager : MonoBehaviour
 
         Debug.DrawLine(centerPoint, centerPoint + (offsetDirection * 10), Color.red, 3.0f);
 
-        searchedPositions.Clear();
-
         for (int row = 0; row < maxRows; row++)
         {
             for (int col = 0; col < maxUnitsPerRow; col++)
             {
-
-                if (Physics.Raycast(aiRallyPosition + Vector3.up * 2, Vector3.down,
+                if (Physics.Raycast(playerRallyPosition + Vector3.up * 2, Vector3.down,
                     out RaycastHit hitInfo))
                 {
                     if (hitInfo.transform.gameObject.layer == 3 && // ground layer
@@ -402,8 +397,6 @@ public class FormationManager : MonoBehaviour
                         return hitInfo.point;
                     }
                 }
-
-                searchedPositions.Add(aiRallyPosition);
 
                 if (col % 2 == 0) // check odd or even
                 {
@@ -474,7 +467,7 @@ public class FormationManager : MonoBehaviour
     private void OnDrawGizmos()
     {
         // draws the fromation positions that each unit will finish at
-        if (formationPositions.Count > 0 && showFormationPositions)
+        if (formationPositions != null && showFormationPositions)
         {
             foreach (Vector3 position in formationPositions)
             {
@@ -484,24 +477,12 @@ public class FormationManager : MonoBehaviour
         }
 
         // draws all of the positions being searched when the formations are being created
-        /*if (searchedPositions != null && showSearchedPositions)
+        if (searchedPositions != null && showSearchedPositions)
         {
             foreach (Vector3 position in searchedPositions)
             {
                 Gizmos.color = Color.yellow;
                 Gizmos.DrawWireSphere(position, 1);
-            }
-        }*/
-
-        if (searchedPositions.Count > 0)
-        {
-            Gizmos.color = Color.yellow;
-            foreach (Vector3 position in searchedPositions)
-            {
-                if (position == searchedPositions.Last())
-                    Gizmos.color = Color.blue;
-
-                Gizmos.DrawWireCube(position + Vector3.up * 0.5f, Vector3.one);
             }
         }
 
@@ -516,22 +497,34 @@ public class FormationManager : MonoBehaviour
             }
         }*/
 
-        if (showPlayerRallyPositions)
+        if(showPlayerRallyPositions)
         {
             Gizmos.color = Color.green;
             Gizmos.DrawWireSphere(playerRallyPosition + Vector3.up * 0.5f, 1);
         }
 
         // shows the rally point position of each unit spawned from an a.i. vehicle bay
-        if (aiRallyFormation.Count > 0 && showAiRallyPositions)
+        if (aiRallyFormation != null && showAiRallyPositions)
         {
             foreach (Vector3 position in aiRallyFormation.Values)
             {
                 Gizmos.color = Color.green;
                 Gizmos.DrawWireSphere(position + Vector3.up * 0.5f, 1);
             }
-        }        
-        
+        }
+
+        /*
+        if (searchedPositions != null)
+        {
+            Gizmos.color = Color.green;
+            foreach (Vector3 position in searchedPositions)
+            {                   
+                if(position == searchedPositions.Last())
+                    Gizmos.color = Color.blue;
+
+                Gizmos.DrawWireCube(position, Vector3.one);
+            }               
+        }*/
     }
 
 }
