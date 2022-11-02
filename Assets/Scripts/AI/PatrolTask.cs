@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Patrol Task", menuName = "Ai Task/Send On Patrol", order = 2)]
-public class PatrolTask : DispatchWaveTask
+[CreateAssetMenu(fileName = "Patrol Task", menuName = "Ai Task/Send To Waypoint", order = 2)]
+public class SendToWaypointTask : DispatchWaveTask
 {
     public int routeNumber = 0;
 
@@ -14,7 +14,7 @@ public class PatrolTask : DispatchWaveTask
 
     public override object Clone()
     {
-        var clonedTask = (PatrolTask) base.Clone();
+        var clonedTask = (SendToWaypointTask) base.Clone();
 
         clonedTask.routeNumber = routeNumber;
         return clonedTask;
