@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Patrol Task", menuName = "Ai Task/Send On Patrol", order = 2)]
-public class PatrolTask : DispatchWaveTask
+[CreateAssetMenu(fileName = "Patrol Task", menuName = "Ai Task/Send To Outpost", order = 2)]
+public class SendToOutpostTask : DispatchWaveTask
 {
-    public int patrolRoute = 0;
+    public int outpostNumber = 0;
 
     private bool completed = false;
 
@@ -14,9 +14,9 @@ public class PatrolTask : DispatchWaveTask
 
     public override object Clone()
     {
-        var clonedTask = (PatrolTask) base.Clone();
+        var clonedTask = (SendToOutpostTask) base.Clone();
 
-        clonedTask.patrolRoute = patrolRoute;
+        clonedTask.outpostNumber = outpostNumber;
         return clonedTask;
     }
 
@@ -102,7 +102,7 @@ public class PatrolTask : DispatchWaveTask
         if (FindObjectOfType<AiPlayer>())
         {
             var ai = FindObjectOfType<AiPlayer>();
-            ai.SendOnPatrol(unitWave);
+            ai.SendToOutpost(unitWave, outpostNumber);
 
             completed = true;
 
@@ -111,7 +111,6 @@ public class PatrolTask : DispatchWaveTask
         else if (FindObjectOfType<SimpleAiPlayer>())
         {
             var ai = FindObjectOfType<SimpleAiPlayer>();
-            //ai.SendOnPatrol(unitWave, waypoints);
 
             completed = true;
             return true;
