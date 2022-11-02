@@ -35,7 +35,11 @@ public class UnitGui : MonoBehaviour
     public TextMeshProUGUI maxHealth;
     public TextMeshProUGUI range;
     public TextMeshProUGUI damagePerSecond;
-    public TextMeshProUGUI movementSpeed;    
+    public TextMeshProUGUI movementSpeed;
+
+    [Header("Button Tooltip")]
+    public GameObject tooltipObject;
+    public TextMeshProUGUI tooltipText;
 
     // private variables
     private List<UnitController> selectedUnits;
@@ -58,6 +62,8 @@ public class UnitGui : MonoBehaviour
         selectionManager = GameObject.FindObjectOfType<SelectionManager>();
 
         DisableActionButtons();
+
+        tooltipObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -237,6 +243,23 @@ public class UnitGui : MonoBehaviour
     #endregion
 
     #region public functions
+    /// <summary>
+    /// Displays the tooltip message and sets the text on it
+    /// </summary>
+    /// <param name="tooltipMessage"></param>
+    public void ShowTooltip(string text)
+    {
+        tooltipObject.SetActive(true);
+        tooltipText.text = text;
+    }
+
+    /// <summary>
+    /// Hide tooltip message
+    /// </summary>
+    public void HideTooltip()
+    {
+        tooltipObject.SetActive(false);
+    }
 
     /// <summary>
     /// Removes all information form gui to do with one particular unit
