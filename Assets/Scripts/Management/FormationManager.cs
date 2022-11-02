@@ -27,6 +27,8 @@ public class FormationManager : MonoBehaviour
     private int playerId = 0;
     private int enemyId = 0;
 
+    [SerializeField] LayerMask groundLayer;
+
     [Header("Gizmos")]
     public bool showFormationPositions = false;
     public bool showPlayerRallyPositions = false;
@@ -97,20 +99,16 @@ public class FormationManager : MonoBehaviour
                 searchedPositions.Add(position);
 
                 // check that the position is not out of bounds
-                if (Physics.Raycast(position + Vector3.up, Vector3.down, out rayHit))
+                if (Physics.Raycast(position + Vector3.up, Vector3.down, out rayHit, groundLayer))
                 {
-                    // check if the position is on the ground
-                    if (rayHit.transform.gameObject.layer == 3 || rayHit.transform.tag == "Ground")
+                    // Make sure point is on navmesh
+                    // Note: maxDistance must be above agent radius else program will get stuck in loop forever
+                    if (NavMesh.SamplePosition(rayHit.point, out navHit, 1.0f, NavMesh.AllAreas))
                     {
-                        // Make sure point is on navmesh
-                        // Note: maxDistance must be above agent radius else program will get stuck in loop forever
-                        if (NavMesh.SamplePosition(rayHit.point, out navHit, 1.0f, NavMesh.AllAreas))
-                        {
-                            formationPositions.Add(navHit.position);
-                            unitsPlaced++;
-                        }
+                        formationPositions.Add(navHit.position);
+                        unitsPlaced++;
                     }
-
+                
                 }
 
                 // exit loop if all units are placed
@@ -175,11 +173,8 @@ public class FormationManager : MonoBehaviour
                 searchedPositions.Add(position);
 
                 // check that the position is not out of bounds
-                if (Physics.Raycast(position + Vector3.up, Vector3.down, out rayHit))
+                if (Physics.Raycast(position + Vector3.up, Vector3.down, out rayHit, groundLayer))
                 {
-                    // check if the position is on the ground
-                    if (rayHit.transform.gameObject.layer == 3 || rayHit.transform.tag == "Ground")
-                    {
                         // Make sure point is on navmesh
                         // Note: maxDistance must be above agent radius else program will get stuck in loop forever
                         if (NavMesh.SamplePosition(rayHit.point, out navHit, 1.0f, NavMesh.AllAreas))
@@ -187,8 +182,7 @@ public class FormationManager : MonoBehaviour
                             formationPositions.Add(navHit.position);
                             unitsPlaced++;
                         }
-                    }
-
+                 
                 }
                 else
                 {
@@ -326,11 +320,9 @@ public class FormationManager : MonoBehaviour
             for(int col = 0; col < maxUnitsPerRow; col++)
             {
                 if(Physics.Raycast(playerRallyPosition + Vector3.up * 2, Vector3.down, 
-                    out RaycastHit hitInfo))
+                    out RaycastHit hitInfo, Mathf.Infinity, groundLayer))
                 {
-                    if (hitInfo.transform.gameObject.layer == 3 && // ground layer
-                        !playerRallyFormation.ContainsValue(hitInfo.point)) 
-                    {
+                    if (!playerRallyFormation.ContainsValue(hitInfo.point)) {
                         rallyNumber = playerId;
                         playerRallyFormation.Add(playerId++, hitInfo.point);                        
 
@@ -386,10 +378,9 @@ public class FormationManager : MonoBehaviour
             for (int col = 0; col < maxUnitsPerRow; col++)
             {
                 if (Physics.Raycast(playerRallyPosition + Vector3.up * 2, Vector3.down,
-                    out RaycastHit hitInfo))
+                    out RaycastHit hitInfo, Mathf.Infinity, groundLayer))
                 {
-                    if (hitInfo.transform.gameObject.layer == 3 && // ground layer
-                        !aiRallyFormation.ContainsValue(hitInfo.point))
+                    if (!aiRallyFormation.ContainsValue(hitInfo.point))
                     {
                         aiRallyFormation.Add(enemyId++, hitInfo.point);
                         rallyNumber = aiRallyFormation.Count - 1;
