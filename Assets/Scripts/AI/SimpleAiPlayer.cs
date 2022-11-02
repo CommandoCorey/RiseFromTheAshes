@@ -311,6 +311,7 @@ public class SimpleAiPlayer : MonoBehaviour
             }
         }
 
+
         //if(vehicleBay != null)
             //Gizmos.DrawLine(vehicleBay.position, vehicleBay.position + vehicleBay.forward * zOffset);
     }
