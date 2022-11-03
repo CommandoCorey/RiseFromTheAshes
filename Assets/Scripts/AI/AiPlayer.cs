@@ -13,6 +13,7 @@ public class TaskSet
     public string description;
     public bool loopTaskSet;
     public bool addRebuildTasks;
+    public bool addOutpostBuildTasks;
     public List<AiTask> tasks;
 
     public int TaskNum { get; set; } = 0;
@@ -21,12 +22,13 @@ public class TaskSet
 
 public class AiPlayer : MonoBehaviour
 {
-    public Transform playerBase;
+    public Transform playerBase;    
     public Transform rallyPoint;
     [SerializeField] List<Transform> buildingPlaceholders;
+    [SerializeField] List<Transform> outpostPlaceholders;
 
     public List<VehicleBay> vehicleBays;
-
+    public Transform[] waypoints;
     public Transform[] patrolRoute;
 
     [Header("Ai Tasks")]
@@ -74,6 +76,7 @@ public class AiPlayer : MonoBehaviour
     private List<TaskSetDisplay> taskDisplays;
 
     public bool PlaceHoldersLeft { get => buildingPlaceholders.Count > 0; }
+    public bool OutpostPlaceholdersLeft { get=> outpostPlaceholders.Count > 0; }
 
     public static AiPlayer Instance { get; private set; }
 
@@ -338,7 +341,7 @@ public class AiPlayer : MonoBehaviour
 
         rebuildTask.name = "Build " + building.buildingName;
         rebuildTask.buildingToConstruct = building;
-        rebuildTask.autoSelectPlaeholder = true;
+        rebuildTask.autoSelectPlaceholder = true;
         rebuildTask.timeDelay = 0;
 
         TaskSet taskSet = tasksSchedule[0];
@@ -356,6 +359,20 @@ public class AiPlayer : MonoBehaviour
     }
 
     /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="units"></param>
+    /// <param name="number">The index in the list of outposts to use</param>
+    public void SendToOutpost(List<Transform> units, int number)
+    {
+        foreach (Transform t in units)
+        {
+            var unit = t.GetComponent<UnitController>();
+            unit.ChangeState(UnitState.Moving, waypoints[number].position);
+        }
+    }
+
+    /// <summary>
     /// Sends all units in a specified list along the patrol route 
     /// </summary>
     /// <param name="units">list of transforms containing the UnitController</param>
@@ -369,6 +386,15 @@ public class AiPlayer : MonoBehaviour
             var patrolState = unit.GetComponent<PatrolState>();
             patrolState.SetPatrolRoute(patrolRoute);
         }
+    }
+
+    /// <summary>
+    /// Add outpost tests
+    /// </summary>
+    /// <param name="outpostPlaceholder"></param>
+    public void AddOutpost(Transform outpostPlaceholder)
+    {
+
     }
 
     public bool TrainUnit(UnitController unit, TrainUnitTask task = null)
@@ -461,7 +487,7 @@ public class AiPlayer : MonoBehaviour
 
         Debug.Log("Dispatching Units");
         return true;
-    } 
+    }
 
     public Transform GetPlaceholder(int number)
     {
@@ -469,6 +495,19 @@ public class AiPlayer : MonoBehaviour
             return buildingPlaceholders[number];
 
         return buildingPlaceholders[0];
+    }
+
+    public Transform GetOutpostPlaceholder(int number)
+    {
+        if (number > -1 && number < outpostPlaceholders.Count)
+            return buildingPlaceholders[number];
+
+        return buildingPlaceholders[0];
+    }
+
+    public bool HasOutpostGhost(Transform transform)
+    {
+        return outpostPlaceholders.Contains(transform);
     }
 
     public Transform[] GetIdleUnits()
