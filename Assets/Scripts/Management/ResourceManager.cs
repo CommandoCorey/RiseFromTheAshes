@@ -112,11 +112,22 @@ public class ResourceManager : MonoBehaviour
     public void AddResource(ResourceType type, int amount)
     {
         playerResources[(int)type].currentAmount += amount;
+
+        if (playerResources[(int)type].currentAmount > playerResources[(int)type].maxAmount)
+            playerResources[(int)type].currentAmount = playerResources[(int)type].maxAmount;
     }
 
+    /// <summary>
+    /// Increases the A.I. player's resource quantity of given type by a specified amount
+    /// </summary>
+    /// <param name="type">the position in the resources array for the resource type</param>
+    /// <param name="amount">The quantity to add to the given resource</param>
     public void AddResourceToAI(ResourceType type, int amount)
     {
         aiResources[(int)type].currentAmount += amount;
+
+        if (aiResources[(int)type].currentAmount > aiResources[(int)type].maxAmount)
+            aiResources[(int)type].currentAmount = aiResources[(int)type].maxAmount;
     }
 
     /// <summary>

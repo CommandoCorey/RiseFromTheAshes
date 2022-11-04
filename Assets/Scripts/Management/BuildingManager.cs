@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class BuildingManager : MonoBehaviour
@@ -38,7 +39,13 @@ public class BuildingManager : MonoBehaviour
 			{
 				Debug.Log(hit.collider.gameObject.name);
 				Building building = hit.collider.gameObject.GetComponent<Building>();
-				building.Interact();
+				try
+				{
+					building.Interact();
+				} catch(Exception e)
+				{
+					Debug.LogException(e);
+				}
 			}
 		}
 	}
