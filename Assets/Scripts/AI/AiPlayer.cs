@@ -104,7 +104,7 @@ public class AiPlayer : MonoBehaviour
 
         activeTasks = new List<AiTask>();
 
-        SortTasks();
+        //SortTasks();
 
         foreach (TaskSet set in tasksSchedule)
         {
