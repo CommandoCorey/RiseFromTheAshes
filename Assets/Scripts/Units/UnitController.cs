@@ -55,14 +55,13 @@ public class UnitController : MonoBehaviour
 
     [Header("Turret Rotation")]
     [SerializeField][Range(1, 100)]
-    float turretRotationSpeed = 1.0f;
+    float turretRotationSpeed = 20.0f;
     [SerializeField][Range(0, 10)]
     float minAngleBeforeFiring = 1;
 
     [Header("Enemy Detection")]
     [Range(1, 100)]
     [SerializeField] float detectionRadius = 30.0f;
-    //[SerializeField] LayerMask detectionLayer;
     [SerializeField] LayerMask enemyUnitLayer;
     [SerializeField] LayerMask enemyBuildingLayer;
     [SerializeField] LayerMask environmentLayer;
@@ -114,12 +113,15 @@ public class UnitController : MonoBehaviour
     private FollowEnemyState followState;
     private AttackState agentAttackState;
     private PatrolState patrolState;
+
+    [SerializeField]
+    private Transform attackTarget = null;
     
     #endregion
 
     # region properties
     public UnitState State { get; private set; }
-    public Transform AttackTarget { get; set; }
+    public Transform AttackTarget { get => attackTarget; set => attackTarget = value; }
     public float DetectionRadius { get => detectionRadius; }
     public LayerMask EnemyUnitLayer { get => enemyUnitLayer; }
     public LayerMask EnemyBuildingLayer { get => enemyBuildingLayer; }

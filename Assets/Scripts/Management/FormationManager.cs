@@ -378,7 +378,7 @@ public class FormationManager : MonoBehaviour
         {
             for (int col = 0; col < maxUnitsPerRow; col++)
             {
-                if (Physics.Raycast(playerRallyPosition + Vector3.up * 2, Vector3.down,
+                if (Physics.Raycast(aiRallyPosition + Vector3.up * 2, Vector3.down,
                     out RaycastHit hitInfo, Mathf.Infinity, groundLayer))
                 {
                     if (!aiRallyFormation.ContainsValue(hitInfo.point))

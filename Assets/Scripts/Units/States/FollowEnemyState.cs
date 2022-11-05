@@ -69,6 +69,7 @@ public class FollowEnemyState : State
         Gizmos.DrawLine(unit.body.position, unit.body.position + directionToTarget * unit.DetectionRadius);
 
 #if UNITY_EDITOR
+        UnityEditor.Handles.color = Color.black;
         UnityEditor.Handles.Label(unit.body.position + Vector3.up * 5, "Moving To Enemy");
 #endif
     }

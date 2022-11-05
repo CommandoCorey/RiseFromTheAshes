@@ -120,7 +120,6 @@ public class AiPlayer : MonoBehaviour
             taskDisplays[i].taskSetNumber.text = "Task Set " + i + ":";
         }
 
-        resources.AddResourceToAI(ResourceType.Steel, 300);
     }
 
     // Update is called once per frame
@@ -359,7 +358,7 @@ public class AiPlayer : MonoBehaviour
     }
 
     /// <summary>
-    /// 
+    /// Sends a group of units to a specified outpost
     /// </summary>
     /// <param name="units"></param>
     /// <param name="number">The index in the list of outposts to use</param>
@@ -397,6 +396,12 @@ public class AiPlayer : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="unit"></param>
+    /// <param name="task"></param>
+    /// <returns></returns>
     public bool TrainUnit(UnitController unit, TrainUnitTask task = null)
     {
         // check for available vehicle bays

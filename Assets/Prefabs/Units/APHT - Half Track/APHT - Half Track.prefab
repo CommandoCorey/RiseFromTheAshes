@@ -1608,6 +1608,7 @@ Transform:
   - {fileID: 8430411455601952506}
   - {fileID: 1092506167159948230}
   - {fileID: 6123190534218913743}
+  - {fileID: 5144965330505549147}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1625,7 +1626,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitName: Half Track
   steelCost: 50
-  timeToTrain: 1
+  timeToTrain: 12
   spaceUsed: 1
   selectionHighlight: {fileID: 1502671828623257943}
   turret: {fileID: 1530437833888941263}
@@ -1638,8 +1639,8 @@ MonoBehaviour:
   damagePerHit: 20
   attackRate: 1
   attackRange: 20
-  turretRotationSpeed: 1
-  minAngleBeforeFiring: 1
+  turretRotationSpeed: 20
+  minAngleBeforeFiring: 5
   detectionRadius: 30
   enemyUnitLayer:
     serializedVersion: 2
@@ -1694,6 +1695,7 @@ MonoBehaviour:
   detectionOpacity: 0.02
   showAttackRange: 0
   attackRangeOpacity: 0.04
+  attackTarget: {fileID: 0}
 --- !u!1 &8652765699483731915
 GameObject:
   m_ObjectHideFlags: 0
@@ -1983,7 +1985,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 8124734693458183249, guid: 5288f7752d1af044ba8781bc8e3cf5fa, type: 3}
   m_PrefabInstance: {fileID: 2610164125971059614}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &4603475851163167540
 --- !u!1001 &2903921928612437993
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2001,7 +2002,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8010315143446698674, guid: e45454b1e4e73454bb17c98ae49c6dc9, type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8010315143446698674, guid: e45454b1e4e73454bb17c98ae49c6dc9, type: 3}
       propertyPath: m_LocalScale.x

@@ -663,6 +663,7 @@ Transform:
   - {fileID: 3521428433331355735}
   - {fileID: 1645160923412942892}
   - {fileID: 7003106980674681324}
+  - {fileID: 562103711272556692}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -680,7 +681,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitName: Reconnaissance Vehicle
   steelCost: 30
-  timeToTrain: 1
+  timeToTrain: 7
   spaceUsed: 1
   selectionHighlight: {fileID: 6084636860212898968}
   turret: {fileID: 1809220546875693944}
@@ -693,8 +694,8 @@ MonoBehaviour:
   damagePerHit: 10
   attackRate: 1
   attackRange: 15
-  turretRotationSpeed: 1
-  minAngleBeforeFiring: 1
+  turretRotationSpeed: 20
+  minAngleBeforeFiring: 5
   detectionRadius: 30
   enemyUnitLayer:
     serializedVersion: 2
@@ -749,6 +750,7 @@ MonoBehaviour:
   detectionOpacity: 0.02
   showAttackRange: 0
   attackRangeOpacity: 0.04
+  attackTarget: {fileID: 0}
 --- !u!1001 &427856437073881577
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1095,7 +1097,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8010315143446698674, guid: e45454b1e4e73454bb17c98ae49c6dc9, type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8010315143446698674, guid: e45454b1e4e73454bb17c98ae49c6dc9, type: 3}
       propertyPath: m_LocalScale.x
@@ -1147,13 +1149,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e45454b1e4e73454bb17c98ae49c6dc9, type: 3}
---- !u!1 &6084636860212898968 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4365779739516481214, guid: e45454b1e4e73454bb17c98ae49c6dc9, type: 3}
-  m_PrefabInstance: {fileID: 7558910952377598502}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &562103711272556692 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8010315143446698674, guid: e45454b1e4e73454bb17c98ae49c6dc9, type: 3}
+  m_PrefabInstance: {fileID: 7558910952377598502}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6084636860212898968 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4365779739516481214, guid: e45454b1e4e73454bb17c98ae49c6dc9, type: 3}
   m_PrefabInstance: {fileID: 7558910952377598502}
   m_PrefabAsset: {fileID: 0}

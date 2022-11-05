@@ -2263,6 +2263,7 @@ Transform:
   - {fileID: 7260449553546266203}
   - {fileID: 1011721725307697700}
   - {fileID: 3151541396288436561}
+  - {fileID: 656740466980761902}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2280,7 +2281,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitName: Armored Fighting Vehicle
   steelCost: 100
-  timeToTrain: 1
+  timeToTrain: 20
   spaceUsed: 1
   selectionHighlight: {fileID: 6530557412702389538}
   turret: {fileID: 6504873562474881247}
@@ -2294,7 +2295,7 @@ MonoBehaviour:
   attackRate: 1
   attackRange: 20
   turretRotationSpeed: 20
-  minAngleBeforeFiring: 1
+  minAngleBeforeFiring: 5
   detectionRadius: 60
   enemyUnitLayer:
     serializedVersion: 2
@@ -2349,6 +2350,7 @@ MonoBehaviour:
   detectionOpacity: 0.02
   showAttackRange: 0
   attackRangeOpacity: 0.04
+  attackTarget: {fileID: 0}
 --- !u!1001 &443308776340700147
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2670,7 +2672,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 8124734693458183249, guid: 5288f7752d1af044ba8781bc8e3cf5fa, type: 3}
   m_PrefabInstance: {fileID: 6592246329360776448}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &7227889898231677214
 --- !u!1001 &7365477585755679644
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2688,7 +2689,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8010315143446698674, guid: e45454b1e4e73454bb17c98ae49c6dc9, type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8010315143446698674, guid: e45454b1e4e73454bb17c98ae49c6dc9, type: 3}
       propertyPath: m_LocalScale.x

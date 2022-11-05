@@ -50,6 +50,9 @@ public class ResourceManager : MonoBehaviour
     {
         for (int i = 0; i < playerResources.Length; i++)
             playerResources[i].currentAmount = playerResources[i].startingAmount;
+
+        for (int i = 0; i < aiResources.Length; i++)
+            aiResources[i].currentAmount = aiResources[i].startingAmount;
     }
 
     // Update is called once per frame
