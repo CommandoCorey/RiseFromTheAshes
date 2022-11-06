@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
@@ -38,7 +39,7 @@ public class UnitController : MonoBehaviour
     public Transform body;
     public Sprite guiIcon;
 
-    [Header("External Scripts")]
+    [Header("Health Display")]
     public ProgressBar healthBar;
     
     [Header("Unit Stats")]
@@ -205,9 +206,12 @@ public class UnitController : MonoBehaviour
 
 	// Update is called once per frame
 	void Update()
-    {        
-        if (healthBar)        
+    {
+        if (healthBar)
+        {
             healthBar.progress = health / maxHealth;
+            healthBar.SetProgress(health / maxHealth, maxHealth);
+        }
 
         if (health <= 0)
         {
@@ -225,8 +229,7 @@ public class UnitController : MonoBehaviour
                 gameManager.InstantiateParticles(destroyEffects[RandomPick(destroyEffects)], body.position);
         }
 
-        healthBar.transform.position = body.position + healthBarOffset;
-
+        //healthBar.transform.position = body.position + healthBarOffset;
 
         if (UnitManager.Instance)
         {
