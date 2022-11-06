@@ -47,11 +47,10 @@ public class AttackState : State
             return;
         }
 
-        // rotate us over time according to speed until we are in the required rotation  
-        //unit.turret.rotation = Quaternion.Slerp(unit.turret.rotation, lookRotation, Time.deltaTime * unit.TurretRotationSpeed);
+        // rotate us over time according to speed until we are in the required rotation        
         unit.turret.rotation = Quaternion.RotateTowards(unit.turret.rotation, lookRotation, Time.deltaTime * unit.TurretRotationSpeed);
         // revert x and z rotation back to there original value
-        unit.turret.localRotation = Quaternion.Euler(initialRotation.x, unit.turret.localRotation.eulerAngles.y, initialRotation.z);
+        //unit.turret.localRotation = Quaternion.Euler(initialRotation.x, unit.turret.localRotation.eulerAngles.y, initialRotation.z);
 
         //Debug.Log("Enemy target detected");
 
