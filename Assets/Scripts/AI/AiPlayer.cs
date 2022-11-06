@@ -251,14 +251,21 @@ public class AiPlayer : MonoBehaviour
             }
             else
             {
-                AiTask task = tasksSchedule[i].tasks[tasksSchedule[i].TaskNum];
+                try
+                {
+                    AiTask task = tasksSchedule[i].tasks[tasksSchedule[i].TaskNum];
 
-                taskDisplays[i].taskDescription.text = task.TaskDescription;
+                    taskDisplays[i].taskDescription.text = task.TaskDescription;
 
-                if (steel < task.GetSteelCost())
-                    taskDisplays[i].taskStatus.text = "Not enough Steel";
-                else
-                    taskDisplays[i].taskStatus.text = task.TaskStatus;
+                    if (steel < task.GetSteelCost())
+                        taskDisplays[i].taskStatus.text = "Not enough Steel";
+                    else
+                        taskDisplays[i].taskStatus.text = task.TaskStatus;
+                }
+                catch(Exception e)
+                {
+                    Debug.LogException(e);
+                }
             }
         }
 
