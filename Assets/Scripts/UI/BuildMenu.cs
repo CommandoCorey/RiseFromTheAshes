@@ -29,7 +29,7 @@ public class BuildMenu : MonoBehaviour
 
 	[SerializeField] GraphicRaycaster raycaster;
 	[SerializeField] EventSystem eventSystem;
-	[SerializeField] GameObject insufficientResourcesText;
+	[SerializeField] TextMeshProUGUI insufficientResourcesText;
 	[SerializeField] float notificationTimeout = 1;
 
 	[Header("Build Stats Text")]
@@ -122,7 +122,7 @@ public class BuildMenu : MonoBehaviour
 			b.ghost = ghostBuilding;
 			ghostBuilding.gameObject.SetActive(false);
 			b.Build();
-			insufficientResourcesText.SetActive(false);
+			insufficientResourcesText.gameObject.SetActive(false);
 
 			Hide();
 		}
@@ -134,8 +134,9 @@ public class BuildMenu : MonoBehaviour
 
 	private IEnumerator showErrorText()
 	{
-        insufficientResourcesText.SetActive(true);
-		yield return new WaitForSeconds(notificationTimeout);
-        insufficientResourcesText.SetActive(false);
+        insufficientResourcesText.gameObject.SetActive(true);
+		insufficientResourcesText.text = "You don't have enough steel to construct this building";
+        yield return new WaitForSeconds(notificationTimeout);
+        insufficientResourcesText.gameObject.SetActive(false);
     }
 }

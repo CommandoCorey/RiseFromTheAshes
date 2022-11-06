@@ -95,6 +95,7 @@ public class AgentMoveState : State
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(targetPos, 1);
 #if UNITY_EDITOR
+
         UnityEditor.Handles.Label(unit.body.position + Vector3.up * 1, "Moving");
 #endif
     }

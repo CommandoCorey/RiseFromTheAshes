@@ -104,7 +104,7 @@ public class AiPlayer : MonoBehaviour
 
         activeTasks = new List<AiTask>();
 
-        SortTasks();
+        //SortTasks();
 
         foreach (TaskSet set in tasksSchedule)
         {
@@ -120,7 +120,6 @@ public class AiPlayer : MonoBehaviour
             taskDisplays[i].taskSetNumber.text = "Task Set " + i + ":";
         }
 
-        resources.AddResourceToAI(ResourceType.Steel, 300);
     }
 
     // Update is called once per frame
@@ -252,14 +251,21 @@ public class AiPlayer : MonoBehaviour
             }
             else
             {
-                AiTask task = tasksSchedule[i].tasks[tasksSchedule[i].TaskNum];
+                try
+                {
+                    AiTask task = tasksSchedule[i].tasks[tasksSchedule[i].TaskNum];
 
-                taskDisplays[i].taskDescription.text = task.TaskDescription;
+                    taskDisplays[i].taskDescription.text = task.TaskDescription;
 
-                if (steel < task.GetSteelCost())
-                    taskDisplays[i].taskStatus.text = "Not enough Steel";
-                else
-                    taskDisplays[i].taskStatus.text = task.TaskStatus;
+                    if (steel < task.GetSteelCost())
+                        taskDisplays[i].taskStatus.text = "Not enough Steel";
+                    else
+                        taskDisplays[i].taskStatus.text = task.TaskStatus;
+                }
+                catch(Exception e)
+                {
+                    Debug.LogException(e);
+                }
             }
         }
 
@@ -359,7 +365,7 @@ public class AiPlayer : MonoBehaviour
     }
 
     /// <summary>
-    /// 
+    /// Sends a group of units to a specified outpost
     /// </summary>
     /// <param name="units"></param>
     /// <param name="number">The index in the list of outposts to use</param>
@@ -397,6 +403,12 @@ public class AiPlayer : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="unit"></param>
+    /// <param name="task"></param>
+    /// <returns></returns>
     public bool TrainUnit(UnitController unit, TrainUnitTask task = null)
     {
         // check for available vehicle bays

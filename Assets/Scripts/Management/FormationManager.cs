@@ -58,7 +58,7 @@ public class FormationManager : MonoBehaviour
     {
         Vector3 unitCenter = new Vector3();
         RaycastHit rayHit;
-        NavMeshHit navHit;        
+        NavMeshHit navHit;
 
         searchedPositions.Clear();
         formationPositions.Clear();
@@ -108,7 +108,7 @@ public class FormationManager : MonoBehaviour
                         formationPositions.Add(navHit.position);
                         unitsPlaced++;
                     }
-                
+
                 }
 
                 // exit loop if all units are placed
@@ -175,14 +175,14 @@ public class FormationManager : MonoBehaviour
                 // check that the position is not out of bounds
                 if (Physics.Raycast(position + Vector3.up, Vector3.down, out rayHit, groundLayer))
                 {
-                        // Make sure point is on navmesh
-                        // Note: maxDistance must be above agent radius else program will get stuck in loop forever
-                        if (NavMesh.SamplePosition(rayHit.point, out navHit, 1.0f, NavMesh.AllAreas))
-                        {
-                            formationPositions.Add(navHit.position);
-                            unitsPlaced++;
-                        }
-                 
+                    // Make sure point is on navmesh
+                    // Note: maxDistance must be above agent radius else program will get stuck in loop forever
+                    if (NavMesh.SamplePosition(rayHit.point, out navHit, 1.0f, NavMesh.AllAreas))
+                    {
+                        formationPositions.Add(navHit.position);
+                        unitsPlaced++;
+                    }
+
                 }
                 else
                 {
@@ -297,7 +297,7 @@ public class FormationManager : MonoBehaviour
                     playerId = 0;
             }
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             Debug.LogException(e);
         }
@@ -317,14 +317,15 @@ public class FormationManager : MonoBehaviour
 
         for (int row = 0; row < maxRows; row++)
         {
-            for(int col = 0; col < maxUnitsPerRow; col++)
+            for (int col = 0; col < maxUnitsPerRow; col++)
             {
-                if(Physics.Raycast(playerRallyPosition + Vector3.up * 2, Vector3.down, 
+                if (Physics.Raycast(playerRallyPosition + Vector3.up * 2, Vector3.down,
                     out RaycastHit hitInfo, Mathf.Infinity, groundLayer))
                 {
-                    if (!playerRallyFormation.ContainsValue(hitInfo.point)) {
+                    if (!playerRallyFormation.ContainsValue(hitInfo.point))
+                    {
                         rallyNumber = playerId;
-                        playerRallyFormation.Add(playerId++, hitInfo.point);                        
+                        playerRallyFormation.Add(playerId++, hitInfo.point);
 
                         return hitInfo.point;
                     }
@@ -357,7 +358,7 @@ public class FormationManager : MonoBehaviour
         Debug.LogError("Max rows exceeded. Could not find a valid rally formation position.");
 
         rallyNumber = playerId;
-        playerRallyFormation.Add(playerId++, centerPoint);        
+        playerRallyFormation.Add(playerId++, centerPoint);
 
         return centerPoint;
     }
@@ -377,7 +378,7 @@ public class FormationManager : MonoBehaviour
         {
             for (int col = 0; col < maxUnitsPerRow; col++)
             {
-                if (Physics.Raycast(playerRallyPosition + Vector3.up * 2, Vector3.down,
+                if (Physics.Raycast(aiRallyPosition + Vector3.up * 2, Vector3.down,
                     out RaycastHit hitInfo, Mathf.Infinity, groundLayer))
                 {
                     if (!aiRallyFormation.ContainsValue(hitInfo.point))
@@ -438,7 +439,7 @@ public class FormationManager : MonoBehaviour
         newVector.z = current.x;
 
         return newVector;
-    }   
+    }
 
     /*
     private void CheckUnitsMoved()
@@ -488,7 +489,7 @@ public class FormationManager : MonoBehaviour
             }
         }*/
 
-        if(showPlayerRallyPositions)
+        if (showPlayerRallyPositions)
         {
             Gizmos.color = Color.green;
             Gizmos.DrawWireSphere(playerRallyPosition + Vector3.up * 0.5f, 1);
