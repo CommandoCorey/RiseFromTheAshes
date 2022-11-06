@@ -45,12 +45,13 @@ public class BuildTask : AiTask
         {
             var ai = FindObjectOfType<AiPlayer>();
 
+            /*
             if(buildingToConstruct.tag == "Outpost" && !ai.OutpostPlaceholdersLeft)
             {
                 taskStatus = "No outposts discovered";                
                 return false;
             }
-            else if (!ai.PlaceHoldersLeft)
+            else */if (!ai.PlaceHoldersLeft)
             {
                 taskStatus = "No placeholders left";
                 Debug.LogError("There are no more placeholders to construct the next building");
@@ -60,7 +61,7 @@ public class BuildTask : AiTask
             Transform ghostBuilding;
 
             // check if building is an outpost
-            if (buildingToConstruct.tag == "Outpost")
+           /* if (buildingToConstruct.tag == "Outpost")
             {
                 if (autoSelectPlaceholder)
                     ghostBuilding = ai.GetOutpostPlaceholder(0);
@@ -68,12 +69,12 @@ public class BuildTask : AiTask
                     ghostBuilding = ai.GetPlaceholder(placeholderNumber);
             }
             else
-            {
+            {*/
                 if (autoSelectPlaceholder)
                     ghostBuilding = ai.GetPlaceholder(0);
                 else
                     ghostBuilding = ai.GetPlaceholder(placeholderNumber);
-            }
+            //}
 
             ai.ConstructBuilding(ghostBuilding, buildingToConstruct, this);
 

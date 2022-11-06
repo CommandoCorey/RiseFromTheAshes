@@ -106,7 +106,7 @@ MonoBehaviour:
     capacity by 100.
   aiBuilding: 0
   HP: 0
-  selectionHighlight: {fileID: 0}
+  selectionHighlight: {fileID: 4292112486065280486}
   hitSounds:
   - clip: {fileID: 8300000, guid: 650e05b04e841814bb114354d5d09252, type: 3}
     volumeScale: 0.5
@@ -151,13 +151,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5288815935731700176}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 62c0e9bedd811934ba1b67fab761f762, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  permRadius: 20
-  impermRadius: 15
+  permRadius: 40
+  impermRadius: 35
 --- !u!208 &188239416831121785
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -544,6 +544,10 @@ PrefabInstance:
       propertyPath: m_Color.a
       value: 0.49019608
       objectReference: {fileID: 0}
+    - target: {fileID: 6071996158041268976, guid: e45454b1e4e73454bb17c98ae49c6dc9, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6607136015882401861, guid: e45454b1e4e73454bb17c98ae49c6dc9, type: 3}
       propertyPath: m_Color.a
       value: 0.49019608
@@ -616,12 +620,25 @@ PrefabInstance:
       propertyPath: m_Color.a
       value: 0.49019608
       objectReference: {fileID: 0}
+    - target: {fileID: 8507280605578382174, guid: e45454b1e4e73454bb17c98ae49c6dc9, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8789546280077218283, guid: e45454b1e4e73454bb17c98ae49c6dc9, type: 3}
       propertyPath: m_Color.a
       value: 0.49019608
       objectReference: {fileID: 0}
+    - target: {fileID: 8970516537599607442, guid: e45454b1e4e73454bb17c98ae49c6dc9, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e45454b1e4e73454bb17c98ae49c6dc9, type: 3}
+--- !u!1 &4292112486065280486 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4365779739516481214, guid: e45454b1e4e73454bb17c98ae49c6dc9, type: 3}
+  m_PrefabInstance: {fileID: 506364798922570584}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7506554125716824554 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8010315143446698674, guid: e45454b1e4e73454bb17c98ae49c6dc9, type: 3}
