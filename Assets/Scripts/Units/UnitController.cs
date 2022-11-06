@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
@@ -10,7 +11,6 @@ public enum UnitState
 {
     Idle,    
     Moving,
-    Flock,
     Follow,
     Attack,
     Patrol
@@ -39,7 +39,7 @@ public class UnitController : MonoBehaviour
     public Transform body;
     public Sprite guiIcon;
 
-    [Header("External Scripts")]
+    [Header("Health Display")]
     public ProgressBar healthBar;
     
     [Header("Unit Stats")]
@@ -56,14 +56,13 @@ public class UnitController : MonoBehaviour
 
     [Header("Turret Rotation")]
     [SerializeField][Range(1, 100)]
-    float turretRotationSpeed = 1.0f;
+    float turretRotationSpeed = 20.0f;
     [SerializeField][Range(0, 10)]
     float minAngleBeforeFiring = 1;
 
     [Header("Enemy Detection")]
     [Range(1, 100)]
     [SerializeField] float detectionRadius = 30.0f;
-    //[SerializeField] LayerMask detectionLayer;
     [SerializeField] LayerMask enemyUnitLayer;
     [SerializeField] LayerMask enemyBuildingLayer;
     [SerializeField] LayerMask environmentLayer;
@@ -109,18 +108,21 @@ public class UnitController : MonoBehaviour
 
     // state classes
     private IdleState idleState;
-    private SeekState moveState;
+    //private SeekState moveState;
     private AgentMoveState agentMoveState;
-    private FlockState flockState;
+    //private FlockState flockState;
     private FollowEnemyState followState;
     private AttackState agentAttackState;
     private PatrolState patrolState;
+
+    [SerializeField]
+    private Transform attackTarget = null;
     
     #endregion
 
     # region properties
     public UnitState State { get; private set; }
-    public Transform AttackTarget { get; set; }
+    public Transform AttackTarget { get => attackTarget; set => attackTarget = value; }
     public float DetectionRadius { get => detectionRadius; }
     public LayerMask EnemyUnitLayer { get => enemyUnitLayer; }
     public LayerMask EnemyBuildingLayer { get => enemyBuildingLayer; }
@@ -204,9 +206,12 @@ public class UnitController : MonoBehaviour
 
 	// Update is called once per frame
 	void Update()
-    {        
-        if (healthBar)        
+    {
+        if (healthBar)
+        {
             healthBar.progress = health / maxHealth;
+            healthBar.SetProgress(health / maxHealth, maxHealth);
+        }
 
         if (health <= 0)
         {
@@ -224,8 +229,7 @@ public class UnitController : MonoBehaviour
                 gameManager.InstantiateParticles(destroyEffects[RandomPick(destroyEffects)], body.position);
         }
 
-        healthBar.transform.position = body.position + healthBarOffset;
-
+        //healthBar.transform.position = body.position + healthBarOffset;
 
         if (UnitManager.Instance)
         {
@@ -245,7 +249,12 @@ public class UnitController : MonoBehaviour
             mat.SetColor("HealEffectColor", Color.blue);
             mat.SetFloat("HealEffectIntensity", Mathf.Clamp(healTimer, 0.0f, 1.0f));
 		}
-    }
+
+
+        // Check for outpost ghosts the unit is A.I. controlled
+        if (gameObject.layer == 7)
+            SearchForOutposts();
+    }    
 
     private void LateUpdate()
     {
@@ -403,27 +412,16 @@ public class UnitController : MonoBehaviour
                 // prevents destruction during redirect
                 if (newState != UnitState.Moving)
                 {
-                    //if (tag == "PlayerUnit")
-                        //Destroy(moveState);
-                    //else if (tag == "NavMesh Agent")
-                        Destroy(agentMoveState);
+                    Destroy(agentMoveState);
                 }
             break;
 
             case UnitState.Follow:
-
-                //if (tag == "NavMesh Agent")
                     Destroy(followState);
-                //else if (tag == "PlayerUnit")
-                    //Destroy(attackState);
 
             break;
 
-            case UnitState.Flock: Destroy(flockState); break;
             case UnitState.Attack:                
-                //if(tag == "PlayerUnit")
-                    //Destroy(attackState);
-                //else if (tag == "NavMesh Agent")
                     Destroy(agentAttackState);                
             break;
 
@@ -446,70 +444,22 @@ public class UnitController : MonoBehaviour
 
             case UnitState.Moving:
 
-                /*
-                if (this.tag == "PlayerUnit")
-                {
-                    if (GetComponent<SeekState>() == null)
-                    {                       
-                        moveState = gameObject.AddComponent<SeekState>();
-                    }               
+                if(agentMoveState == null)
+                    agentMoveState = gameObject.AddComponent<AgentMoveState>();
+                else                      
+                    body.GetComponent<NavMeshAgent>().isStopped = true;
 
-                    //moveState.Target = target;
-                    moveState.MoveTo(target);
-                }*/
-                //else if (this.tag == "NavMesh Agent")
-                //{
-                    if(agentMoveState == null)
-                        agentMoveState = gameObject.AddComponent<AgentMoveState>();
-                    else                      
-                        body.GetComponent<NavMeshAgent>().isStopped = true;
-
-                    agentMoveState.MoveTo(target);
-                //}
-            break;
-
-            case UnitState.Flock:
-                if (GetComponent<FlockState>() == null)
-                {
-                    flockState = gameObject.AddComponent<FlockState>();
-                }
-
-                flockState.Target = target;
-                //flockState.FormationTarget = formationTarget;
-            break;
-
-            case UnitState.Follow:
+                agentMoveState.MoveTo(target);
                 
-                //if (this.tag == "NavMesh Agent")
-                //{
-                    followState = gameObject.AddComponent<FollowEnemyState>();
-                //}
-                /*else if (this.tag == "PlayerUnit")
-                {
-                    //if (GetComponent<CombatState>() == null)
-                    //{
-                        //attackState = gameObject.AddComponent<CombatState>();
-                    //}
+           break;
 
-                //}*/
-            break;
+           case UnitState.Follow:
+                followState = gameObject.AddComponent<FollowEnemyState>();
 
-            case UnitState.Attack:
+           break;
 
-                /*
-                if (this.tag == "PlayerUnit")
-                {
-                    if (GetComponent<CombatState>() == null)
-                    {
-                        attackState = gameObject.AddComponent<CombatState>();
-                    }
-
-                }*/
-                
-                //else if (this.tag == "NavMesh Agent")
-                //{
-                    agentAttackState = gameObject.AddComponent<AttackState>();                    
-                //}
+           case UnitState.Attack:
+               agentAttackState = gameObject.AddComponent<AttackState>();                    
            break;
 
            case UnitState.Patrol:
@@ -523,6 +473,28 @@ public class UnitController : MonoBehaviour
     private int RandomPick(Object[] array)
     {
         return Random.Range(0, array.Length - 1);
+    }
+
+    //------------------------------------------------------------------
+    // Checks if there is an outpost placeholder in detection range that
+    // the AiPlayer has not already found
+    // If there is the Aiplayer adds it to the outpost placeholder list
+    //------------------------------------------------------------------
+    private void SearchForOutposts()
+    {
+        var aiPlayer = AiPlayer.Instance;
+        var ghostBuildings = Physics.OverlapSphere(transform.position, detectionRadius, 22); // 22 = buildable layer
+
+        foreach(Collider ghost in ghostBuildings)
+        {
+            // check that the placeholder is an outpost placeholder and that
+            // the ai player does not already have it
+            if(ghost.gameObject.tag == "Outpost" && 
+                !aiPlayer.HasOutpostGhost(ghost.transform))
+            {
+                aiPlayer.AddOutpost(ghost.transform);
+            }
+        }
     }
 
     // Removes unit from lists in unit manager and GUI once it is destroyed

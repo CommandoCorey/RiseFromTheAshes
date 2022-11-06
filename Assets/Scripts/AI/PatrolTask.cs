@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Patrol Task", menuName = "Ai Task/Send On Patrol", order = 2)]
 public class PatrolTask : DispatchWaveTask
 {
-    public int routeNumber = 0;
+    public int patrolRoute = 0;
 
     private bool completed = false;
 
@@ -16,7 +16,7 @@ public class PatrolTask : DispatchWaveTask
     {
         var clonedTask = (PatrolTask) base.Clone();
 
-        clonedTask.routeNumber = routeNumber;
+        clonedTask.patrolRoute = patrolRoute;
         return clonedTask;
     }
 

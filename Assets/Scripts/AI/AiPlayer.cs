@@ -13,6 +13,7 @@ public class TaskSet
     public string description;
     public bool loopTaskSet;
     public bool addRebuildTasks;
+    public bool addOutpostBuildTasks;
     public List<AiTask> tasks;
 
     public int TaskNum { get; set; } = 0;
@@ -21,12 +22,13 @@ public class TaskSet
 
 public class AiPlayer : MonoBehaviour
 {
-    public Transform playerBase;
+    public Transform playerBase;    
     public Transform rallyPoint;
     [SerializeField] List<Transform> buildingPlaceholders;
+    [SerializeField] List<Transform> outpostPlaceholders;
 
     public List<VehicleBay> vehicleBays;
-
+    public Transform[] waypoints;
     public Transform[] patrolRoute;
 
     [Header("Ai Tasks")]
@@ -74,6 +76,7 @@ public class AiPlayer : MonoBehaviour
     private List<TaskSetDisplay> taskDisplays;
 
     public bool PlaceHoldersLeft { get => buildingPlaceholders.Count > 0; }
+    public bool OutpostPlaceholdersLeft { get=> outpostPlaceholders.Count > 0; }
 
     public static AiPlayer Instance { get; private set; }
 
@@ -101,7 +104,7 @@ public class AiPlayer : MonoBehaviour
 
         activeTasks = new List<AiTask>();
 
-        SortTasks();
+        //SortTasks();
 
         foreach (TaskSet set in tasksSchedule)
         {
@@ -117,7 +120,6 @@ public class AiPlayer : MonoBehaviour
             taskDisplays[i].taskSetNumber.text = "Task Set " + i + ":";
         }
 
-        resources.AddResourceToAI(ResourceType.Steel, 300);
     }
 
     // Update is called once per frame
@@ -249,14 +251,21 @@ public class AiPlayer : MonoBehaviour
             }
             else
             {
-                AiTask task = tasksSchedule[i].tasks[tasksSchedule[i].TaskNum];
+                try
+                {
+                    AiTask task = tasksSchedule[i].tasks[tasksSchedule[i].TaskNum];
 
-                taskDisplays[i].taskDescription.text = task.TaskDescription;
+                    taskDisplays[i].taskDescription.text = task.TaskDescription;
 
-                if (steel < task.GetSteelCost())
-                    taskDisplays[i].taskStatus.text = "Not enough Steel";
-                else
-                    taskDisplays[i].taskStatus.text = task.TaskStatus;
+                    if (steel < task.GetSteelCost())
+                        taskDisplays[i].taskStatus.text = "Not enough Steel";
+                    else
+                        taskDisplays[i].taskStatus.text = task.TaskStatus;
+                }
+                catch(Exception e)
+                {
+                    Debug.LogException(e);
+                }
             }
         }
 
@@ -338,7 +347,7 @@ public class AiPlayer : MonoBehaviour
 
         rebuildTask.name = "Build " + building.buildingName;
         rebuildTask.buildingToConstruct = building;
-        rebuildTask.autoSelectPlaeholder = true;
+        rebuildTask.autoSelectPlaceholder = true;
         rebuildTask.timeDelay = 0;
 
         TaskSet taskSet = tasksSchedule[0];
@@ -353,6 +362,20 @@ public class AiPlayer : MonoBehaviour
 
         tasksSchedule[rebuiltSetNumber].tasks.Add(rebuildTask);
         SortTaskSet(tasksSchedule[rebuiltSetNumber]);
+    }
+
+    /// <summary>
+    /// Sends a group of units to a specified outpost
+    /// </summary>
+    /// <param name="units"></param>
+    /// <param name="number">The index in the list of outposts to use</param>
+    public void SendToOutpost(List<Transform> units, int number)
+    {
+        foreach (Transform t in units)
+        {
+            var unit = t.GetComponent<UnitController>();
+            unit.ChangeState(UnitState.Moving, waypoints[number].position);
+        }
     }
 
     /// <summary>
@@ -371,6 +394,21 @@ public class AiPlayer : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Add outpost tests
+    /// </summary>
+    /// <param name="outpostPlaceholder"></param>
+    public void AddOutpost(Transform outpostPlaceholder)
+    {
+
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="unit"></param>
+    /// <param name="task"></param>
+    /// <returns></returns>
     public bool TrainUnit(UnitController unit, TrainUnitTask task = null)
     {
         // check for available vehicle bays
@@ -461,7 +499,7 @@ public class AiPlayer : MonoBehaviour
 
         Debug.Log("Dispatching Units");
         return true;
-    } 
+    }
 
     public Transform GetPlaceholder(int number)
     {
@@ -469,6 +507,19 @@ public class AiPlayer : MonoBehaviour
             return buildingPlaceholders[number];
 
         return buildingPlaceholders[0];
+    }
+
+    public Transform GetOutpostPlaceholder(int number)
+    {
+        if (number > -1 && number < outpostPlaceholders.Count)
+            return buildingPlaceholders[number];
+
+        return buildingPlaceholders[0];
+    }
+
+    public bool HasOutpostGhost(Transform transform)
+    {
+        return outpostPlaceholders.Contains(transform);
     }
 
     public Transform[] GetIdleUnits()

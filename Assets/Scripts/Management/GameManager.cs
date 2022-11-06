@@ -102,6 +102,8 @@ public class GameManager : MonoBehaviour
 
         if(maxUnitsText)
             maxUnitsText.text = maxUnitsPlayer.ToString();
+
+        Cursor.lockState = CursorLockMode.Confined;
     }
 
     // Update is called once per frame
@@ -227,7 +229,10 @@ public class GameManager : MonoBehaviour
         GetComponent<SelectionManager>().enabled = !paused;
         GetComponent<ResourceManager>().enabled = !paused;
         GetComponent<BuildingManager>().enabled = !paused;
-        GetComponent<AiManager>().enabled = !paused;
+
+        /* NOTE (George): I don't know if this is still required. It
+         * appears to not be, but I have no idea. */
+        //GetComponent<AiManager>().enabled = !paused;
     }
 
     /// <summary>

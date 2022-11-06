@@ -48,4 +48,10 @@ public class ProgressBar : MonoBehaviour
 			text.gameObject.SetActive(false);
 		}
 	}
+
+	public void SetProgress(float currentValue, float maxValue)
+	{
+		progress = currentValue;
+		this.maxValue = maxValue;
+	}
 }
