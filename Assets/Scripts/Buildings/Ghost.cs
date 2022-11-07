@@ -9,7 +9,7 @@ public class Ghost : MonoBehaviour
 
 	public void ShowBuildMenu()
 	{
-		BuildMenu.Instance.transform.position = transform.position + buildMenuOffset;
+		//BuildMenu.Instance.transform.position = transform.position + buildMenuOffset;
 		BuildMenu.Instance.ghostBuilding = this;
 		BuildMenu.Instance.gameObject.SetActive(true);
 	}

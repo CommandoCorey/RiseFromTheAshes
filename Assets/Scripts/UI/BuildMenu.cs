@@ -57,9 +57,13 @@ public class BuildMenu : MonoBehaviour
 			});
 		}
 
-		cancelButton.onClick.AddListener(() => {
-			Hide();
-		});
+		if (cancelButton)
+		{
+			cancelButton.onClick.AddListener(() =>
+			{
+				Hide();
+			});
+		}
 
 		Hide();
 	}
@@ -78,7 +82,7 @@ public class BuildMenu : MonoBehaviour
 			{
 				if (!hit.collider.gameObject.CompareTag("BuildMenu"))
 				{
-					//Hide();
+					Hide();
 				}
 			}
 		}

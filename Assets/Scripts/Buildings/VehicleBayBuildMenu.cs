@@ -92,9 +92,13 @@ public class VehicleBayBuildMenu : MonoBehaviour {
 			});
 		}
 
-		cancelButton.onClick.AddListener(() => {
-			Hide();
-		});
+		if (cancelButton)
+		{
+			cancelButton.onClick.AddListener(() =>
+			{
+				Hide();
+			});
+		}
 
 		Hide();
 	}

@@ -49,7 +49,7 @@ public class VehicleBay : MonoBehaviour {
 	public void Interact()
 	{
 		if (building != null && building.IsBuilt) {
-			VehicleBayBuildMenu.Instance.transform.position = transform.position + buildMenuOffset;
+			//VehicleBayBuildMenu.Instance.transform.position = transform.position + buildMenuOffset;
 			VehicleBayBuildMenu.Instance.currentVehicleBay = this;
 			VehicleBayBuildMenu.Instance.gameObject.SetActive(true);
 		}
