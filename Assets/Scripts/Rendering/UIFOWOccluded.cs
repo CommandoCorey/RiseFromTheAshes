@@ -39,19 +39,10 @@ public class UIFOWOccluded : MonoBehaviour
 
 	private void Update()
 	{
-		FOW f;
+		if (!FOWManager.Instance) { return; }
 
-        try
-		{
-			f = FOWManager.Instance.imperm;
-        }
-        catch (Exception)
-        {
-            //Debug.Log("Fog of war not in scene");
-            f = null;
-        }
+		FOW f = FOWManager.Instance.imperm;
 
-        if (!f) { return; }
 		if (f.GetMask(f.WorldPosToMaskPos(transform.position)))
 		{
 			EnableRendering(true);

@@ -7,11 +7,11 @@ public class BuildTask : AiTask
 {
     public Building buildingToConstruct;
 
-    public bool autoSelectPlaeholder = true;
+    public bool autoSelectPlaceholder = true;
     [Range(0, 7)]
     public int placeholderNumber;
 
-    private Building instance;
+    protected Building instance;
 
     public override string TaskDescription { 
         get => "Build " + buildingToConstruct.buildingName;
@@ -27,7 +27,7 @@ public class BuildTask : AiTask
         var clonedTask = new BuildTask();
 
         clonedTask.buildingToConstruct = buildingToConstruct;
-        clonedTask.autoSelectPlaeholder= autoSelectPlaeholder;
+        clonedTask.autoSelectPlaceholder= autoSelectPlaceholder;
         clonedTask.placeholderNumber = placeholderNumber;
         clonedTask.instance = instance;
 
@@ -45,7 +45,12 @@ public class BuildTask : AiTask
         {
             var ai = FindObjectOfType<AiPlayer>();
 
-            if (!ai.PlaceHoldersLeft)
+            if(buildingToConstruct.tag == "Outpost" && !ai.OutpostPlaceholdersLeft)
+            {
+                taskStatus = "No outposts discovered";                
+                return false;
+            }
+            else if (!ai.PlaceHoldersLeft)
             {
                 taskStatus = "No placeholders left";
                 Debug.LogError("There are no more placeholders to construct the next building");
@@ -53,10 +58,22 @@ public class BuildTask : AiTask
             }
 
             Transform ghostBuilding;
-            if (autoSelectPlaeholder)
-                ghostBuilding = ai.GetPlaceholder(0);
+
+            // check if building is an outpost
+            if (buildingToConstruct.tag == "Outpost")
+            {
+                if (autoSelectPlaceholder)
+                    ghostBuilding = ai.GetOutpostPlaceholder(0);
+                else
+                    ghostBuilding = ai.GetPlaceholder(placeholderNumber);
+            }
             else
-                ghostBuilding = ai.GetPlaceholder(placeholderNumber);
+            {
+                if (autoSelectPlaceholder)
+                    ghostBuilding = ai.GetPlaceholder(0);
+                else
+                    ghostBuilding = ai.GetPlaceholder(placeholderNumber);
+            }
 
             ai.ConstructBuilding(ghostBuilding, buildingToConstruct, this);
 
@@ -76,7 +93,7 @@ public class BuildTask : AiTask
             }
 
             Transform ghostBuilding;
-            if (autoSelectPlaeholder)
+            if (autoSelectPlaceholder)
                 ghostBuilding = ai.GetPlaceholder(0);
             else
                 ghostBuilding = ai.GetPlaceholder(placeholderNumber);
