@@ -26,7 +26,16 @@ public class BuildingManager : MonoBehaviour
 
 		if (Input.GetMouseButtonUp(0))
 		{
+			if (Physics.Raycast(mainCamera.ScreenPointToRay(Input.mousePosition), out hit, Mathf.Infinity))
+			{
+				Ghost building = hit.collider.gameObject.GetComponent<Ghost>();
 
+				if (building)
+				{
+					building.ShowBuildMenu();
+				}
+			} 
+			
 			if (Physics.Raycast(mainCamera.ScreenPointToRay(Input.mousePosition), out hit, Mathf.Infinity, buildingLayer))
 			{
 				Debug.Log(hit.collider.gameObject.name);
