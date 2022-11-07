@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8508637679494413032}
   - component: {fileID: 5613045719355002117}
   - component: {fileID: 164602056861491791}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Wheel_B
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -90,7 +90,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2166941693427979822}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Hull
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -123,7 +123,7 @@ GameObject:
   - component: {fileID: 3276954279772596776}
   - component: {fileID: 1713071427478026386}
   - component: {fileID: 118100435131869818}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Hull 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -204,7 +204,7 @@ GameObject:
   - component: {fileID: 4859369558812710313}
   - component: {fileID: 5655837326864852449}
   - component: {fileID: 7516707293852997021}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Turret 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -283,7 +283,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7077868169961141685}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Firing Point
   m_TagString: Untagged
   m_Icon: {fileID: 3443629218296621865, guid: 0000000000000000d000000000000000, type: 0}
@@ -317,7 +317,7 @@ GameObject:
   - component: {fileID: 6862848550484486654}
   - component: {fileID: 5537998600367210516}
   - component: {fileID: 3571264517486242658}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Disconnected
   m_TagString: NavMesh Agent
   m_Icon: {fileID: 0}
@@ -497,7 +497,7 @@ GameObject:
   - component: {fileID: 8282881749606817174}
   - component: {fileID: 1131629914126896673}
   - component: {fileID: 7442858759562954384}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Wheel_A
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -576,7 +576,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 46833386487602073}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Wheels
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -608,7 +608,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1809220546875693944}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Turret
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -641,7 +641,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8115696531288314860}
   - component: {fileID: 7946778796234961367}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: RCV - Reconnaissance Vehicle
   m_TagString: NavMesh Agent
   m_Icon: {fileID: 0}
@@ -699,10 +699,10 @@ MonoBehaviour:
   detectionRadius: 30
   enemyUnitLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   enemyBuildingLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 512
   environmentLayer:
     serializedVersion: 2
     m_Bits: 1024
@@ -746,9 +746,9 @@ MonoBehaviour:
   autoAttack: 1
   seeThroughWalls: 0
   showSolidDisks: 1
-  showDetectionRadius: 0
+  showDetectionRadius: 1
   detectionOpacity: 0.02
-  showAttackRange: 0
+  showAttackRange: 1
   attackRangeOpacity: 0.04
   attackTarget: {fileID: 0}
 --- !u!1001 &1292765750677880253
@@ -1049,7 +1049,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4365779739516481214, guid: e45454b1e4e73454bb17c98ae49c6dc9, type: 3}
       propertyPath: m_Name
-      value: Selection Sprites Container
+      value: Selection Container
       objectReference: {fileID: 0}
     - target: {fileID: 4365779739516481214, guid: e45454b1e4e73454bb17c98ae49c6dc9, type: 3}
       propertyPath: m_IsActive
@@ -1058,14 +1058,6 @@ PrefabInstance:
     - target: {fileID: 8010315143446698674, guid: e45454b1e4e73454bb17c98ae49c6dc9, type: 3}
       propertyPath: m_RootOrder
       value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 8010315143446698674, guid: e45454b1e4e73454bb17c98ae49c6dc9, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 8010315143446698674, guid: e45454b1e4e73454bb17c98ae49c6dc9, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 8010315143446698674, guid: e45454b1e4e73454bb17c98ae49c6dc9, type: 3}
       propertyPath: m_LocalPosition.x
