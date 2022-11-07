@@ -43,6 +43,7 @@ GameObject:
   - component: {fileID: 4141755629583067671}
   - component: {fileID: 4141755629583067670}
   - component: {fileID: 4141755629583067665}
+  - component: {fileID: 1635743789266454008}
   m_Layer: 22
   m_Name: Canvas
   m_TagString: Untagged
@@ -127,10 +128,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_IgnoreReversedGraphics: 1
-  m_BlockingObjects: 0
+  m_BlockingObjects: 2
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &1635743789266454008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4141755629583067664}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0da86031c4b495f4a9672c43dd3f5e24, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4141755630795759561
 GameObject:
   m_ObjectHideFlags: 0
@@ -466,19 +479,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 6930374291729606827}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 4141755630795759567}
-        m_TargetAssemblyTypeName: Ghost, Assembly-CSharp
-        m_MethodName: ShowBuildMenu
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!1 &5363792772219330104
 GameObject:
   m_ObjectHideFlags: 0

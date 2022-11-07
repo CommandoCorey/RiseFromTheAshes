@@ -26,8 +26,7 @@ public class BuildingManager : MonoBehaviour
 
 		if (Input.GetMouseButtonUp(0))
 		{
-
-			if (Physics.Raycast(mainCamera.ScreenPointToRay(Input.mousePosition), out hit, Mathf.Infinity, buildableLayer))
+			if (Physics.Raycast(mainCamera.ScreenPointToRay(Input.mousePosition), out hit, Mathf.Infinity))
 			{
 				Ghost building = hit.collider.gameObject.GetComponent<Ghost>();
 
@@ -35,7 +34,9 @@ public class BuildingManager : MonoBehaviour
 				{
 					building.ShowBuildMenu();
 				}
-			} else if (Physics.Raycast(mainCamera.ScreenPointToRay(Input.mousePosition), out hit, Mathf.Infinity, buildingLayer))
+			} 
+			
+			if (Physics.Raycast(mainCamera.ScreenPointToRay(Input.mousePosition), out hit, Mathf.Infinity, buildingLayer))
 			{
 				Debug.Log(hit.collider.gameObject.name);
 				Building building = hit.collider.gameObject.GetComponent<Building>();
