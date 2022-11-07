@@ -39,12 +39,9 @@ public class BuildingManager : MonoBehaviour
 			{
 				Debug.Log(hit.collider.gameObject.name);
 				Building building = hit.collider.gameObject.GetComponent<Building>();
-				try
+				if (building)
 				{
 					building.Interact();
-				} catch(Exception e)
-				{
-					Debug.LogException(e);
 				}
 			}
 		}
