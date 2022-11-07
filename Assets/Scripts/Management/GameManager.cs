@@ -41,6 +41,11 @@ public class GameManager : MonoBehaviour
     public CursorSprite moveCursor;
     public CursorSprite attackCursor;
 
+    [Header("Unit Display Options")]
+    [SerializeField] bool showIcons = true;
+    [SerializeField] bool showHealthbars = true;
+    [SerializeField] bool showStatusText = true;
+
     [Header("Keyboard Shortcuts")]
     public KeyCode pauseKey;
 
@@ -64,6 +69,9 @@ public class GameManager : MonoBehaviour
     public int MaxUnitsAi { get => maxUnitsAi; }
     public int UnitCountPlayer { get => unitCountPlayer; }
     public int UnitCountAi { get => unitCountAi; }
+    public bool ShowIcons { get => showIcons; }
+    public bool ShowHealthbars { get => showHealthbars; }
+    public bool ShowStatusText { get => showStatusText; }
 
     private void Awake()
     {

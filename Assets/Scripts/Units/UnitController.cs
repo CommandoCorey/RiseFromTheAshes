@@ -38,6 +38,8 @@ public class UnitController : MonoBehaviour
     public Transform firingPoint;
     public Transform body;
     public Sprite guiIcon;
+    public Image unitIcon;
+    public TextMeshProUGUI statusText;
 
     [Header("Health Display")]
     public ProgressBar healthBar;
@@ -201,14 +203,21 @@ public class UnitController : MonoBehaviour
         childMeshRenderers = GetComponentsInChildren<MeshRenderer>();
         myMeshRenderer = GetComponent<MeshRenderer>();
 
-        PopulateMaterialRefs();
+        PopulateMaterialRefs();        
     }
 
 	// Update is called once per frame
 	void Update()
     {
+        // show/hide gui above unit
+        if(unitIcon)
+            unitIcon.gameObject.SetActive(gameManager.ShowIcons);
+        if(statusText)
+            statusText.gameObject.SetActive(gameManager.ShowStatusText);
+
         if (healthBar)
         {
+            healthBar.gameObject.SetActive(gameManager.ShowHealthbars);
             healthBar.progress = health / maxHealth;
             healthBar.SetProgress(health / maxHealth, maxHealth);
         }
