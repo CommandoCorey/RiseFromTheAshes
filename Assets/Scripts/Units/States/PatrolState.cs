@@ -15,6 +15,8 @@ public class PatrolState : State
     {        
         unit = GetComponent<UnitController>();
         agent = unit.body.GetComponent<NavMeshAgent>();
+
+        unit.statusText.text = "Patrolling";
     }
 
     // Update is called once per frame

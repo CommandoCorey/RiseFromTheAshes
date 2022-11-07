@@ -54,8 +54,12 @@ public class AttackState : State
 
         //Debug.Log("Enemy target detected");
 
+        float angle = Quaternion.Angle(unit.turret.rotation, lookRotation);
+
+        unit.statusText.text = "Aiming: " + angle;
+
         // check if turret is pointing at target
-        if (Quaternion.Angle(unit.turret.rotation, lookRotation) < unit.MinAngle)        
+        if (angle < unit.MinAngle)        
         {
             unit.turret.rotation = lookRotation;
 
@@ -79,6 +83,8 @@ public class AttackState : State
     // deals damage to enemy once every x amount of seconds
     private void DealDamage()
     {
+        unit.statusText.text = "Firing";
+
         if (unit.AttackTarget != null)
         {
             Vector3 hitPosition = new Vector3();

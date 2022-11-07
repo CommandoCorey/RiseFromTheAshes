@@ -30,6 +30,8 @@ public class AgentMoveState : State
         //um = FindObjectOfType<UnitManager>();
 
         agent.speed = unit.Speed;
+
+        unit.statusText.text = "Moving to target";
     }
 
     // Update is called once per frame
