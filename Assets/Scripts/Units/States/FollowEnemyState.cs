@@ -16,6 +16,8 @@ public class FollowEnemyState : State
         // start the navmesh agent again
         if (agent.isStopped)
             agent.isStopped = false;
+
+        unit.statusText.text = "Moving to enemy";
     }
 
     // Update is called once per frame

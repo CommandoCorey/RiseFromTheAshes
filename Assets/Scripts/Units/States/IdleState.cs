@@ -21,6 +21,8 @@ public class IdleState : State
 
         if (audio != null && audio.isPlaying)
             audio.Stop();
+
+        unit.statusText.text = "Idle";
     }
 
     protected override void Update()
