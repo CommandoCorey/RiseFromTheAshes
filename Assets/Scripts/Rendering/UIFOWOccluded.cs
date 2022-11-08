@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System;
+using TMPro;
 
 /* This script disables the rendering of the game object
  * if it is occluded by the fog of war. For UI objects
@@ -37,7 +38,7 @@ public class UIFOWOccluded : MonoBehaviour
 		PopulateCanvasRefs();
 	}
 
-	private void Update()
+	private void LateUpdate()
 	{
 		if (!FOWManager.Instance) { return; }
 

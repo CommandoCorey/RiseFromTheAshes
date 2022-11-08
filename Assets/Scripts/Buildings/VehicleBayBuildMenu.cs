@@ -77,17 +77,17 @@ public class VehicleBayBuildMenu : MonoBehaviour {
 					}
 					else
 					{
-                        //Hide();
-                        // Display not enough room text
-						StartCoroutine(ShowNotification("Not enough space"));
-                    }
+						//Hide();
+						// Display not enough room text
+						Notify.Queue("Not enough space.", 1.0f);
+					}
 
 				}
 				else
 				{
                     // Display not enough steel text
-                    StartCoroutine(ShowNotification("Not enough steel"));
-                }
+					Notify.Queue("Not enough steel.", 1.0f);
+				}
 
 			});
 		}
@@ -131,14 +131,4 @@ public class VehicleBayBuildMenu : MonoBehaviour {
     {
 		infoPanel.SetActive(false);
 	}
-
-	private IEnumerator ShowNotification(string message)
-	{
-		errorNotification.gameObject.SetActive(true);
-		errorNotification.text = message;
-
-        yield return new WaitForSeconds(notificationTimeout);
-
-        errorNotification.gameObject.SetActive(false);
-    }
 }
