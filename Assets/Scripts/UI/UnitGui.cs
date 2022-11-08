@@ -95,7 +95,7 @@ public class UnitGui : MonoBehaviour
 
                 if(!attackSuccess)
                 {
-                    StartCoroutine(ShowAlert("That's not a valid attack target", 2));
+                    Notify.Queue("That's not a valid attack target", 2.0f);
                 }
 
                 // reset cursor and button
