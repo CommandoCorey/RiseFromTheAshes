@@ -126,7 +126,7 @@ public class BuildMenu : MonoBehaviour
 			b.ghost = ghostBuilding;
 			ghostBuilding.gameObject.SetActive(false);
 			b.Build();
-			insufficientResourcesText.gameObject.SetActive(false);
+			//insufficientResourcesText.gameObject.SetActive(false);
 
 			Hide();
 		}

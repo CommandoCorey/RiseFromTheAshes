@@ -140,7 +140,7 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 8586527515397540875}
+        - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: VehicleBayBuildMenu, Assembly-CSharp
           m_MethodName: ShowUnitInfo
           m_Mode: 3
@@ -156,7 +156,7 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 8586527515397540875}
+        - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: VehicleBayBuildMenu, Assembly-CSharp
           m_MethodName: HideUnitInfo
           m_Mode: 1
@@ -638,7 +638,7 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 8586527515397540875}
+        - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: VehicleBayBuildMenu, Assembly-CSharp
           m_MethodName: ShowUnitInfo
           m_Mode: 3
@@ -654,7 +654,7 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 8586527515397540875}
+        - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: VehicleBayBuildMenu, Assembly-CSharp
           m_MethodName: HideUnitInfo
           m_Mode: 1
@@ -840,7 +840,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4157694406355295776}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a73622f2247e8164d9894db5eba360b4, type: 3}
   m_Name: 
@@ -1120,7 +1120,7 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 8586527515397540875}
+        - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: VehicleBayBuildMenu, Assembly-CSharp
           m_MethodName: ShowUnitInfo
           m_Mode: 3
@@ -1136,7 +1136,7 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 8586527515397540875}
+        - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: VehicleBayBuildMenu, Assembly-CSharp
           m_MethodName: HideUnitInfo
           m_Mode: 1
@@ -1157,9 +1157,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4379932607600886344}
-  - component: {fileID: 8586527515397540875}
   m_Layer: 5
-  m_Name: Build Menu - Vehicle Bay (2.0)
+  m_Name: Build Menu - Vehicle Bay (Screen space)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1180,49 +1179,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8586527515397540875
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4379932607600886347}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2c83da7879b5faf41ae934e7d8057b6b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  units:
-  - name: RCV
-    unit: {fileID: 7008911197033162878, guid: 1a447b3d65a266745a3bba30f58e122e, type: 3}
-    buildButton: {fileID: 8029137723198206335}
-    index: 0
-  - name: MBT
-    unit: {fileID: 5886917441323081197, guid: 6c264a75b716425468d6c7b6965b601b, type: 3}
-    buildButton: {fileID: 7957713965691085070}
-    index: 0
-  - name: AFV
-    unit: {fileID: 835486160671293135, guid: 3fcfb217e62862548a7430d63f97e618, type: 3}
-    buildButton: {fileID: 4379932607531328409}
-    index: 0
-  - name: APHT
-    unit: {fileID: 171000447872918366, guid: d45733420b5ab214eae2a0ec5cd88d57, type: 3}
-    buildButton: {fileID: 7152900655214448314}
-    index: 0
-  cancelButton: {fileID: 0}
-  errorNotification: {fileID: 0}
-  notificationTimeout: 1
-  hideOnConstructUnit: 0
-  infoPanel: {fileID: 8159132662642957698}
-  unitName: {fileID: 4561790230729939866}
-  cost: {fileID: 8292140978138119954}
-  spaceUsed: {fileID: 297886453359373018}
-  timeToBuild: {fileID: 586200966943148355}
-  maxHealth: {fileID: 915061909793366856}
-  attackRange: {fileID: 2232873184237300775}
-  damagePerSecond: {fileID: 6828303793656532325}
-  movementSpeed: {fileID: 4541094513512676190}
-  currentVehicleBay: {fileID: 0}
 --- !u!1 &4876144475939580882
 GameObject:
   m_ObjectHideFlags: 0
@@ -1363,7 +1319,7 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 8586527515397540875}
+        - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: VehicleBayBuildMenu, Assembly-CSharp
           m_MethodName: ShowUnitInfo
           m_Mode: 3
@@ -1379,7 +1335,7 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 8586527515397540875}
+        - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: VehicleBayBuildMenu, Assembly-CSharp
           m_MethodName: HideUnitInfo
           m_Mode: 1
@@ -2280,101 +2236,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b78e82343ae0f6f4c86028b27af0474c, type: 3}
---- !u!1 &8159132662642957698 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 398112725516130469, guid: b78e82343ae0f6f4c86028b27af0474c, type: 3}
-  m_PrefabInstance: {fileID: 8412001207797499175}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &310964552332904007 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8137347136806699872, guid: b78e82343ae0f6f4c86028b27af0474c, type: 3}
   m_PrefabInstance: {fileID: 8412001207797499175}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &4561790230729939866 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5472949470963179197, guid: b78e82343ae0f6f4c86028b27af0474c, type: 3}
-  m_PrefabInstance: {fileID: 8412001207797499175}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &297886453359373018 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8115240929592324093, guid: b78e82343ae0f6f4c86028b27af0474c, type: 3}
-  m_PrefabInstance: {fileID: 8412001207797499175}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &586200966943148355 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8980164651032398948, guid: b78e82343ae0f6f4c86028b27af0474c, type: 3}
-  m_PrefabInstance: {fileID: 8412001207797499175}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &915061909793366856 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8651306525649020527, guid: b78e82343ae0f6f4c86028b27af0474c, type: 3}
-  m_PrefabInstance: {fileID: 8412001207797499175}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &2232873184237300775 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7656590863981144320, guid: b78e82343ae0f6f4c86028b27af0474c, type: 3}
-  m_PrefabInstance: {fileID: 8412001207797499175}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &6828303793656532325 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3062004200905164866, guid: b78e82343ae0f6f4c86028b27af0474c, type: 3}
-  m_PrefabInstance: {fileID: 8412001207797499175}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &4541094513512676190 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5456211974134742649, guid: b78e82343ae0f6f4c86028b27af0474c, type: 3}
-  m_PrefabInstance: {fileID: 8412001207797499175}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &8292140978138119954 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 553648972322617909, guid: b78e82343ae0f6f4c86028b27af0474c, type: 3}
-  m_PrefabInstance: {fileID: 8412001207797499175}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
