@@ -171,8 +171,7 @@ public class SelectionManager : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit, 50000.0f, selectionLayer)) //&&
             //1 << hit.transform.gameObject.layer == selectionLayer.value)
-        {      
-            
+        {            
             if (Input.GetKey(KeyCode.LeftShift)) //inclusive select
             {
                 AddSelected(hit.transform.root.gameObject);
@@ -320,7 +319,9 @@ public class SelectionManager : MonoBehaviour
 
                 //Destroy(selectedTable[pair.Key].GetComponent<SelectedDictionary>());
                 unit.SetSelected(false);
-                unitManager.SetTargetHighlight(unit, false);
+
+                if(unit.AttackTarget != null)
+                    unitManager.SetTargetHighlight(unit, false);
             }
         }
         selectedTable.Clear(); // clears the whole dictionary

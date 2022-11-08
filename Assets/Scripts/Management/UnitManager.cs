@@ -308,6 +308,10 @@ public class UnitManager : MonoBehaviour
             foreach(var unitObject in selectedUnits)
             {
                 var unit = unitObject.GetComponent<UnitController>();
+
+                if (unit.AttackTarget != null)
+                    SetTargetHighlight(unit, false);
+
                 unit.AttackTarget = target;
                 unit.AttackOrderGiven = true;
 

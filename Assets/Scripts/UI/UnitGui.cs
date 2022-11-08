@@ -71,65 +71,78 @@ public class UnitGui : MonoBehaviour
     {
         UpdateUnitHealth();
 
+        /*
+        if(Input.GetMouseButtonUp(0))
+        {
+            RaycastHit hitInfo;
+            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo))
+                Debug.Log("Clicked on " + transform.gameObject.name);
+        }*/
+
         // check if mouse clicks on environment while an action is chosen
-        if(Input.GetMouseButtonUp(0) && ButtonClicked != ActionChosen.Null && 
-            !EventSystem.current.IsPointerOverGameObject())
+        if (Input.GetMouseButtonDown(0) && ButtonClicked != ActionChosen.Null)
         {
             RaycastHit hitInfo;
 
-            if(ButtonClicked == ActionChosen.Move && 
-                Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo))
+            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo) &&
+                hitInfo.transform.gameObject.layer != 5)
             {
-                unitManager.MoveUnits(hitInfo);
 
-                // reset cursor and button
-                gameManager.ResetCursor();
-                moveButton.interactable = true;
-
-                ButtonClicked = ActionChosen.Null;
-            }
-            else if(ButtonClicked == ActionChosen.Attack && 
-                Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo))
-            {
-                bool attackSuccess = unitManager.AttackTarget(hitInfo.transform);
-
-                if(!attackSuccess)
+                if (ButtonClicked == ActionChosen.Move)
                 {
-                    StartCoroutine(ShowAlert("That's not a valid attack target", 2));
+                    unitManager.MoveUnits(hitInfo);
+
+                    // reset cursor and button
+                    gameManager.ResetCursor();
+                    moveButton.interactable = true;
+
+                    ButtonClicked = ActionChosen.Null;
                 }
-
-                // reset cursor and button
-                gameManager.ResetCursor();
-                attackButton.interactable = true;
-
-                ButtonClicked = ActionChosen.Null;
-            }
-            else if(ButtonClicked == ActionChosen.Halt)
-            {
-                unitManager.HaltUnitSelection();
-            }
-            if (ButtonClicked == ActionChosen.MoveRallyPoint && 
-                Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo))
-            {
-                int layer = hitInfo.transform.gameObject.layer;
-
-                if (layer == 3 || layer == 6)
+                else if (ButtonClicked == ActionChosen.Attack)
                 {
-                    unitManager.SetPlayerRallyPointPosition(hitInfo.point);
+                    bool attackSuccess = unitManager.AttackTarget(hitInfo.transform);
+
+                    if (!attackSuccess)
+                    {
+                        StartCoroutine(ShowAlert("That's not a valid attack target", 2));
+                    }
+
+                    // reset cursor and button
+                    gameManager.ResetCursor();
+                    attackButton.interactable = true;
+
+                    ButtonClicked = ActionChosen.Null;
                 }
-                else
+                else if (ButtonClicked == ActionChosen.Halt)
                 {
-                    // display error message
+                    unitManager.HaltUnitSelection();
                 }
+                else if (ButtonClicked == ActionChosen.MoveRallyPoint)
+                {
+                    int layer = hitInfo.transform.gameObject.layer;
 
-                // reset cursor and button
-                gameManager.ResetCursor();
-                setRallyPointButton.interactable = true;
+                    if (layer == 3 || layer == 6)
+                    {
+                        unitManager.SetPlayerRallyPointPosition(hitInfo.point);
+                    }
+                    else
+                    {
+                        // display error message
+                    }
 
-                ButtonClicked = ActionChosen.Null; 
-            }
+                    // reset cursor and button
+                    gameManager.ResetCursor();
+                    setRallyPointButton.interactable = true;
 
-            selectionManager.enabled = true;            
+                    ButtonClicked = ActionChosen.Null;
+                }
+                    
+            }            
+        }
+
+        if(Input.GetMouseButtonUp(0) && ButtonClicked == ActionChosen.Null)
+        {
+            selectionManager.enabled = true;
         }
 
         if (Input.GetMouseButtonUp(1) && ButtonClicked != ActionChosen.Null)
