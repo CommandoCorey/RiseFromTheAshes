@@ -32,14 +32,19 @@ public class UnitController : MonoBehaviour
     MeshRenderer myMeshRenderer;
 
     #region variable declartion
-    [Header("Game Objects and Transforms")]
-    public GameObject selectionHighlight;
+    [Header("Game Objects and Transforms")]    
     public Transform turret;
     public Transform firingPoint;
     public Transform body;
     public Sprite guiIcon;
     public Image unitIcon;
     public TextMeshProUGUI statusText;
+
+    [Header("Highlights")]
+    public GameObject selectionHighlight;
+    public GameObject targetedHighlight;
+    [SerializeField][Range(10, 200)]
+    float highlightRotationSpeed = 100;
 
     [Header("Health Display")]
     public ProgressBar healthBar;
@@ -117,12 +122,15 @@ public class UnitController : MonoBehaviour
     private AttackState agentAttackState;
     private PatrolState patrolState;
 
-    [SerializeField]
+    //[SerializeField]
     private Transform attackTarget = null;
-    
+
+    private float highlightAngle = 0;
+
+
     #endregion
 
-    # region properties
+    #region properties
     public UnitState State { get; private set; }
     public Transform AttackTarget { get => attackTarget; set => attackTarget = value; }
     public float DetectionRadius { get => detectionRadius; }
@@ -149,8 +157,10 @@ public class UnitController : MonoBehaviour
     public float AttackRate { get => attackRate; }
     public float AttackRange {  get => attackRange; }
     public float MinAngle { get => minAngleBeforeFiring; }
-
     public float DPS { get => damagePerHit / attackRate; }
+
+    public bool SingleSelected { get; set; } = false;
+    public bool RotatingHighlight { get; set; } = false;
    
     public bool IsInCombat { get {
             return State == UnitState.Attack || recentlyDamaged;
@@ -259,11 +269,24 @@ public class UnitController : MonoBehaviour
             mat.SetFloat("HealEffectIntensity", Mathf.Clamp(healTimer, 0.0f, 1.0f));
 		}
 
-
         // Check for outpost ghosts the unit is A.I. controlled
         if (gameObject.layer == 7)
             SearchForOutposts();
-    }    
+
+        if (targetedHighlight.activeInHierarchy)
+            RotateHighlight();
+    }
+
+    private void RotateHighlight()
+    {
+        highlightAngle += highlightRotationSpeed * Time.deltaTime;
+
+        if (highlightAngle >= 360)
+            highlightAngle = 0;
+
+        targetedHighlight.transform.rotation = Quaternion.Euler(90, highlightAngle, 0);
+
+    }
 
     private void LateUpdate()
     {

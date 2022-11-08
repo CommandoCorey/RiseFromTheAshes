@@ -682,13 +682,15 @@ MonoBehaviour:
   steelCost: 30
   timeToTrain: 7
   spaceUsed: 1
-  selectionHighlight: {fileID: 6084636860212898968}
   turret: {fileID: 1809220546875693944}
   firingPoint: {fileID: 7077868169961141685}
   body: {fileID: 2700802823653411386}
   guiIcon: {fileID: 21300000, guid: 5323f6ac78de8a649854d0d02bf4a30d, type: 3}
   unitIcon: {fileID: 5083342961738169346}
   statusText: {fileID: 901997375285775757}
+  selectionHighlight: {fileID: 6084636860212898968}
+  targetedHighlight: {fileID: 0}
+  highlightRotationSpeed: 100
   healthBar: {fileID: 985721303246212031}
   maxHealth: 100
   movementSpeed: 10
@@ -751,7 +753,6 @@ MonoBehaviour:
   detectionOpacity: 0.02
   showAttackRange: 1
   attackRangeOpacity: 0.04
-  attackTarget: {fileID: 0}
 --- !u!1001 &1292765750677880253
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1014,7 +1015,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4365779739516481214, guid: e45454b1e4e73454bb17c98ae49c6dc9, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4610682005922032167, guid: e45454b1e4e73454bb17c98ae49c6dc9, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8010315143446698674, guid: e45454b1e4e73454bb17c98ae49c6dc9, type: 3}
       propertyPath: m_RootOrder
@@ -1058,6 +1063,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8010315143446698674, guid: e45454b1e4e73454bb17c98ae49c6dc9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8507280605578382174, guid: e45454b1e4e73454bb17c98ae49c6dc9, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
