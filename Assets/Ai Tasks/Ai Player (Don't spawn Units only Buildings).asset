@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfec3beb6435167479a5e4427da4b2b8, type: 3}
+  m_Name: Ai Player (Don't spawn Units only Buildings)
+  m_EditorClassIdentifier: 
+  tasksSchedule:
+  - description: Builld and Train
+    loopTaskSet: 0
+    addRebuildTasks: 0
+    addOutpostBuildTasks: 0
+    tasks:
+    - {fileID: 11400000, guid: 1e63546794e62c34696df0787f29b772, type: 2}
+    - {fileID: 11400000, guid: 1e63546794e62c34696df0787f29b772, type: 2}
+    - {fileID: 11400000, guid: 1e63546794e62c34696df0787f29b772, type: 2}
+    - {fileID: 11400000, guid: 1e63546794e62c34696df0787f29b772, type: 2}
+    - {fileID: 11400000, guid: 1e63546794e62c34696df0787f29b772, type: 2}
+    - {fileID: 11400000, guid: 1e63546794e62c34696df0787f29b772, type: 2}
+    - {fileID: 11400000, guid: 1e63546794e62c34696df0787f29b772, type: 2}
+  - description: Dispatch Units
+    loopTaskSet: 0
+    addRebuildTasks: 0
+    addOutpostBuildTasks: 0
+    tasks:
+    - {fileID: 11400000, guid: 1f6aa5d1d3c5376498c78636e58f1cdb, type: 2}
+    - {fileID: 11400000, guid: 766bafb098e6c9948839145b3c30e0ca, type: 2}
+    - {fileID: 11400000, guid: 8c8fb21ab62fb3b489883e6d5644866e, type: 2}
+  - description: Reconstruct Buildings
+    loopTaskSet: 0
+    addRebuildTasks: 1
+    addOutpostBuildTasks: 0
+    tasks: []
