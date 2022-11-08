@@ -17,6 +17,7 @@ public class Building : MonoBehaviour
 	public float HP;
 
 	public GameObject selectionHighlight;
+	public GameObject targetedHighlight;
 
 	[Header("Sound Effects")]
     [SerializeField] SoundEffect[] hitSounds;

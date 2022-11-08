@@ -51,8 +51,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 10, y: 3, z: 10}
-  m_Center: {x: 0, y: 1.5, z: 0}
+  m_Size: {x: 10, y: 6.833378, z: 10}
+  m_Center: {x: 0, y: 3.416689, z: 0}
 --- !u!82 &3494309390463593849
 AudioSource:
   m_ObjectHideFlags: 0
@@ -170,6 +170,7 @@ MonoBehaviour:
   aiBuilding: 0
   HP: 0
   selectionHighlight: {fileID: 6117311289375840294}
+  targetedHighlight: {fileID: 0}
   hitSounds:
   - clip: {fileID: 8300000, guid: 650e05b04e841814bb114354d5d09252, type: 3}
     volumeScale: 0.5
@@ -1830,6 +1831,10 @@ PrefabInstance:
       propertyPath: m_Color.a
       value: 0.49019608
       objectReference: {fileID: 0}
+    - target: {fileID: 4256273693607681159, guid: e45454b1e4e73454bb17c98ae49c6dc9, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4353330785383196888, guid: e45454b1e4e73454bb17c98ae49c6dc9, type: 3}
       propertyPath: m_Color.a
       value: 0.49019608
@@ -1840,7 +1845,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4365779739516481214, guid: e45454b1e4e73454bb17c98ae49c6dc9, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5599652312712104053, guid: e45454b1e4e73454bb17c98ae49c6dc9, type: 3}
       propertyPath: m_Color.a

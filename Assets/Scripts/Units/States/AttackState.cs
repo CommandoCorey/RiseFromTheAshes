@@ -13,7 +13,7 @@ public class AttackState : State
     // Start is called before the first frame update
     void Start()
     {
-        unit.PlayAimSound();
+        unit.PlayAimSound();        
     }
 
     // Update is called once per frame
