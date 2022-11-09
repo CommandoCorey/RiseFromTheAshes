@@ -103,7 +103,7 @@ public class VehicleBay : MonoBehaviour {
 				foreach (Collider o in overlapping)
 				{
 					UnitController uc;
-					if (!o.gameObject.GetComponent<Transform>().parent.TryGetComponent(out uc)) { continue; }
+					if (!o.gameObject.GetComponent<Transform>().TryGetComponent(out uc)) { continue; }
 
 					uc.Heal(healUnitPerSecond);
 				}

@@ -1,5 +1,18 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &1990559691012238902
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5515852998597984863}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b36fab795d2f7f4a95380e327ab50e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotationSpeed: 100
 --- !u!114 &8309989380970106143
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14,19 +27,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fadeSpeed: 8
   iterations: 3
---- !u!114 &1990559691012238902
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5515852998597984863}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1b36fab795d2f7f4a95380e327ab50e2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rotationSpeed: 100
 --- !u!65 &6323935701484105124
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -209,7 +209,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3325285086029104556, guid: 76e0e11b5308da44e9cdadbfc4b5c155, type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3325285086029104556, guid: 76e0e11b5308da44e9cdadbfc4b5c155, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3492618572682730521, guid: 76e0e11b5308da44e9cdadbfc4b5c155, type: 3}
       propertyPath: m_Layer
