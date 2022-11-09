@@ -807,8 +807,15 @@ MonoBehaviour:
   playerBase: {fileID: 0}
   rallyPoint: {fileID: 0}
   buildingPlaceholders: []
+  outpostPlaceholders: []
+  buildingPrefabs:
+  - {fileID: 827916637745009275, guid: bd063687586bcde4c9c3cd2156ad548a, type: 3}
+  - {fileID: 7431137951449496598, guid: 2f8ee12193d033140928c68379da60e3, type: 3}
+  - {fileID: 1255533466230746296, guid: b4ff2ece59f0eb04f854b270ae43a7e4, type: 3}
+  - {fileID: 5515852998597984859, guid: b6b2b22b19161cc4a9f20d6d545e88c8, type: 3}
   vehicleBays:
   - {fileID: 0}
+  waypoints: []
   patrolRoute: []
   playerStrategy: {fileID: 0}
   rebuiltSetNumber: 0
@@ -816,6 +823,7 @@ MonoBehaviour:
   - description: Train Units
     loopTaskSet: 1
     addRebuildTasks: 0
+    addOutpostBuildTasks: 0
     tasks:
     - {fileID: 11400000, guid: ab74243d8f5f6f944955bd739551d7d6, type: 2}
   showInfoPanel: 0

@@ -26,6 +26,7 @@ public class AiPlayer : MonoBehaviour
     public Transform rallyPoint;
     [SerializeField] List<Transform> buildingPlaceholders;
     [SerializeField] List<Transform> outpostPlaceholders;
+    [SerializeField] Transform[] buildingPrefabs;
 
     public List<VehicleBay> vehicleBays;
     public Transform[] waypoints;
@@ -75,7 +76,17 @@ public class AiPlayer : MonoBehaviour
     private List<AiTask> activeTasks;
     private List<TaskSetDisplay> taskDisplays;
 
-    public bool PlaceHoldersLeft { get => buildingPlaceholders.Count > 0; }
+    public bool PlaceHoldersLeft {
+        get
+        {
+            if(GetNextPlaceholder() != null)
+                return true;
+
+            return false;
+        }        
+
+        //get => buildingPlaceholders.Count > 0; 
+    }
     public bool OutpostPlaceholdersLeft { get=> outpostPlaceholders.Count > 0; }
 
     public static AiPlayer Instance { get; private set; }
@@ -337,17 +348,35 @@ public class AiPlayer : MonoBehaviour
     #endregion
 
     #region public functions
+
     /// <summary>
     /// Adds a new build task to the rebuild set at runtime
     /// </summary>
-    /// <param name="building">The building to be rebuilt</param>
-    public void AddRebuildTask(Building building)
+    /// <param name="BuildingTag">The tag of the game object to be instantiated</param>
+    /// <param name="placholder">Game Object with the Ghost script to build on</param>
+    public void AddRebuildTask(string buildingTag, Transform placholder)
     {
         BuildTask rebuildTask = ScriptableObject.CreateInstance<BuildTask>();
+        Building buildingToConstruct = null;
 
-        rebuildTask.name = "Build " + building.buildingName;
-        rebuildTask.buildingToConstruct = building;
-        rebuildTask.autoSelectPlaceholder = true;
+        foreach(Transform building in buildingPrefabs)
+        {
+            if(building.tag == buildingTag)
+            {
+                buildingToConstruct = building.GetComponent<Building>();
+                break;
+            }
+        }
+
+        if(buildingToConstruct == null)
+        {
+            Debug.LogError("No prefab found in list with tag '" + buildingTag + "'");
+            return;
+        }    
+
+        rebuildTask.name = "Build " + buildingToConstruct.buildingName;
+        rebuildTask.buildingToConstruct = buildingToConstruct;
+        rebuildTask.placeholderNumber = buildingPlaceholders.IndexOf(placholder);
         rebuildTask.timeDelay = 0;
 
         TaskSet taskSet = tasksSchedule[0];
@@ -360,8 +389,9 @@ public class AiPlayer : MonoBehaviour
             }
         }
 
-        tasksSchedule[rebuiltSetNumber].tasks.Add(rebuildTask);
+        taskSet.tasks.Add(rebuildTask);
         SortTaskSet(tasksSchedule[rebuiltSetNumber]);
+
     }
 
     /// <summary>
@@ -446,15 +476,34 @@ public class AiPlayer : MonoBehaviour
 
         // create the building
         Building building = Instantiate(buildItem, ghostBuilding.position, ghostBuilding.rotation);
-        ghostBuilding.gameObject.SetActive(false);
+        building.ghostTransform = ghostBuilding;
         building.Build();
+
+        ghostBuilding.gameObject.SetActive(false);
 
         if (building.gameObject.CompareTag("VehicleBay") && building.GetComponent<VehicleBay>())
             baysInConstruction.Add(building);
 
-        buildingPlaceholders.Remove(ghostBuilding);
+        ghostBuilding.gameObject.SetActive(false);
+
+        //buildingPlaceholders.Remove(ghostBuilding);
 
         task.SetBuildingInstance(building);
+    }
+
+    /// <summary>
+    /// Finds an AI ghost building that is currently set to active
+    /// </summary>
+    /// <returns>The first transform found is active</returns>
+    public Transform GetNextPlaceholder()        
+    {
+        foreach(Transform placeholder in buildingPlaceholders)
+        {
+            if (placeholder.gameObject.activeInHierarchy)
+                return placeholder;
+        }
+
+        return null;
     }
 
     public void DispatchAllUnits()
@@ -551,5 +600,23 @@ public class AiPlayer : MonoBehaviour
         //if(vehicleBay != null)
             //Gizmos.DrawLine(vehicleBay.position, vehicleBay.position + vehicleBay.forward * zOffset);
     }
-    
+
+    private void OnDestroy()
+    {
+        Debug.Log("Game Object Destroyed");
+        ClearRebuildTasks();
+    }
+
+    private void ClearRebuildTasks()
+    {
+        TaskSet taskSet = tasksSchedule[0];
+        foreach (TaskSet set in tasksSchedule)
+        {
+            if (set.addRebuildTasks)
+            {
+                set.tasks.Clear();
+            }
+        }
+    }
+
 }
