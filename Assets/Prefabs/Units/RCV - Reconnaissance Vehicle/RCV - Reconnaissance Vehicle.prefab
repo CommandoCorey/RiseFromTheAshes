@@ -350,7 +350,7 @@ BoxCollider:
   m_GameObject: {fileID: 5509412386174621901}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 1.1, y: 1, z: 2.2}
   m_Center: {x: 0, y: 0.5, z: 0}
@@ -640,6 +640,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8115696531288314860}
+  - component: {fileID: 8145287347400094663}
   - component: {fileID: 7946778796234961367}
   m_Layer: 6
   m_Name: RCV - Reconnaissance Vehicle
@@ -666,6 +667,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &8145287347400094663
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8929351991352559958}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.1, y: 1, z: 2.2}
+  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!114 &7946778796234961367
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1022,10 +1036,6 @@ PrefabInstance:
       value: Selection Container
       objectReference: {fileID: 0}
     - target: {fileID: 4365779739516481214, guid: e45454b1e4e73454bb17c98ae49c6dc9, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4610682005922032167, guid: e45454b1e4e73454bb17c98ae49c6dc9, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}

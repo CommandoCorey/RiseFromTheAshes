@@ -53,6 +53,21 @@ public class UnitGui : MonoBehaviour
     // properties
     public ActionChosen ButtonClicked { get; set; } = ActionChosen.Null;
 
+    // Singleton instance
+    public static UnitGui Instance { get; set; }
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            Instance = this;
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -374,26 +389,23 @@ public class UnitGui : MonoBehaviour
     {
         ClearUnitSelection();
 
+        unitInfoPanel.SetActive(false);
+
         // if only one unit is selcted display the unit stats/info instead
         if(selection.Count == 1)
         {
             selectedUnits.Add(selection[0].GetComponent<UnitController>());
-            SelectSingleUnit(0);
-            //return;
+            SelectSingleUnit(0);            
         }
-
-        //if(selection.Count > 0)
-            //buttonPanel.SetActive(true);
 
         // generate new icons
         for (int i=0; i < selection.Count; i++)
         {
             unitIcons.Add(Instantiate(unitIconPrefab, unitPanal));
 
-            //if (selection[i].tag == "PlayerUnit")
-                selectedUnits.Add(selection[i].GetComponent<UnitController>());
-            //else if (selection[i].tag == "Navmesh Agent")
-               // selectedUnits.Add(selection[i].GetComponent<NavMeshUnitController>());
+            
+            selectedUnits.Add(selection[i].GetComponent<UnitController>());
+
 
             TextMeshProUGUI[] healthText = unitIcons[i].GetComponentsInChildren<TextMeshProUGUI>();
 
@@ -421,27 +433,10 @@ public class UnitGui : MonoBehaviour
         ClearUnitSelection();
 
         // select the matching unit
-        selectedUnits.Add(unit);
+        //selectedUnits.Add(unit);
         unit.SetSelected(true);
 
-        /*
-        // intantiate a new unit icon
-        var unitIcon = Instantiate(unitIconPrefab, unitPanal);
-        unitIcons.Add(unitIcon);
-
-        // set the icon and health
-        unitIcon.GetComponentInChildren<Image>().sprite = unit.GuiIcon;
-
-        TextMeshProUGUI[] healthText = unitIcon.GetComponentsInChildren<TextMeshProUGUI>();
-        healthText[2].text = unit.MaxHealth.ToString();
-        healthText[0].text = unit.CurrentHealth.ToString();
-        
-        var healthBar = unit.GetComponentInChildren<ProgressBar>();
-        healthBar.progress = unit.CurrentHealth / unit.MaxHealth;*/
-
         DisplayUnitStats(unit);
-
-        //buttonPanel.SetActive(true);
 
         // update the unit manager
         var unitManager = GameObject.FindObjectOfType<UnitManager>();
