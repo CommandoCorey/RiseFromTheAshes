@@ -53,6 +53,21 @@ public class UnitGui : MonoBehaviour
     // properties
     public ActionChosen ButtonClicked { get; set; } = ActionChosen.Null;
 
+    // Singleton instance
+    public static UnitGui Instance { get; set; }
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            Instance = this;
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -71,65 +86,78 @@ public class UnitGui : MonoBehaviour
     {
         UpdateUnitHealth();
 
+        /*
+        if(Input.GetMouseButtonUp(0))
+        {
+            RaycastHit hitInfo;
+            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo))
+                Debug.Log("Clicked on " + transform.gameObject.name);
+        }*/
+
         // check if mouse clicks on environment while an action is chosen
-        if(Input.GetMouseButtonUp(0) && ButtonClicked != ActionChosen.Null && 
-            !EventSystem.current.IsPointerOverGameObject())
+        if (Input.GetMouseButtonDown(0) && ButtonClicked != ActionChosen.Null)
         {
             RaycastHit hitInfo;
 
-            if(ButtonClicked == ActionChosen.Move && 
-                Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo))
+            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo) &&
+                hitInfo.transform.gameObject.layer != 5)
             {
-                unitManager.MoveUnits(hitInfo);
 
-                // reset cursor and button
-                gameManager.ResetCursor();
-                moveButton.interactable = true;
-
-                ButtonClicked = ActionChosen.Null;
-            }
-            else if(ButtonClicked == ActionChosen.Attack && 
-                Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo))
-            {
-                bool attackSuccess = unitManager.AttackTarget(hitInfo.transform);
-
-                if(!attackSuccess)
+                if (ButtonClicked == ActionChosen.Move)
                 {
-                    StartCoroutine(ShowAlert("That's not a valid attack target", 2));
+                    unitManager.MoveUnits(hitInfo);
+
+                    // reset cursor and button
+                    gameManager.ResetCursor();
+                    moveButton.interactable = true;
+
+                    ButtonClicked = ActionChosen.Null;
                 }
-
-                // reset cursor and button
-                gameManager.ResetCursor();
-                attackButton.interactable = true;
-
-                ButtonClicked = ActionChosen.Null;
-            }
-            else if(ButtonClicked == ActionChosen.Halt)
-            {
-                unitManager.HaltUnitSelection();
-            }
-            if (ButtonClicked == ActionChosen.MoveRallyPoint && 
-                Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo))
-            {
-                int layer = hitInfo.transform.gameObject.layer;
-
-                if (layer == 3 || layer == 6)
+                else if (ButtonClicked == ActionChosen.Attack)
                 {
-                    unitManager.SetPlayerRallyPointPosition(hitInfo.point);
+                    bool attackSuccess = unitManager.AttackTarget(hitInfo.transform);                                    
+
+                    if (!attackSuccess)
+                    {
+                        Notify.Queue("That's not a valid attack target", 2.0f);
+                    }
+
+                    // reset cursor and button
+                    gameManager.ResetCursor();
+                    attackButton.interactable = true;
+
+                    ButtonClicked = ActionChosen.Null;
                 }
-                else
+                else if (ButtonClicked == ActionChosen.Halt)
                 {
-                    // display error message
+                    unitManager.HaltUnitSelection();
                 }
+                else if (ButtonClicked == ActionChosen.MoveRallyPoint)
+                {
+                    int layer = hitInfo.transform.gameObject.layer;
 
-                // reset cursor and button
-                gameManager.ResetCursor();
-                setRallyPointButton.interactable = true;
+                    if (layer == 3 || layer == 6)
+                    {
+                        unitManager.SetPlayerRallyPointPosition(hitInfo.point);
+                    }
+                    else
+                    {
+                        // display error message
+                    }
 
-                ButtonClicked = ActionChosen.Null; 
-            }
+                    // reset cursor and button
+                    gameManager.ResetCursor();
+                    setRallyPointButton.interactable = true;
 
-            selectionManager.enabled = true;            
+                    ButtonClicked = ActionChosen.Null;
+                }
+                    
+            }            
+        }
+
+        if(Input.GetMouseButtonUp(0) && ButtonClicked == ActionChosen.Null)
+        {
+            selectionManager.enabled = true;
         }
 
         if (Input.GetMouseButtonUp(1) && ButtonClicked != ActionChosen.Null)
@@ -361,26 +389,23 @@ public class UnitGui : MonoBehaviour
     {
         ClearUnitSelection();
 
+        unitInfoPanel.SetActive(false);
+
         // if only one unit is selcted display the unit stats/info instead
         if(selection.Count == 1)
         {
             selectedUnits.Add(selection[0].GetComponent<UnitController>());
-            SelectSingleUnit(0);
-            //return;
+            SelectSingleUnit(0);            
         }
-
-        //if(selection.Count > 0)
-            //buttonPanel.SetActive(true);
 
         // generate new icons
         for (int i=0; i < selection.Count; i++)
         {
             unitIcons.Add(Instantiate(unitIconPrefab, unitPanal));
 
-            //if (selection[i].tag == "PlayerUnit")
-                selectedUnits.Add(selection[i].GetComponent<UnitController>());
-            //else if (selection[i].tag == "Navmesh Agent")
-               // selectedUnits.Add(selection[i].GetComponent<NavMeshUnitController>());
+            
+            selectedUnits.Add(selection[i].GetComponent<UnitController>());
+
 
             TextMeshProUGUI[] healthText = unitIcons[i].GetComponentsInChildren<TextMeshProUGUI>();
 
@@ -408,27 +433,10 @@ public class UnitGui : MonoBehaviour
         ClearUnitSelection();
 
         // select the matching unit
-        selectedUnits.Add(unit);
+        //selectedUnits.Add(unit);
         unit.SetSelected(true);
 
-        /*
-        // intantiate a new unit icon
-        var unitIcon = Instantiate(unitIconPrefab, unitPanal);
-        unitIcons.Add(unitIcon);
-
-        // set the icon and health
-        unitIcon.GetComponentInChildren<Image>().sprite = unit.GuiIcon;
-
-        TextMeshProUGUI[] healthText = unitIcon.GetComponentsInChildren<TextMeshProUGUI>();
-        healthText[2].text = unit.MaxHealth.ToString();
-        healthText[0].text = unit.CurrentHealth.ToString();
-        
-        var healthBar = unit.GetComponentInChildren<ProgressBar>();
-        healthBar.progress = unit.CurrentHealth / unit.MaxHealth;*/
-
         DisplayUnitStats(unit);
-
-        //buttonPanel.SetActive(true);
 
         // update the unit manager
         var unitManager = GameObject.FindObjectOfType<UnitManager>();

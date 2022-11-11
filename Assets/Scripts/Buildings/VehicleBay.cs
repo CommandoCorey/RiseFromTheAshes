@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
@@ -21,6 +22,8 @@ public class VehicleBay : MonoBehaviour {
 	[HideInInspector] public float buildTimer = 0.0f;
 	[HideInInspector] public int buildingIndex;
 	[HideInInspector] public bool isBuilding;
+
+	[SerializeField] public TMPro.TextMeshProUGUI errorText;
 
 	float healPulseTimer = 0.0f;
 
@@ -49,6 +52,12 @@ public class VehicleBay : MonoBehaviour {
 	public void Interact()
 	{
 		if (building != null && building.IsBuilt) {
+			if (isBuilding)
+			{
+				Notify.Queue("This vehicle bay is busy.", 1.5f);
+				return;
+			}
+
 			VehicleBayBuildMenu.Instance.transform.position = transform.position + buildMenuOffset;
 			VehicleBayBuildMenu.Instance.currentVehicleBay = this;
 			VehicleBayBuildMenu.Instance.gameObject.SetActive(true);
@@ -94,7 +103,7 @@ public class VehicleBay : MonoBehaviour {
 				foreach (Collider o in overlapping)
 				{
 					UnitController uc;
-					if (!o.gameObject.GetComponent<Transform>().parent.TryGetComponent(out uc)) { continue; }
+					if (!o.gameObject.GetComponent<Transform>().TryGetComponent(out uc)) { continue; }
 
 					uc.Heal(healUnitPerSecond);
 				}

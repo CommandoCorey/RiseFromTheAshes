@@ -27,7 +27,8 @@ public abstract class State : MonoBehaviour
 
     }
 
-    #region protected functions
+    #region protected functions    
+
     protected void HandleEnemies()
     {
         var enemiesInRange = GetEnemiesInRange();
@@ -92,7 +93,6 @@ public abstract class State : MonoBehaviour
 
         return closest;
     }
-
 
     protected void HandleEnemyInRange()
     {

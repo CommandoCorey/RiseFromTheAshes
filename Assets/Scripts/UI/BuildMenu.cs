@@ -57,9 +57,13 @@ public class BuildMenu : MonoBehaviour
 			});
 		}
 
-		cancelButton.onClick.AddListener(() => {
-			Hide();
-		});
+		if (cancelButton)
+		{
+			cancelButton.onClick.AddListener(() =>
+			{
+				Hide();
+			});
+		}
 
 		Hide();
 	}
@@ -78,7 +82,7 @@ public class BuildMenu : MonoBehaviour
 			{
 				if (!hit.collider.gameObject.CompareTag("BuildMenu"))
 				{
-					//Hide();
+					Hide();
 				}
 			}
 		}
@@ -128,15 +132,7 @@ public class BuildMenu : MonoBehaviour
 		}
 		else
         {
-			StartCoroutine(showErrorText());
+			Notify.Queue("You don't have enough steel to construct this building", notificationTimeout);
 		}
 	}
-
-	private IEnumerator showErrorText()
-	{
-        insufficientResourcesText.gameObject.SetActive(true);
-		insufficientResourcesText.text = "You don't have enough steel to construct this building";
-        yield return new WaitForSeconds(notificationTimeout);
-        insufficientResourcesText.gameObject.SetActive(false);
-    }
 }

@@ -97,6 +97,17 @@ public class UnitManager : MonoBehaviour
             }
         }
         DoTheMusic();
+
+        foreach(GameObject go in selectedUnits)
+        {
+            var unit = go.GetComponent<UnitController>();
+
+            if(unit.SingleSelected && unit.AttackTarget != null)
+            {
+                SetTargetHighlight(unit, true);
+            }
+        }
+
     }
     #endregion
 
@@ -120,6 +131,28 @@ public class UnitManager : MonoBehaviour
 	}
 
     #region public functions
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="unit"></param>
+    /// <param name="on"></param>
+    public void SetTargetHighlight(UnitController unit, bool on)
+    {
+        int layer = unit.AttackTarget.gameObject.layer;
+
+        if (layer == 6 || layer == 7)
+        {
+            var enemy = unit.AttackTarget.root.GetComponent<UnitController>();
+            enemy.targetedHighlight.SetActive(on);
+        }
+        if (layer == 8 || layer == 9)
+        {
+            var enemy = unit.AttackTarget.GetComponent<Building>();
+            enemy.targetedHighlight.SetActive(on);
+        }
+        
+    }
 
     /// <summary>
     /// Returns all units that are selected by the player
@@ -275,6 +308,10 @@ public class UnitManager : MonoBehaviour
             foreach(var unitObject in selectedUnits)
             {
                 var unit = unitObject.GetComponent<UnitController>();
+
+                if (unit.AttackTarget != null)
+                    SetTargetHighlight(unit, false);
+
                 unit.AttackTarget = target;
                 unit.AttackOrderGiven = true;
 

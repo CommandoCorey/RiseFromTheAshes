@@ -1,5 +1,18 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &4017995430053258761
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1031517767769604281}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b36fab795d2f7f4a95380e327ab50e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotationSpeed: 100
 --- !u!114 &5114650377933476802
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -38,9 +51,13 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1312286936267064975, guid: deb89ce8c20028f4c9910088061dd264, type: 3}
+      propertyPath: targetedHighlight
+      value: 
+      objectReference: {fileID: 8420340203021986583}
+    - target: {fileID: 1312286936267064975, guid: deb89ce8c20028f4c9910088061dd264, type: 3}
       propertyPath: selectionHighlight
       value: 
-      objectReference: {fileID: 8981774643781125263}
+      objectReference: {fileID: 883360635326099005}
     - target: {fileID: 1312286936267064975, guid: deb89ce8c20028f4c9910088061dd264, type: 3}
       propertyPath: hitSounds.Array.size
       value: 3
@@ -94,6 +111,18 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2311962323558722943, guid: deb89ce8c20028f4c9910088061dd264, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2311962323558722943, guid: deb89ce8c20028f4c9910088061dd264, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2311962323558722943, guid: deb89ce8c20028f4c9910088061dd264, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2311962323558722943, guid: deb89ce8c20028f4c9910088061dd264, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -145,9 +174,33 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[1]
       value: 
       objectReference: {fileID: 0}
-    - target: {fileID: 4292112486065280486, guid: deb89ce8c20028f4c9910088061dd264, type: 3}
+    - target: {fileID: 3646860551257747195, guid: deb89ce8c20028f4c9910088061dd264, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3646860551257747195, guid: deb89ce8c20028f4c9910088061dd264, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3646860551257747195, guid: deb89ce8c20028f4c9910088061dd264, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3646860551257747195, guid: deb89ce8c20028f4c9910088061dd264, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3741936238665349758, guid: deb89ce8c20028f4c9910088061dd264, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4105759766273200511, guid: deb89ce8c20028f4c9910088061dd264, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4292112486065280486, guid: deb89ce8c20028f4c9910088061dd264, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5288815935731700176, guid: deb89ce8c20028f4c9910088061dd264, type: 3}
       propertyPath: m_Name
@@ -156,6 +209,10 @@ PrefabInstance:
     - target: {fileID: 5288815935731700176, guid: deb89ce8c20028f4c9910088061dd264, type: 3}
       propertyPath: m_Layer
       value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 5437914250061496148, guid: deb89ce8c20028f4c9910088061dd264, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5678390232059704026, guid: deb89ce8c20028f4c9910088061dd264, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -214,8 +271,13 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 4292006169086223299, guid: deb89ce8c20028f4c9910088061dd264, type: 3}
   m_PrefabInstance: {fileID: 5131018224055341417}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &8981774643781125263 stripped
+--- !u!1 &8420340203021986583 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 4292112486065280486, guid: deb89ce8c20028f4c9910088061dd264, type: 3}
+  m_CorrespondingSourceObject: {fileID: 3741936238665349758, guid: deb89ce8c20028f4c9910088061dd264, type: 3}
+  m_PrefabInstance: {fileID: 5131018224055341417}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &883360635326099005 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5437914250061496148, guid: deb89ce8c20028f4c9910088061dd264, type: 3}
   m_PrefabInstance: {fileID: 5131018224055341417}
   m_PrefabAsset: {fileID: 0}
