@@ -6,8 +6,11 @@ using UnityEngine.EventSystems;
 
 public class SelectionManager : MonoBehaviour
 {
-    public LayerMask selectionLayer;
+    [Header("Layer Masks")]
+    public LayerMask unitSelection;
     public LayerMask buildingSelectionLayer;
+    public LayerMask enemyUnitSelection;
+    public LayerMask enemyBuildingSelection;
 
     public bool drawDebugBox = true;
     public UnitGui gui; // used to update unit icons
@@ -154,6 +157,8 @@ public class SelectionManager : MonoBehaviour
             Debug.Log("Hit: " + hit.transform.name + " at " + hit.point);
         }*/
 
+        unitManager.DeselectEnemyUnit();
+
         // clear the building selection if the player clicked on something other than the building
         if (Physics.Raycast(ray, out hit, 50000.0f))
         {
@@ -169,26 +174,40 @@ public class SelectionManager : MonoBehaviour
             return;
         }*/
 
-        if (Physics.Raycast(ray, out hit, 50000.0f, selectionLayer))
-        {            
-            if (Input.GetKey(KeyCode.LeftShift)) //inclusive select
+        if (Physics.Raycast(ray, out hit, 50000.0f, unitSelection))
+        {
+
+            if (hit.transform.gameObject.layer == 6) // Player unit
             {
-                AddSelected(hit.transform.gameObject);
 
-                var lastUnit = selectedTable.Values.Last().GetComponent<UnitController>();
-                lastUnit.SingleSelected = false;
+                if (Input.GetKey(KeyCode.LeftShift)) //inclusive select
+                {
+                    AddSelected(hit.transform.gameObject);
 
-                gui.GenerateUnitIcons(Units);
+                    var lastUnit = selectedTable.Values.Last().GetComponent<UnitController>();
+                    lastUnit.SingleSelected = false;
+
+                    gui.GenerateUnitIcons(Units);
+                }
+                else //exclusive selected
+                {
+                    var unit = hit.transform.GetComponent<UnitController>();
+
+                    DeselectAll();
+                    AddSelected(hit.transform.gameObject);
+                    unit.SingleSelected = true;
+
+                    gui.GenerateUnitIcons(Units);
+                }
             }
-            else //exclusive selected
+            else if (hit.transform.gameObject.layer == 7) // Ai unit
             {
                 var unit = hit.transform.GetComponent<UnitController>();
-
-                DeselectAll();
-                AddSelected(hit.transform.gameObject);
+                unit.selectionHighlight.SetActive(true);
                 unit.SingleSelected = true;
 
-                gui.GenerateUnitIcons(Units);                
+                unitManager.SelectEnemyUnit(unit);
+
             }
         }
         else //if we didnt hit something
@@ -238,7 +257,7 @@ public class SelectionManager : MonoBehaviour
         if (drawDebugBox)
             DrawOverlapBox(centerPoint, halfExtents);
 
-        var collisions = Physics.OverlapBox(centerPoint, halfExtents, Quaternion.identity, selectionLayer);
+        var collisions = Physics.OverlapBox(centerPoint, halfExtents, Quaternion.identity, unitSelection);
 
         foreach (Collider collision in collisions)
         {

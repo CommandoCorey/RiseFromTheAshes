@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -5,6 +6,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
+using static UnityEngine.UI.CanvasScaler;
 
 public class UnitManager : MonoBehaviour
 {
@@ -20,6 +22,7 @@ public class UnitManager : MonoBehaviour
     //[SerializeField]
     List<GameObject> selectedUnits;
     SelectionManager selection;
+    private UnitController selectedEnemyUnit;
 
     //[Header("Group Movement")]
     //[SerializeField] bool flockWhileMoving;
@@ -293,7 +296,6 @@ public class UnitManager : MonoBehaviour
     {
         if (target.gameObject.layer == 7) // Ai Unit
         {
-            target.root.GetComponent<UnitController>().selectionHighlight.SetActive(true);
             target.root.GetComponent<FlashSelection>().enabled = true;
         }
         else if (target.gameObject.layer == 9) // Ai Building
@@ -510,4 +512,31 @@ public class UnitManager : MonoBehaviour
 
     }
 
+    public void SelectEnemyUnit(UnitController unit)
+    {
+        selectedEnemyUnit = unit;
+        unit.selectionHighlight.SetActive(true);
+            
+        if (unit.AttackTarget != null)
+        {
+            var unitEnemy = unit.AttackTarget.GetComponent<UnitController>();
+            unitEnemy.targetedHighlight.SetActive(true);
+        }
+    }
+
+    public void DeselectEnemyUnit()
+    {
+        if(selectedEnemyUnit != null)
+        {
+            selectedEnemyUnit.selectionHighlight.SetActive(false);
+
+            if (selectedEnemyUnit.AttackTarget != null)
+            {
+                var unitEnemy = selectedEnemyUnit.AttackTarget.GetComponent<UnitController>();
+                unitEnemy.targetedHighlight.SetActive(false);
+            }
+
+            selectedEnemyUnit = null;
+        }
+    }
 }
