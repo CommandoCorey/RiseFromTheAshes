@@ -102,6 +102,8 @@ public class GameManager : MonoBehaviour
 
         if(maxUnitsText)
             maxUnitsText.text = maxUnitsPlayer.ToString();
+
+        Cursor.lockState = CursorLockMode.Confined;
     }
 
     // Update is called once per frame
