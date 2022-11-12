@@ -1,19 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &4017995430053258761
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1031517767769604281}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1b36fab795d2f7f4a95380e327ab50e2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  targetedHighlight: {fileID: 8420340203021986583}
-  rotationSpeed: 100
 --- !u!114 &8006617633277067496
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -41,10 +27,6 @@ PrefabInstance:
       propertyPath: targetedHighlight
       value: 
       objectReference: {fileID: 8420340203021986583}
-    - target: {fileID: 1312286936267064975, guid: deb89ce8c20028f4c9910088061dd264, type: 3}
-      propertyPath: selectionHighlight
-      value: 
-      objectReference: {fileID: 883360635326099005}
     - target: {fileID: 1312286936267064975, guid: deb89ce8c20028f4c9910088061dd264, type: 3}
       propertyPath: hitSounds.Array.size
       value: 3
@@ -185,6 +167,18 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3956046960706615488, guid: deb89ce8c20028f4c9910088061dd264, type: 3}
+      propertyPath: attackedSprite
+      value: 
+      objectReference: {fileID: 2825912650549085344}
+    - target: {fileID: 3956046960706615488, guid: deb89ce8c20028f4c9910088061dd264, type: 3}
+      propertyPath: selectedSprite
+      value: 
+      objectReference: {fileID: 2825912650549085344}
+    - target: {fileID: 3956046960706615488, guid: deb89ce8c20028f4c9910088061dd264, type: 3}
+      propertyPath: targetedSprite
+      value: 
+      objectReference: {fileID: 1292798258103245752}
     - target: {fileID: 4105759766273200511, guid: deb89ce8c20028f4c9910088061dd264, type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -252,11 +246,6 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 3298764268007567521, guid: deb89ce8c20028f4c9910088061dd264, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: deb89ce8c20028f4c9910088061dd264, type: 3}
---- !u!1 &1031517767769604281 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5288815935731700176, guid: deb89ce8c20028f4c9910088061dd264, type: 3}
-  m_PrefabInstance: {fileID: 5131018224055341417}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &8981669957841760938 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4292006169086223299, guid: deb89ce8c20028f4c9910088061dd264, type: 3}
@@ -267,8 +256,18 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 3741936238665349758, guid: deb89ce8c20028f4c9910088061dd264, type: 3}
   m_PrefabInstance: {fileID: 5131018224055341417}
   m_PrefabAsset: {fileID: 0}
+--- !u!212 &1292798258103245752 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 6252677200796125905, guid: deb89ce8c20028f4c9910088061dd264, type: 3}
+  m_PrefabInstance: {fileID: 5131018224055341417}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &883360635326099005 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5437914250061496148, guid: deb89ce8c20028f4c9910088061dd264, type: 3}
+  m_PrefabInstance: {fileID: 5131018224055341417}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &2825912650549085344 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 6918269509574661577, guid: deb89ce8c20028f4c9910088061dd264, type: 3}
   m_PrefabInstance: {fileID: 5131018224055341417}
   m_PrefabAsset: {fileID: 0}
