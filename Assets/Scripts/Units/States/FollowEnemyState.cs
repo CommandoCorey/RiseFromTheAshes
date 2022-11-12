@@ -18,6 +18,14 @@ public class FollowEnemyState : State
             agent.isStopped = false;
 
         unit.statusText.text = "Moving to enemy";
+
+        if (unit.AttackTarget != null && unit.SingleSelected)
+        {
+            var sprites = unit.AttackTarget.GetComponent<SelectionSprites>();
+            if (sprites)
+                sprites.ShowTargetedSprite = true;
+        }
+
     }
 
     // Update is called once per frame

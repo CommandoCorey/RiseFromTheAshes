@@ -176,39 +176,35 @@ public class SelectionManager : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit, 50000.0f, unitSelection))
         {
-
-            if (hit.transform.gameObject.layer == 6) // Player unit
+            if (Input.GetKey(KeyCode.LeftShift)) //inclusive select
             {
+                AddSelected(hit.transform.gameObject);
 
-                if (Input.GetKey(KeyCode.LeftShift)) //inclusive select
-                {
-                    AddSelected(hit.transform.gameObject);
+                var lastUnit = selectedTable.Values.Last().GetComponent<UnitController>();
+                lastUnit.SingleSelected = false;
 
-                    var lastUnit = selectedTable.Values.Last().GetComponent<UnitController>();
-                    lastUnit.SingleSelected = false;
-
-                    gui.GenerateUnitIcons(Units);
-                }
-                else //exclusive selected
-                {
-                    var unit = hit.transform.GetComponent<UnitController>();
-
-                    DeselectAll();
-                    AddSelected(hit.transform.gameObject);
-                    unit.SingleSelected = true;
-
-                    gui.GenerateUnitIcons(Units);
-                }
+                gui.GenerateUnitIcons(Units);
             }
-            else if (hit.transform.gameObject.layer == 7) // Ai unit
+            else //exclusive selected
             {
                 var unit = hit.transform.GetComponent<UnitController>();
-                unit.selectionHighlight.SetActive(true);
+
+                DeselectAll();
+                AddSelected(hit.transform.gameObject);
                 unit.SingleSelected = true;
 
-                unitManager.SelectEnemyUnit(unit);
-
+                gui.GenerateUnitIcons(Units);
             }
+
+        }
+        else if (Physics.Raycast(ray, out hit, 50000.0f, enemyUnitSelection))
+        {
+            DeselectAll(); // removes all player untis from selection
+
+            var unit = hit.transform.GetComponent<UnitController>();
+            unit.SingleSelected = true;
+
+            unitManager.SelectEnemyUnit(unit);
         }
         else //if we didnt hit something
         {
@@ -320,7 +316,7 @@ public class SelectionManager : MonoBehaviour
 
         selectedTable.Remove(id);
 
-        unitManager.SetTargetHighlight(unit, false);
+        //unitManager.SetTargetHighlight(unit, false);
     }
 
     /// <summary>
@@ -339,15 +335,16 @@ public class SelectionManager : MonoBehaviour
                 //Destroy(selectedTable[pair.Key].GetComponent<SelectedDictionary>());
                 unit.SetSelected(false);
 
-                if(unit.AttackTarget != null)
-                    unitManager.SetTargetHighlight(unit, false);
+                //if(unit.AttackTarget != null)
+                    //unitManager.SetTargetHighlight(unit, false);
             }
         }
         selectedTable.Clear(); // clears the whole dictionary
 
         gui.ClearUnitSelection();
-
         gui.DisableActionButtons();
+
+        unitManager.DeselectEnemyUnit();
     }
 
     public void SetSelectedBuilding(Building building)

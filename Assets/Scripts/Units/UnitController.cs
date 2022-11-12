@@ -23,6 +23,7 @@ public class UnitController : MonoBehaviour
     [SerializeField] int steelCost = 10;
     [SerializeField] int timeToTrain = 1;
     [SerializeField] int spaceUsed = 1;
+    [SerializeField] bool moveToRallyPoint = true;
 
     float healTimer = 0.0f;
 
@@ -42,9 +43,7 @@ public class UnitController : MonoBehaviour
 
     [Header("Highlights")]
     public GameObject selectionHighlight;
-    public GameObject targetedHighlight;
-    [SerializeField][Range(10, 200)]
-    float highlightRotationSpeed = 100;
+    SelectionSprites selection;
 
     [Header("Health Display")]
     public ProgressBar healthBar;
@@ -121,18 +120,11 @@ public class UnitController : MonoBehaviour
     private FollowEnemyState followState;
     private AttackState agentAttackState;
     private PatrolState patrolState;
-
-    //[SerializeField]
-    private Transform attackTarget = null;
-
-    private float highlightAngle = 0;
-
-
     #endregion
 
     #region properties
     public UnitState State { get; private set; }
-    public Transform AttackTarget { get => attackTarget; set => attackTarget = value; }
+    public Transform AttackTarget { get; set ; }
     public float DetectionRadius { get => detectionRadius; }
     public LayerMask EnemyUnitLayer { get => enemyUnitLayer; }
     public LayerMask EnemyBuildingLayer { get => enemyBuildingLayer; }
@@ -202,7 +194,7 @@ public class UnitController : MonoBehaviour
         if(idleState != null)
             State = UnitState.Idle;
 
-        if (ReachedRallyPoint)
+        if (ReachedRallyPoint || !moveToRallyPoint)
             ChangeState(UnitState.Idle);
 
         if (UnitManager.Instance)
@@ -272,20 +264,6 @@ public class UnitController : MonoBehaviour
         // Check for outpost ghosts the unit is A.I. controlled
         if (gameObject.layer == 7)
             SearchForOutposts();
-
-        if (targetedHighlight.activeInHierarchy)
-            RotateHighlight();
-    }
-
-    private void RotateHighlight()
-    {
-        highlightAngle += highlightRotationSpeed * Time.deltaTime;
-
-        if (highlightAngle >= 360)
-            highlightAngle = 0;
-
-        targetedHighlight.transform.rotation = Quaternion.Euler(90, highlightAngle, 0);
-
     }
 
     private void LateUpdate()
@@ -302,6 +280,14 @@ public class UnitController : MonoBehaviour
     {
         selectionHighlight.SetActive(selected);
         healthBar.gameObject.SetActive(selected);
+
+        GetComponent<SelectionSprites>().SetSelectedSprite(selected);
+
+        if(AttackTarget != null)
+        {
+            var targetSprites = AttackTarget.GetComponent<SelectionSprites>();
+            targetSprites.ShowTargetedSprite = selected;
+        }
     }
 
     /// <summary>

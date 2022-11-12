@@ -1,32 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &3092047008011175281
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8111638073337904198}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40eb759e8017aaf44af68486a3b1e647, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fadeSpeed: 8
-  iterations: 3
---- !u!65 &6703295139060404855
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8111638073337904198}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1.4, y: 1.4, z: 3.5}
-  m_Center: {x: 0, y: 0.7, z: 0}
 --- !u!1001 &531332481378429607
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -306,6 +279,18 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: ed7dc8b459dbf8544bc6e9c38ce270c4, type: 3}
+    - target: {fileID: 6945494653652233660, guid: 352daa70bd63fa2479424b0de467a781, type: 3}
+      propertyPath: attackedSprite
+      value: 
+      objectReference: {fileID: 5194683249452833759}
+    - target: {fileID: 6945494653652233660, guid: 352daa70bd63fa2479424b0de467a781, type: 3}
+      propertyPath: selectedSprite
+      value: 
+      objectReference: {fileID: 5377063220929191257}
+    - target: {fileID: 6945494653652233660, guid: 352daa70bd63fa2479424b0de467a781, type: 3}
+      propertyPath: targetedSprite
+      value: 
+      objectReference: {fileID: 9137910688854885575}
     - target: {fileID: 6967329806202852180, guid: 352daa70bd63fa2479424b0de467a781, type: 3}
       propertyPath: m_Layer
       value: 7
@@ -401,7 +386,7 @@ PrefabInstance:
     - target: {fileID: 8924296544527421054, guid: 352daa70bd63fa2479424b0de467a781, type: 3}
       propertyPath: selectionHighlight
       value: 
-      objectReference: {fileID: 7161501451970212162}
+      objectReference: {fileID: 579783904673724185}
     - target: {fileID: 8924296544527421054, guid: 352daa70bd63fa2479424b0de467a781, type: 3}
       propertyPath: showDetectionRadius
       value: 0
@@ -460,9 +445,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 352daa70bd63fa2479424b0de467a781, type: 3}
---- !u!1 &8111638073337904198 stripped
+--- !u!1 &579783904673724185 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 8632837304087926497, guid: 352daa70bd63fa2479424b0de467a781, type: 3}
+  m_CorrespondingSourceObject: {fileID: 1104616042168114622, guid: 352daa70bd63fa2479424b0de467a781, type: 3}
+  m_PrefabInstance: {fileID: 531332481378429607}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &5377063220929191257 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 5602625894053935102, guid: 352daa70bd63fa2479424b0de467a781, type: 3}
   m_PrefabInstance: {fileID: 531332481378429607}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &2016379791071835240 stripped
@@ -470,8 +460,13 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 2063830257402437327, guid: 352daa70bd63fa2479424b0de467a781, type: 3}
   m_PrefabInstance: {fileID: 531332481378429607}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &7161501451970212162 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7223052192852270053, guid: 352daa70bd63fa2479424b0de467a781, type: 3}
+--- !u!212 &9137910688854885575 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 8759445513478139488, guid: 352daa70bd63fa2479424b0de467a781, type: 3}
+  m_PrefabInstance: {fileID: 531332481378429607}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &5194683249452833759 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 5712979916677378424, guid: 352daa70bd63fa2479424b0de467a781, type: 3}
   m_PrefabInstance: {fileID: 531332481378429607}
   m_PrefabAsset: {fileID: 0}

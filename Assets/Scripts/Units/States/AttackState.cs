@@ -13,7 +13,14 @@ public class AttackState : State
     // Start is called before the first frame update
     void Start()
     {
-        unit.PlayAimSound();        
+        unit.PlayAimSound();
+
+        if (unit.AttackTarget != null && unit.SingleSelected)
+        {
+            var sprites = unit.AttackTarget.GetComponent<SelectionSprites>();
+            if (sprites)
+                sprites.ShowTargetedSprite = true;
+        }
     }
 
     // Update is called once per frame
@@ -89,10 +96,12 @@ public class AttackState : State
         {
             Vector3 hitPosition = new Vector3();
 
-            ParticleSystem fireParticles = unit.fireEffects[Random.Range(0, unit.fireEffects.Length)];
-
-            //unit.PlayParticles(unit.fireEffect);
-            unit.InstantiateParticles(fireParticles, unit.firingPoint.position);
+            if (unit.fireEffects.Length > 0)
+            {
+                ParticleSystem fireParticles = unit.fireEffects[Random.Range(0, unit.fireEffects.Length)];
+                //unit.PlayParticles(unit.fireEffect);
+                unit.InstantiateParticles(fireParticles, unit.firingPoint.position);
+            }
 
             unit.PlayFireSound();
 
