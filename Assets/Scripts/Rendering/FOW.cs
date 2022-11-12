@@ -15,6 +15,8 @@ public class FOW : MonoBehaviour {
 	Texture2D genMaskTexture;
 	RenderTexture genBlurredMaskTexture;
 
+	[SerializeField] Texture edgeMask;
+
 	[SerializeField] ComputeShader noiseGenShader;
 	[SerializeField] ComputeShader maskBlurShader;
 	[SerializeField]
@@ -166,6 +168,7 @@ public class FOW : MonoBehaviour {
 		genMaskTexture.Apply();
 
 		maskBlurShader.SetTexture(0, "Result",   genBlurredMaskTexture);
+		maskBlurShader.SetTexture(0, "EdgeMask", edgeMask);
 		maskBlurShader.SetTexture(0, "Original", genMaskTexture);
 		maskBlurShader.SetVector("TextureSize", GetMaskExtentf());
 		maskBlurShader.Dispatch(0,
