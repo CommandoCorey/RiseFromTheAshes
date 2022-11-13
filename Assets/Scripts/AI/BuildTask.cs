@@ -27,7 +27,7 @@ public class BuildTask : AiTask
         var clonedTask = new BuildTask();
 
         clonedTask.buildingToConstruct = buildingToConstruct;
-        clonedTask.autoSelectPlaceholder= autoSelectPlaceholder;
+        clonedTask.autoSelectPlaceholder = autoSelectPlaceholder;
         clonedTask.placeholderNumber = placeholderNumber;
         clonedTask.instance = instance;
 
@@ -54,25 +54,25 @@ public class BuildTask : AiTask
             else */if (!ai.PlaceHoldersLeft)
             {
                 taskStatus = "No placeholders left";
-                Debug.LogError("There are no more placeholders to construct the next building");
+                Debug.LogWarning("There are no more placeholders to construct the next building");
                 return false;
             }
 
             Transform ghostBuilding;
 
             // check if building is an outpost
-           /* if (buildingToConstruct.tag == "Outpost")
-            {
+            /* if (buildingToConstruct.tag == "Outpost")
+             {
+                 if (autoSelectPlaceholder)
+                     ghostBuilding = ai.GetOutpostPlaceholder(0);
+                 else
+                     ghostBuilding = ai.GetPlaceholder(placeholderNumber);
+             }
+             else
+             {*/
                 if (autoSelectPlaceholder)
-                    ghostBuilding = ai.GetOutpostPlaceholder(0);
-                else
-                    ghostBuilding = ai.GetPlaceholder(placeholderNumber);
-            }
-            else
-            {*/
-                if (autoSelectPlaceholder)
-                    ghostBuilding = ai.GetPlaceholder(0);
-                else
+                    ghostBuilding = ai.GetNextPlaceholder();                    
+                else                
                     ghostBuilding = ai.GetPlaceholder(placeholderNumber);
             //}
 
@@ -89,7 +89,7 @@ public class BuildTask : AiTask
             if (!ai.PlaceHoldersLeft)
             {
                 taskStatus = "No placeholders left";
-                Debug.LogError("There are no more placeholders to construct the next building");
+                Debug.LogWarning("There are no more placeholders to construct the next building");
                 return false;
             }
 

@@ -24,12 +24,9 @@ public class Building : MonoBehaviour
 	[SerializeField] SoundEffect[] destroySounds;
 
 	[Header("Visual Effects")]
-
 	[SerializeField] ParticleSystem[] hitVFX;
 	[SerializeField] ParticleSystem[] destroyEffects;
 	[SerializeField] Transform[] damagedVFX;
-
-	
 
     new AudioSource audio;
 
@@ -43,6 +40,8 @@ public class Building : MonoBehaviour
 	// Added by Paul
 	private bool damageEffectOn = false;
 	private GameObject damagedEffect;
+	[HideInInspector]
+	public Transform ghostTransform;
 
 	public bool IsBuilt {
 		get {
@@ -151,7 +150,8 @@ public class Building : MonoBehaviour
 				isBuilding = false;
 			}
 		}
-	}
+
+    }
 
 	public void Build()
 	{
@@ -189,13 +189,20 @@ public class Building : MonoBehaviour
 			ghost.child = null;
 		}
 
-		if (gameObject.layer == 9 && // AI building layer
+		if (ghostTransform)
+		{
+			ghostTransform.gameObject.SetActive(true);
+		}
+
+        // if the destroyed building is on the AIBuilding layer
+		// and it is nto the headquarters rebuild it
+        if (gameObject.layer == 9 && 
 		    gameObject.tag != "Headquarters")
 		{
 			AiPlayer aiPlayer = AiPlayer.Instance;
 
-			if(aiPlayer != null)
-				aiPlayer.AddRebuildTask(this);
+			if(aiPlayer != null)			
+				aiPlayer.AddRebuildTask(gameObject.tag, ghostTransform);
 		}
 
 		if(destroySounds.Length > 0)

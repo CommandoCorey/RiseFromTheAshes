@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1903116917320561004}
   - component: {fileID: 6037390489453486409}
   - component: {fileID: 8457461539150711139}
-  - component: {fileID: 5601415052179616152}
+  - component: {fileID: 5198256235031779449}
   m_Layer: 5
   m_Name: Unit Button
   m_TagString: Untagged
@@ -122,9 +122,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5601415052179616152}
-        m_TargetAssemblyTypeName: TrainUnitButton, Assembly-CSharp
-        m_MethodName: TrainUnit
+      - m_Target: {fileID: 5198256235031779449}
+        m_TargetAssemblyTypeName: UnitIconButton, Assembly-CSharp
+        m_MethodName: SelectSingleUnit
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -134,7 +134,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &5601415052179616152
+--- !u!114 &5198256235031779449
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -143,15 +143,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1895965325096452265}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c2d8c69006a34db4bb51648cb0fd95c7, type: 3}
+  m_Script: {fileID: 11500000, guid: 6d51312f2b54ed94c93ec7b9890727f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textLabel: Heavy AFV
-  unitToTrain: {fileID: 0}
-  steelCost: 0
-  timeToTrain: 0
-  building: {fileID: 0}
-  spawnOffset: {x: 0, y: 0, z: 3}
 --- !u!1 &8858206235635361228
 GameObject:
   m_ObjectHideFlags: 0

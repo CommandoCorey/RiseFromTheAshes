@@ -169,26 +169,26 @@ public class SelectionManager : MonoBehaviour
             return;
         }*/
 
-        if (Physics.Raycast(ray, out hit, 50000.0f, selectionLayer)) //&&
-            //1 << hit.transform.gameObject.layer == selectionLayer.value)
+        if (Physics.Raycast(ray, out hit, 50000.0f, selectionLayer))
         {            
             if (Input.GetKey(KeyCode.LeftShift)) //inclusive select
             {
-                AddSelected(hit.transform.root.gameObject);
+                AddSelected(hit.transform.gameObject);
 
                 var lastUnit = selectedTable.Values.Last().GetComponent<UnitController>();
                 lastUnit.SingleSelected = false;
+
+                gui.GenerateUnitIcons(Units);
             }
             else //exclusive selected
             {
-                var unit = hit.transform.root.GetComponent<UnitController>();
+                var unit = hit.transform.GetComponent<UnitController>();
 
                 DeselectAll();
-                AddSelected(hit.transform.parent.gameObject);
+                AddSelected(hit.transform.gameObject);
                 unit.SingleSelected = true;
 
-                gui.GenerateUnitIcons(Units);
-                
+                gui.GenerateUnitIcons(Units);                
             }
         }
         else //if we didnt hit something
@@ -243,7 +243,7 @@ public class SelectionManager : MonoBehaviour
         foreach (Collider collision in collisions)
         {
             //Debug.Log("Selected: " + collision.gameObject.name);
-            AddSelected(collision.transform.parent.gameObject);
+            AddSelected(collision.transform.gameObject);
         }
 
         gui.GenerateUnitIcons(Units);
