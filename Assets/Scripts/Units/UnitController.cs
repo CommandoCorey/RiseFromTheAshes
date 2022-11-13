@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
@@ -31,14 +32,21 @@ public class UnitController : MonoBehaviour
     MeshRenderer myMeshRenderer;
 
     #region variable declartion
-    [Header("Game Objects and Transforms")]
-    public GameObject selectionHighlight;
+    [Header("Game Objects and Transforms")]    
     public Transform turret;
     public Transform firingPoint;
     public Transform body;
     public Sprite guiIcon;
+    public Image unitIcon;
+    public TextMeshProUGUI statusText;
 
-    [Header("External Scripts")]
+    [Header("Highlights")]
+    public GameObject selectionHighlight;
+    public GameObject targetedHighlight;
+    [SerializeField][Range(10, 200)]
+    float highlightRotationSpeed = 100;
+
+    [Header("Health Display")]
     public ProgressBar healthBar;
     
     [Header("Unit Stats")]
@@ -55,14 +63,13 @@ public class UnitController : MonoBehaviour
 
     [Header("Turret Rotation")]
     [SerializeField][Range(1, 100)]
-    float turretRotationSpeed = 1.0f;
+    float turretRotationSpeed = 20.0f;
     [SerializeField][Range(0, 10)]
     float minAngleBeforeFiring = 1;
 
     [Header("Enemy Detection")]
     [Range(1, 100)]
     [SerializeField] float detectionRadius = 30.0f;
-    //[SerializeField] LayerMask detectionLayer;
     [SerializeField] LayerMask enemyUnitLayer;
     [SerializeField] LayerMask enemyBuildingLayer;
     [SerializeField] LayerMask environmentLayer;
@@ -114,12 +121,18 @@ public class UnitController : MonoBehaviour
     private FollowEnemyState followState;
     private AttackState agentAttackState;
     private PatrolState patrolState;
-    
+
+    //[SerializeField]
+    private Transform attackTarget = null;
+
+    private float highlightAngle = 0;
+
+
     #endregion
 
-    # region properties
+    #region properties
     public UnitState State { get; private set; }
-    public Transform AttackTarget { get; set; }
+    public Transform AttackTarget { get => attackTarget; set => attackTarget = value; }
     public float DetectionRadius { get => detectionRadius; }
     public LayerMask EnemyUnitLayer { get => enemyUnitLayer; }
     public LayerMask EnemyBuildingLayer { get => enemyBuildingLayer; }
@@ -144,8 +157,10 @@ public class UnitController : MonoBehaviour
     public float AttackRate { get => attackRate; }
     public float AttackRange {  get => attackRange; }
     public float MinAngle { get => minAngleBeforeFiring; }
-
     public float DPS { get => damagePerHit / attackRate; }
+
+    public bool SingleSelected { get; set; } = false;
+    public bool RotatingHighlight { get; set; } = false;
    
     public bool IsInCombat { get {
             return State == UnitState.Attack || recentlyDamaged;
@@ -198,14 +213,24 @@ public class UnitController : MonoBehaviour
         childMeshRenderers = GetComponentsInChildren<MeshRenderer>();
         myMeshRenderer = GetComponent<MeshRenderer>();
 
-        PopulateMaterialRefs();
+        PopulateMaterialRefs();        
     }
 
 	// Update is called once per frame
 	void Update()
-    {        
-        if (healthBar)        
+    {
+        // show/hide gui above unit
+        if(unitIcon)
+            unitIcon.gameObject.SetActive(gameManager.ShowIcons);
+        if(statusText)
+            statusText.gameObject.SetActive(gameManager.ShowStatusText);
+
+        if (healthBar)
+        {
+            healthBar.gameObject.SetActive(gameManager.ShowHealthbars);
             healthBar.progress = health / maxHealth;
+            healthBar.SetProgress(health / maxHealth, maxHealth);
+        }
 
         if (health <= 0)
         {
@@ -223,8 +248,7 @@ public class UnitController : MonoBehaviour
                 gameManager.InstantiateParticles(destroyEffects[RandomPick(destroyEffects)], body.position);
         }
 
-        healthBar.transform.position = body.position + healthBarOffset;
-
+        //healthBar.transform.position = body.position + healthBarOffset;
 
         if (UnitManager.Instance)
         {
@@ -245,11 +269,24 @@ public class UnitController : MonoBehaviour
             mat.SetFloat("HealEffectIntensity", Mathf.Clamp(healTimer, 0.0f, 1.0f));
 		}
 
-
         // Check for outpost ghosts the unit is A.I. controlled
         if (gameObject.layer == 7)
             SearchForOutposts();
-    }    
+
+        if (targetedHighlight.activeInHierarchy)
+            RotateHighlight();
+    }
+
+    private void RotateHighlight()
+    {
+        highlightAngle += highlightRotationSpeed * Time.deltaTime;
+
+        if (highlightAngle >= 360)
+            highlightAngle = 0;
+
+        targetedHighlight.transform.rotation = Quaternion.Euler(90, highlightAngle, 0);
+
+    }
 
     private void LateUpdate()
     {

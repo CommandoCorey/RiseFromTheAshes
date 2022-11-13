@@ -13,7 +13,7 @@ public class AttackState : State
     // Start is called before the first frame update
     void Start()
     {
-        unit.PlayAimSound();
+        unit.PlayAimSound();        
     }
 
     // Update is called once per frame
@@ -47,16 +47,19 @@ public class AttackState : State
             return;
         }
 
-        // rotate us over time according to speed until we are in the required rotation  
-        //unit.turret.rotation = Quaternion.Slerp(unit.turret.rotation, lookRotation, Time.deltaTime * unit.TurretRotationSpeed);
+        // rotate us over time according to speed until we are in the required rotation        
         unit.turret.rotation = Quaternion.RotateTowards(unit.turret.rotation, lookRotation, Time.deltaTime * unit.TurretRotationSpeed);
         // revert x and z rotation back to there original value
-        unit.turret.localRotation = Quaternion.Euler(initialRotation.x, unit.turret.localRotation.eulerAngles.y, initialRotation.z);
+        //unit.turret.localRotation = Quaternion.Euler(initialRotation.x, unit.turret.localRotation.eulerAngles.y, initialRotation.z);
 
         //Debug.Log("Enemy target detected");
 
+        float angle = Quaternion.Angle(unit.turret.rotation, lookRotation);
+
+        unit.statusText.text = "Aiming: " + angle;
+
         // check if turret is pointing at target
-        if (Quaternion.Angle(unit.turret.rotation, lookRotation) < unit.MinAngle)        
+        if (angle < unit.MinAngle)        
         {
             unit.turret.rotation = lookRotation;
 
@@ -80,6 +83,8 @@ public class AttackState : State
     // deals damage to enemy once every x amount of seconds
     private void DealDamage()
     {
+        unit.statusText.text = "Firing";
+
         if (unit.AttackTarget != null)
         {
             Vector3 hitPosition = new Vector3();
@@ -136,6 +141,7 @@ public class AttackState : State
         Gizmos.DrawLine(unit.firingPoint.position, unit.firingPoint.position + (unit.turret.forward * unit.AttackRange));
 
 #if UNITY_EDITOR
+        UnityEditor.Handles.color = Color.black;
         if(!pointingAtTarget)
             UnityEditor.Handles.Label(unit.body.position + Vector3.up * 5, "Aiming");
         else

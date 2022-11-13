@@ -31,6 +31,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 20
       objectReference: {fileID: 0}
+    - target: {fileID: 913872594091714120, guid: 3450d15c802a67b4e93dec63d482e348, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1334875588792180636, guid: 3450d15c802a67b4e93dec63d482e348, type: 3}
       propertyPath: m_Layer
       value: 20
@@ -51,10 +55,6 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 20
       objectReference: {fileID: 0}
-    - target: {fileID: 1798536176248804958, guid: 3450d15c802a67b4e93dec63d482e348, type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1956634507368159980, guid: 3450d15c802a67b4e93dec63d482e348, type: 3}
       propertyPath: m_Layer
       value: 6
@@ -71,17 +71,9 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2387774598496536950, guid: 3450d15c802a67b4e93dec63d482e348, type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2513009403295291411, guid: 3450d15c802a67b4e93dec63d482e348, type: 3}
       propertyPath: m_Layer
       value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 2985837240720992975, guid: 3450d15c802a67b4e93dec63d482e348, type: 3}
-      propertyPath: m_Layer
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3461995865964231903, guid: 3450d15c802a67b4e93dec63d482e348, type: 3}
       propertyPath: m_Layer
@@ -111,10 +103,6 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: 0bb472c2ddae0884685ebb2cf2c150b5, type: 3}
-    - target: {fileID: 5349233577759173995, guid: 3450d15c802a67b4e93dec63d482e348, type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 5484230123834093263, guid: 3450d15c802a67b4e93dec63d482e348, type: 3}
       propertyPath: m_Layer
       value: 20
@@ -126,6 +114,10 @@ PrefabInstance:
     - target: {fileID: 5519180409395167244, guid: 3450d15c802a67b4e93dec63d482e348, type: 3}
       propertyPath: m_Layer
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5537998600367210516, guid: 3450d15c802a67b4e93dec63d482e348, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6242543496770161712, guid: 3450d15c802a67b4e93dec63d482e348, type: 3}
       propertyPath: m_sharedMaterial
@@ -156,13 +148,13 @@ PrefabInstance:
       value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 7946778796234961367, guid: 3450d15c802a67b4e93dec63d482e348, type: 3}
-      propertyPath: enemyUnitLayer.m_Bits
-      value: 128
-      objectReference: {fileID: 0}
+      propertyPath: targetedHighlight
+      value: 
+      objectReference: {fileID: 8879939558639844043}
     - target: {fileID: 7946778796234961367, guid: 3450d15c802a67b4e93dec63d482e348, type: 3}
-      propertyPath: enemyBuildingLayer.m_Bits
-      value: 512
-      objectReference: {fileID: 0}
+      propertyPath: selectionHighlight
+      value: 
+      objectReference: {fileID: 261979428791697377}
     - target: {fileID: 8115696531288314860, guid: 3450d15c802a67b4e93dec63d482e348, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -211,10 +203,6 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
-    - target: {fileID: 8494088888911391370, guid: 3450d15c802a67b4e93dec63d482e348, type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 8688346722104979261, guid: 3450d15c802a67b4e93dec63d482e348, type: 3}
       propertyPath: m_Layer
       value: 20
@@ -235,9 +223,15 @@ PrefabInstance:
       propertyPath: m_Name
       value: RCV - Reconnaissance Vehicle Blue
       objectReference: {fileID: 0}
-    - target: {fileID: 8929351991352559958, guid: 3450d15c802a67b4e93dec63d482e348, type: 3}
-      propertyPath: m_Layer
-      value: 6
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3450d15c802a67b4e93dec63d482e348, type: 3}
+--- !u!1 &8879939558639844043 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8374416381171540834, guid: 3450d15c802a67b4e93dec63d482e348, type: 3}
+  m_PrefabInstance: {fileID: 1084248960242784681}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &261979428791697377 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 913872594091714120, guid: 3450d15c802a67b4e93dec63d482e348, type: 3}
+  m_PrefabInstance: {fileID: 1084248960242784681}
+  m_PrefabAsset: {fileID: 0}

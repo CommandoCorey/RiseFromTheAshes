@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -40,6 +41,9 @@ public class SelectionManager : MonoBehaviour
     // properties
     public static SelectionManager Instance { get; private set; }
 
+    /// <summary>
+    /// Returns a list of unit gameobjects in the selection
+    /// </summary>
     public List<GameObject> Units
     {
         get {
@@ -71,7 +75,6 @@ public class SelectionManager : MonoBehaviour
             return unitCenter;
         }
     }
-
 
     private void Awake()
     {
@@ -118,105 +121,14 @@ public class SelectionManager : MonoBehaviour
         //3. when mouse button comes up
         if (Input.GetMouseButtonUp(0))
         {
-
-            if (dragSelect == false) //single select
+            if (dragSelect == false)
             {
-                Ray ray = Camera.main.ScreenPointToRay(p1);
-
-                /*
-                if(Physics.Raycast(ray, out hit, 50000.0f))
-                {
-                    Debug.Log("Hit: " + hit.transform.name + " at " + hit.point);
-                }*/
-
-                // clear the building selection if the player clicked on something other than the building
-                if (Physics.Raycast(ray, out hit, 50000.0f))
-                {
-                    if (1 << hit.transform.gameObject.layer != buildingSelectionLayer.value &&
-                        hit.transform.gameObject.layer != 5) // UI layer
-                        ClearBuildingSelection();
-                }
-
-                // dont select anything if the GUI is clicked
-                /*if (EventSystem.current.IsPointerOverGameObject())
-                {
-                    //Debug.Log("Clicked on GUI");
-                    return;
-                }*/
-
-                if (Physics.Raycast(ray, out hit, 50000.0f, selectionLayer))
-                {
-                    if (Input.GetKey(KeyCode.LeftShift)) //inclusive select
-                    {
-                        AddSelected(hit.transform.parent.gameObject);
-                    }
-                    else //exclusive selected
-                    {
-                        DeselectAll();
-                        AddSelected(hit.transform.parent.gameObject);
-
-                        gui.GenerateUnitIcons(Units);
-                    }
-                }
-                else //if we didnt hit something
-                {
-                    if (Input.GetKey(KeyCode.LeftShift))
-                    {
-                        //do nothing
-                    }
-                    else
-                    {
-                        DeselectAll();
-                    }
-
-                    gui.unitInfoPanel.SetActive(false);
-                }
+                SingleSelect();
             }
-            else //marquee select
+            else 
             {
-                verts = new Vector3[4];
-                int i = 0;
-                p2 = Input.mousePosition;
-
-                corners = GetBoundingBox(p1, p2);
-
-                foreach (Vector2 corner in corners)
-                {
-                    Ray ray = Camera.main.ScreenPointToRay(corner);
-
-                    if (Physics.Raycast(ray, out hit, 1000000.0f))// (1 << 8)))
-                    {
-                        verts[i] = new Vector3(hit.point.x, hit.point.y, hit.point.z);                        
-                        Debug.DrawLine(Camera.main.ScreenToWorldPoint(corner), hit.point, Color.red, 1.0f);
-                    }
-                    i++;
-                }
-
-                if (!Input.GetKey(KeyCode.LeftShift) && gui.ButtonClicked == UnitGui.ActionChosen.Null)
-                {
-                    DeselectAll();
-                }
-
-                Vector3 centerPoint = GetBoxCenter();
-                Vector3 halfExtents = GetHalfExtents();
-
-                // shows the overlap box on the scene view
-                if(drawDebugBox)
-                    DrawOverlapBox(centerPoint, halfExtents);
-
-                var collisions = Physics.OverlapBox(centerPoint, halfExtents, Quaternion.identity, selectionLayer);
-
-                foreach (Collider collision in collisions)
-                {
-                    //Debug.Log("Selected: " + collision.gameObject.name);
-                    AddSelected(collision.transform.parent.gameObject);
-                }
-
-                gui.GenerateUnitIcons(Units);
-
-                Destroy(selectionBox, 0.02f);
-
-            }//end marquee select
+                MarqueeSelect();
+            }
 
             dragSelect = false;
 
@@ -227,8 +139,116 @@ public class SelectionManager : MonoBehaviour
                 gui.SelectSingleUnit(0);
 
             // reset to default cursor
+
         }
 
+    }
+
+    private void SingleSelect()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(p1);
+
+        /*
+        if(Physics.Raycast(ray, out hit, 50000.0f))
+        {
+            Debug.Log("Hit: " + hit.transform.name + " at " + hit.point);
+        }*/
+
+        // clear the building selection if the player clicked on something other than the building
+        if (Physics.Raycast(ray, out hit, 50000.0f))
+        {
+            if (1 << hit.transform.gameObject.layer != buildingSelectionLayer.value &&
+                hit.transform.gameObject.layer != 5) // UI layer
+                ClearBuildingSelection();
+        }
+
+        // dont select anything if the GUI is clicked
+        /*if (EventSystem.current.IsPointerOverGameObject())
+        {
+            //Debug.Log("Clicked on GUI");
+            return;
+        }*/
+
+        if (Physics.Raycast(ray, out hit, 50000.0f, selectionLayer))
+        {            
+            if (Input.GetKey(KeyCode.LeftShift)) //inclusive select
+            {
+                AddSelected(hit.transform.gameObject);
+
+                var lastUnit = selectedTable.Values.Last().GetComponent<UnitController>();
+                lastUnit.SingleSelected = false;
+
+                gui.GenerateUnitIcons(Units);
+            }
+            else //exclusive selected
+            {
+                var unit = hit.transform.GetComponent<UnitController>();
+
+                DeselectAll();
+                AddSelected(hit.transform.gameObject);
+                unit.SingleSelected = true;
+
+                gui.GenerateUnitIcons(Units);                
+            }
+        }
+        else //if we didnt hit something
+        {
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                //do nothing
+            }
+            else
+            {
+                DeselectAll();
+            }
+
+            gui.unitInfoPanel.SetActive(false);
+        }
+    }
+
+    private void MarqueeSelect()
+    {
+        verts = new Vector3[4];
+        int i = 0;
+        p2 = Input.mousePosition;
+
+        corners = GetBoundingBox(p1, p2);
+
+        foreach (Vector2 corner in corners)
+        {
+            Ray ray = Camera.main.ScreenPointToRay(corner);
+
+            if (Physics.Raycast(ray, out hit, 1000000.0f))// (1 << 8)))
+            {
+                verts[i] = new Vector3(hit.point.x, hit.point.y, hit.point.z);
+                Debug.DrawLine(Camera.main.ScreenToWorldPoint(corner), hit.point, Color.red, 1.0f);
+            }
+            i++;
+        }
+
+        if (!Input.GetKey(KeyCode.LeftShift) && gui.ButtonClicked == UnitGui.ActionChosen.Null)
+        {
+            DeselectAll();
+        }
+
+        Vector3 centerPoint = GetBoxCenter();
+        Vector3 halfExtents = GetHalfExtents();
+
+        // shows the overlap box on the scene view
+        if (drawDebugBox)
+            DrawOverlapBox(centerPoint, halfExtents);
+
+        var collisions = Physics.OverlapBox(centerPoint, halfExtents, Quaternion.identity, selectionLayer);
+
+        foreach (Collider collision in collisions)
+        {
+            //Debug.Log("Selected: " + collision.gameObject.name);
+            AddSelected(collision.transform.gameObject);
+        }
+
+        gui.GenerateUnitIcons(Units);
+
+        Destroy(selectionBox, 0.02f);
     }
 
     private void OnGUI()
@@ -255,9 +275,12 @@ public class SelectionManager : MonoBehaviour
         {
             selectedTable.Add(id, go);
 
-            if (go.GetComponent<UnitController>() != null)
+            var unit = go.GetComponent<UnitController>();
+
+            if (unit != null)
             {
-                go.GetComponent<UnitController>().SetSelected(true);
+                unit.SetSelected(true);                
+
                 //Debug.Log("Added " + id + " to selected dict");
             }
         }
@@ -271,9 +294,14 @@ public class SelectionManager : MonoBehaviour
     /// <param name="id">The instance id of the game object to be deselected</param>
     public void Deselect(int id)
     {
-        //Destroy(selectedTable[id].GetComponent<SelectionComponent>());
-        selectedTable[id].GetComponent<UnitController>().SetSelected(false);
+        var unit = selectedTable[id].GetComponent<UnitController>();
+        
+        unit.SetSelected(false);
+        unit.SingleSelected = false;
+
         selectedTable.Remove(id);
+
+        unitManager.SetTargetHighlight(unit, false);
     }
 
     /// <summary>
@@ -287,8 +315,13 @@ public class SelectionManager : MonoBehaviour
         {
             if (pair.Value != null)
             {
+                var unit = selectedTable[pair.Key].GetComponent<UnitController>();
+
                 //Destroy(selectedTable[pair.Key].GetComponent<SelectedDictionary>());
-                selectedTable[pair.Key].GetComponent<UnitController>().SetSelected(false);
+                unit.SetSelected(false);
+
+                if(unit.AttackTarget != null)
+                    unitManager.SetTargetHighlight(unit, false);
             }
         }
         selectedTable.Clear(); // clears the whole dictionary

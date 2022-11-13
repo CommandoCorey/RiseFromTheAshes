@@ -34,12 +34,17 @@ public class FlashSelection : MonoBehaviour
 
         renderColor.r = 1;
         renderColor.a = alpha;
-        sprite.color = renderColor;
+
+        if(sprite)
+            sprite.color = renderColor;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (sprite == null)
+            return;
+
         if(fadeIn)
         {
             alpha += fadeSpeed * Time.deltaTime;

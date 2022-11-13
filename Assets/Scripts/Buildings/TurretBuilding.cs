@@ -96,6 +96,12 @@ public class TurretBuilding : MonoBehaviour
 
     private void Aim()
     {
+        if (target == null)
+        {
+            state = TurretState.Searching;
+            return;
+        }
+
         faceDirection = (target.position - turretGun.position).normalized;
         lookRotation = Quaternion.LookRotation(faceDirection);
 
@@ -179,8 +185,10 @@ public class TurretBuilding : MonoBehaviour
 
         if (showDetectionRadius)
         {
-            UnityEditor.Handles.color = new Color(Color.yellow.r, Color.yellow.g, Color.yellow.b, 0.01f);
-            UnityEditor.Handles.DrawSolidDisc(transform.position, Vector3.up, detectionRadius);
+            UnityEditor.Handles.color = Color.red;
+            //UnityEditor.Handles.color = new Color(Color.yellow.r, Color.yellow.g, Color.yellow.b, 0.01f);
+            //UnityEditor.Handles.DrawSolidDisc(transform.position, Vector3.up, detectionRadius);
+            UnityEditor.Handles.DrawWireDisc(transform.position, Vector3.up, detectionRadius);
         }
 #endif
     }

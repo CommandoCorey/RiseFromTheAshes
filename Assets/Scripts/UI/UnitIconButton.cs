@@ -6,12 +6,19 @@ public class UnitIconButton : MonoBehaviour
 {
     public int IconIndex { get; set; }
 
-    public void SelectSingleUnit()
-    {
-        //Debug.Log("You clicked on button " + IconIndex);
+    UnitGui gui;
 
-        GetComponentInParent<UnitGui>().SelectSingleUnit(IconIndex);
+    public void Start()
+    {
+        gui = UnitGui.Instance;
+        
     }
 
+    public void SelectSingleUnit()
+    {
+        SelectionManager.Instance.enabled = false;
+        gui.SelectSingleUnit(IconIndex);
+        SelectionManager.Instance.enabled = true;
+    }
 
 }

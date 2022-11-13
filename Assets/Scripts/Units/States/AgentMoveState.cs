@@ -30,6 +30,8 @@ public class AgentMoveState : State
         //um = FindObjectOfType<UnitManager>();
 
         agent.speed = unit.Speed;
+
+        unit.statusText.text = "Moving to target";
     }
 
     // Update is called once per frame
@@ -95,6 +97,7 @@ public class AgentMoveState : State
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(targetPos, 1);
 #if UNITY_EDITOR
+
         UnityEditor.Handles.Label(unit.body.position + Vector3.up * 1, "Moving");
 #endif
     }

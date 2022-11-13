@@ -29,7 +29,7 @@ public class BuildMenu : MonoBehaviour
 
 	[SerializeField] GraphicRaycaster raycaster;
 	[SerializeField] EventSystem eventSystem;
-	[SerializeField] GameObject insufficientResourcesText;
+	[SerializeField] TextMeshProUGUI insufficientResourcesText;
 	[SerializeField] float notificationTimeout = 1;
 
 	[Header("Build Stats Text")]
@@ -57,9 +57,13 @@ public class BuildMenu : MonoBehaviour
 			});
 		}
 
-		cancelButton.onClick.AddListener(() => {
-			Hide();
-		});
+		if (cancelButton)
+		{
+			cancelButton.onClick.AddListener(() =>
+			{
+				Hide();
+			});
+		}
 
 		Hide();
 	}
@@ -78,7 +82,7 @@ public class BuildMenu : MonoBehaviour
 			{
 				if (!hit.collider.gameObject.CompareTag("BuildMenu"))
 				{
-					//Hide();
+					Hide();
 				}
 			}
 		}
@@ -122,20 +126,13 @@ public class BuildMenu : MonoBehaviour
 			b.ghost = ghostBuilding;
 			ghostBuilding.gameObject.SetActive(false);
 			b.Build();
-			insufficientResourcesText.SetActive(false);
+			insufficientResourcesText.gameObject.SetActive(false);
 
 			Hide();
 		}
 		else
         {
-			StartCoroutine(showErrorText());
+			Notify.Queue("You don't have enough steel to construct this building", notificationTimeout);
 		}
 	}
-
-	private IEnumerator showErrorText()
-	{
-        insufficientResourcesText.SetActive(true);
-		yield return new WaitForSeconds(notificationTimeout);
-        insufficientResourcesText.SetActive(false);
-    }
 }

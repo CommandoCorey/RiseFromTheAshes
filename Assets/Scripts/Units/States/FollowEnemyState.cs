@@ -16,6 +16,8 @@ public class FollowEnemyState : State
         // start the navmesh agent again
         if (agent.isStopped)
             agent.isStopped = false;
+
+        unit.statusText.text = "Moving to enemy";
     }
 
     // Update is called once per frame
@@ -69,6 +71,7 @@ public class FollowEnemyState : State
         Gizmos.DrawLine(unit.body.position, unit.body.position + directionToTarget * unit.DetectionRadius);
 
 #if UNITY_EDITOR
+        UnityEditor.Handles.color = Color.black;
         UnityEditor.Handles.Label(unit.body.position + Vector3.up * 5, "Moving To Enemy");
 #endif
     }
