@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
-using UnityEngine.AI;
+using Random = UnityEngine.Random;
 
 [System.Serializable]
 public class TaskSet
@@ -20,6 +20,12 @@ public class TaskSet
     public bool ReadyToPerform { get; set; } = true;
 }
 
+[System.Serializable]
+public struct RaidPath
+{
+    public Transform[] route;
+}
+
 public class AiPlayer : MonoBehaviour
 {
     public Transform playerBase;    
@@ -29,8 +35,8 @@ public class AiPlayer : MonoBehaviour
     [SerializeField] Transform[] buildingPrefabs;
 
     public List<VehicleBay> vehicleBays;
-    public Transform[] waypoints;
-    public Transform[] patrolRoute;
+    public RaidPath[] raidPaths;
+    public RaidPath[] patrolRoutes;
 
     [Header("Ai Tasks")]
     [SerializeField] AiStrategy playerStrategy;
@@ -102,6 +108,9 @@ public class AiPlayer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // seed the unit random number generator by using the time
+        Random.InitState((int)DateTime.Now.Ticks);
+
         resources = ResourceManager.Instance;
         formations = FormationManager.Instance;
         gameManager = GameManager.Instance;
@@ -404,12 +413,12 @@ public class AiPlayer : MonoBehaviour
         foreach (Transform t in units)
         {
             var unit = t.GetComponent<UnitController>();
-            unit.ChangeState(UnitState.Moving, waypoints[number].position);
+            unit.ChangeState(UnitState.Moving, outpostPlaceholders[number].position);
         }
     }
 
     /// <summary>
-    /// Sends all units in a specified list along the patrol route 
+    /// Sends all units in a specified list along a random patrol route 
     /// </summary>
     /// <param name="units">list of transforms containing the UnitController</param>
     public void SendOnPatrol(List<Transform> units)
@@ -419,8 +428,46 @@ public class AiPlayer : MonoBehaviour
             var unit = t.GetComponent<UnitController>();
             unit.ChangeState(UnitState.Patrol);
 
-            var patrolState = unit.GetComponent<PatrolState>();
-            patrolState.SetPatrolRoute(patrolRoute);
+            // select random route            
+            int random = Random.Range(0, patrolRoutes.Length - 1);            
+
+            var patrolState = unit.GetComponent<FollowPathState>();
+            patrolState.SetRoute(patrolRoutes[random].route);
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="units"></param>
+    /// <param name="pathNumber"></param>
+    public void SendOnPatrol(List<Transform> units, int pathNumber)
+    {
+        foreach (Transform t in units)
+        {
+            var unit = t.GetComponent<UnitController>();
+            unit.ChangeState(UnitState.Patrol);
+
+            var patrolState = unit.GetComponent<FollowPathState>();
+            patrolState.LoopPath = true;
+            patrolState.SetRoute(patrolRoutes[pathNumber].route);
+        }
+    }
+
+    public void SendAlongPath(List<Transform> units, bool patrolling)
+    {
+        // select random route
+        Random.InitState((int)DateTime.Now.Ticks);
+        int random = Random.Range(0, raidPaths.Length - 1);
+
+        foreach (Transform t in units)
+        {
+            var unit = t.GetComponent<UnitController>();
+            unit.ChangeState(UnitState.Patrol);            
+
+            var followPathState = unit.GetComponent<FollowPathState>();
+            followPathState.LoopPath = patrolling;
+            followPathState.SetRoute(raidPaths[random].route);
         }
     }
 

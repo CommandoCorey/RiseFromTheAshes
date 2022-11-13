@@ -473,14 +473,17 @@ public class UnitGui : MonoBehaviour
     /// </summary>
     public void ClearUnitSelection()
     {
-        // Destroy existing icons on GUI
-        foreach (var icon in unitIcons)
+        if (unitIcons != null)
         {
-            GameObject.Destroy(icon);
-        }
+            // Destroy existing icons on GUI
+            foreach (var icon in unitIcons)
+            {
+                GameObject.Destroy(icon);
+            }
 
-        // clear the lists
-        unitIcons.Clear();
+            // clear the lists
+            unitIcons.Clear();
+        }
         selectedUnits.Clear();
 
         //buttonPanel.SetActive(false);

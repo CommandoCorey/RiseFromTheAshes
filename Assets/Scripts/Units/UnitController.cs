@@ -119,7 +119,7 @@ public class UnitController : MonoBehaviour
     //private FlockState flockState;
     private FollowEnemyState followState;
     private AttackState agentAttackState;
-    private PatrolState patrolState;
+    private FollowPathState patrolState;
     #endregion
 
     #region properties
@@ -481,7 +481,7 @@ public class UnitController : MonoBehaviour
            break;
 
            case UnitState.Patrol:
-                patrolState = gameObject.AddComponent<PatrolState>();
+                patrolState = gameObject.AddComponent<FollowPathState>();
            break;
 
         }
