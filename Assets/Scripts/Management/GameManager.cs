@@ -139,14 +139,12 @@ public class GameManager : MonoBehaviour
     #region public functions
     public void ChangeGameState(GameState newState)
     {
-        state = newState;
-
-        Time.timeScale = 1;
+        state = newState;        
 
         switch (state)
         {
             case GameState.Running:
-                Time.timeScale = 1;
+                Time.timeScale = timeScale;
                 TogglePause(false);
                 break;
 
@@ -165,6 +163,11 @@ public class GameManager : MonoBehaviour
                 loseDialog.SetActive(true);
                break;
         }
+    }
+
+    public void ResumeGame()
+    {
+        ChangeGameState(GameState.Running);        
     }
 
     /// <summary>
