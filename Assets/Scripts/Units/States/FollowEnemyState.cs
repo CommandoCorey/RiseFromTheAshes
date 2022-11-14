@@ -36,7 +36,7 @@ public class FollowEnemyState : State
 
         // check if there is a closer target if auto attacking
         if (!unit.AttackOrderGiven)
-        {            
+        {
             var unitsInRange = GetEnemiesInRange();
             var closest = GetClosestEnemy(unitsInRange.ToArray(), unit.AttackTarget);
 
@@ -72,6 +72,11 @@ public class FollowEnemyState : State
                 unit.ChangeState(UnitState.Attack);
             }
         }
+    }
+
+    private void SearchForCloserEnemies()
+    {
+
     }
 
     private void OnDestroy()

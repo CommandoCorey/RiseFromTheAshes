@@ -14,13 +14,17 @@ public class FollowPathState : State
     [SerializeField] private Vector3 waypoint;
     private NavMeshAgent agent;
 
+    private AiUnit aiUnit;
 
     public bool LoopPath { get; set; } = false;
 
     protected override void Awake()
     {        
         unit = GetComponent<UnitController>();
-        agent = unit.body.GetComponent<NavMeshAgent>();        
+        agent = unit.body.GetComponent<NavMeshAgent>();    
+        
+        aiUnit = GetComponent<AiUnit>();
+
     }
 
     private void Start()
@@ -58,7 +62,11 @@ public class FollowPathState : State
             agent.destination = waypoint;
         }
 
-        HandleEnemies(); // could cause state to change
+        // If the ai unit is not in offesnive mode check for enemies
+        if (aiUnit != null && aiUnit.Mode != UnitMode.Offensive)
+        {
+            HandleEnemies();
+        }
     }
 
     /// <summary>
