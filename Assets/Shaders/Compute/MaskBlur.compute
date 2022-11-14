@@ -2,6 +2,7 @@
 
 RWTexture2D<float> Result;
 Texture2D<float> Original;
+Texture2D<float> EdgeMask;
 
 float2 TextureSize;
 
@@ -12,12 +13,16 @@ void CSMain (uint3 id : SV_DispatchThreadID) {
 	}
 
 	float sum = 0.0;
+	float edgeSum = 0.0;
 	int incr = 0;
 	for (int x = -4; x < 4; x++) {
 		for (int y = -4; y < 4; y++) {
 			sum += Original[int2(id.x + x, id.y + y)];
+			edgeSum += EdgeMask[int2(id.x + x, id.y + y)];
 			incr++;
 		}
 	}
-	Result[id.xy] = sum / float(incr);
+
+	float divisor = float(incr);
+	Result[id.xy] = clamp((sum / divisor) + (edgeSum / divisor), 0.0, 1.0);
 }
