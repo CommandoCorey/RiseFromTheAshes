@@ -18,6 +18,14 @@ public class FollowEnemyState : State
             agent.isStopped = false;
 
         unit.statusText.text = "Moving to enemy";
+
+        if (unit.AttackTarget != null && unit.SingleSelected)
+        {
+            var sprites = unit.AttackTarget.GetComponent<SelectionSprites>();
+            if (sprites)
+                sprites.ShowTargetedSprite = true;
+        }
+
     }
 
     // Update is called once per frame
@@ -34,7 +42,14 @@ public class FollowEnemyState : State
 
             if (closest && closest != unit.AttackTarget) // closest enemy was found
             {
+                // remove highlight from previous enemy
+                if(unit.SingleSelected)
+                    unit.AttackTarget.GetComponent<SelectionSprites>().ShowTargetedSprite = false;
+
                 unit.AttackTarget = closest;
+
+                if (unit.SingleSelected)
+                    unit.AttackTarget.GetComponent<SelectionSprites>().ShowTargetedSprite = true;
 
                 // update path
                 agent.SetDestination(unit.AttackTarget.position);
