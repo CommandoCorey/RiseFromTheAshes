@@ -1572,6 +1572,7 @@ GameObject:
   - component: {fileID: 8972911425053166683}
   - component: {fileID: 6185098175623382547}
   - component: {fileID: 8924296544527421054}
+  - component: {fileID: 6945494653652233660}
   m_Layer: 6
   m_Name: APHT - Half Track
   m_TagString: NavMesh Agent
@@ -1626,22 +1627,21 @@ MonoBehaviour:
   steelCost: 50
   timeToTrain: 12
   spaceUsed: 1
+  moveToRallyPoint: 1
   turret: {fileID: 1530437833888941263}
   firingPoint: {fileID: 2066745330007294737}
   body: {fileID: 1291640806421703945}
   guiIcon: {fileID: 21300000, guid: dc0258fb91132fe49852091fc6820090, type: 3}
   unitIcon: {fileID: 6878752323967741928}
   statusText: {fileID: 1547299162131897959}
-  selectionHighlight: {fileID: 1502671828623257943}
-  targetedHighlight: {fileID: 0}
-  highlightRotationSpeed: 100
+  selectionHighlight: {fileID: 1395447125398651758}
   healthBar: {fileID: 1463786409169606741}
   maxHealth: 125
   movementSpeed: 10
   damagePerHit: 20
   attackRate: 1
   attackRange: 20
-  turretRotationSpeed: 20
+  turretRotationSpeed: 40
   minAngleBeforeFiring: 5
   detectionRadius: 30
   enemyUnitLayer:
@@ -1697,6 +1697,25 @@ MonoBehaviour:
   detectionOpacity: 0.02
   showAttackRange: 1
   attackRangeOpacity: 0.04
+--- !u!114 &6945494653652233660
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8632837304087926497}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a0e9eae8d7446b4cabaf66d61a44f89, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selectedSprite: {fileID: 0}
+  targetedSprite: {fileID: 0}
+  rotateSprite: 1
+  rotationSpeed: 100
+  attackedSprite: {fileID: 0}
+  fadeSpeed: 8
+  iterations: 3
 --- !u!1 &8652765699483731915
 GameObject:
   m_ObjectHideFlags: 0
@@ -2096,13 +2115,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e45454b1e4e73454bb17c98ae49c6dc9, type: 3}
---- !u!1 &1502671828623257943 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4365779739516481214, guid: e45454b1e4e73454bb17c98ae49c6dc9, type: 3}
-  m_PrefabInstance: {fileID: 2903921928612437993}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5144965330505549147 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8010315143446698674, guid: e45454b1e4e73454bb17c98ae49c6dc9, type: 3}
+  m_PrefabInstance: {fileID: 2903921928612437993}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1395447125398651758 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4256273693607681159, guid: e45454b1e4e73454bb17c98ae49c6dc9, type: 3}
   m_PrefabInstance: {fileID: 2903921928612437993}
   m_PrefabAsset: {fileID: 0}

@@ -17,7 +17,6 @@ public class Building : MonoBehaviour
 	public float HP;
 
 	public GameObject selectionHighlight;
-	public GameObject targetedHighlight;
 
 	[Header("Sound Effects")]
     [SerializeField] SoundEffect[] hitSounds;
@@ -199,10 +198,10 @@ public class Building : MonoBehaviour
         if (gameObject.layer == 9 && 
 		    gameObject.tag != "Headquarters")
 		{
-			AiPlayer aiPlayer = AiPlayer.Instance;
+			AiTaskScheduler aiTasks = AiTaskScheduler.Instance;
 
-			if(aiPlayer != null)			
-				aiPlayer.AddRebuildTask(gameObject.tag, ghostTransform);
+			if(aiTasks != null)
+				aiTasks.AddRebuildTask(gameObject.tag, ghostTransform);
 		}
 
 		if(destroySounds.Length > 0)

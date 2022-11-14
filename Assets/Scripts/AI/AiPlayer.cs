@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
-using UnityEngine.AI;
+using Random = UnityEngine.Random;
 
 [System.Serializable]
 public class TaskSet
@@ -20,36 +20,27 @@ public class TaskSet
     public bool ReadyToPerform { get; set; } = true;
 }
 
+[System.Serializable]
+public struct RaidPath
+{
+    public Transform[] route;
+}
+
 public class AiPlayer : MonoBehaviour
 {
-    public Transform playerBase;    
+    public Transform AiHeadquarters;
+    public Transform playerBase;
     public Transform rallyPoint;
+    [SerializeField] [Range(0, 200)]
+    float HQDefenseRadius = 80;
+
     [SerializeField] List<Transform> buildingPlaceholders;
     [SerializeField] List<Transform> outpostPlaceholders;
     [SerializeField] Transform[] buildingPrefabs;
 
     public List<VehicleBay> vehicleBays;
-    public Transform[] waypoints;
-    public Transform[] patrolRoute;
-
-    [Header("Ai Tasks")]
-    [SerializeField] AiStrategy playerStrategy;
-    [SerializeField] int rebuiltSetNumber = 0;
-    public TaskSet[] tasksSchedule;
-
-    [Header("Info Panel")]
-    [SerializeField] bool showInfoPanel;
-    [SerializeField] GameObject infoPanel;
-    [SerializeField] TextMeshProUGUI steelCurrentAmount;
-    [SerializeField] TextMeshProUGUI steelMaxAmount;
-    [SerializeField] TextMeshProUGUI totalUnitAmount;
-    [SerializeField] TextMeshProUGUI maxUnitAmount;
-    [SerializeField] Transform taskListPanel;
-    [SerializeField] TaskSetDisplay taskSetPanelPrefab;    
-
-    //[SerializeField] TextMeshProUGUI taskDescription;
-    //[SerializeField] TextMeshProUGUI taskStatus;
-    [SerializeField] TextMeshProUGUI activeTaskList;
+    public RaidPath[] raidPaths;
+    public RaidPath[] patrolRoutes;
 
     // private variables
     private ResourceManager resources;
@@ -61,33 +52,43 @@ public class AiPlayer : MonoBehaviour
 
     private float zOffset = 6;
     private float unitsPerRow = 5;
-    private float spaceBetween = 4;    
+    private float spaceBetween = 4;
 
     // unit management
     private List<UnitController> aiUnits;
+    [HideInInspector]
+    public List<UnitController> unitsAttackingHQ;
     private List<Transform> unitGroup;
     private List<Vector3> formationPositions;
 
-    private List<Building> baysInConstruction;
+    private List<Building> baysInConstruction = new List<Building>();
 
     private GameManager gameManager;
     private FormationManager formations;
+    private AiTaskScheduler taskScheduler;
 
     private List<AiTask> activeTasks;
     private List<TaskSetDisplay> taskDisplays;
 
-    public bool PlaceHoldersLeft {
+    // propertis
+    public Transform[] BuildingPrefabs { get => buildingPrefabs; }
+    public List<Transform> BuildingPlaceholders { get => buildingPlaceholders; }
+    public List<Building> BaysInConstruction { get => baysInConstruction; }
+    public List<UnitController> UnitsAttackingHQ { get => unitsAttackingHQ; } 
+
+    public bool PlaceHoldersLeft
+    {
         get
         {
-            if(GetNextPlaceholder() != null)
+            if (GetNextPlaceholder() != null)
                 return true;
 
             return false;
-        }        
+        }
 
         //get => buildingPlaceholders.Count > 0; 
     }
-    public bool OutpostPlaceholdersLeft { get=> outpostPlaceholders.Count > 0; }
+    public bool OutpostPlaceholdersLeft { get => outpostPlaceholders.Count > 0; }
 
     public static AiPlayer Instance { get; private set; }
 
@@ -102,35 +103,16 @@ public class AiPlayer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // seed the unit random number generator by using the time
+        Random.InitState((int)DateTime.Now.Ticks);
+
         resources = ResourceManager.Instance;
         formations = FormationManager.Instance;
         gameManager = GameManager.Instance;
-
-        if (playerStrategy != null)
-            tasksSchedule = (TaskSet[]) playerStrategy.Clone();
+        taskScheduler = GetComponent<AiTaskScheduler>();
 
         aiUnits = new List<UnitController>();
         unitGroup = new List<Transform>();
-        baysInConstruction = new List<Building>();        
-
-        activeTasks = new List<AiTask>();
-
-        //SortTasks();
-
-        foreach (TaskSet set in tasksSchedule)
-        {
-            set.TaskNum = 0;
-            set.ReadyToPerform = true;
-        }
-
-        // instantiate task sets on info panel
-        taskDisplays = new List<TaskSetDisplay>();
-        for (int i= 0; i < tasksSchedule.Length; i++)
-        {
-            taskDisplays.Add(Instantiate(taskSetPanelPrefab, taskListPanel));
-            taskDisplays[i].taskSetNumber.text = "Task Set " + i + ":";
-        }
-
     }
 
     // Update is called once per frame
@@ -139,174 +121,10 @@ public class AiPlayer : MonoBehaviour
         if (gameManager.State != GameState.Running)
             return;
 
-        steel = resources.GetResource(ResourceType.Steel, true);
-        maxSteel = resources.GetResourceMax(ResourceType.Steel, true);
-
-        // toggle info panel
-        if (showInfoPanel)
-        {
-            infoPanel.SetActive(true);
-            UpdateInfoPanel();
-        }
-        else
-        {
-            infoPanel.SetActive(false);
-        }
-
-        // check status of current tasks
-        foreach (TaskSet set in tasksSchedule)
-        {
-            // if not looping move to the next set
-            if (set.TaskNum >= set.tasks.Count && !set.loopTaskSet)
-                continue;
-
-            if (steel >= set.tasks[set.TaskNum].GetSteelCost() && set.ReadyToPerform)
-            {
-                StartCoroutine(PerformNextTask(set));
-                set.ReadyToPerform = false;
-            }
-        }
-
-        // check if vehicle bays in construction have finished building
-        foreach (Building v in baysInConstruction)
-        {
-            if (v.IsBuilt)
-            {
-                vehicleBays.Add(v.GetComponent<VehicleBay>());
-                baysInConstruction.Remove(v);
-                return;
-            }
-        }
-
-        if (Input.GetKeyDown(KeyCode.Tilde))
-		{
-            infoPanel.SetActive(!infoPanel.activeSelf);
-		}
+        UpdateUnitsAttackingHQ();
     }
 
     #region private functions
-    // sorts tasks in every set by highest to lowst priority score
-    private void SortTasks()
-    {
-        foreach (TaskSet set in tasksSchedule)
-        {
-            RemoveNullTasks(set.tasks);
-
-            var sortedTasks = from t in set.tasks
-                              orderby t.priorityScore descending
-                              select t;
-
-            set.tasks = sortedTasks.ToList();
-        }
-    }
-
-    // sorts tasks in a specific task set by highest to lowst priority score
-    private void SortTaskSet(TaskSet set)
-    {
-        RemoveNullTasks(set.tasks);
-
-        var sortedTasks = from t in set.tasks
-                          orderby t.priorityScore descending
-                          select t;
-
-        set.tasks = sortedTasks.ToList();
-    }
-
-
-    // checks if any taks in a set is null and if they are, removes them
-    private void RemoveNullTasks(List<AiTask> tasks)
-    {
-        foreach(AiTask task in tasks)
-        {
-            if(task == null)
-            {
-                tasks.Remove(task);
-                RemoveNullTasks(tasks);
-                return;
-            }
-
-        }
-    }
-
-    private IEnumerator PerformNextTask(TaskSet set)
-    {
-        yield return new WaitForSeconds(set.tasks[set.TaskNum].timeDelay);
-
-        if (set.tasks[set.TaskNum].PerformTask()) // attempt to perform the task
-        {
-            activeTasks.Add(set.tasks[set.TaskNum]);
-            set.TaskNum++;
-
-            if (set.TaskNum >= set.tasks.Count && set.loopTaskSet)
-            {
-                set.TaskNum = 0;
-            }
-        }
-
-        set.ReadyToPerform = true;
-    }
-
-    private void UpdateInfoPanel()
-    {
-        steelCurrentAmount.text = steel.ToString();
-        steelMaxAmount.text = maxSteel.ToString();
-        totalUnitAmount.text = gameManager.UnitCountAi.ToString();
-        maxUnitAmount.text = gameManager.MaxUnitsAi.ToString();
-
-        for (int i = 0; i < tasksSchedule.Length; i++)
-        {
-            if (tasksSchedule[i].TaskNum >= tasksSchedule[i].tasks.Count)
-            {
-                taskDisplays[i].taskDescription.text = "None";
-                taskDisplays[i].taskStatus.text = "Task Set complete";
-            }
-            else
-            {
-                try
-                {
-                    AiTask task = tasksSchedule[i].tasks[tasksSchedule[i].TaskNum];
-
-                    taskDisplays[i].taskDescription.text = task.TaskDescription;
-
-                    if (steel < task.GetSteelCost())
-                        taskDisplays[i].taskStatus.text = "Not enough Steel";
-                    else
-                        taskDisplays[i].taskStatus.text = task.TaskStatus;
-                }
-                catch(Exception e)
-                {
-                    Debug.LogException(e);
-                }
-            }
-        }
-
-        UpdateActiveTasks();
-
-        // display active tasks
-        activeTaskList.text = "";
-        foreach (var task in activeTasks)
-        {
-            //if (task.IsComplete())
-            //activeTaskList.text += "DONE\n";            
-            //else
-            activeTaskList.text += task.ActiveTaskDescription + "\n";
-        }
-    }
-
-    private void UpdateActiveTasks()
-    {
-        foreach (var task in activeTasks)
-        {
-            if (task.IsComplete())
-            {
-                activeTasks.Remove(task);
-                //UpdateActiveTasks();
-
-                return;
-            }
-        }
-    }
-
     private IEnumerator StartTraining(VehicleBay vehicleBay, UnitController unit, TrainUnitTask task = null)
     {
         //Debug.Log("Training Unit");
@@ -345,53 +163,51 @@ public class AiPlayer : MonoBehaviour
 
         return new Vector3(x, 0, z);
     }
+
+    private void SendUnitsToHQ()
+    {
+        var colliders = Physics.OverlapSphere(AiHeadquarters.position, HQDefenseRadius);
+
+        foreach(var collider in colliders)
+        {
+            if(collider.gameObject.layer == 7)
+            {
+                var aiUnit = collider.GetComponent<AiUnit>();
+                aiUnit.AttackClosestHQEnemy();
+            }
+        }
+    }
+
+    private void UpdateUnitsAttackingHQ()
+    {
+        foreach(UnitController unit in unitsAttackingHQ)
+        {
+            if(unit == null || // unit has been destroyed
+                !unit.GetComponent<AttackState>()) // unit is not in attack state
+            {
+                unitsAttackingHQ.Remove(unit);
+                UpdateUnitsAttackingHQ();
+                return;
+            }
+
+        }
+    }
+
     #endregion
 
     #region public functions
-
-    /// <summary>
-    /// Adds a new build task to the rebuild set at runtime
-    /// </summary>
-    /// <param name="BuildingTag">The tag of the game object to be instantiated</param>
-    /// <param name="placholder">Game Object with the Ghost script to build on</param>
-    public void AddRebuildTask(string buildingTag, Transform placholder)
+    public void AddVehicleBay(VehicleBay bay)
     {
-        BuildTask rebuildTask = ScriptableObject.CreateInstance<BuildTask>();
-        Building buildingToConstruct = null;
+        vehicleBays.Add(bay);
+    }
 
-        foreach(Transform building in buildingPrefabs)
+    public void AddUnitAttackingHQ(UnitController unit)
+    {
+        if (!unitsAttackingHQ.Contains(unit))
         {
-            if(building.tag == buildingTag)
-            {
-                buildingToConstruct = building.GetComponent<Building>();
-                break;
-            }
+            unitsAttackingHQ.Add(unit);
+            SendUnitsToHQ();
         }
-
-        if(buildingToConstruct == null)
-        {
-            Debug.LogError("No prefab found in list with tag '" + buildingTag + "'");
-            return;
-        }    
-
-        rebuildTask.name = "Build " + buildingToConstruct.buildingName;
-        rebuildTask.buildingToConstruct = buildingToConstruct;
-        rebuildTask.placeholderNumber = buildingPlaceholders.IndexOf(placholder);
-        rebuildTask.timeDelay = 0;
-
-        TaskSet taskSet = tasksSchedule[0];
-        foreach(TaskSet set in tasksSchedule)
-        {
-            if(set.addRebuildTasks)
-            {
-                taskSet = set;
-                break;
-            }
-        }
-
-        taskSet.tasks.Add(rebuildTask);
-        SortTaskSet(tasksSchedule[rebuiltSetNumber]);
-
     }
 
     /// <summary>
@@ -404,12 +220,12 @@ public class AiPlayer : MonoBehaviour
         foreach (Transform t in units)
         {
             var unit = t.GetComponent<UnitController>();
-            unit.ChangeState(UnitState.Moving, waypoints[number].position);
+            unit.ChangeState(UnitState.Moving, outpostPlaceholders[number].position);
         }
     }
 
     /// <summary>
-    /// Sends all units in a specified list along the patrol route 
+    /// Sends all units in a specified list along a random patrol route 
     /// </summary>
     /// <param name="units">list of transforms containing the UnitController</param>
     public void SendOnPatrol(List<Transform> units)
@@ -419,8 +235,46 @@ public class AiPlayer : MonoBehaviour
             var unit = t.GetComponent<UnitController>();
             unit.ChangeState(UnitState.Patrol);
 
-            var patrolState = unit.GetComponent<PatrolState>();
-            patrolState.SetPatrolRoute(patrolRoute);
+            // select random route            
+            int random = Random.Range(0, patrolRoutes.Length - 1);
+
+            var patrolState = unit.GetComponent<FollowPathState>();
+            patrolState.SetRoute(patrolRoutes[random].route);
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="units"></param>
+    /// <param name="pathNumber"></param>
+    public void SendOnPatrol(List<Transform> units, int pathNumber)
+    {
+        foreach (Transform t in units)
+        {
+            var unit = t.GetComponent<UnitController>();
+            unit.ChangeState(UnitState.Patrol);
+
+            var patrolState = unit.GetComponent<FollowPathState>();
+            patrolState.LoopPath = true;
+            patrolState.SetRoute(patrolRoutes[pathNumber].route);
+        }
+    }
+
+    public void SendAlongPath(List<Transform> units, bool patrolling)
+    {
+        // select random route
+        Random.InitState((int)DateTime.Now.Ticks);
+        int random = Random.Range(0, raidPaths.Length - 1);
+
+        foreach (Transform t in units)
+        {
+            var unit = t.GetComponent<UnitController>();
+            unit.ChangeState(UnitState.Patrol);
+
+            var followPathState = unit.GetComponent<FollowPathState>();
+            followPathState.LoopPath = patrolling;
+            followPathState.SetRoute(raidPaths[random].route);
         }
     }
 
@@ -434,36 +288,36 @@ public class AiPlayer : MonoBehaviour
     }
 
     /// <summary>
-    /// 
+    /// Trains a specified unit from a vehicle bay
     /// </summary>
-    /// <param name="unit"></param>
-    /// <param name="task"></param>
+    /// <param name="unit">The type of unit to be trained</param>
+    /// <param name="task">The TrainUnitTask scriptable object</param>
     /// <returns></returns>
     public bool TrainUnit(UnitController unit, TrainUnitTask task = null)
     {
         // check for available vehicle bays
-        if(vehicleBays.Count == 0)
+        if (vehicleBays.Count == 0)
         {
             task.TaskStatus = "No vehicle bays in base";
             return false;
         }
 
-        if(gameManager.UnitCountAi >= gameManager.MaxUnitsAi)
+        if (gameManager.UnitCountAi >= gameManager.MaxUnitsAi)
         {
             task.TaskStatus = "Not enough space for more units";
             return false;
         }
 
-        foreach(VehicleBay bay in vehicleBays)
+        foreach (VehicleBay bay in vehicleBays)
         {
-            if(!bay.IsTraining)
+            if (!bay.IsTraining)
             {
                 StartCoroutine(StartTraining(bay, unit, task));
                 //Debug.Log("Training Unit");
 
                 return true;
             }
-            
+
         }
 
         task.TaskStatus = "All vehicle bays are busy";
@@ -495,9 +349,9 @@ public class AiPlayer : MonoBehaviour
     /// Finds an AI ghost building that is currently set to active
     /// </summary>
     /// <returns>The first transform found is active</returns>
-    public Transform GetNextPlaceholder()        
+    public Transform GetNextPlaceholder()
     {
-        foreach(Transform placeholder in buildingPlaceholders)
+        foreach (Transform placeholder in buildingPlaceholders)
         {
             if (placeholder.gameObject.activeInHierarchy)
                 return placeholder;
@@ -524,7 +378,7 @@ public class AiPlayer : MonoBehaviour
             unit.ChangeState(UnitState.Moving, formationPositions[i]);
             unit.MovingToBase = true;
         }
-        
+
     }
 
     public bool DispatchUnits(List<Transform> unitGroup)
@@ -552,7 +406,7 @@ public class AiPlayer : MonoBehaviour
 
     public Transform GetPlaceholder(int number)
     {
-        if(number >-1 && number < buildingPlaceholders.Count)
+        if (number > -1 && number < buildingPlaceholders.Count)
             return buildingPlaceholders[number];
 
         return buildingPlaceholders[0];
@@ -575,7 +429,7 @@ public class AiPlayer : MonoBehaviour
     {
         List<Transform> idleUnits = new List<Transform>();
 
-        foreach(var unit in aiUnits)
+        foreach (var unit in aiUnits)
         {
             if (unit.State == UnitState.Idle)
                 idleUnits.Add(unit.transform);
@@ -587,6 +441,7 @@ public class AiPlayer : MonoBehaviour
 
     private void OnDrawGizmos()
     {
+#if UNITY_EDITOR
         // draws the fromation positions that each unit will finish at
         if (formationPositions != null)
         {
@@ -597,26 +452,16 @@ public class AiPlayer : MonoBehaviour
             }
         }
 
-        //if(vehicleBay != null)
-            //Gizmos.DrawLine(vehicleBay.position, vehicleBay.position + vehicleBay.forward * zOffset);
-    }
-
-    private void OnDestroy()
-    {
-        Debug.Log("Game Object Destroyed");
-        ClearRebuildTasks();
-    }
-
-    private void ClearRebuildTasks()
-    {
-        TaskSet taskSet = tasksSchedule[0];
-        foreach (TaskSet set in tasksSchedule)
+        if (AiHeadquarters != null)
         {
-            if (set.addRebuildTasks)
-            {
-                set.tasks.Clear();
-            }
+            UnityEditor.Handles.color = Color.green;
+            UnityEditor.Handles.DrawWireDisc(AiHeadquarters.position, Vector3.up, HQDefenseRadius);
         }
+
+        //if(vehicleBay != null)
+        //Gizmos.DrawLine(vehicleBay.position, vehicleBay.position + vehicleBay.forward * zOffset);
+
+#endif
     }
 
 }

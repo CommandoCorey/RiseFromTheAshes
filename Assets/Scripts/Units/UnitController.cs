@@ -23,6 +23,7 @@ public class UnitController : MonoBehaviour
     [SerializeField] int steelCost = 10;
     [SerializeField] int timeToTrain = 1;
     [SerializeField] int spaceUsed = 1;
+    [SerializeField] bool moveToRallyPoint = true;
 
     float healTimer = 0.0f;
 
@@ -42,9 +43,7 @@ public class UnitController : MonoBehaviour
 
     [Header("Highlights")]
     public GameObject selectionHighlight;
-    public GameObject targetedHighlight;
-    [SerializeField][Range(10, 200)]
-    float highlightRotationSpeed = 100;
+    SelectionSprites selection;
 
     [Header("Health Display")]
     public ProgressBar healthBar;
@@ -108,6 +107,7 @@ public class UnitController : MonoBehaviour
     private GameManager gameManager;
     private int rallyId = 0;
     private Vector3 spawnPos;
+    private NavMeshAgent agent;
 
     // added by George
     bool recentlyDamaged;
@@ -120,19 +120,12 @@ public class UnitController : MonoBehaviour
     //private FlockState flockState;
     private FollowEnemyState followState;
     private AttackState agentAttackState;
-    private PatrolState patrolState;
-
-    //[SerializeField]
-    private Transform attackTarget = null;
-
-    private float highlightAngle = 0;
-
-
+    private FollowPathState patrolState;
     #endregion
 
     #region properties
     public UnitState State { get; private set; }
-    public Transform AttackTarget { get => attackTarget; set => attackTarget = value; }
+    public Transform AttackTarget { get; set ; }
     public float DetectionRadius { get => detectionRadius; }
     public LayerMask EnemyUnitLayer { get => enemyUnitLayer; }
     public LayerMask EnemyBuildingLayer { get => enemyBuildingLayer; }
@@ -202,7 +195,7 @@ public class UnitController : MonoBehaviour
         if(idleState != null)
             State = UnitState.Idle;
 
-        if (ReachedRallyPoint)
+        if (ReachedRallyPoint || !moveToRallyPoint)
             ChangeState(UnitState.Idle);
 
         if (UnitManager.Instance)
@@ -213,7 +206,10 @@ public class UnitController : MonoBehaviour
         childMeshRenderers = GetComponentsInChildren<MeshRenderer>();
         myMeshRenderer = GetComponent<MeshRenderer>();
 
-        PopulateMaterialRefs();        
+        PopulateMaterialRefs();
+
+        agent = body.GetComponent<NavMeshAgent>();
+        agent.speed = movementSpeed;
     }
 
 	// Update is called once per frame
@@ -268,24 +264,7 @@ public class UnitController : MonoBehaviour
             mat.SetColor("HealEffectColor", Color.blue);
             mat.SetFloat("HealEffectIntensity", Mathf.Clamp(healTimer, 0.0f, 1.0f));
 		}
-
-        // Check for outpost ghosts the unit is A.I. controlled
-        if (gameObject.layer == 7)
-            SearchForOutposts();
-
-        if (targetedHighlight.activeInHierarchy)
-            RotateHighlight();
-    }
-
-    private void RotateHighlight()
-    {
-        highlightAngle += highlightRotationSpeed * Time.deltaTime;
-
-        if (highlightAngle >= 360)
-            highlightAngle = 0;
-
-        targetedHighlight.transform.rotation = Quaternion.Euler(90, highlightAngle, 0);
-
+        
     }
 
     private void LateUpdate()
@@ -302,6 +281,14 @@ public class UnitController : MonoBehaviour
     {
         selectionHighlight.SetActive(selected);
         healthBar.gameObject.SetActive(selected);
+
+        GetComponent<SelectionSprites>().SetSelectedSprite(selected);
+
+        if(AttackTarget != null)
+        {
+            var targetSprites = AttackTarget.GetComponent<SelectionSprites>();
+            targetSprites.ShowTargetedSprite = selected;
+        }
     }
 
     /// <summary>
@@ -416,7 +403,7 @@ public class UnitController : MonoBehaviour
     public void MoveToRallyPoint(Vector3 point)
     {
         FormationManager formations = FormationManager.Instance;
-        NavMeshAgent agent = body.GetComponent<NavMeshAgent>();
+        agent = body.GetComponent<NavMeshAgent>();
 
         agent.avoidancePriority -= formations.GetCurrentRallySize(1);
 
@@ -495,7 +482,7 @@ public class UnitController : MonoBehaviour
            break;
 
            case UnitState.Patrol:
-                patrolState = gameObject.AddComponent<PatrolState>();
+                patrolState = gameObject.AddComponent<FollowPathState>();
            break;
 
         }
@@ -505,29 +492,7 @@ public class UnitController : MonoBehaviour
     private int RandomPick(Object[] array)
     {
         return Random.Range(0, array.Length - 1);
-    }
-
-    //------------------------------------------------------------------
-    // Checks if there is an outpost placeholder in detection range that
-    // the AiPlayer has not already found
-    // If there is the Aiplayer adds it to the outpost placeholder list
-    //------------------------------------------------------------------
-    private void SearchForOutposts()
-    {
-        var aiPlayer = AiPlayer.Instance;
-        var ghostBuildings = Physics.OverlapSphere(transform.position, detectionRadius, 22); // 22 = buildable layer
-
-        foreach(Collider ghost in ghostBuildings)
-        {
-            // check that the placeholder is an outpost placeholder and that
-            // the ai player does not already have it
-            if(ghost.gameObject.tag == "Outpost" && 
-                !aiPlayer.HasOutpostGhost(ghost.transform))
-            {
-                aiPlayer.AddOutpost(ghost.transform);
-            }
-        }
-    }
+    }    
 
     // Removes unit from lists in unit manager and GUI once it is destroyed
     private void OnDestroy()
