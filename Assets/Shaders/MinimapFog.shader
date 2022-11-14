@@ -46,8 +46,10 @@ Shader "Hidden/MinimapFog"
 			}
 
 			sampler2D _MainTex;
-			sampler2D G_FOWOccludeMaskTexture;
 			sampler2D G_FOWPermMaskTexture;
+			sampler2D G_FOWImpermMaskTexture;
+
+			uniform float4 G_FOWColour;
 
 			uniform float4 _PermTopCorner;
 			uniform float4 _ImpermTopCorner;
@@ -88,9 +90,12 @@ Shader "Hidden/MinimapFog"
 
 				hitPointMaskSpace = clamp(hitPointMaskSpace, 0.0, 1.0);
 
-				float maskVal = tex2D(G_FOWPermMaskTexture, hitPointMaskSpace).r;
+				float permMaskVal = tex2D(G_FOWPermMaskTexture, hitPointMaskSpace).r;
+				float impermMaskVal = tex2D(G_FOWImpermMaskTexture, hitPointMaskSpace).r;
 
-				return float4(tex2D(_MainTex, i.uv).rgb * (1.0 - maskVal), 1.0);
+				float maskMul = (1.0 - impermMaskVal);
+
+				return float4(tex2D(_MainTex, i.uv).rgb * (1.0 - impermMaskVal) + impermMaskVal * permMaskVal * G_FOWColour, 1.0);
 
 			}
 			ENDHLSL

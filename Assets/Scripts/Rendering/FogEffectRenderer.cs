@@ -108,17 +108,20 @@ class FogEffectPass : ScriptableRenderPass
 		fogMaterial.SetFloat("_CloudScale", scale);
 		fogMaterial.SetFloat("_RenderDistance", renderDistance);
 
-		RenderTexture mask = FOWManager.Instance.imperm.MaskToTexture();
+		RenderTexture impermMask = FOWManager.Instance.imperm.MaskToTexture();
+		RenderTexture permMask   = FOWManager.Instance.perm.MaskToTexture();
 
-		impermMaterial.SetTexture("_MaskTex", mask);
+		impermMaterial.SetTexture("_MaskTex", impermMask);
 		impermMaterial.SetVector("_FogTopCorner", FOWManager.Instance.imperm.transform.position);
 		impermMaterial.SetFloat("_Height", FOWManager.Instance.imperm.transform.position.y);
 		impermMaterial.SetVector("_FogMaskSize", FOWManager.Instance.imperm.GetMaskExtentf());
 		impermMaterial.SetVector("_FogColour", exploredColour);
 		impermMaterial.SetTexture("_MainDepth", Camera.main.activeTexture, RenderTextureSubElement.Depth);
 
-		Shader.SetGlobalTexture("G_FOWOccludeMaskTexture", mask);
-		Shader.SetGlobalTexture("G_FOWPermMaskTexture", mask);
+		Shader.SetGlobalTexture("G_FOWOccludeMaskTexture", impermMask);
+		Shader.SetGlobalTexture("G_FOWImpermMaskTexture", impermMask);
+		Shader.SetGlobalTexture("G_FOWPermMaskTexture", permMask);
+		Shader.SetGlobalColor("G_FOWColour", colour);
 		Shader.SetGlobalVector("G_FogTopCorner", FOWManager.Instance.imperm.transform.position);
 		Shader.SetGlobalVector("G_FogMaskSize", FOWManager.Instance.imperm.GetMaskExtentf());
 
