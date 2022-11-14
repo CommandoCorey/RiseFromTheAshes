@@ -120,6 +120,8 @@ public class AiPlayer : MonoBehaviour
     {
         if (gameManager.State != GameState.Running)
             return;
+
+        UpdateUnitsAttackingHQ();
     }
 
     #region private functions
@@ -178,7 +180,17 @@ public class AiPlayer : MonoBehaviour
 
     private void UpdateUnitsAttackingHQ()
     {
+        foreach(UnitController unit in unitsAttackingHQ)
+        {
+            if(unit == null || // unit has been destroyed
+                !unit.GetComponent<AttackState>()) // unit is not in attack state
+            {
+                unitsAttackingHQ.Remove(unit);
+                UpdateUnitsAttackingHQ();
+                return;
+            }
 
+        }
     }
 
     #endregion
