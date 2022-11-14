@@ -55,6 +55,8 @@ Shader "Hidden/Fog"
 
 			SamplerState sampler_NoiseTexture;
 
+			uniform bool _ShouldDepthTest;
+
 			uniform float _Threshold;
 			uniform float _FogDepth;
 			uniform float _StepSize;
@@ -98,7 +100,7 @@ Shader "Hidden/Fog"
 				float depth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, sampler_CameraDepthTexture, i.uv);
 				depth = ComputeWorldSpacePosition(i.uv, depth, UNITY_MATRIX_I_VP).y;
 
-				if (hitPoint.y < depth) {
+				if (_ShouldDepthTest && hitPoint.y < depth) {
 					return col;
 				}
 
