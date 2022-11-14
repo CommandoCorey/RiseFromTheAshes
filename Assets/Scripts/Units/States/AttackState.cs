@@ -128,6 +128,12 @@ public class AttackState : State
             {
                 //Debug.Log("Dealing " + unit.DamagePerHit + " damage to " + unit.AttackTarget.name);
                 unit.AttackTarget.GetComponent<Building>().TakeDamage(hitPosition, unit.DamagePerHit);
+
+                if(transform.gameObject.layer == 6 && unit.AttackTarget.tag == "Headquarters")
+                {
+                    AiPlayer.Instance.AddUnitAttackingHQ(unit);
+                }
+
                 Invoke("DealDamage", unit.AttackRate);
             }
 
