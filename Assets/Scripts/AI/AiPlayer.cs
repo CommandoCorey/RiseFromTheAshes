@@ -28,8 +28,12 @@ public struct RaidPath
 
 public class AiPlayer : MonoBehaviour
 {
+    public Transform AiHeadquarters;
     public Transform playerBase;
     public Transform rallyPoint;
+    [SerializeField] [Range(0, 200)]
+    float HQDefenseRadius = 80;
+
     [SerializeField] List<Transform> buildingPlaceholders;
     [SerializeField] List<Transform> outpostPlaceholders;
     [SerializeField] Transform[] buildingPrefabs;
@@ -52,6 +56,8 @@ public class AiPlayer : MonoBehaviour
 
     // unit management
     private List<UnitController> aiUnits;
+    [HideInInspector]
+    public List<UnitController> unitsAttackingHQ;
     private List<Transform> unitGroup;
     private List<Vector3> formationPositions;
 
@@ -67,8 +73,8 @@ public class AiPlayer : MonoBehaviour
     // propertis
     public Transform[] BuildingPrefabs { get => buildingPrefabs; }
     public List<Transform> BuildingPlaceholders { get => buildingPlaceholders; }
-
     public List<Building> BaysInConstruction { get => baysInConstruction; }
+    public List<UnitController> UnitsAttackingHQ { get => unitsAttackingHQ; } 
 
     public bool PlaceHoldersLeft
     {
@@ -155,12 +161,41 @@ public class AiPlayer : MonoBehaviour
 
         return new Vector3(x, 0, z);
     }
+
+    private void SendUnitsToHQ()
+    {
+        var colliders = Physics.OverlapSphere(AiHeadquarters.position, HQDefenseRadius);
+
+        foreach(var collider in colliders)
+        {
+            if(collider.gameObject.layer == 7)
+            {
+                var aiUnit = collider.GetComponent<AiUnit>();
+                aiUnit.AttackClosestHQEnemy();
+            }
+        }
+    }
+
+    private void UpdateUnitsAttackingHQ()
+    {
+
+    }
+
     #endregion
 
     #region public functions
     public void AddVehicleBay(VehicleBay bay)
     {
         vehicleBays.Add(bay);
+    }
+
+    public void AddUnitAttackingHQ(UnitController unit)
+    {
+        if (!unitsAttackingHQ.Contains(unit))
+        {
+            unitsAttackingHQ.Add(unit);
+            SendUnitsToHQ();
+        }
     }
 
     /// <summary>
@@ -394,6 +429,7 @@ public class AiPlayer : MonoBehaviour
 
     private void OnDrawGizmos()
     {
+#if UNITY_EDITOR
         // draws the fromation positions that each unit will finish at
         if (formationPositions != null)
         {
@@ -404,9 +440,16 @@ public class AiPlayer : MonoBehaviour
             }
         }
 
+        if (AiHeadquarters != null)
+        {
+            UnityEditor.Handles.color = Color.green;
+            UnityEditor.Handles.DrawWireDisc(AiHeadquarters.position, Vector3.up, HQDefenseRadius);
+        }
+
         //if(vehicleBay != null)
         //Gizmos.DrawLine(vehicleBay.position, vehicleBay.position + vehicleBay.forward * zOffset);
-    }
 
+#endif
+    }
 
 }

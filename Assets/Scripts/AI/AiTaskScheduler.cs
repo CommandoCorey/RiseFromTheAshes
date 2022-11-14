@@ -292,8 +292,7 @@ public class AiTaskScheduler : MonoBehaviour
     }
 
     private void ClearRebuildTasks()
-    {
-        TaskSet taskSet = tasksSchedule[0];
+    {       
         foreach (TaskSet set in tasksSchedule)
         {
             if (set.addRebuildTasks)
