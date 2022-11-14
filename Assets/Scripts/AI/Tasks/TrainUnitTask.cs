@@ -6,6 +6,7 @@ using UnityEngine;
 public class TrainUnitTask : AiTask
 {
     public UnitController unitToTrain;
+    public UnitMode mode = UnitMode.Intermediate;
 
     public bool UnitTrained { get; set; }
 

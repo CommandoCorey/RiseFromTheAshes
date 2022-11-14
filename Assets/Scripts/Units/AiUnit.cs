@@ -9,7 +9,6 @@ public enum UnitMode
 
 public class AiUnit : MonoBehaviour
 {
-
     public UnitMode Mode { get; set; } = UnitMode.Intermediate;
 
     UnitController unit;

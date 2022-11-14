@@ -138,7 +138,10 @@ public class AiPlayer : MonoBehaviour
         vehicleBay.IsTraining = false;
 
         var unitInstance = Instantiate(unit, vehicleBay.spawnLocation.position, Quaternion.identity);
-        unitInstance.body.forward = vehicleBay.transform.forward;
+        //unitInstance.body.forward = vehicleBay.transform.forward; // look at this
+        unitInstance.body.rotation = Quaternion.Euler(0, 180, 0);
+
+        unitInstance.GetComponent<AiUnit>().Mode = task.mode; // sets the unit mode (Intermediate by default)
 
         unitInstance.MoveToRallyPoint(rallyPoint.position);
 
