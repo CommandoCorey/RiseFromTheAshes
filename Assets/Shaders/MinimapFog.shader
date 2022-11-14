@@ -93,9 +93,9 @@ Shader "Hidden/MinimapFog"
 				float permMaskVal = tex2D(G_FOWPermMaskTexture, hitPointMaskSpace).r;
 				float impermMaskVal = tex2D(G_FOWImpermMaskTexture, hitPointMaskSpace).r;
 
-				float maskMul = (1.0 - impermMaskVal);
-
-				return float4(tex2D(_MainTex, i.uv).rgb * (1.0 - impermMaskVal) + impermMaskVal * permMaskVal * G_FOWColour, 1.0);
+				return float4(
+					tex2D(_MainTex, i.uv).rgb * (1.0 - impermMaskVal) + 
+					impermMaskVal * permMaskVal * G_FOWColour, 1.0);
 
 			}
 			ENDHLSL
