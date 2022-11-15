@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1080651215503150866}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -59,7 +59,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3822680982107020871}
-  m_Layer: 0
+  - component: {fileID: 860280081831041455}
+  m_Layer: 10
   m_Name: Brutalist building full 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -82,6 +83,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &860280081831041455
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3468071961645368737}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 25.39, y: 10.29, z: 3.86}
+  m_Center: {x: 0.86, y: 5.1, z: 20.83}
 --- !u!1 &3760628120382297139
 GameObject:
   m_ObjectHideFlags: 0
@@ -91,7 +105,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2109177700576983928}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Roof
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -121,9 +135,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1080651215503150866}
     m_Modifications:
+    - target: {fileID: 5898731131031246541, guid: 3eb74cea79d458d448f31d862f5528de, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 6318953152644939983, guid: 3eb74cea79d458d448f31d862f5528de, type: 3}
       propertyPath: m_Name
       value: Brutalist_wall B (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6318953152644939983, guid: 3eb74cea79d458d448f31d862f5528de, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6699877149606468213, guid: 3eb74cea79d458d448f31d862f5528de, type: 3}
       propertyPath: m_RootOrder
@@ -187,6 +209,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1080651215503150866}
     m_Modifications:
+    - target: {fileID: 3552244220646344367, guid: 63de2b9fbbd93e24d9c845c9a2dd0a16, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 4172125501792313194, guid: 63de2b9fbbd93e24d9c845c9a2dd0a16, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.25
@@ -243,6 +269,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Brutalist_column A
       objectReference: {fileID: 0}
+    - target: {fileID: 8828288223064109622, guid: 63de2b9fbbd93e24d9c845c9a2dd0a16, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 63de2b9fbbd93e24d9c845c9a2dd0a16, type: 3}
 --- !u!4 &9177923358536085985 stripped
@@ -257,9 +287,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1080651215503150866}
     m_Modifications:
+    - target: {fileID: 5898731131031246541, guid: 3eb74cea79d458d448f31d862f5528de, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 6318953152644939983, guid: 3eb74cea79d458d448f31d862f5528de, type: 3}
       propertyPath: m_Name
       value: Brutalist_wall B (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6318953152644939983, guid: 3eb74cea79d458d448f31d862f5528de, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6699877149606468213, guid: 3eb74cea79d458d448f31d862f5528de, type: 3}
       propertyPath: m_RootOrder
@@ -323,6 +361,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1080651215503150866}
     m_Modifications:
+    - target: {fileID: 26670114805698501, guid: c3659e637019c2142b127e6162308ee5, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 7286522762256964006, guid: c3659e637019c2142b127e6162308ee5, type: 3}
       propertyPath: m_RootOrder
       value: 10
@@ -371,6 +413,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Brutalist_roof
       objectReference: {fileID: 0}
+    - target: {fileID: 7950328286267015964, guid: c3659e637019c2142b127e6162308ee5, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c3659e637019c2142b127e6162308ee5, type: 3}
 --- !u!4 &8074267905624443627 stripped
@@ -385,9 +431,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1080651215503150866}
     m_Modifications:
+    - target: {fileID: 5898731131031246541, guid: 3eb74cea79d458d448f31d862f5528de, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 6318953152644939983, guid: 3eb74cea79d458d448f31d862f5528de, type: 3}
       propertyPath: m_Name
       value: Brutalist_wall B (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6318953152644939983, guid: 3eb74cea79d458d448f31d862f5528de, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6699877149606468213, guid: 3eb74cea79d458d448f31d862f5528de, type: 3}
       propertyPath: m_RootOrder
@@ -451,9 +505,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1080651215503150866}
     m_Modifications:
+    - target: {fileID: 5898731131031246541, guid: 3eb74cea79d458d448f31d862f5528de, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 6318953152644939983, guid: 3eb74cea79d458d448f31d862f5528de, type: 3}
       propertyPath: m_Name
       value: Brutalist_wall A (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6318953152644939983, guid: 3eb74cea79d458d448f31d862f5528de, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6699877149606468213, guid: 3eb74cea79d458d448f31d862f5528de, type: 3}
       propertyPath: m_RootOrder
@@ -517,6 +579,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1080651215503150866}
     m_Modifications:
+    - target: {fileID: 26670114805698501, guid: c3659e637019c2142b127e6162308ee5, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 7286522762256964006, guid: c3659e637019c2142b127e6162308ee5, type: 3}
       propertyPath: m_RootOrder
       value: 12
@@ -565,6 +631,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Brutalist_roof (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 7950328286267015964, guid: c3659e637019c2142b127e6162308ee5, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c3659e637019c2142b127e6162308ee5, type: 3}
 --- !u!4 &8797666806839679792 stripped
@@ -579,6 +649,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1080651215503150866}
     m_Modifications:
+    - target: {fileID: 26670114805698501, guid: c3659e637019c2142b127e6162308ee5, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 7286522762256964006, guid: c3659e637019c2142b127e6162308ee5, type: 3}
       propertyPath: m_RootOrder
       value: 16
@@ -627,6 +701,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Brutalist_roof (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 7950328286267015964, guid: c3659e637019c2142b127e6162308ee5, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c3659e637019c2142b127e6162308ee5, type: 3}
 --- !u!4 &5495316729553961084 stripped
@@ -641,9 +719,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1080651215503150866}
     m_Modifications:
+    - target: {fileID: 5898731131031246541, guid: 3eb74cea79d458d448f31d862f5528de, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 6318953152644939983, guid: 3eb74cea79d458d448f31d862f5528de, type: 3}
       propertyPath: m_Name
       value: Brutalist_wall A (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6318953152644939983, guid: 3eb74cea79d458d448f31d862f5528de, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6699877149606468213, guid: 3eb74cea79d458d448f31d862f5528de, type: 3}
       propertyPath: m_RootOrder
@@ -707,9 +793,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1080651215503150866}
     m_Modifications:
+    - target: {fileID: 5898731131031246541, guid: 3eb74cea79d458d448f31d862f5528de, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 6318953152644939983, guid: 3eb74cea79d458d448f31d862f5528de, type: 3}
       propertyPath: m_Name
       value: Brutalist_wall A
+      objectReference: {fileID: 0}
+    - target: {fileID: 6318953152644939983, guid: 3eb74cea79d458d448f31d862f5528de, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6699877149606468213, guid: 3eb74cea79d458d448f31d862f5528de, type: 3}
       propertyPath: m_RootOrder
@@ -773,9 +867,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1080651215503150866}
     m_Modifications:
+    - target: {fileID: 5898731131031246541, guid: 3eb74cea79d458d448f31d862f5528de, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 6318953152644939983, guid: 3eb74cea79d458d448f31d862f5528de, type: 3}
       propertyPath: m_Name
       value: Brutalist_wall B
+      objectReference: {fileID: 0}
+    - target: {fileID: 6318953152644939983, guid: 3eb74cea79d458d448f31d862f5528de, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6699877149606468213, guid: 3eb74cea79d458d448f31d862f5528de, type: 3}
       propertyPath: m_RootOrder
@@ -839,9 +941,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1080651215503150866}
     m_Modifications:
+    - target: {fileID: 5898731131031246541, guid: 3eb74cea79d458d448f31d862f5528de, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 6318953152644939983, guid: 3eb74cea79d458d448f31d862f5528de, type: 3}
       propertyPath: m_Name
       value: Brutalist_wall A (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6318953152644939983, guid: 3eb74cea79d458d448f31d862f5528de, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6699877149606468213, guid: 3eb74cea79d458d448f31d862f5528de, type: 3}
       propertyPath: m_RootOrder
@@ -905,9 +1015,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1080651215503150866}
     m_Modifications:
+    - target: {fileID: 5898731131031246541, guid: 3eb74cea79d458d448f31d862f5528de, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 6318953152644939983, guid: 3eb74cea79d458d448f31d862f5528de, type: 3}
       propertyPath: m_Name
       value: Brutalist_wall B (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6318953152644939983, guid: 3eb74cea79d458d448f31d862f5528de, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6699877149606468213, guid: 3eb74cea79d458d448f31d862f5528de, type: 3}
       propertyPath: m_RootOrder
@@ -971,6 +1089,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1080651215503150866}
     m_Modifications:
+    - target: {fileID: 26670114805698501, guid: c3659e637019c2142b127e6162308ee5, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 7286522762256964006, guid: c3659e637019c2142b127e6162308ee5, type: 3}
       propertyPath: m_RootOrder
       value: 17
@@ -1019,6 +1141,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Brutalist_roof (5)
       objectReference: {fileID: 0}
+    - target: {fileID: 7950328286267015964, guid: c3659e637019c2142b127e6162308ee5, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c3659e637019c2142b127e6162308ee5, type: 3}
 --- !u!4 &3127387546593824327 stripped
@@ -1033,6 +1159,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1080651215503150866}
     m_Modifications:
+    - target: {fileID: 26670114805698501, guid: c3659e637019c2142b127e6162308ee5, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 7286522762256964006, guid: c3659e637019c2142b127e6162308ee5, type: 3}
       propertyPath: m_RootOrder
       value: 11
@@ -1081,6 +1211,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Brutalist_roof (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 7950328286267015964, guid: c3659e637019c2142b127e6162308ee5, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c3659e637019c2142b127e6162308ee5, type: 3}
 --- !u!4 &3059310258734893444 stripped
@@ -1095,6 +1229,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1080651215503150866}
     m_Modifications:
+    - target: {fileID: 26670114805698501, guid: c3659e637019c2142b127e6162308ee5, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 7286522762256964006, guid: c3659e637019c2142b127e6162308ee5, type: 3}
       propertyPath: m_RootOrder
       value: 13
@@ -1143,6 +1281,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Brutalist_roof (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 7950328286267015964, guid: c3659e637019c2142b127e6162308ee5, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c3659e637019c2142b127e6162308ee5, type: 3}
 --- !u!4 &1019028920262900892 stripped
@@ -1157,9 +1299,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1080651215503150866}
     m_Modifications:
+    - target: {fileID: 5898731131031246541, guid: 3eb74cea79d458d448f31d862f5528de, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 6318953152644939983, guid: 3eb74cea79d458d448f31d862f5528de, type: 3}
       propertyPath: m_Name
       value: Brutalist_wall A (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6318953152644939983, guid: 3eb74cea79d458d448f31d862f5528de, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6699877149606468213, guid: 3eb74cea79d458d448f31d862f5528de, type: 3}
       propertyPath: m_RootOrder
@@ -1223,9 +1373,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1080651215503150866}
     m_Modifications:
+    - target: {fileID: 5898731131031246541, guid: 3eb74cea79d458d448f31d862f5528de, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 6318953152644939983, guid: 3eb74cea79d458d448f31d862f5528de, type: 3}
       propertyPath: m_Name
       value: Brutalist_wall A (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6318953152644939983, guid: 3eb74cea79d458d448f31d862f5528de, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6699877149606468213, guid: 3eb74cea79d458d448f31d862f5528de, type: 3}
       propertyPath: m_RootOrder
@@ -1289,6 +1447,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1080651215503150866}
     m_Modifications:
+    - target: {fileID: 3552244220646344367, guid: 63de2b9fbbd93e24d9c845c9a2dd0a16, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 8200969098535921804, guid: 63de2b9fbbd93e24d9c845c9a2dd0a16, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -1341,6 +1503,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Brutalist_column B
       objectReference: {fileID: 0}
+    - target: {fileID: 8828288223064109622, guid: 63de2b9fbbd93e24d9c845c9a2dd0a16, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 63de2b9fbbd93e24d9c845c9a2dd0a16, type: 3}
 --- !u!4 &546865804672810917 stripped
@@ -1355,9 +1521,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1080651215503150866}
     m_Modifications:
+    - target: {fileID: 5898731131031246541, guid: 3eb74cea79d458d448f31d862f5528de, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 6318953152644939983, guid: 3eb74cea79d458d448f31d862f5528de, type: 3}
       propertyPath: m_Name
       value: Brutalist_wall B (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6318953152644939983, guid: 3eb74cea79d458d448f31d862f5528de, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6699877149606468213, guid: 3eb74cea79d458d448f31d862f5528de, type: 3}
       propertyPath: m_RootOrder
@@ -1473,6 +1647,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: brutalist roof wall
       objectReference: {fileID: 0}
+    - target: {fileID: 1946400885626112069, guid: f7de75ced39372a4dbbe55a8a9680483, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5042472732891805994, guid: f7de75ced39372a4dbbe55a8a9680483, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f7de75ced39372a4dbbe55a8a9680483, type: 3}
 --- !u!4 &7584909612345441486 stripped
@@ -1538,6 +1720,14 @@ PrefabInstance:
     - target: {fileID: 1946400885626112069, guid: f7de75ced39372a4dbbe55a8a9680483, type: 3}
       propertyPath: m_Name
       value: brutalist roof wall
+      objectReference: {fileID: 0}
+    - target: {fileID: 1946400885626112069, guid: f7de75ced39372a4dbbe55a8a9680483, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5042472732891805994, guid: f7de75ced39372a4dbbe55a8a9680483, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f7de75ced39372a4dbbe55a8a9680483, type: 3}

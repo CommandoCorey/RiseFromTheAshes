@@ -42,7 +42,7 @@ public class BuildingManager : MonoBehaviour
 			
 			if (Physics.Raycast(mainCamera.ScreenPointToRay(Input.mousePosition), out hit, Mathf.Infinity, buildingLayer))
 			{
-				Debug.Log(hit.collider.gameObject.name);
+				//Debug.Log(hit.collider.gameObject.name);
 				Building building = hit.collider.gameObject.GetComponent<Building>();
 				if (building)
 				{
