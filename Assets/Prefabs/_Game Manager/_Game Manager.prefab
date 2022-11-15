@@ -375,12 +375,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81316e3d837137240b65f36c0ceeb096, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spaceBetweenUnits: 4.5
+  spaceBetweenUnits: 3
   maxUnitsPerRow: 5
   maxRows: 1000
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
+  environmentLayer:
+    serializedVersion: 2
+    m_Bits: 0
   showFormationPositions: 0
   showPlayerRallyPositions: 0
   showAiRallyPositions: 0
@@ -4350,6 +4353,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2724173016248368636}
     m_Modifications:
+    - target: {fileID: 370776946380711569, guid: 0d85f3da3e3ee264ab9c32be7440ea2c, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
     - target: {fileID: 2370629931944888548, guid: 0d85f3da3e3ee264ab9c32be7440ea2c, type: 3}
       propertyPath: errorNotification
       value: 
@@ -4798,6 +4805,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7167035437671082027, guid: c9024c79e347fa244b16be269a4aca07, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c9024c79e347fa244b16be269a4aca07, type: 3}
 --- !u!4 &1044927610394073028 stripped
