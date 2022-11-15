@@ -53,6 +53,8 @@ Shader "Hidden/FogImperm"
 
 			uniform float _Height;
 
+			uniform bool _ShouldDepthTest;
+
 			uniform float4 _FogColour;
 
 			uniform float4 _FogTopCorner;
@@ -101,11 +103,11 @@ Shader "Hidden/FogImperm"
 				float depth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, sampler_CameraDepthTexture, i.uv);
 				depth = ComputeWorldSpacePosition(i.uv, depth, UNITY_MATRIX_I_VP).y;
 
-				if (hitPoint.y < depth) {
+				float3 m = (1.0 - (maskVal - _FogColour.rgb * _FogColour.a));
+
+				if (_ShouldDepthTest && hitPoint.y < depth) {
 					return col;
-				}
-				else {
-					float3 m = (1.0 - (maskVal - _FogColour.rgb * _FogColour.a));
+				} else {
 					return float4(m * col.rgb, 1.0);
 				}
 			}

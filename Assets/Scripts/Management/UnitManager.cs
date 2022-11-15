@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -5,6 +6,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
+using static UnityEngine.UI.CanvasScaler;
 
 public class UnitManager : MonoBehaviour
 {
@@ -20,6 +22,7 @@ public class UnitManager : MonoBehaviour
     //[SerializeField]
     List<GameObject> selectedUnits;
     SelectionManager selection;
+    private UnitController selectedEnemyUnit;
 
     //[Header("Group Movement")]
     //[SerializeField] bool flockWhileMoving;
@@ -98,6 +101,7 @@ public class UnitManager : MonoBehaviour
         }
         DoTheMusic();
 
+        /*
         foreach(GameObject go in selectedUnits)
         {
             var unit = go.GetComponent<UnitController>();
@@ -106,7 +110,7 @@ public class UnitManager : MonoBehaviour
             {
                 SetTargetHighlight(unit, true);
             }
-        }
+        }*/
 
     }
     #endregion
@@ -133,25 +137,19 @@ public class UnitManager : MonoBehaviour
     #region public functions
 
     /// <summary>
-    /// 
+    /// Turns targeted highlight of object that a unit is fighting on or off
     /// </summary>
-    /// <param name="unit"></param>
-    /// <param name="on"></param>
+    /// <param name="unit">The unit being used</param>
+    /// <param name="on">The on/off toggle to the highlight</param>
     public void SetTargetHighlight(UnitController unit, bool on)
     {
-        int layer = unit.AttackTarget.gameObject.layer;
+        //int layer = unit.AttackTarget.gameObject.layer;
 
-        if (layer == 6 || layer == 7)
-        {
-            var enemy = unit.AttackTarget.root.GetComponent<UnitController>();
-            enemy.targetedHighlight.SetActive(on);
-        }
-        if (layer == 8 || layer == 9)
-        {
-            var enemy = unit.AttackTarget.GetComponent<Building>();
-            enemy.targetedHighlight.SetActive(on);
-        }
-        
+        //if (layer == 6 || layer == 7 || layer == 8 || layer == 9)
+        //
+        var highlight = unit.AttackTarget.root.GetComponent<SelectionSprites>();
+        highlight.enabled = on;
+        //}        
     }
 
     /// <summary>
@@ -291,16 +289,18 @@ public class UnitManager : MonoBehaviour
     /// <returns>True or false value based on whether the object is valid</returns>
     public bool AttackTarget(Transform target)
     {
+        /*
         if (target.gameObject.layer == 7) // Ai Unit
         {
-            target.root.GetComponent<UnitController>().selectionHighlight.SetActive(true);
             target.root.GetComponent<FlashSelection>().enabled = true;
         }
         else if (target.gameObject.layer == 9) // Ai Building
         {
             target.GetComponent<Building>().selectionHighlight.SetActive(true);
             target.GetComponent<FlashSelection>().enabled = true;
-        }
+        }*/
+
+        target.GetComponent<SelectionSprites>().ShowAttackedSprite = true;
 
         // check if the target's layer is one of the enemy layers
         if (enemyLayers == (enemyLayers | (1 << target.gameObject.layer)))
@@ -309,8 +309,8 @@ public class UnitManager : MonoBehaviour
             {
                 var unit = unitObject.GetComponent<UnitController>();
 
-                if (unit.AttackTarget != null)
-                    SetTargetHighlight(unit, false);
+                //if (unit.AttackTarget != null)
+                    //SetTargetHighlight(unit, false);
 
                 unit.AttackTarget = target;
                 unit.AttackOrderGiven = true;
@@ -510,4 +510,23 @@ public class UnitManager : MonoBehaviour
 
     }
 
+    public void SelectEnemyUnit(UnitController unit)
+    {
+        selectedEnemyUnit = unit;
+        unit.SetSelected(true);
+
+        if (unit.AttackTarget != null)
+        {
+            unit.AttackTarget.GetComponent<SelectionSprites>().ShowTargetedSprite = true;
+        }
+    }
+
+    public void DeselectEnemyUnit()
+    {
+        if(selectedEnemyUnit != null)
+        {
+            selectedEnemyUnit.SetSelected(false);        
+            selectedEnemyUnit = null;
+        }
+    }
 }

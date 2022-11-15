@@ -6,8 +6,11 @@ using UnityEngine.EventSystems;
 
 public class SelectionManager : MonoBehaviour
 {
-    public LayerMask selectionLayer;
+    [Header("Layer Masks")]
+    public LayerMask unitSelection;
     public LayerMask buildingSelectionLayer;
+    public LayerMask enemyUnitSelection;
+    public LayerMask enemyBuildingSelection;
 
     public bool drawDebugBox = true;
     public UnitGui gui; // used to update unit icons
@@ -154,6 +157,8 @@ public class SelectionManager : MonoBehaviour
             Debug.Log("Hit: " + hit.transform.name + " at " + hit.point);
         }*/
 
+        unitManager.DeselectEnemyUnit();
+
         // clear the building selection if the player clicked on something other than the building
         if (Physics.Raycast(ray, out hit, 50000.0f))
         {
@@ -169,8 +174,8 @@ public class SelectionManager : MonoBehaviour
             return;
         }*/
 
-        if (Physics.Raycast(ray, out hit, 50000.0f, selectionLayer))
-        {            
+        if (Physics.Raycast(ray, out hit, 50000.0f, unitSelection))
+        {
             if (Input.GetKey(KeyCode.LeftShift)) //inclusive select
             {
                 AddSelected(hit.transform.gameObject);
@@ -188,8 +193,18 @@ public class SelectionManager : MonoBehaviour
                 AddSelected(hit.transform.gameObject);
                 unit.SingleSelected = true;
 
-                gui.GenerateUnitIcons(Units);                
+                gui.GenerateUnitIcons(Units);
             }
+
+        }
+        else if (Physics.Raycast(ray, out hit, 50000.0f, enemyUnitSelection))
+        {
+            DeselectAll(); // removes all player untis from selection
+
+            var unit = hit.transform.GetComponent<UnitController>();
+            unit.SingleSelected = true;
+
+            unitManager.SelectEnemyUnit(unit);
         }
         else //if we didnt hit something
         {
@@ -238,7 +253,7 @@ public class SelectionManager : MonoBehaviour
         if (drawDebugBox)
             DrawOverlapBox(centerPoint, halfExtents);
 
-        var collisions = Physics.OverlapBox(centerPoint, halfExtents, Quaternion.identity, selectionLayer);
+        var collisions = Physics.OverlapBox(centerPoint, halfExtents, Quaternion.identity, unitSelection);
 
         foreach (Collider collision in collisions)
         {
@@ -301,7 +316,7 @@ public class SelectionManager : MonoBehaviour
 
         selectedTable.Remove(id);
 
-        unitManager.SetTargetHighlight(unit, false);
+        //unitManager.SetTargetHighlight(unit, false);
     }
 
     /// <summary>
@@ -320,15 +335,16 @@ public class SelectionManager : MonoBehaviour
                 //Destroy(selectedTable[pair.Key].GetComponent<SelectedDictionary>());
                 unit.SetSelected(false);
 
-                if(unit.AttackTarget != null)
-                    unitManager.SetTargetHighlight(unit, false);
+                //if(unit.AttackTarget != null)
+                    //unitManager.SetTargetHighlight(unit, false);
             }
         }
         selectedTable.Clear(); // clears the whole dictionary
 
         gui.ClearUnitSelection();
-
         gui.DisableActionButtons();
+
+        unitManager.DeselectEnemyUnit();
     }
 
     public void SetSelectedBuilding(Building building)

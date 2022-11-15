@@ -53,10 +53,9 @@ public class IdleState : State
 
                 if(!ObstacleInWay(directionToTarget))
                 {
-                    //if (gameObject.tag == "PlayerUnit")
-                        //unit.ChangeState(UnitState.Attack);
-                    //else
-                        unit.ChangeState(UnitState.Follow);
+                    unit.AttackTarget = enemiesInRange[0].gameObject.transform;
+                    
+                    unit.ChangeState(UnitState.Follow);
                 }
             }
         }

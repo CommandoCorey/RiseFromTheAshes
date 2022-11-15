@@ -307,11 +307,17 @@ public class UnitGui : MonoBehaviour
 
         selectedUnits.Remove(unit);
 
-        // turn off the buttons panel is all selected untis are destroted
-        if (selectedUnits.Count < 1)
+        // This will cause problems in some scenarios
+        if (unit.AttackTarget != null)
         {
-            //buttonPanel.SetActive(false);
+            unit.AttackTarget.GetComponent<SelectionSprites>().ShowTargetedSprite = false;
         }
+
+        // turn off the buttons panel is all selected units are destroted
+        //if (selectedUnits.Count < 1)
+        //{
+            //buttonPanel.SetActive(false);
+        //}
     }
 
     /// <summary>
@@ -467,14 +473,17 @@ public class UnitGui : MonoBehaviour
     /// </summary>
     public void ClearUnitSelection()
     {
-        // Destroy existing icons on GUI
-        foreach (var icon in unitIcons)
+        if (unitIcons != null)
         {
-            GameObject.Destroy(icon);
-        }
+            // Destroy existing icons on GUI
+            foreach (var icon in unitIcons)
+            {
+                GameObject.Destroy(icon);
+            }
 
-        // clear the lists
-        unitIcons.Clear();
+            // clear the lists
+            unitIcons.Clear();
+        }
         selectedUnits.Clear();
 
         //buttonPanel.SetActive(false);

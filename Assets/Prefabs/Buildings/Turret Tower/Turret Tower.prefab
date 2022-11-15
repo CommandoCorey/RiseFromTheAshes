@@ -360,13 +360,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4999239961471015111}
-  - component: {fileID: 3787053027728743182}
-  - component: {fileID: 3639430971072205396}
-  - component: {fileID: 5964667483132050092}
   - component: {fileID: 6925086241110974003}
   - component: {fileID: 7667564885276854173}
   - component: {fileID: 5018134750328692643}
-  m_Layer: 8
+  - component: {fileID: 3787053027728743182}
+  - component: {fileID: 3639430971072205396}
+  - component: {fileID: 5964667483132050092}
+  - component: {fileID: 7917182563359427517}
+  m_Layer: 0
   m_Name: Turret Tower
   m_TagString: DefenceTurret
   m_Icon: {fileID: 0}
@@ -390,86 +391,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3787053027728743182
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4999239961471015109}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ce1311378444314781025cff0c15cca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  buildingName: Turret Tower
-  steelCost: 100
-  timeToBuild: 20
-  maxHP: 300
-  startAtMaxHP: 0
-  buildingDescription: A defensive tower the fires at any enemy that comes in range
-  aiBuilding: 0
-  HP: 0
-  selectionHighlight: {fileID: 8387549152385729494}
-  targetedHighlight: {fileID: 0}
-  hitSounds:
-  - clip: {fileID: 8300000, guid: 650e05b04e841814bb114354d5d09252, type: 3}
-    volumeScale: 0.5
-  - clip: {fileID: 8300000, guid: bb6dcd82c2325ed4ea4029144c00061e, type: 3}
-    volumeScale: 0.5
-  - clip: {fileID: 8300000, guid: a185a70575a8e1c44a4273772865504a, type: 3}
-    volumeScale: 0.5
-  destroySounds:
-  - clip: {fileID: 8300000, guid: 57da73a0a2b86f14dafcff35194b943c, type: 3}
-    volumeScale: 1
-  hitVFX:
-  - {fileID: 4119108375505451554, guid: 68ec58ae1d281a34eb79565561680e98, type: 3}
-  destroyEffects:
-  - {fileID: 7159291665532620558, guid: 50f434bbf162ba948853cb88a27a1732, type: 3}
-  damagedVFX:
-  - {fileID: 4337280294247246497}
-  - {fileID: 2944757626615844355}
-  - {fileID: 4823200360999199991}
-  ghost: {fileID: 0}
-  ghostTransform: {fileID: 0}
---- !u!114 &3639430971072205396
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4999239961471015109}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba5770ddb47e1bb4eba75cd6dff05570, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  turretGun: {fileID: 2910396837187008869}
-  firingPoint: {fileID: 6341171571076371148}
-  fireEffect: {fileID: 6122729733747261526, guid: 537757cdc640b964ea07bc66dfdedfb4, type: 3}
-  detectionRadius: 20
-  aimSpeed: 30
-  damagePerShot: 20
-  fireRate: 1
-  defaultAimAngle: 90
-  enemyLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  showDetectionRadius: 1
---- !u!114 &5964667483132050092
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4999239961471015109}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62c0e9bedd811934ba1b67fab761f762, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  permRadius: 40
-  impermRadius: 35
 --- !u!208 &6925086241110974003
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -595,6 +516,104 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &3787053027728743182
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4999239961471015109}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ce1311378444314781025cff0c15cca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buildingName: Turret Tower
+  steelCost: 100
+  timeToBuild: 20
+  maxHP: 300
+  startAtMaxHP: 0
+  buildingDescription: A defensive tower the fires at any enemy that comes in range
+  aiBuilding: 0
+  HP: 0
+  selectionHighlight: {fileID: 8350096294185660911}
+  hitSounds:
+  - clip: {fileID: 8300000, guid: 650e05b04e841814bb114354d5d09252, type: 3}
+    volumeScale: 0.5
+  - clip: {fileID: 8300000, guid: bb6dcd82c2325ed4ea4029144c00061e, type: 3}
+    volumeScale: 0.5
+  - clip: {fileID: 8300000, guid: a185a70575a8e1c44a4273772865504a, type: 3}
+    volumeScale: 0.5
+  destroySounds:
+  - clip: {fileID: 8300000, guid: 57da73a0a2b86f14dafcff35194b943c, type: 3}
+    volumeScale: 1
+  hitVFX:
+  - {fileID: 4119108375505451554, guid: 68ec58ae1d281a34eb79565561680e98, type: 3}
+  destroyEffects:
+  - {fileID: 7159291665532620558, guid: 50f434bbf162ba948853cb88a27a1732, type: 3}
+  damagedVFX:
+  - {fileID: 4337280294247246497}
+  - {fileID: 2944757626615844355}
+  - {fileID: 4823200360999199991}
+  ghost: {fileID: 0}
+  ghostTransform: {fileID: 0}
+--- !u!114 &3639430971072205396
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4999239961471015109}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba5770ddb47e1bb4eba75cd6dff05570, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  turretGun: {fileID: 2910396837187008869}
+  firingPoint: {fileID: 6341171571076371148}
+  fireEffect: {fileID: 6122729733747261526, guid: 537757cdc640b964ea07bc66dfdedfb4, type: 3}
+  detectionRadius: 20
+  aimSpeed: 30
+  damagePerShot: 20
+  fireRate: 1
+  defaultAimAngle: 90
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  showDetectionRadius: 1
+--- !u!114 &5964667483132050092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4999239961471015109}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62c0e9bedd811934ba1b67fab761f762, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  permRadius: 40
+  impermRadius: 35
+--- !u!114 &7917182563359427517
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4999239961471015109}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a0e9eae8d7446b4cabaf66d61a44f89, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selectedSprite: {fileID: 0}
+  targetedSprite: {fileID: 0}
+  rotateSprite: 1
+  rotationSpeed: 100
+  attackedSprite: {fileID: 0}
+  fadeSpeed: 8
+  iterations: 3
 --- !u!1 &6864695455569421718
 GameObject:
   m_ObjectHideFlags: 0
@@ -612,7 +631,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1177584960990416228
 Transform:
   m_ObjectHideFlags: 0
@@ -951,14 +970,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e45454b1e4e73454bb17c98ae49c6dc9, type: 3}
---- !u!1 &8387549152385729494 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4365779739516481214, guid: e45454b1e4e73454bb17c98ae49c6dc9, type: 3}
-  m_PrefabInstance: {fileID: 5255931701664591208}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2871758515708114906 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8010315143446698674, guid: e45454b1e4e73454bb17c98ae49c6dc9, type: 3}
+  m_PrefabInstance: {fileID: 5255931701664591208}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &8350096294185660911 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4256273693607681159, guid: e45454b1e4e73454bb17c98ae49c6dc9, type: 3}
   m_PrefabInstance: {fileID: 5255931701664591208}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7288252892879061293

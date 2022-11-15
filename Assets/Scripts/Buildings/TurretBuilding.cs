@@ -55,8 +55,8 @@ public class TurretBuilding : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!building.IsBuilt)
-            return;
+        //if (!building.IsBuilt)
+            //return;
 
         switch(state)
         {

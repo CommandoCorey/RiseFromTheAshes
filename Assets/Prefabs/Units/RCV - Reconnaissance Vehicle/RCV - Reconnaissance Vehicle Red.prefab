@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &2221642774639222717
+--- !u!114 &6533214261564558799
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9,11 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 5268226621432198667}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40eb759e8017aaf44af68486a3b1e647, type: 3}
+  m_Script: {fileID: 11500000, guid: ea5fb6f8cab235548ba65825d872d039, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fadeSpeed: 8
-  iterations: 3
 --- !u!1001 &3672666119917272925
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -45,6 +43,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 20
       objectReference: {fileID: 0}
+    - target: {fileID: 901997375285775757, guid: 3450d15c802a67b4e93dec63d482e348, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
     - target: {fileID: 1334875588792180636, guid: 3450d15c802a67b4e93dec63d482e348, type: 3}
       propertyPath: m_Layer
       value: 20
@@ -265,6 +267,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8226025272641318320, guid: 3450d15c802a67b4e93dec63d482e348, type: 3}
+      propertyPath: attackedSprite
+      value: 
+      objectReference: {fileID: 4401444526306530282}
+    - target: {fileID: 8226025272641318320, guid: 3450d15c802a67b4e93dec63d482e348, type: 3}
+      propertyPath: selectedSprite
+      value: 
+      objectReference: {fileID: 4583820116782028140}
+    - target: {fileID: 8226025272641318320, guid: 3450d15c802a67b4e93dec63d482e348, type: 3}
+      propertyPath: targetedSprite
+      value: 
+      objectReference: {fileID: 851826592415517938}
     - target: {fileID: 8340768716026626904, guid: 3450d15c802a67b4e93dec63d482e348, type: 3}
       propertyPath: m_Layer
       value: 7
@@ -309,13 +323,28 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8929351991352559958, guid: 3450d15c802a67b4e93dec63d482e348, type: 3}
   m_PrefabInstance: {fileID: 3672666119917272925}
   m_PrefabAsset: {fileID: 0}
+--- !u!212 &4583820116782028140 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 966847288772323889, guid: 3450d15c802a67b4e93dec63d482e348, type: 3}
+  m_PrefabInstance: {fileID: 3672666119917272925}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &7996620671600082013 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6633338543462892288, guid: 3450d15c802a67b4e93dec63d482e348, type: 3}
   m_PrefabInstance: {fileID: 3672666119917272925}
   m_PrefabAsset: {fileID: 0}
+--- !u!212 &851826592415517938 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 4117879564190839727, guid: 3450d15c802a67b4e93dec63d482e348, type: 3}
+  m_PrefabInstance: {fileID: 3672666119917272925}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1612545119271565687 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2636584210013308458, guid: 3450d15c802a67b4e93dec63d482e348, type: 3}
+  m_PrefabInstance: {fileID: 3672666119917272925}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &4401444526306530282 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 1144754446879780023, guid: 3450d15c802a67b4e93dec63d482e348, type: 3}
   m_PrefabInstance: {fileID: 3672666119917272925}
   m_PrefabAsset: {fileID: 0}

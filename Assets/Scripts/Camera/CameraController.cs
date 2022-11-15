@@ -47,6 +47,7 @@ public class CameraController : MonoBehaviour {
 
 	private void Update()
 	{
+		float timestep = Time.deltaTime / GameManager.Instance.timeScale;
 
 		Vector2 mp = Input.mousePosition;
 
@@ -71,7 +72,7 @@ public class CameraController : MonoBehaviour {
 
 		if (zoomTime < 1.0)
 		{
-			zoomTime += Time.deltaTime * zoomInterpSpeed;
+			zoomTime += timestep * zoomInterpSpeed;
 		}
 
 		zoom = Mathf.Lerp(startPy, targetPy, zoomTime);
@@ -118,11 +119,11 @@ public class CameraController : MonoBehaviour {
 				Cursor.visible = true;
 			}
 		} else {
-			transform.transform.position += new Vector3(velocity.x, 0.0f, velocity.y) * Time.deltaTime;
+			transform.transform.position += new Vector3(velocity.x, 0.0f, velocity.y) * timestep;
 
 			if (velocity.x > 0.0001f && velocity.y > 0.0001 || velocity.x < -0.0001 || velocity.y < -0.0001)
 			{
-				velocity -= new Vector2(Time.deltaTime * friction, Time.deltaTime * friction) * velocity;
+				velocity -= new Vector2(timestep * friction, timestep * friction) * velocity;
 			} else
 			{
 				velocity = new Vector2(0.0f, 0.0f);
