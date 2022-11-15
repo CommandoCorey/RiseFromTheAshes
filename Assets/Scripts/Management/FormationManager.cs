@@ -332,14 +332,7 @@ public class FormationManager : MonoBehaviour
         for (int row = 0; row < maxRows; row++)
         {
             for (int col = 0; col < maxUnitsPerRow; col++)
-            {     
-                /*
-                if(Physics.BoxCast(playerRallyPosition + Vector3.up, Vector3.down, 
-                    out RaycastHit hitInfo, Mathf.Infinity))
-                {
-
-                }*/
-
+            {                   
                 if (Physics.Raycast(playerRallyPosition + Vector3.up * 5, Vector3.down,
                     out RaycastHit hitInfo, Mathf.Infinity))
                 {
