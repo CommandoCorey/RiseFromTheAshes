@@ -26,6 +26,9 @@ public class BuildingManager : MonoBehaviour
 
 		if (Input.GetMouseButtonUp(0))
 		{
+
+			bool buildMenuShown = false;
+
 			if (Physics.Raycast(mainCamera.ScreenPointToRay(Input.mousePosition), out hit, Mathf.Infinity))
 			{
 				Ghost building = hit.collider.gameObject.GetComponent<Ghost>();
@@ -33,6 +36,7 @@ public class BuildingManager : MonoBehaviour
 				if (building)
 				{
 					building.ShowBuildMenu();
+					buildMenuShown = true;
 				}
 			} 
 			
@@ -44,6 +48,11 @@ public class BuildingManager : MonoBehaviour
 				{
 					building.Interact();
 				}
+			}
+
+			if (!buildMenuShown)
+			{
+				BuildMenu.Instance.Hide();
 			}
 		}
 	}
