@@ -137,8 +137,6 @@ public class AiTaskScheduler : MonoBehaviour
         set.tasks = sortedTasks.ToList();
     }
 
-
-
     // checks if any taks in a set is null and if they are, removes them
     private void RemoveNullTasks(List<AiTask> tasks)
     {

@@ -13,7 +13,8 @@ public class TaskSet
     public string description;
     public bool loopTaskSet;
     public bool addRebuildTasks;
-    public bool addOutpostBuildTasks;
+    //public bool addOutpostBuildTasks;
+    public bool waitForPreviousTaskSet;
     public List<AiTask> tasks;
 
     public int TaskNum { get; set; } = 0;
@@ -35,7 +36,6 @@ public class AiPlayer : MonoBehaviour
     float HQDefenseRadius = 80;
 
     [SerializeField] List<Transform> buildingPlaceholders;
-    [SerializeField] List<Transform> outpostPlaceholders;
     [SerializeField] Transform[] buildingPrefabs;
 
     public List<VehicleBay> vehicleBays;
@@ -70,7 +70,7 @@ public class AiPlayer : MonoBehaviour
     private List<AiTask> activeTasks;
     private List<TaskSetDisplay> taskDisplays;
 
-    // propertis
+    // properties
     public Transform[] BuildingPrefabs { get => buildingPrefabs; }
     public List<Transform> BuildingPlaceholders { get => buildingPlaceholders; }
     public List<Building> BaysInConstruction { get => baysInConstruction; }
@@ -88,7 +88,8 @@ public class AiPlayer : MonoBehaviour
 
         //get => buildingPlaceholders.Count > 0; 
     }
-    public bool OutpostPlaceholdersLeft { get => outpostPlaceholders.Count > 0; }
+
+    //public bool OutpostPlaceholdersLeft { get => outpostPlaceholders.Count > 0; }
 
     public static AiPlayer Instance { get; private set; }
 
@@ -195,7 +196,6 @@ public class AiPlayer : MonoBehaviour
 
         }
     }
-
     #endregion
 
     #region public functions
@@ -213,6 +213,7 @@ public class AiPlayer : MonoBehaviour
         }
     }
 
+    /*
     /// <summary>
     /// Sends a group of units to a specified outpost
     /// </summary>
@@ -225,7 +226,7 @@ public class AiPlayer : MonoBehaviour
             var unit = t.GetComponent<UnitController>();
             unit.ChangeState(UnitState.Moving, outpostPlaceholders[number].position);
         }
-    }
+    }*/
 
     /// <summary>
     /// Sends all units in a specified list along a random patrol route 
@@ -281,6 +282,7 @@ public class AiPlayer : MonoBehaviour
         }
     }
 
+    /*
     /// <summary>
     /// Add outpost tests
     /// </summary>
@@ -288,7 +290,7 @@ public class AiPlayer : MonoBehaviour
     public void AddOutpost(Transform outpostPlaceholder)
     {
 
-    }
+    }*/
 
     /// <summary>
     /// Trains a specified unit from a vehicle bay
@@ -415,6 +417,7 @@ public class AiPlayer : MonoBehaviour
         return buildingPlaceholders[0];
     }
 
+    /*
     public Transform GetOutpostPlaceholder(int number)
     {
         if (number > -1 && number < outpostPlaceholders.Count)
@@ -426,7 +429,7 @@ public class AiPlayer : MonoBehaviour
     public bool HasOutpostGhost(Transform transform)
     {
         return outpostPlaceholders.Contains(transform);
-    }
+    }*/
 
     public Transform[] GetIdleUnits()
     {
