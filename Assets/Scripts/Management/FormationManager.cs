@@ -336,19 +336,19 @@ public class FormationManager : MonoBehaviour
 
         for (int row = 0; row < maxRows; row++)
         {
-            Debug.Log("Row " + row);
+            //Debug.Log("Row " + row);
 
             for (int col = 0; col < maxUnitsPerRow; col++)
             {
-                Debug.Log("Column " + col);
+                //Debug.Log("Column " + col);
 
-                if (Physics.BoxCast(playerRallyPosition + Vector3.up * castHeight, boxSize/2, 
+                if (Physics.BoxCast(rallyPosition + Vector3.up * castHeight, boxSize/2, 
                     Vector3.down, out RaycastHit hitInfo))               
 
                 //if (Physics.Raycast(rallyPosition + Vector3.up * 10, Vector3.down,
                     //out RaycastHit hitInfo, Mathf.Infinity))
                 {
-                    Debug.DrawLine(rallyPosition + Vector3.up * castHeight, hitInfo.point, Color.red, 2.0f);
+                    //Debug.DrawLine(rallyPosition + Vector3.up * castHeight, hitInfo.point, Color.red, 2.0f);
 
                     int layerMask = 1 << hitInfo.transform.gameObject.layer;
 
@@ -358,7 +358,7 @@ public class FormationManager : MonoBehaviour
                         rallyFormations.Add(playerId++, hitInfo.point);
 
                         //Debug.Log("Row: " + row + ", Column: " + col);
-                        Debug.Log("Spot Found");                           
+                        //Debug.Log("Spot Found");                           
                         return hitInfo.point;
                     }
                     else if(layerMask == environmentLayer)
@@ -366,7 +366,7 @@ public class FormationManager : MonoBehaviour
                         hitEnvironment = true;
                     }
 
-                    Debug.Log("Hit" + hitInfo.transform.gameObject.name);
+                    //Debug.Log("Hit" + hitInfo.transform.gameObject.name);
 
                     searchedPositions.Add(hitInfo.point);
                 }                
