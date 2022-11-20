@@ -25,8 +25,8 @@ public class AiUnit : MonoBehaviour
     void Update()
     {
         // Check for outpost ghosts the unit is A.I. controlled
-        if (gameObject.layer == 7)
-            SearchForOutposts();
+        //if (gameObject.layer == 7)
+            //SearchForOutposts();
     }
 
     /// <summary>
@@ -56,6 +56,7 @@ public class AiUnit : MonoBehaviour
         }
     }
 
+    /*
     //------------------------------------------------------------------
     // Checks if there is an outpost placeholder in detection range that
     // the AiPlayer has not already found
@@ -76,6 +77,6 @@ public class AiUnit : MonoBehaviour
                 aiPlayer.AddOutpost(ghost.transform);
             }
         }
-    }
+    }*/
 
 }
