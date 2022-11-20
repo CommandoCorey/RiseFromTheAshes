@@ -6,6 +6,7 @@ using UnityEngine;
 public class BuildTask : AiTask
 {
     public Building buildingToConstruct;
+    public int priorityScore = 10;
 
     public bool autoSelectPlaceholder = true;
     [Range(0, 7)]

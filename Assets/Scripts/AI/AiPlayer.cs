@@ -8,20 +8,6 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 [System.Serializable]
-public class TaskSet
-{
-    public string description;
-    public bool loopTaskSet;
-    public bool addRebuildTasks;
-    //public bool addOutpostBuildTasks;
-    public bool waitForPreviousTaskSet;
-    public List<AiTask> tasks;
-
-    public int TaskNum { get; set; } = 0;
-    public bool ReadyToPerform { get; set; } = true;
-}
-
-[System.Serializable]
 public struct RaidPath
 {
     public Transform[] route;

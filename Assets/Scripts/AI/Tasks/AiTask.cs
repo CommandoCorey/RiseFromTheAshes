@@ -7,13 +7,14 @@ using static UnityEngine.UI.CanvasScaler;
 
 public abstract class AiTask : ScriptableObject, ICloneable
 {
-    public float timeDelay;
-    public int priorityScore = 10;
+    public float timeDelay;    
 
     //protected AiPlayer ai;
     //protected SimpleAiPlayer simpleAi;
 
     protected string taskStatus;
+
+    public bool Completed { get; set; }
 
     public abstract string TaskDescription { get; }
     public abstract string ActiveTaskDescription { get; }
