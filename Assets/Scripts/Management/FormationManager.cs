@@ -10,11 +10,27 @@ public class FormationManager : MonoBehaviour
     [SerializeField]
     [Range(1, 10)]
     float spaceBetweenUnits = 4.5f;
+    [SerializeField][Range(1, 10)]
+    float spaceBetweenRows = 3.0f;
     [SerializeField]
     [Range(1, 20)]
     int maxUnitsPerRow = 5;
     [SerializeField]
     int maxRows = 1000;
+
+    [SerializeField]
+    Vector3 boxSize = Vector3.one;
+
+    [Header("Casting")]
+    [SerializeField] float castHeight = 10;
+    [SerializeField] LayerMask groundLayer;
+    [SerializeField] LayerMask environmentLayer;
+
+    [Header("Gizmos")]
+    public bool showFormationPositions = false;
+    public bool showPlayerRallyPositions = false;
+    public bool showAiRallyPositions = false;
+    public bool showSearchedPositions = false;    
 
     List<Vector3> formationPositions = new List<Vector3>();
     private Dictionary<int, Vector3> playerRallyFormation = new Dictionary<int, Vector3>();
@@ -25,16 +41,7 @@ public class FormationManager : MonoBehaviour
     private Vector3 aiRallyPosition = new Vector3();
 
     private int playerId = 0;
-    private int enemyId = 0;
-
-    [SerializeField] LayerMask groundLayer;
-    [SerializeField] LayerMask environmentLayer;
-
-    [Header("Gizmos")]
-    public bool showFormationPositions = false;
-    public bool showPlayerRallyPositions = false;
-    public bool showAiRallyPositions = false;
-    public bool showSearchedPositions = false;
+    private int enemyId = 0;    
 
     public static FormationManager Instance { get; private set; }
 
@@ -252,7 +259,7 @@ public class FormationManager : MonoBehaviour
     {
         Vector3 moveDirection = (rallyPoint - origin).normalized;
 
-        //Debug.DrawLine(origin, rallyPoint, Color.yellow, 3.0f);
+        Debug.DrawLine(origin, rallyPoint, Color.yellow, 3.0f);
 
         if (aiPlayer) // Ai player
             //return GetNextAiFormationPoint(rallyPoint, moveDirection, ref rallyNumber);
@@ -261,8 +268,6 @@ public class FormationManager : MonoBehaviour
         else
             return GetNextFormationPoint(rallyPoint, moveDirection, ref rallyNumber, playerRallyFormation,
                    out playerRallyPosition);
-
-        //return GetNextFormationPoint(rallyPoint, moveDirection, ref rallyNumber);
     }
 
     // used for agent priorities
@@ -311,7 +316,7 @@ public class FormationManager : MonoBehaviour
 
     #region private functions
     private Vector3 GetNextFormationPoint(Vector3 centerPoint, Vector3 direction, ref int rallyNumber,
-            Dictionary<int, Vector3> rallyFormations, out Vector3 rallyPosition )
+            Dictionary<int, Vector3> rallyFormations, out Vector3 rallyPosition)
     {
         int unitsOnLeft = 0;
         int unitsOnRight = 0;
@@ -331,11 +336,20 @@ public class FormationManager : MonoBehaviour
 
         for (int row = 0; row < maxRows; row++)
         {
+            //Debug.Log("Row " + row);
+
             for (int col = 0; col < maxUnitsPerRow; col++)
-            {                   
-                if (Physics.Raycast(playerRallyPosition + Vector3.up * 5, Vector3.down,
-                    out RaycastHit hitInfo, Mathf.Infinity))
+            {
+                //Debug.Log("Column " + col);
+
+                if (Physics.BoxCast(rallyPosition + Vector3.up * castHeight, boxSize/2, 
+                    Vector3.down, out RaycastHit hitInfo))               
+
+                //if (Physics.Raycast(rallyPosition + Vector3.up * 10, Vector3.down,
+                    //out RaycastHit hitInfo, Mathf.Infinity))
                 {
+                    //Debug.DrawLine(rallyPosition + Vector3.up * castHeight, hitInfo.point, Color.red, 2.0f);
+
                     int layerMask = 1 << hitInfo.transform.gameObject.layer;
 
                     if (layerMask == groundLayer && !rallyFormations.ContainsValue(hitInfo.point))
@@ -343,20 +357,19 @@ public class FormationManager : MonoBehaviour
                         rallyNumber = playerId;
                         rallyFormations.Add(playerId++, hitInfo.point);
 
+                        //Debug.Log("Row: " + row + ", Column: " + col);
+                        //Debug.Log("Spot Found");                           
                         return hitInfo.point;
                     }
-                    else if(hitInfo.transform.gameObject.layer == 10) // environment layer
+                    else if(layerMask == environmentLayer)
                     {
                         hitEnvironment = true;
                     }
 
-                    searchedPositions.Add(hitInfo.point);
-                }
+                    //Debug.Log("Hit" + hitInfo.transform.gameObject.name);
 
-                if (hitEnvironment && oddFailed && evenFailed)
-                {
-                    break;
-                }
+                    searchedPositions.Add(hitInfo.point);
+                }                
 
                 if (col % 2 == 0) // check odd or even
                 {
@@ -375,13 +388,18 @@ public class FormationManager : MonoBehaviour
                         oddFailed = true;
                 }
 
-                rallyPosition = centerPoint - direction * (row + 1);
+                if (hitEnvironment && oddFailed && evenFailed)
+                {
+                    break; // move to next row
+                }
+
+                rallyPosition = centerPoint - (direction * row);
                 rallyPosition += offset;
             }            
 
             // move position to center of next row
             rallyPosition = centerPoint;
-            rallyPosition -= direction * (row+1) * spaceBetweenUnits;
+            rallyPosition -= direction * (spaceBetweenRows * (row + 1));
 
             //Debug.Log("Next row at " + rallyPosition);
 
@@ -396,128 +414,10 @@ public class FormationManager : MonoBehaviour
         Debug.LogError("Max rows exceeded. Could not find a valid rally formation position.");
 
         rallyNumber = playerId;
-        playerRallyFormation.Add(playerId++, centerPoint);
+        rallyFormations.Add(playerId++, centerPoint);
 
         return centerPoint;
     }
-
-    /*
-    private Vector3 GetNextFormationPoint(Vector3 centerPoint, Vector3 direction, ref int rallyNumber)
-    {
-        int unitsOnLeft = 0;
-        int unitsOnRight = 0;
-
-        playerRallyPosition = centerPoint;
-
-        Vector3 offsetDirection = GetRightAngle(direction);
-
-        Debug.DrawLine(centerPoint, centerPoint + (offsetDirection * 10), Color.red, 3.0f);
-
-        for (int row = 0; row < maxRows; row++)
-        {
-            for (int col = 0; col < maxUnitsPerRow; col++)
-            {
-                if (Physics.Raycast(playerRallyPosition + Vector3.up * 2, Vector3.down,
-                    out RaycastHit hitInfo, Mathf.Infinity, groundLayer))
-                {
-                    if (!playerRallyFormation.ContainsValue(hitInfo.point))
-                    {
-                        rallyNumber = playerId;
-                        playerRallyFormation.Add(playerId++, hitInfo.point);
-
-                        return hitInfo.point;
-                    }
-                }
-
-                if (col % 2 == 0) // check odd or even
-                {
-                    unitsOnRight++;
-                    //playerRallyPosition.x = centerPoint.x + spaceBetweenUnits * unitsOnRight;
-                    Vector3 offset = offsetDirection * unitsOnRight * spaceBetweenUnits;
-
-                    playerRallyPosition = centerPoint + offset;
-                }
-                else
-                {
-                    unitsOnLeft++;
-                    Vector3 offset = offsetDirection * unitsOnLeft * spaceBetweenUnits;
-                    //playerRallyPosition.x = centerPoint.x - spaceBetweenUnits * unitsOnLeft;
-                    playerRallyPosition = centerPoint - offset;
-                }
-            }
-
-            playerRallyPosition.x = centerPoint.x;
-            playerRallyPosition.z += spaceBetweenUnits;
-
-            unitsOnLeft = 0;
-            unitsOnRight = 0;
-        }
-
-        Debug.LogError("Max rows exceeded. Could not find a valid rally formation position.");
-
-        rallyNumber = playerId;
-        playerRallyFormation.Add(playerId++, centerPoint);
-
-        return centerPoint;
-    }
-
-    private Vector3 GetNextAiFormationPoint(Vector3 centerPoint, Vector3 direction, ref int rallyNumber)
-    {
-        int unitsOnLeft = 0;
-        int unitsOnRight = 0;
-
-        aiRallyPosition = centerPoint;
-
-        Vector3 offsetDirection = GetRightAngle(direction);
-
-        Debug.DrawLine(centerPoint, centerPoint + (offsetDirection * 10), Color.red, 3.0f);
-
-        for (int row = 0; row < maxRows; row++)
-        {
-            for (int col = 0; col < maxUnitsPerRow; col++)
-            {
-                if (Physics.Raycast(aiRallyPosition + Vector3.up * 2, Vector3.down,
-                    out RaycastHit hitInfo, Mathf.Infinity, groundLayer))
-                {
-                    if (!aiRallyFormation.ContainsValue(hitInfo.point))
-                    {
-                        aiRallyFormation.Add(enemyId++, hitInfo.point);
-                        rallyNumber = aiRallyFormation.Count - 1;
-
-                        return hitInfo.point;
-                    }
-                }
-
-                if (col % 2 == 0) // check odd or even
-                {
-                    unitsOnRight++;
-                    Vector3 offset = offsetDirection * unitsOnRight * spaceBetweenUnits;
-
-                    aiRallyPosition = centerPoint + offset;
-                }
-                else
-                {
-                    unitsOnLeft++;
-                    Vector3 offset = offsetDirection * unitsOnLeft * spaceBetweenUnits;
-                    aiRallyPosition = centerPoint - offset;
-                }
-            }
-
-            aiRallyPosition.x = centerPoint.x;
-            aiRallyPosition.z += spaceBetweenUnits;
-
-            unitsOnLeft = 0;
-            unitsOnRight = 0;
-        }
-
-        Debug.LogError("Max rows exceeded. Could not find a valid rally formation position.");
-
-        aiRallyFormation.Add(enemyId++, centerPoint);
-        rallyNumber = aiRallyFormation.Count - 1;
-
-        return centerPoint;
-    }
-    */
 
     // Checks if the player clicked outside of the map by
     // seeing if a raycase hit anything
@@ -573,10 +473,10 @@ public class FormationManager : MonoBehaviour
             foreach (Vector3 position in searchedPositions)
             {
                 Gizmos.color = Color.yellow;
-                Gizmos.DrawWireSphere(position, 1);
+                //Gizmos.DrawWireSphere(position, 1);
+                Gizmos.DrawWireCube(position, Vector3.one);
             }
         }
-
 
         // shows the rally point position of each unit spawned from a player's vehicle bay
         /*if (playerRallyFormation != null && showPlayerRallyPositions)
@@ -604,18 +504,6 @@ public class FormationManager : MonoBehaviour
             }
         }
 
-        /*
-        if (searchedPositions != null)
-        {
-            Gizmos.color = Color.green;
-            foreach (Vector3 position in searchedPositions)
-            {                   
-                if(position == searchedPositions.Last())
-                    Gizmos.color = Color.blue;
-
-                Gizmos.DrawWireCube(position, Vector3.one);
-            }               
-        }*/
     }
 
 }

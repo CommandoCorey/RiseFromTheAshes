@@ -20,6 +20,7 @@ public class SelectionManager : MonoBehaviour
     RaycastHit hit;
 
     bool dragSelect; // defines whether or not to show a box on screen
+    bool overSelectableObject = false;
 
     Building selectedBuilding;
 
@@ -106,6 +107,9 @@ public class SelectionManager : MonoBehaviour
         if (gui.ButtonClicked != UnitGui.ActionChosen.Null)
             return;
 
+        if(gameManager.enableCursorChanges)        
+            HoverOverObject();        
+
         //1. when left mouse button clicked (but not released)
         if (Input.GetMouseButtonDown(0))
         {
@@ -142,6 +146,34 @@ public class SelectionManager : MonoBehaviour
                 gui.SelectSingleUnit(0);
 
             // reset to default cursor
+
+        }
+
+    }
+
+    private void HoverOverObject()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        if (Physics.Raycast(ray, out hit, 50000.0f))
+        {
+            int layer = hit.transform.gameObject.layer;
+
+            if ((layer >= 6 && layer <= 9) || layer == 22)
+            {                
+                var events = EventSystem.current;                
+
+                if (!overSelectableObject)
+                {
+                    gameManager.SetCursor(gameManager.selectableCursor);
+                    overSelectableObject = true;
+                }
+            }
+            else if (overSelectableObject)
+            {
+                gameManager.SetCursor(gameManager.defaultCursor);
+                overSelectableObject = false;
+            }
 
         }
 

@@ -805,10 +805,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36518f83df217114386203b0d1dda425, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AiHeadquarters: {fileID: 0}
   playerBase: {fileID: 0}
   rallyPoint: {fileID: 0}
+  HQDefenseRadius: 80
   buildingPlaceholders: []
-  outpostPlaceholders: []
   buildingPrefabs:
   - {fileID: 827916637745009275, guid: bd063687586bcde4c9c3cd2156ad548a, type: 3}
   - {fileID: 7431137951449496598, guid: 2f8ee12193d033140928c68379da60e3, type: 3}
@@ -818,6 +819,7 @@ MonoBehaviour:
   - {fileID: 0}
   raidPaths: []
   patrolRoutes: []
+  unitsAttackingHQ: []
 --- !u!114 &8430209181594095443
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -830,8 +832,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4441d7076f1bff47b4616fcd8df537d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerStrategy: {fileID: 0}
-  rebuiltSetNumber: 0
+  playerStrategy: {fileID: 11400000, guid: 14514190c2880204f931e89ced631512, type: 2}
   tasksSchedule: []
   showInfoPanel: 0
   infoPanel: {fileID: 3892714476887254199}

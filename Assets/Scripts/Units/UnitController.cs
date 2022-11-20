@@ -409,7 +409,7 @@ public class UnitController : MonoBehaviour
 
         bool isAi = gameObject.layer == 7;
 
-        Debug.DrawLine(spawnPos, point, Color.yellow, 3.0f);
+        //Debug.DrawLine(spawnPos, point, Color.yellow, 3.0f);
 
         Vector3 origin;
         if(isAi)
