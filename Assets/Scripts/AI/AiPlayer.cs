@@ -319,7 +319,7 @@ public class AiPlayer : MonoBehaviour
         return false;
     }
 
-    public void ConstructBuilding(Transform ghostBuilding, Building buildItem, BuildTask task = null)
+    public void ConstructBuilding(Transform ghostBuilding, Building buildItem, BuildTask task = null, TaskSet set = null)
     {
         resources.AiSpendSteel(buildItem.steelCost);
 
@@ -338,6 +338,11 @@ public class AiPlayer : MonoBehaviour
         //buildingPlaceholders.Remove(ghostBuilding);
 
         task.SetBuildingInstance(building);
+
+        if(set != null && set.addRebuildTasks)
+        {
+            set.tasks.Remove(task);
+        }
     }
 
     /// <summary>
