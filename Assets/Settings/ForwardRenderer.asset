@@ -55,8 +55,9 @@ MonoBehaviour:
   - {fileID: -1962931647464493938}
   - {fileID: 5135327888524169996}
   - {fileID: 4267458021221377295}
+  - {fileID: 2414758170953954568}
   - {fileID: 7644269420588112230}
-  m_RendererFeatureMap: 8eac81121144c2e40cd3a3a8815944470fa5cad8750e393b6619897589e6156a
+  m_RendererFeatureMap: 8eac81121144c2e40cd3a3a8815944470fa5cad8750e393b08b52e36c3f182216619897589e6156a
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
   shaders:
@@ -85,6 +86,45 @@ MonoBehaviour:
   m_ShadowTransparentReceive: 1
   m_RenderingMode: 0
   m_AccurateGbufferNormals: 0
+--- !u!114 &2414758170953954568
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b3d386ba5cd94485973aee1479b272e, type: 3}
+  m_Name: Render Marker
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  settings:
+    passTag: Render Marker
+    Event: 600
+    filterSettings:
+      RenderQueueType: 0
+      LayerMask:
+        serializedVersion: 2
+        m_Bits: 8388608
+      PassNames: []
+    overrideMaterial: {fileID: 0}
+    overrideMaterialPassIndex: 0
+    overrideDepthState: 1
+    depthCompareFunction: 0
+    enableWrite: 0
+    stencilSettings:
+      overrideStencilState: 0
+      stencilReference: 0
+      stencilCompareFunction: 8
+      passOperation: 0
+      failOperation: 0
+      zFailOperation: 0
+    cameraSettings:
+      overrideCamera: 0
+      restoreCamera: 1
+      offset: {x: 0, y: 0, z: 0, w: 0}
+      cameraFieldOfView: 60
 --- !u!114 &2581161368134266368
 MonoBehaviour:
   m_ObjectHideFlags: 0

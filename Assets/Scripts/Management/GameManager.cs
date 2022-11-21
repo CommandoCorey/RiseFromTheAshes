@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.VFX;
+using UnityEngine.Timeline;
+//using static UnityEditor.Experimental.GraphView.GraphView;
 
 public enum GameState
 {
@@ -50,6 +52,9 @@ public class GameManager : MonoBehaviour
 
     [Header("Keyboard Shortcuts")]
     public KeyCode pauseKey;
+    public KeyCode unitHealthbarKey;
+    public KeyCode unitIconsKey;
+    public KeyCode unitStatusTextKey;
 
     private GameState state;
     private new AudioSource audio;
@@ -140,6 +145,20 @@ public class GameManager : MonoBehaviour
         if (enableCursorChanges && currentCursor == selectableCursor &&
             IsPointerOverUIElement())
             SetCursor(defaultCursor);
+
+        HandleKeyboardShortcuts();
+    }
+
+    private void HandleKeyboardShortcuts()
+    {
+        if (Input.GetKeyDown(unitHealthbarKey))
+            showHealthbars = !showHealthbars;
+
+        if(Input.GetKeyDown(unitIconsKey))
+            showIcons = !showIcons;
+
+        if(Input.GetKeyDown(unitStatusTextKey))
+            showStatusText = !showStatusText;
     }
 
     #region public functions

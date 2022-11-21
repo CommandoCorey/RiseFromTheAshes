@@ -34,6 +34,8 @@ public class FollowPathTask : DispatchWaveTask
 
     public override bool PerformTask()
     {
+        unitWave = new List<Transform>();
+
         if (AddUnitsToWave()) // invoke from parent class
         {
             if (FindObjectOfType<AiPlayer>())
