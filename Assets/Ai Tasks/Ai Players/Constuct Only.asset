@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfec3beb6435167479a5e4427da4b2b8, type: 3}
+  m_Name: Constuct Only
+  m_EditorClassIdentifier: 
+  tasksSchedule:
+  - description: Construct Buildings
+    loopTaskSet: 0
+    addRebuildTasks: 0
+    waitForPreviousTaskSet: 0
+    tasks:
+    - {fileID: 11400000, guid: b008510ce44331443818d773a9a7526a, type: 2}
+    - {fileID: 11400000, guid: 554b2691b14272d40987d7a7e67be99e, type: 2}
+    - {fileID: 11400000, guid: a58b67708357e5242b990f2b99b4898e, type: 2}
+    - {fileID: 11400000, guid: 1730439bc2dc4c24aac92bc9222419e7, type: 2}
+    - {fileID: 11400000, guid: c111a21a6e939e549b7a7316d9abb87f, type: 2}
+    - {fileID: 11400000, guid: e941ee8183302bd4ba88927208fd0eb8, type: 2}
+    - {fileID: 11400000, guid: d3f7042942d54ad47b28b2c18229003d, type: 2}
+    - {fileID: 11400000, guid: 0b5a114bd6bc64842ba24b4e9238926a, type: 2}
+  - description: Rebuild Buildings
+    loopTaskSet: 0
+    addRebuildTasks: 1
+    waitForPreviousTaskSet: 0
+    tasks: []

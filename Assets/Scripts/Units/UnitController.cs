@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
 using static UnityEngine.Rendering.DebugUI;
+using UnityEngine.VFX;
 
 public enum UnitState
 {
@@ -76,7 +77,7 @@ public class UnitController : MonoBehaviour
     [Header("Particle Systems")]
     public ParticleSystem[] fireEffects;
     public ParticleSystem[] hitEffects;
-    public ParticleSystem[] destroyEffects;
+    public VisualEffect[] destroyEffects;
 
     [Header("Sound Effects")]
     public SoundEffect[] moveSounds;
@@ -360,6 +361,22 @@ public class UnitController : MonoBehaviour
             child.Play();
     }
 
+    public void InstantiateParticles(VisualEffect particles, Vector3 position)
+    {
+        if (particles == null)
+            return;
+
+        var obj = Instantiate(particles, position, Quaternion.identity, transform);
+
+        var childParticles = particles.gameObject.GetComponentsInChildren<VisualEffect>();
+
+        particles.Play();
+        foreach (VisualEffect child in childParticles)
+            child.Play();
+
+        Destroy(obj, 3.0f);
+    }
+
     /// <summary>
     /// Playss a random movement sound
     /// </summary>
@@ -409,7 +426,7 @@ public class UnitController : MonoBehaviour
 
         bool isAi = gameObject.layer == 7;
 
-        Debug.DrawLine(spawnPos, point, Color.yellow, 3.0f);
+        //Debug.DrawLine(spawnPos, point, Color.yellow, 3.0f);
 
         Vector3 origin;
         if(isAi)

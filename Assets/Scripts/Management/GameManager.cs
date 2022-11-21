@@ -1,10 +1,9 @@
-using JetBrains.Annotations;
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
-using UnityEngine.Timeline;
+using UnityEngine.VFX;
 
 public enum GameState
 {
@@ -38,8 +37,11 @@ public class GameManager : MonoBehaviour
     [Header("Cursors")]
     public bool enableCursorChanges;
     public CursorSprite defaultCursor;
+    public CursorSprite selectableCursor;
     public CursorSprite moveCursor;
     public CursorSprite attackCursor;
+
+    private CursorSprite currentCursor;
 
     [Header("Unit Display Options")]
     [SerializeField] bool showIcons = true;
@@ -97,8 +99,8 @@ public class GameManager : MonoBehaviour
         // set cursor sizes
         //defaultCursor.Resize(32, 32);
 
-        if(enableCursorChanges)
-            Cursor.SetCursor(defaultCursor.image, defaultCursor.hotspot, CursorMode.ForceSoftware);
+        if (enableCursorChanges)        
+            SetCursor(defaultCursor);        
 
         if (playerHQ != null && enemyHQ != null)
             handleEndConidition = true;
@@ -134,6 +136,10 @@ public class GameManager : MonoBehaviour
         {
             ChangeGameState(GameState.Running);
         }
+
+        if (enableCursorChanges && currentCursor == selectableCursor &&
+            IsPointerOverUIElement())
+            SetCursor(defaultCursor);
     }
 
     #region public functions
@@ -209,6 +215,13 @@ public class GameManager : MonoBehaviour
     public void InstantiateParticles(ParticleSystem prefab, Vector3 position)
     {
         var particles = Instantiate(prefab.gameObject, position, Quaternion.identity);
+        Destroy(particles, 3.0f);
+    }
+
+    public void InstantiateParticles(VisualEffect prefab, Vector3 position)
+    {
+        var particles = Instantiate(prefab.gameObject, position, Quaternion.identity);
+        Destroy(particles, 3.0f);
     }
 
     /// <summary>
@@ -217,8 +230,10 @@ public class GameManager : MonoBehaviour
     /// <param name="sprite"></param>
     public void SetCursor(CursorSprite sprite)
     {
-        if(enableCursorChanges)
-            Cursor.SetCursor(sprite.image, sprite.hotspot, CursorMode.ForceSoftware);
+        if (enableCursorChanges)
+            Cursor.SetCursor(sprite.image, sprite.hotspot, CursorMode.Auto);
+
+        currentCursor = sprite;
     }
 
     /// <summary>
@@ -227,9 +242,9 @@ public class GameManager : MonoBehaviour
     public void ResetCursor()
     {
         if (enableCursorChanges)
-            Cursor.SetCursor(defaultCursor.image, defaultCursor.hotspot, CursorMode.ForceSoftware);
+            Cursor.SetCursor(defaultCursor.image, defaultCursor.hotspot, CursorMode.Auto);
     }
-    #endregion
+    
     public void TogglePause(bool paused)
     {
         pauseDialog.SetActive(paused);
@@ -315,10 +330,43 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void MoveUnitRallyPoint()
     {
-        GetComponent<SelectionManager>().enabled = false;
-
-        
+        GetComponent<SelectionManager>().enabled = false;        
     }
+    #endregion
+
+    #region private functions
+    //Returns 'true' if we touched or hovering on Unity UI element.
+    //public bool IsPointerOverUIElement()
+    //{
+    // return IsPointerOverUIElement(GetEventSystemRaycastResults());
+    //}
+
+
+    //Returns 'true' if we touched or hovering on Unity UI element.
+    private bool IsPointerOverUIElement()
+    {
+        var eventSystemRaysastResults = GetEventSystemRaycastResults();
+
+        for (int index = 0; index < eventSystemRaysastResults.Count; index++)
+        {
+            RaycastResult curRaysastResult = eventSystemRaysastResults[index];
+            if (curRaysastResult.gameObject.layer == 5) // UI Layer
+                return true;
+        }
+        return false;
+    }
+
+
+    //Gets all event system raycast results of current mouse or touch position.
+    private List<RaycastResult> GetEventSystemRaycastResults()
+    {
+        PointerEventData eventData = new PointerEventData(EventSystem.current);
+        eventData.position = Input.mousePosition;
+        List<RaycastResult> raysastResults = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventData, raysastResults);
+        return raysastResults;
+    }
+    #endregion
 
 }
 
@@ -327,6 +375,22 @@ public struct CursorSprite
 {
     public Texture2D image;
     public Vector2 hotspot;
+
+    public static bool operator ==(CursorSprite a, CursorSprite b)
+    {
+        if (a.image == b.image && a.hotspot == b.hotspot)
+            return true;
+
+        return false;
+    }
+
+    public static bool operator !=(CursorSprite a, CursorSprite b)
+    {
+        if (a.image != b.image || a.hotspot != b.hotspot)
+            return true;
+
+        return false;
+    }
 }
 
 [System.Serializable]

@@ -5,6 +5,22 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 
+[System.Serializable]
+public class TaskSet
+{
+    public string description;
+    public bool loopTaskSet;
+    public bool addRebuildTasks;
+    //public bool addOutpostBuildTasks;
+    public bool waitForPreviousTaskSet;
+    public List<AiTask> tasks;
+
+    public int TaskNum { get; set; } = 0;
+    public bool ReadyToPerform { get; set; } = true;
+
+    public bool Completed { get => TaskNum >= tasks.Count; }
+}
+
 public class AiTaskScheduler : MonoBehaviour
 {
     [Header("Ai Tasks")]
@@ -34,6 +50,8 @@ public class AiTaskScheduler : MonoBehaviour
     private List<Building> baysInConstruction;
 
     private AiPlayer aiPlayer;
+
+    private TaskSet previousSet;
 
     public static AiTaskScheduler Instance { get; private set; }
 
@@ -73,13 +91,14 @@ public class AiTaskScheduler : MonoBehaviour
         {
             taskDisplays.Add(Instantiate(taskSetPanelPrefab, taskListPanel));
             taskDisplays[i].taskSetNumber.text = "Task Set " + i + ":";
-        }        
+        }
         
     }
 
     // Update is called once per frame
     void Update()
     {
+        previousSet = null;
         steel = resources.GetResource(ResourceType.Steel, true);
         maxSteel = resources.GetResourceMax(ResourceType.Steel, true);
 
@@ -97,6 +116,13 @@ public class AiTaskScheduler : MonoBehaviour
         // check status of current tasks
         foreach (TaskSet set in tasksSchedule)
         {
+            // Check if the task set requires completion of previous set
+            if (set.waitForPreviousTaskSet && previousSet != null && !previousSet.Completed)
+            {
+                set.tasks[set.TaskNum].TaskStatus = "Waiting for previous set to finish";
+                continue;
+            }
+
             // if not looping move to the next set
             if (set.TaskNum >= set.tasks.Count && !set.loopTaskSet)
                 continue;
@@ -106,6 +132,8 @@ public class AiTaskScheduler : MonoBehaviour
                 StartCoroutine(PerformNextTask(set));
                 set.ReadyToPerform = false;
             }
+
+            previousSet = set;
         }
 
         // check if vehicle bays in construction have finished building
@@ -122,7 +150,7 @@ public class AiTaskScheduler : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Tilde))
         {
             infoPanel.SetActive(!infoPanel.activeSelf);
-        }
+        }        
     }
 
     // sorts tasks in a specific task set by highest to lowst priority score
@@ -131,13 +159,11 @@ public class AiTaskScheduler : MonoBehaviour
         RemoveNullTasks(set.tasks);
 
         var sortedTasks = from t in set.tasks
-                          orderby t.priorityScore descending
+                          orderby ((BuildTask) t).priorityScore descending
                           select t;
 
         set.tasks = sortedTasks.ToList();
     }
-
-
 
     // checks if any taks in a set is null and if they are, removes them
     private void RemoveNullTasks(List<AiTask> tasks)
@@ -156,10 +182,14 @@ public class AiTaskScheduler : MonoBehaviour
 
     private IEnumerator PerformNextTask(TaskSet set)
     {
+        set.tasks[set.TaskNum].TaskStatus = "Performing Soon";
+
         yield return new WaitForSeconds(set.tasks[set.TaskNum].timeDelay);
 
         if (set.tasks[set.TaskNum].PerformTask()) // attempt to perform the task
         {
+            set.tasks[set.TaskNum].TaskStatus = "Task performed";
+
             activeTasks.Add(set.tasks[set.TaskNum]);
             set.TaskNum++;
 
@@ -233,6 +263,7 @@ public class AiTaskScheduler : MonoBehaviour
         }
     }
 
+    /* No Longer used
     private void SortTasks()
     {
         foreach (TaskSet set in tasksSchedule)
@@ -245,7 +276,7 @@ public class AiTaskScheduler : MonoBehaviour
 
             set.tasks = sortedTasks.ToList();
         }
-    }
+    }*/
 
     /// <summary>
     /// Adds a new build task to the rebuild set at runtime
