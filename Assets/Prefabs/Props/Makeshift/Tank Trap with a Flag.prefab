@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 220741248684073008}
   - component: {fileID: 3801004457065983893}
   - component: {fileID: 1394732852117560159}
+  - component: {fileID: 3412573965196260735}
+  - component: {fileID: 138589657409486840}
   m_Layer: 0
   m_Name: TankTrap
   m_TagString: Untagged
@@ -81,6 +83,34 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &3412573965196260735
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 602332619965168266}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.57288015, y: 0.6279901, z: 0.5644171}
+  m_Center: {x: 0.018478066, y: -0.002743557, z: 0}
+--- !u!114 &138589657409486840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 602332619965168266}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d746c29f4275ae409900733c19e6413, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unitLayerMask:
+    serializedVersion: 2
+    m_Bits: 192
 --- !u!1 &1207158443759367470
 GameObject:
   m_ObjectHideFlags: 0
@@ -93,6 +123,7 @@ GameObject:
   - component: {fileID: 3180872899986497585}
   - component: {fileID: 846760590344738043}
   - component: {fileID: 4415440942495597154}
+  - component: {fileID: 4908116108115657875}
   m_Layer: 0
   m_Name: Flag
   m_TagString: Untagged
@@ -179,6 +210,19 @@ MonoBehaviour:
   unitLayerMask:
     serializedVersion: 2
     m_Bits: 192
+--- !u!65 &4908116108115657875
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1207158443759367470}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.030274047, y: 1.857724, z: 0.44318745}
+  m_Center: {x: 0, y: 0.92157686, z: 0}
 --- !u!1 &3729124492526246065
 GameObject:
   m_ObjectHideFlags: 0

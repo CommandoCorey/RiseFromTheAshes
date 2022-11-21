@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4530886116287141426}
   - component: {fileID: 543784839263268900}
   - component: {fileID: 2006761821360229553}
+  - component: {fileID: 7676975982014320235}
   m_Layer: 0
   m_Name: WoodenCrate (4)
   m_TagString: Untagged
@@ -97,6 +98,19 @@ MonoBehaviour:
   unitLayerMask:
     serializedVersion: 2
     m_Bits: 192
+--- !u!65 &7676975982014320235
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3429964535477242807}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.31126633, y: 0.17246966, z: 0.5111189}
+  m_Center: {x: 0.000000029802322, y: 0.08622409, z: -0.00000005960468}
 --- !u!1 &4161217369305188827
 GameObject:
   m_ObjectHideFlags: 0
@@ -109,6 +123,7 @@ GameObject:
   - component: {fileID: 5073533557389641508}
   - component: {fileID: 1278438602937514142}
   - component: {fileID: 5416530513449164139}
+  - component: {fileID: 4912406256502554765}
   m_Layer: 0
   m_Name: Pallet (2)
   m_TagString: Untagged
@@ -194,6 +209,19 @@ MonoBehaviour:
   unitLayerMask:
     serializedVersion: 2
     m_Bits: 192
+--- !u!65 &4912406256502554765
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4161217369305188827}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.81210136, y: 0.13981321, z: 0.8121014}
+  m_Center: {x: 0, y: 0.06500724, z: -0.00000021606684}
 --- !u!1 &5352490692880548493
 GameObject:
   m_ObjectHideFlags: 0
@@ -243,6 +271,7 @@ GameObject:
   - component: {fileID: 839012651599342810}
   - component: {fileID: 6755053879441258924}
   - component: {fileID: 548693452300574748}
+  - component: {fileID: 1430579352396555017}
   m_Layer: 0
   m_Name: WoodenCrate (5)
   m_TagString: Untagged
@@ -328,6 +357,19 @@ MonoBehaviour:
   unitLayerMask:
     serializedVersion: 2
     m_Bits: 192
+--- !u!65 &1430579352396555017
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6802200813868402913}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.31126615, y: 0.17246966, z: 0.5111186}
+  m_Center: {x: 0, y: 0.08622409, z: 0}
 --- !u!1 &7336801489337554568
 GameObject:
   m_ObjectHideFlags: 0
@@ -339,11 +381,13 @@ GameObject:
   - component: {fileID: 7376810984379570503}
   - component: {fileID: 8281078549195961363}
   - component: {fileID: 6502877995968874996}
+  - component: {fileID: 4497588376430685412}
+  - component: {fileID: 151350734285814394}
   m_Layer: 0
   m_Name: Steel_Low (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
+  m_NavMeshLayer: 1
   m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &7376810984379570503
@@ -409,6 +453,34 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &4497588376430685412
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7336801489337554568}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d746c29f4275ae409900733c19e6413, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unitLayerMask:
+    serializedVersion: 2
+    m_Bits: 192
+--- !u!65 &151350734285814394
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7336801489337554568}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 146.69408, y: 34.246582, z: 126.56279}
+  m_Center: {x: 0, y: 22.172577, z: -0.000015258789}
 --- !u!1 &8609066937269612564
 GameObject:
   m_ObjectHideFlags: 0
@@ -421,6 +493,7 @@ GameObject:
   - component: {fileID: 6734749324215450174}
   - component: {fileID: 2606775374568366138}
   - component: {fileID: 4245285454881795529}
+  - component: {fileID: 3245415354672186724}
   m_Layer: 0
   m_Name: WoodenCrate (3)
   m_TagString: Untagged
@@ -506,6 +579,19 @@ MonoBehaviour:
   unitLayerMask:
     serializedVersion: 2
     m_Bits: 192
+--- !u!65 &3245415354672186724
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8609066937269612564}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.31126615, y: 0.17246966, z: 0.5111186}
+  m_Center: {x: 0, y: 0.08622409, z: -0.000000014901161}
 --- !u!1001 &3189128921345078581
 PrefabInstance:
   m_ObjectHideFlags: 0
