@@ -6,7 +6,6 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.Timeline;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 public enum GameState
 {
