@@ -55,9 +55,9 @@ MonoBehaviour:
   - {fileID: -1962931647464493938}
   - {fileID: 5135327888524169996}
   - {fileID: 4267458021221377295}
-  - {fileID: 7644269420588112230}
   - {fileID: 2414758170953954568}
-  m_RendererFeatureMap: 8eac81121144c2e40cd3a3a8815944470fa5cad8750e393b6619897589e6156a08b52e36c3f18221
+  - {fileID: 7644269420588112230}
+  m_RendererFeatureMap: 8eac81121144c2e40cd3a3a8815944470fa5cad8750e393b08b52e36c3f182216619897589e6156a
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
   shaders:
@@ -100,7 +100,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Active: 1
   settings:
-    passTag: NewRenderObjects
+    passTag: Render Marker
     Event: 600
     filterSettings:
       RenderQueueType: 0
@@ -110,9 +110,9 @@ MonoBehaviour:
       PassNames: []
     overrideMaterial: {fileID: 0}
     overrideMaterialPassIndex: 0
-    overrideDepthState: 0
-    depthCompareFunction: 4
-    enableWrite: 1
+    overrideDepthState: 1
+    depthCompareFunction: 0
+    enableWrite: 0
     stencilSettings:
       overrideStencilState: 0
       stencilReference: 0
