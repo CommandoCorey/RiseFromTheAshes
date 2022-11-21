@@ -102,7 +102,7 @@ public class SendToOutpostTask : DispatchWaveTask
         if (FindObjectOfType<AiPlayer>())
         {
             var ai = FindObjectOfType<AiPlayer>();
-            ai.SendToOutpost(unitWave, outpostNumber);
+            //ai.SendToOutpost(unitWave, outpostNumber);
 
             completed = true;
 

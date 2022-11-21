@@ -60,7 +60,7 @@ public class VehicleBayBuildMenu : MonoBehaviour {
 				{
 					int newUnitCount = GameManager.Instance.UnitCountPlayer + ud.unit.SpaceUsed;
 
-                    if (newUnitCount < GameManager.Instance.MaxUnitsPlayer)
+                    if (newUnitCount <= GameManager.Instance.MaxUnitsPlayer)
 					{
 						/*
 						currentVehicleBay.PrepareBuild();
