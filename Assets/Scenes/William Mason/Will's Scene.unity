@@ -24,7 +24,7 @@ RenderSettings:
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
-  m_AmbientMode: 0
+  m_AmbientMode: 3
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
   m_HaloStrength: 0.5
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0.99999905, b: 0.99999905, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1117,6 +1117,10 @@ PrefabInstance:
     - target: {fileID: 6338233663436568340, guid: 0d273b7b6e6bab34a87b5ed9677ec8ce, type: 3}
       propertyPath: m_Name
       value: Prop_Spot_BIG
+      objectReference: {fileID: 0}
+    - target: {fileID: 6338233663436568340, guid: 0d273b7b6e6bab34a87b5ed9677ec8ce, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7350395095900693065, guid: 0d273b7b6e6bab34a87b5ed9677ec8ce, type: 3}
       propertyPath: m_RootOrder
@@ -2411,7 +2415,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &524408216
 Transform:
   m_ObjectHideFlags: 0
@@ -2624,6 +2628,10 @@ PrefabInstance:
     - target: {fileID: 6338233663436568340, guid: 077e574cd6e93d740b94505184c4a59f, type: 3}
       propertyPath: m_Name
       value: Prop_Spot_SMALL SK
+      objectReference: {fileID: 0}
+    - target: {fileID: 6338233663436568340, guid: 077e574cd6e93d740b94505184c4a59f, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7350395095900693065, guid: 077e574cd6e93d740b94505184c4a59f, type: 3}
       propertyPath: m_RootOrder
@@ -4666,6 +4674,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Prop_Spot_NORMAL
       objectReference: {fileID: 0}
+    - target: {fileID: 6338233663436568340, guid: 5b45d9e006e28714d89f7d64750eda58, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7350395095900693065, guid: 5b45d9e006e28714d89f7d64750eda58, type: 3}
       propertyPath: m_RootOrder
       value: 5
@@ -4722,6 +4734,10 @@ PrefabInstance:
     - target: {fileID: 6338233663436568340, guid: 24400a0cafbc038458148880f6561d7f, type: 3}
       propertyPath: m_Name
       value: Prop_Spot_BIG SK
+      objectReference: {fileID: 0}
+    - target: {fileID: 6338233663436568340, guid: 24400a0cafbc038458148880f6561d7f, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7350395095900693065, guid: 24400a0cafbc038458148880f6561d7f, type: 3}
       propertyPath: m_RootOrder
@@ -5555,6 +5571,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Prop_Spot_SMALL
       objectReference: {fileID: 0}
+    - target: {fileID: 6338233663436568340, guid: c17b8b69b5415044fa26e513bf3af9d9, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7350395095900693065, guid: c17b8b69b5415044fa26e513bf3af9d9, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -6226,6 +6246,63 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 9179794080482702772, guid: 8ce32fd1af66a4b4881cd7aca45b178e, type: 3}
   m_PrefabInstance: {fileID: 2120857235}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &63249420092502711
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4253663430980759476, guid: 7aa3c6bff8393534f88ec84877cc7df1, type: 3}
+      propertyPath: m_Name
+      value: Old Monument
+      objectReference: {fileID: 0}
+    - target: {fileID: 9158653050656958148, guid: 7aa3c6bff8393534f88ec84877cc7df1, type: 3}
+      propertyPath: m_RootOrder
+      value: 24
+      objectReference: {fileID: 0}
+    - target: {fileID: 9158653050656958148, guid: 7aa3c6bff8393534f88ec84877cc7df1, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.2137003
+      objectReference: {fileID: 0}
+    - target: {fileID: 9158653050656958148, guid: 7aa3c6bff8393534f88ec84877cc7df1, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 9158653050656958148, guid: 7aa3c6bff8393534f88ec84877cc7df1, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 60.536385
+      objectReference: {fileID: 0}
+    - target: {fileID: 9158653050656958148, guid: 7aa3c6bff8393534f88ec84877cc7df1, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9158653050656958148, guid: 7aa3c6bff8393534f88ec84877cc7df1, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9158653050656958148, guid: 7aa3c6bff8393534f88ec84877cc7df1, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9158653050656958148, guid: 7aa3c6bff8393534f88ec84877cc7df1, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9158653050656958148, guid: 7aa3c6bff8393534f88ec84877cc7df1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9158653050656958148, guid: 7aa3c6bff8393534f88ec84877cc7df1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9158653050656958148, guid: 7aa3c6bff8393534f88ec84877cc7df1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 7aa3c6bff8393534f88ec84877cc7df1, type: 3}
 --- !u!1001 &479826700702040432
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6342,6 +6419,10 @@ PrefabInstance:
     - target: {fileID: 561517969351151789, guid: 791dbb576cc29b948b9271a8bf056cec, type: 3}
       propertyPath: m_Name
       value: Prop Spot Big (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 561517969351151789, guid: 791dbb576cc29b948b9271a8bf056cec, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 791dbb576cc29b948b9271a8bf056cec, type: 3}
@@ -6462,6 +6543,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Prop Spot Small (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 1022302023278011376, guid: 2eb50db334d7a684e86a333dc4b64a48, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2eb50db334d7a684e86a333dc4b64a48, type: 3}
 --- !u!1001 &3267779241423375953
@@ -6518,6 +6603,10 @@ PrefabInstance:
     - target: {fileID: 3267779241968452161, guid: eaba85dd6ecc658438841a03afac06d5, type: 3}
       propertyPath: m_Name
       value: Prop Spot Normal (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3267779241968452161, guid: eaba85dd6ecc658438841a03afac06d5, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eaba85dd6ecc658438841a03afac06d5, type: 3}
@@ -6576,6 +6665,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Prop Spot Normal (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 3314575926389936517, guid: 7b53885bfc1d0624399ae49b5bcb0d3a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7b53885bfc1d0624399ae49b5bcb0d3a, type: 3}
 --- !u!1001 &3397670151439593808
@@ -6588,6 +6681,10 @@ PrefabInstance:
     - target: {fileID: 3397670150947993786, guid: 4be7ac782cc88d744aabba4188c52aad, type: 3}
       propertyPath: m_Name
       value: Prop Spot Big SK (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3397670150947993786, guid: 4be7ac782cc88d744aabba4188c52aad, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3397670150947993787, guid: 4be7ac782cc88d744aabba4188c52aad, type: 3}
       propertyPath: m_RootOrder
@@ -6708,6 +6805,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Market
       objectReference: {fileID: 0}
+    - target: {fileID: 117801264640058483, guid: f9fcba34dbeddc0448abac33b753709c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5706179667393966365, guid: f9fcba34dbeddc0448abac33b753709c, type: 3}
       propertyPath: m_RootOrder
       value: 21
@@ -6809,6 +6910,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Prop Spot Small SK (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 5953226005251493291, guid: 20687cec369b3f7478edc923e85ed74f, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 20687cec369b3f7478edc923e85ed74f, type: 3}
 --- !u!1001 &4251731132547213373
@@ -6865,6 +6970,10 @@ PrefabInstance:
     - target: {fileID: 5730288085185471347, guid: 29eb5066c0dc41546925b4bdb9bcdbcc, type: 3}
       propertyPath: m_Name
       value: Prop Spot Small (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5730288085185471347, guid: 29eb5066c0dc41546925b4bdb9bcdbcc, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 29eb5066c0dc41546925b4bdb9bcdbcc, type: 3}
@@ -6923,6 +7032,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Prop Spot Big SK (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 4741756291562982879, guid: 8fb39968c3e0a3a42ac50db948dc9250, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8fb39968c3e0a3a42ac50db948dc9250, type: 3}
 --- !u!1001 &4857596006974261338
@@ -6935,6 +7048,10 @@ PrefabInstance:
     - target: {fileID: 3950703799148839395, guid: a744bf58854d4c943b9f8bfae63c7a53, type: 3}
       propertyPath: m_Name
       value: Prop Spot Small (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3950703799148839395, guid: a744bf58854d4c943b9f8bfae63c7a53, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7184248767269863882, guid: a744bf58854d4c943b9f8bfae63c7a53, type: 3}
       propertyPath: m_RootOrder
@@ -6992,6 +7109,10 @@ PrefabInstance:
     - target: {fileID: 4993400382787057260, guid: 81d813c1b216c734d9621ad73d10b91e, type: 3}
       propertyPath: m_Name
       value: Prop Spot Big SK (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4993400382787057260, guid: 81d813c1b216c734d9621ad73d10b91e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4993400382787057263, guid: 81d813c1b216c734d9621ad73d10b91e, type: 3}
       propertyPath: m_RootOrder
@@ -7094,6 +7215,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Prop Spot 3 (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 5199799805662511839, guid: dc3ac8e2d7a4bc048aa93cbfeffc3182, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dc3ac8e2d7a4bc048aa93cbfeffc3182, type: 3}
 --- !u!1001 &7151605311272384907
@@ -7106,6 +7231,10 @@ PrefabInstance:
     - target: {fileID: 3656066559464234053, guid: d2de9b05e90c01f4a985f6473563eccf, type: 3}
       propertyPath: m_Name
       value: Military Checkpoint
+      objectReference: {fileID: 0}
+    - target: {fileID: 3656066559464234053, guid: d2de9b05e90c01f4a985f6473563eccf, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7748695389673310448, guid: d2de9b05e90c01f4a985f6473563eccf, type: 3}
       propertyPath: m_RootOrder
@@ -7163,6 +7292,10 @@ PrefabInstance:
     - target: {fileID: 7739974363369003900, guid: c35870364d4041443918fe874271fbb8, type: 3}
       propertyPath: m_Name
       value: Prop Spot Big SK (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7739974363369003900, guid: c35870364d4041443918fe874271fbb8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7739974363369003901, guid: c35870364d4041443918fe874271fbb8, type: 3}
       propertyPath: m_RootOrder
