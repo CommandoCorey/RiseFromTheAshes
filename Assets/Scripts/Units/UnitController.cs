@@ -90,6 +90,11 @@ public class UnitController : MonoBehaviour
     public bool autoAttack = true;
     public bool seeThroughWalls = false;
 
+    [Header("Circle meshes")]
+    public bool showRanges;
+    public Transform detectionRangeMesh;
+    public Transform attackRangeMesh;
+
     [Header("Gizmos")]
     [SerializeField] bool showSolidDisks = true;
     [SerializeField] bool showDetectionRadius = true;
@@ -212,6 +217,17 @@ public class UnitController : MonoBehaviour
 
         agent = body.GetComponent<NavMeshAgent>();
         agent.speed = movementSpeed;
+
+        // set scale of circle meshes
+        if (detectionRangeMesh)
+        {
+            detectionRangeMesh.gameObject.SetActive(false);            
+        }
+
+        if (attackRangeMesh)
+        {
+            attackRangeMesh.gameObject.SetActive(false);
+        }
     }
 
 	// Update is called once per frame
@@ -266,7 +282,19 @@ public class UnitController : MonoBehaviour
             mat.SetColor("HealEffectColor", Color.blue);
             mat.SetFloat("HealEffectIntensity", Mathf.Clamp(healTimer, 0.0f, 1.0f));
 		}
-        
+
+        // set scale of circle meshes
+        if (detectionRangeMesh)
+        {            
+            detectionRangeMesh.localScale = new Vector3(detectionRadius, detectionRangeMesh.localScale.y,
+                detectionRadius);
+        }
+
+        if (attackRangeMesh)
+        {            
+            attackRangeMesh.localScale = new Vector3(attackRange, attackRangeMesh.localScale.y, attackRange);
+        }
+
     }
 
     private void LateUpdate()
@@ -285,6 +313,25 @@ public class UnitController : MonoBehaviour
         healthBar.gameObject.SetActive(selected);
 
         GetComponent<SelectionSprites>().SetSelectedSprite(selected);
+
+        if(selected && SingleSelected && showRanges)
+        {
+            if(detectionRangeMesh != null)
+                detectionRangeMesh.gameObject.SetActive(true);
+
+            if(attackRangeMesh != null)
+                attackRangeMesh.gameObject.SetActive(true);
+        }
+        else if(!selected)
+        {
+            if (detectionRangeMesh != null)
+                detectionRangeMesh.gameObject.SetActive(false);
+
+            if (attackRangeMesh != null)
+                attackRangeMesh.gameObject.SetActive(false);
+
+            //SingleSelected = false;
+        }
 
         if(AttackTarget != null)
         {
