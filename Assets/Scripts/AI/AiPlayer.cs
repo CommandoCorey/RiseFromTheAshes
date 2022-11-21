@@ -262,6 +262,10 @@ public class AiPlayer : MonoBehaviour
             var unit = t.GetComponent<UnitController>();
             unit.ChangeState(UnitState.Patrol);
 
+            // mark the unit as being in a wave
+            var aiUnit = t.GetComponent<AiUnit>();
+            aiUnit.IsInWave = true;
+
             var followPathState = unit.GetComponent<FollowPathState>();
             followPathState.LoopPath = patrolling;
             followPathState.SetRoute(raidPaths[random].route);
