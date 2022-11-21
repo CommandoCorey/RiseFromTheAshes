@@ -1,10 +1,9 @@
-using JetBrains.Annotations;
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using UnityEngine.VFX;
 using UnityEngine.Timeline;
 //using static UnityEditor.Experimental.GraphView.GraphView;
 
@@ -235,6 +234,13 @@ public class GameManager : MonoBehaviour
     public void InstantiateParticles(ParticleSystem prefab, Vector3 position)
     {
         var particles = Instantiate(prefab.gameObject, position, Quaternion.identity);
+        Destroy(particles, 3.0f);
+    }
+
+    public void InstantiateParticles(VisualEffect prefab, Vector3 position)
+    {
+        var particles = Instantiate(prefab.gameObject, position, Quaternion.identity);
+        Destroy(particles, 3.0f);
     }
 
     /// <summary>
