@@ -5,29 +5,69 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
-    public void QuitGame()
+    [SerializeField] GameObject mainMenu;
+    [SerializeField] GameObject credits;
+    [SerializeField] GameObject loadingScreen;
+    [SerializeField] float creditsRiseSpeed = 100.0f;
+    [SerializeField] RectTransform creditsMover;
+
+    Vector3 creditsMoverOriginalPos;
+
+	public void Awake()
+	{
+		creditsMoverOriginalPos = creditsMover.position;
+	}
+
+	public void QuitGame()
     {
         Debug.Log("Quitting game...");
 
-        Application.Quit();
-
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
 #endif
     }
-    public void LoadScene1()
+    public void LoadScene(int index)
     {
-        Debug.Log("Loading...");
-        SceneManager.LoadScene(1);
+        mainMenu.SetActive(false);
+        credits.SetActive(false);
+        loadingScreen.SetActive(true);
+        SceneManager.LoadScene(index);
     }
-    public void LoadScene2()
-    {
-        Debug.Log("Loading...");
-        SceneManager.LoadScene(2);
+
+	private void Start()
+	{
+        ShowMainMenu();
     }
-    public void LoadScene3()
+
+	public void PlayCredits()
+	{
+        creditsMover.position = creditsMoverOriginalPos;
+        mainMenu.SetActive(false);
+        credits.SetActive(true);
+        loadingScreen.SetActive(false);
+    }
+
+    public void ShowMainMenu()
     {
-        Debug.Log("Loading...");
-        SceneManager.LoadScene(3);
+        creditsMover.position = creditsMoverOriginalPos;
+        mainMenu.SetActive(true);
+        credits.SetActive(false);
+        loadingScreen.SetActive(false);
+    }
+
+    public static Rect RectTransformToScreenSpace(RectTransform transform)
+    {
+        Vector2 size = Vector2.Scale(transform.rect.size, transform.lossyScale);
+        Rect rect = new Rect(transform.position.x, Screen.height - transform.position.y, size.x, size.y);
+        rect.x -= (transform.pivot.x * size.x);
+        rect.y -= ((1.0f - transform.pivot.y) * size.y);
+        return rect;
+    }
+
+    public void Update()
+	{
+        creditsMover.position += Vector3.up * Time.deltaTime * creditsRiseSpeed;
     }
 }

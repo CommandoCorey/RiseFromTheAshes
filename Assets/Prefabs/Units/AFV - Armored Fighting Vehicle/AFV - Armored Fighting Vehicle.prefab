@@ -2363,9 +2363,9 @@ MonoBehaviour:
   autoAttack: 1
   seeThroughWalls: 0
   showSolidDisks: 1
-  showDetectionRadius: 1
+  showDetectionRadius: 0
   detectionOpacity: 0.02
-  showAttackRange: 1
+  showAttackRange: 0
   attackRangeOpacity: 0.04
 --- !u!114 &1564937486150851928
 MonoBehaviour:
@@ -2560,6 +2560,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8302662413746311316}
     m_Modifications:
+    - target: {fileID: 6182571350897940494, guid: 5288f7752d1af044ba8781bc8e3cf5fa, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7984546746252857440, guid: 5288f7752d1af044ba8781bc8e3cf5fa, type: 3}
       propertyPath: m_Name
       value: Minimap Icon
@@ -2594,11 +2598,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8124734693458183249, guid: 5288f7752d1af044ba8781bc8e3cf5fa, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 10
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 8124734693458183249, guid: 5288f7752d1af044ba8781bc8e3cf5fa, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 10
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 8124734693458183249, guid: 5288f7752d1af044ba8781bc8e3cf5fa, type: 3}
       propertyPath: m_LocalPosition.x

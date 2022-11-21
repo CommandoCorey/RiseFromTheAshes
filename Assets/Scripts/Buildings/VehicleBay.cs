@@ -58,7 +58,7 @@ public class VehicleBay : MonoBehaviour {
 				return;
 			}
 
-			VehicleBayBuildMenu.Instance.transform.position = transform.position + buildMenuOffset;
+			//VehicleBayBuildMenu.Instance.transform.position = transform.position + buildMenuOffset;
 			VehicleBayBuildMenu.Instance.currentVehicleBay = this;
 			VehicleBayBuildMenu.Instance.gameObject.SetActive(true);
 		}

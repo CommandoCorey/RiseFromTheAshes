@@ -173,6 +173,7 @@ public class UnitController : MonoBehaviour
     private void Awake()
     {
         spawnPos = transform.position;
+        gameManager = GameManager.Instance;
     }
 
     // Start is called before the first frame update
@@ -184,7 +185,6 @@ public class UnitController : MonoBehaviour
             healthBarOffset = healthBar.transform.parent.localPosition;
 
         audio = body.GetComponent<AudioSource>();
-        gameManager = GameObject.FindObjectOfType<GameManager>();
 
         bool isAi = body.gameObject.layer == 7;
 
@@ -411,7 +411,13 @@ public class UnitController : MonoBehaviour
 
         Debug.DrawLine(spawnPos, point, Color.yellow, 3.0f);
 
-        Vector3 formationPos = formations.GetRallyPosition(point, spawnPos, isAi, ref rallyId);
+        Vector3 origin;
+        if(isAi)
+            origin = gameManager.enemyHQ.transform.position;  
+        else
+            origin = gameManager.playerHQ.transform.position;
+
+        Vector3 formationPos = formations.GetRallyPosition(point, origin, isAi, ref rallyId);
 
         ChangeState(UnitState.Moving, formationPos);
     }

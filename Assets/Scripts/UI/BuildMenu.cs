@@ -73,21 +73,6 @@ public class BuildMenu : MonoBehaviour
 		gameObject.SetActive(false);
 	}
 
-	private void Update()
-	{
-		if (Input.GetMouseButtonUp(0))
-		{
-			RaycastHit hit;
-			if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit))
-			{
-				if (!hit.collider.gameObject.CompareTag("BuildMenu"))
-				{
-					Hide();
-				}
-			}
-		}
-	}
-
 	// added by Paul
 	/// <summary>
 	/// Updates the value on the info panel to show the stats based on the button hovered over

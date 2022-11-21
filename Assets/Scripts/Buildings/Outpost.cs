@@ -2,9 +2,11 @@ using UnityEngine;
 
 public class Outpost : MonoBehaviour
 {
-
 	Building building;
-	Ghost[] ghosts;
+	[SerializeField] Ghost[] ghosts;
+
+	[SerializeField] int maxUnitIncrease = 5;
+
 	private void Start()
 	{
 		building = GetComponent<Building>();
@@ -27,5 +29,7 @@ public class Outpost : MonoBehaviour
 		{
 			ghost.gameObject.SetActive(true);
 		}
+
+		GameManager.Instance.IncreaseMaxUnits(maxUnitIncrease, gameObject.layer == 9);
 	}
 }

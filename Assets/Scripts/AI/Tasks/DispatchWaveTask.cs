@@ -55,6 +55,9 @@ public class DispatchWaveTask : AiTask
             switch(unitType.type)
             {
                 case UnitType.AFV:
+
+                    // Todo: check if unit is in defensive mode
+
                     if (afvs.Length < unitType.quantity)
                     {
                         taskStatus = "Not enough units";
@@ -68,6 +71,9 @@ public class DispatchWaveTask : AiTask
                 break;
 
                 case UnitType.APHT:
+
+                    // Todo: check if unit is in defensive mode
+
                     if (aphts.Length < unitType.quantity)
                     {
                         taskStatus = "Not enough units";
@@ -82,6 +88,9 @@ public class DispatchWaveTask : AiTask
                 break;
 
                 case UnitType.MBT:
+
+                    // Todo: check if unit is in defensive mode
+
                     if (mbts.Length < unitType.quantity)
                     {
                         taskStatus = "Not enough units";
@@ -95,6 +104,9 @@ public class DispatchWaveTask : AiTask
                 break;
 
                 case UnitType.RCV:
+
+                    // Todo: check if unit is in defensive mode
+
                     if (rcvs.Length < unitType.quantity)
                     {
                         taskStatus = "Not enough units";
