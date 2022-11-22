@@ -347,11 +347,22 @@ public class GameManager : MonoBehaviour
             maxUnitsText.text = maxUnitsPlayer.ToString();
         }
     }
+    public void DecreaseMaxUnits(int amount, bool aiPlayer)
+    {
+        if (aiPlayer)
+        {
+            maxUnitsAi -= amount;
+        } else
+        {
+            maxUnitsPlayer -= amount;
+            maxUnitsText.text = maxUnitsPlayer.ToString();
+        }
+    }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    public void MoveUnitRallyPoint()
+        /// <summary>
+        /// 
+        /// </summary>
+        public void MoveUnitRallyPoint()
     {
         GetComponent<SelectionManager>().enabled = false;        
     }

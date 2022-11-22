@@ -107,7 +107,7 @@ public class ResourceBuilding : MonoBehaviour
 
     public void OnDie()
     {
-        resources.DecreaseResourceMaximum(ResourceType.Steel, maxQuantityIncrease, giveToAIPlayer);
+        ResourceManager.Instance.DecreaseResourceMaximum(resourceToAdd, maxQuantityIncrease, giveToAIPlayer);
     }
 
 }

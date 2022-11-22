@@ -188,6 +188,12 @@ public class Building : MonoBehaviour
 			rb.OnDie();
         }
 
+		Outpost outpost;
+		if (TryGetComponent(out outpost))
+        {
+			outpost.OnDie();
+        }
+
 		if (ghost)
 		{
 			ghost.gameObject.SetActive(true);
