@@ -119,11 +119,11 @@ public class VehicleBayBuildMenu : MonoBehaviour {
 		cost.text = unit.Cost.ToString();
 		timeToBuild.text = unit.TimeToTrain.ToString();
 
-		spaceUsed.text = unit.SpaceUsed.ToString();
-		maxHealth.text = unit.MaxHealth.ToString();
-		attackRange.text = unit.AttackRange.ToString();
-		damagePerSecond.text = unit.DPS.ToString();
-		movementSpeed.text = unit.Speed.ToString();
+		spaceUsed.text = Mathf.Round(unit.SpaceUsed).ToString();
+		maxHealth.text = Mathf.Round(unit.MaxHealth).ToString();
+		attackRange.text = Mathf.Round(unit.AttackRange).ToString();
+		damagePerSecond.text = Mathf.Round(unit.DPS).ToString();
+		movementSpeed.text = Mathf.Round(unit.Speed).ToString();
 	}
 
 	// Added by Paul
