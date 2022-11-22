@@ -56,6 +56,9 @@ public class GameManager : MonoBehaviour
     public KeyCode unitIconsKey;
     public KeyCode unitStatusTextKey;
 
+    [Header("Particle systems")]
+    public GameObject destroyPropEffect;
+
     private GameState state;
     private new AudioSource audio;
 
