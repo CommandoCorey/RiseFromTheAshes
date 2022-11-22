@@ -26,8 +26,8 @@ public class ResourceBuilding : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        resources = FindObjectOfType<ResourceManager>();
-        gameManager = FindObjectOfType<GameManager>();
+        resources = ResourceManager.Instance;
+        gameManager = GameManager.Instance;
         building = GetComponent<Building>();
 
         //if (gameObject.CompareTag("Headquarters"))
@@ -103,6 +103,11 @@ public class ResourceBuilding : MonoBehaviour
     private void HideLabel()
     {
         floatingLabel.SetActive(false);
+    }
+
+    public void OnDie()
+    {
+        resources.DecreaseResourceMaximum(ResourceType.Steel, maxQuantityIncrease, giveToAIPlayer);
     }
 
 }

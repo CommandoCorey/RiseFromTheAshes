@@ -182,6 +182,12 @@ public class Building : MonoBehaviour
 			trigger.OnDie();
 		}
 
+		ResourceBuilding rb;
+		if (TryGetComponent(out rb))
+        {
+			rb.OnDie();
+        }
+
 		if (ghost)
 		{
 			ghost.gameObject.SetActive(true);
