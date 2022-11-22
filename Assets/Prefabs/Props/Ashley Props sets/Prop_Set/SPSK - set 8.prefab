@@ -44,6 +44,7 @@ GameObject:
   - component: {fileID: 1868408385940166478}
   - component: {fileID: 4470135780278526852}
   - component: {fileID: 616883949878457629}
+  - component: {fileID: 8612602776860909293}
   m_Layer: 0
   m_Name: Flag
   m_TagString: Untagged
@@ -130,6 +131,19 @@ MonoBehaviour:
   unitLayerMask:
     serializedVersion: 2
     m_Bits: 192
+--- !u!65 &8612602776860909293
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2668911364196287057}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.030274045, y: 1.857724, z: 0.44318742}
+  m_Center: {x: 0.000000059604645, y: 0.92157686, z: 0}
 --- !u!1 &2749352380501113631
 GameObject:
   m_ObjectHideFlags: 0
@@ -175,6 +189,7 @@ GameObject:
   - component: {fileID: 1538869211551186723}
   - component: {fileID: 3656885706973498345}
   - component: {fileID: 4578306389298290589}
+  - component: {fileID: 389539396690868355}
   m_Layer: 0
   m_Name: Pallet
   m_TagString: Untagged
@@ -260,6 +275,19 @@ MonoBehaviour:
   unitLayerMask:
     serializedVersion: 2
     m_Bits: 192
+--- !u!65 &389539396690868355
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3008160858312567356}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.81210154, y: 0.13981329, z: 0.8121016}
+  m_Center: {x: -0.0000000048434368, y: 0.06500724, z: -0.00000026725223}
 --- !u!1 &4436814020555099637
 GameObject:
   m_ObjectHideFlags: 0
@@ -271,6 +299,8 @@ GameObject:
   - component: {fileID: 3952307197514913615}
   - component: {fileID: 105467225260398826}
   - component: {fileID: 2779361607862938656}
+  - component: {fileID: 9210856507346389484}
+  - component: {fileID: 407529295083177271}
   m_Layer: 0
   m_Name: TankTrap
   m_TagString: Untagged
@@ -341,6 +371,34 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &9210856507346389484
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4436814020555099637}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.57288015, y: 0.6279901, z: 0.5644171}
+  m_Center: {x: 0.018478096, y: -0.002743557, z: 0}
+--- !u!114 &407529295083177271
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4436814020555099637}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d746c29f4275ae409900733c19e6413, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unitLayerMask:
+    serializedVersion: 2
+    m_Bits: 192
 --- !u!1 &5132066178109976863
 GameObject:
   m_ObjectHideFlags: 0
@@ -353,6 +411,7 @@ GameObject:
   - component: {fileID: 8925230415304057856}
   - component: {fileID: 6645130037050020042}
   - component: {fileID: 2704430529341093398}
+  - component: {fileID: 940221019996632139}
   m_Layer: 0
   m_Name: OilBarrel (1)
   m_TagString: Untagged
@@ -438,6 +497,19 @@ MonoBehaviour:
   unitLayerMask:
     serializedVersion: 2
     m_Bits: 192
+--- !u!65 &940221019996632139
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5132066178109976863}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.2471766, y: 0.42697632, z: 0.24717654}
+  m_Center: {x: 0, y: 0.21348816, z: -0.00000023841858}
 --- !u!1 &5252899657779223473
 GameObject:
   m_ObjectHideFlags: 0
@@ -450,6 +522,7 @@ GameObject:
   - component: {fileID: 8359251905008684718}
   - component: {fileID: 6045783537408031332}
   - component: {fileID: 3867325395981800451}
+  - component: {fileID: 4619503954887058025}
   m_Layer: 0
   m_Name: industrial_Car (Black)
   m_TagString: Untagged
@@ -535,6 +608,19 @@ MonoBehaviour:
   unitLayerMask:
     serializedVersion: 2
     m_Bits: 192
+--- !u!65 &4619503954887058025
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5252899657779223473}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.8676151, y: 0.59703296, z: 1.9278857}
+  m_Center: {x: 0, y: 0.2984726, z: 0}
 --- !u!1 &5665808029528356323
 GameObject:
   m_ObjectHideFlags: 0
@@ -579,6 +665,7 @@ GameObject:
   - component: {fileID: 6544236936811534124}
   - component: {fileID: 9022182968947680230}
   - component: {fileID: 325688713290532154}
+  - component: {fileID: 3121970667843496230}
   m_Layer: 0
   m_Name: OilBarrel (2)
   m_TagString: Untagged
@@ -664,6 +751,19 @@ MonoBehaviour:
   unitLayerMask:
     serializedVersion: 2
     m_Bits: 192
+--- !u!65 &3121970667843496230
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7365012581592531507}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.24717659, y: 0.4269764, z: 0.24717653}
+  m_Center: {x: 0.0000003512654, y: 0.2134882, z: -0.000000032983543}
 --- !u!1 &8942928203790976031
 GameObject:
   m_ObjectHideFlags: 0
@@ -709,6 +809,7 @@ GameObject:
   - component: {fileID: 4641190597130896739}
   - component: {fileID: 7461379415693210025}
   - component: {fileID: 2178628107470362485}
+  - component: {fileID: 7777823596569795367}
   m_Layer: 0
   m_Name: OilBarrel
   m_TagString: Untagged
@@ -794,3 +895,16 @@ MonoBehaviour:
   unitLayerMask:
     serializedVersion: 2
     m_Bits: 192
+--- !u!65 &7777823596569795367
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8974787283242815612}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.2471766, y: 0.42697632, z: 0.24717654}
+  m_Center: {x: 0, y: 0.21348816, z: -0.0000004172325}

@@ -31,10 +31,13 @@ public class ResourceBuilding : MonoBehaviour
         building = GetComponent<Building>();
 
         //if (gameObject.CompareTag("Headquarters"))
-            //building.IsBuilding = false;
+        //building.IsBuilding = false;
 
-        if(gameManager.State == GameState.Running && !building.IsBuilding)
+        if (gameManager.State == GameState.Running && !building.IsBuilding)
+        {
             Invoke("IncrementResource", timePerIncerement);
+            generating = true;
+        }
 
         resources.IncreaseResourceMax(resourceToAdd, maxQuantityIncrease, giveToAIPlayer);
     }

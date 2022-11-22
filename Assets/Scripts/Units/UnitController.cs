@@ -173,14 +173,15 @@ public class UnitController : MonoBehaviour
 
     private void Awake()
     {
-        spawnPos = transform.position;
-        gameManager = GameManager.Instance;
+        spawnPos = transform.position;        
     }
 
     // Start is called before the first frame update
     void Start()
     {
-    	health = maxHealth;        
+        gameManager = GameManager.Instance;
+
+        health = maxHealth;        
 
         if (healthBar)
             healthBarOffset = healthBar.transform.parent.localPosition;
@@ -419,6 +420,8 @@ public class UnitController : MonoBehaviour
     /// <param name="point">the location of the rally point</param>
     public void MoveToRallyPoint(Vector3 point)
     {
+        gameManager = GameManager.Instance;
+
         FormationManager formations = FormationManager.Instance;
         agent = body.GetComponent<NavMeshAgent>();
 

@@ -29,6 +29,7 @@ public class AiTaskScheduler : MonoBehaviour
 
     [Header("Info Panel")]
     [SerializeField] bool showInfoPanel;
+    [SerializeField] KeyCode togglePanelKey;
     [SerializeField] GameObject infoPanel;
     [SerializeField] TextMeshProUGUI steelCurrentAmount;
     [SerializeField] TextMeshProUGUI steelMaxAmount;
@@ -147,9 +148,9 @@ public class AiTaskScheduler : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Tilde))
-        {
-            infoPanel.SetActive(!infoPanel.activeSelf);
+        if (Input.GetKeyDown(togglePanelKey) || Input.GetKeyDown(KeyCode.Tilde))
+        {            
+            showInfoPanel = !showInfoPanel;
         }        
     }
 
