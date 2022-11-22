@@ -127,6 +127,13 @@ public class UnitController : MonoBehaviour
     private FollowEnemyState followState;
     private AttackState agentAttackState;
     private FollowPathState patrolState;
+
+    // circle material colours
+    Material deteectionRangeMaterial;
+    Material attackRangeMaterial;
+
+    UnitManager um;
+
     #endregion
 
     #region properties
@@ -185,6 +192,7 @@ public class UnitController : MonoBehaviour
     void Start()
     {
         gameManager = GameManager.Instance;
+        um = UnitManager.Instance;
 
         health = maxHealth;        
 
@@ -205,9 +213,9 @@ public class UnitController : MonoBehaviour
         if (ReachedRallyPoint || !moveToRallyPoint)
             ChangeState(UnitState.Idle);
 
-        if (UnitManager.Instance)
+        if (um)
         {
-            UnitManager.Instance.UCRefs.AddLast(this);
+            um.UCRefs.AddLast(this);
         }
 
         childMeshRenderers = GetComponentsInChildren<MeshRenderer>();
@@ -217,17 +225,17 @@ public class UnitController : MonoBehaviour
 
         agent = body.GetComponent<NavMeshAgent>();
         agent.speed = movementSpeed;
-
-        // set scale of circle meshes
+        
         if (detectionRangeMesh)
-        {
-            detectionRangeMesh.gameObject.SetActive(false);            
+        {            
+            detectionRangeMesh.gameObject.SetActive(false);
         }
 
         if (attackRangeMesh)
-        {
+        {            
             attackRangeMesh.gameObject.SetActive(false);
         }
+
     }
 
 	// Update is called once per frame
@@ -286,13 +294,17 @@ public class UnitController : MonoBehaviour
         // set scale of circle meshes
         if (detectionRangeMesh)
         {            
-            detectionRangeMesh.localScale = new Vector3(detectionRadius, detectionRangeMesh.localScale.y,
-                detectionRadius);
+            detectionRangeMesh.localScale = new Vector3(2*detectionRadius, detectionRangeMesh.localScale.y,
+                2*detectionRadius);
+
+            detectionRangeMesh.GetComponent<Renderer>().material.color = um.DetectionRangeColor;
         }
+
 
         if (attackRangeMesh)
         {            
-            attackRangeMesh.localScale = new Vector3(attackRange, attackRangeMesh.localScale.y, attackRange);
+            attackRangeMesh.localScale = new Vector3(2*attackRange, attackRangeMesh.localScale.y, 2*attackRange);
+            attackRangeMesh.GetComponent<Renderer>().material.color = um.AttackRangeColor;
         }
 
     }
