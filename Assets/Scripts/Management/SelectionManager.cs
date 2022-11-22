@@ -365,6 +365,7 @@ public class SelectionManager : MonoBehaviour
                 var unit = selectedTable[pair.Key].GetComponent<UnitController>();
 
                 //Destroy(selectedTable[pair.Key].GetComponent<SelectedDictionary>());
+                unit.SingleSelected=false;
                 unit.SetSelected(false);
 
                 //if(unit.AttackTarget != null)
