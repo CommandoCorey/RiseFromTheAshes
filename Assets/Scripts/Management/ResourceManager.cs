@@ -106,6 +106,20 @@ public class ResourceManager : MonoBehaviour
             playerResources[(int)type].maxAmount += amount;
     }
 
+    public void DecreaseResourceMaximum(ResourceType type, int amount, bool aiPlayer = false)
+    {
+        if (aiPlayer)
+        {
+            aiResources[(int)type].maxAmount     = Mathf.Max(0, aiResources[(int)type].maxAmount - amount);
+            aiResources[(int)type].currentAmount = Mathf.Max(0, aiResources[(int)type].maxAmount);
+        }
+        else
+        {
+            playerResources[(int)type].maxAmount     = Mathf.Max(0, playerResources[(int)type].maxAmount - amount);
+            playerResources[(int)type].currentAmount = Mathf.Max(0, playerResources[(int)type].maxAmount);
+        }
+    }
+
 
     /// <summary>
     /// Increases the resource quantity of given type by a specified amount

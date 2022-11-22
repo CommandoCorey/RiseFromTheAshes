@@ -238,13 +238,13 @@ public class GameManager : MonoBehaviour
     public void InstantiateParticles(ParticleSystem prefab, Vector3 position)
     {
         var particles = Instantiate(prefab.gameObject, position, Quaternion.identity);
-        Destroy(particles, 3.0f);
+        Destroy(particles, 5.0f);
     }
 
     public void InstantiateParticles(VisualEffect prefab, Vector3 position)
     {
         var particles = Instantiate(prefab.gameObject, position, Quaternion.identity);
-        Destroy(particles, 3.0f);
+        Destroy(particles, 5.0f);
     }
 
     /// <summary>
@@ -347,11 +347,22 @@ public class GameManager : MonoBehaviour
             maxUnitsText.text = maxUnitsPlayer.ToString();
         }
     }
+    public void DecreaseMaxUnits(int amount, bool aiPlayer)
+    {
+        if (aiPlayer)
+        {
+            maxUnitsAi -= amount;
+        } else
+        {
+            maxUnitsPlayer -= amount;
+            maxUnitsText.text = maxUnitsPlayer.ToString();
+        }
+    }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    public void MoveUnitRallyPoint()
+        /// <summary>
+        /// 
+        /// </summary>
+        public void MoveUnitRallyPoint()
     {
         GetComponent<SelectionManager>().enabled = false;        
     }
