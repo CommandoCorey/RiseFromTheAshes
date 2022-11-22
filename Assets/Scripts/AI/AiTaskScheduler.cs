@@ -29,6 +29,7 @@ public class AiTaskScheduler : MonoBehaviour
 
     [Header("Info Panel")]
     [SerializeField] bool showInfoPanel;
+    [SerializeField] KeyCode togglePanelKey;
     [SerializeField] GameObject infoPanel;
     [SerializeField] TextMeshProUGUI steelCurrentAmount;
     [SerializeField] TextMeshProUGUI steelMaxAmount;
@@ -147,9 +148,9 @@ public class AiTaskScheduler : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Tilde))
-        {
-            infoPanel.SetActive(!infoPanel.activeSelf);
+        if (Input.GetKeyDown(togglePanelKey) || Input.GetKeyDown(KeyCode.Tilde))
+        {            
+            showInfoPanel = !showInfoPanel;
         }        
     }
 
@@ -182,13 +183,13 @@ public class AiTaskScheduler : MonoBehaviour
 
     private IEnumerator PerformNextTask(TaskSet set)
     {
-        set.tasks[set.TaskNum].TaskStatus = "Performing Soon";
+        //set.tasks[set.TaskNum].TaskStatus = "Performing Soon";
 
         yield return new WaitForSeconds(set.tasks[set.TaskNum].timeDelay);
 
         if (set.tasks[set.TaskNum].PerformTask()) // attempt to perform the task
         {
-            set.tasks[set.TaskNum].TaskStatus = "Task performed";
+            //set.tasks[set.TaskNum].TaskStatus = "Task performed";
 
             activeTasks.Add(set.tasks[set.TaskNum]);
             set.TaskNum++;

@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
 using static UnityEngine.Rendering.DebugUI;
+using UnityEngine.VFX;
 
 public enum UnitState
 {
@@ -76,7 +77,7 @@ public class UnitController : MonoBehaviour
     [Header("Particle Systems")]
     public ParticleSystem[] fireEffects;
     public ParticleSystem[] hitEffects;
-    public ParticleSystem[] destroyEffects;
+    public VisualEffect[] destroyEffects;
 
     [Header("Sound Effects")]
     public SoundEffect[] moveSounds;
@@ -172,14 +173,15 @@ public class UnitController : MonoBehaviour
 
     private void Awake()
     {
-        spawnPos = transform.position;
-        gameManager = GameManager.Instance;
+        spawnPos = transform.position;        
     }
 
     // Start is called before the first frame update
     void Start()
     {
-    	health = maxHealth;        
+        gameManager = GameManager.Instance;
+
+        health = maxHealth;        
 
         if (healthBar)
             healthBarOffset = healthBar.transform.parent.localPosition;
@@ -360,6 +362,22 @@ public class UnitController : MonoBehaviour
             child.Play();
     }
 
+    public void InstantiateParticles(VisualEffect particles, Vector3 position)
+    {
+        if (particles == null)
+            return;
+
+        var obj = Instantiate(particles, position, Quaternion.identity, transform);
+
+        var childParticles = particles.gameObject.GetComponentsInChildren<VisualEffect>();
+
+        particles.Play();
+        foreach (VisualEffect child in childParticles)
+            child.Play();
+
+        Destroy(obj, 3.0f);
+    }
+
     /// <summary>
     /// Playss a random movement sound
     /// </summary>
@@ -402,6 +420,8 @@ public class UnitController : MonoBehaviour
     /// <param name="point">the location of the rally point</param>
     public void MoveToRallyPoint(Vector3 point)
     {
+        gameManager = GameManager.Instance;
+
         FormationManager formations = FormationManager.Instance;
         agent = body.GetComponent<NavMeshAgent>();
 

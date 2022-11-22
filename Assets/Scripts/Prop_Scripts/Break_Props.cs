@@ -4,24 +4,27 @@ using UnityEngine;
 
 public class Break_Props : MonoBehaviour
 {
+    BoxCollider bc;
     [SerializeField] LayerMask unitLayerMask;
 
-    //[Space(10)]
-
-    //public List<GameObject> SpawnObjects = new List<GameObject>();
-    //public GameObject Remove;
-
-    // Start is called before the first frame update
-    void OnTriggerEnter(Collider other)
+    void MyOnTrigger(Collider other)
     {
-        //entering the trigger
-        Debug.Log("Prop Break");
-        if (((1 << other.gameObject.layer) & unitLayerMask) == 0)
-        {
-            //foreach (var g in SpawnObjects)
-            //{
-            //}
-                Destroy(this);
-        }
+        var p = Instantiate(GameManager.Instance.destroyPropEffect, transform.position, Quaternion.identity);
+        Destroy(p, 1.0f);
+
+        Destroy(gameObject);
+    }
+
+    private void OnEnable()
+    {
+        bc = GetComponent<BoxCollider>();
+    }
+
+    private void FixedUpdate()
+    {
+        var hits = Physics.OverlapBox(
+            bc.bounds.min + (bc.bounds.max - bc.bounds.min) * 0.5f,
+            (bc.bounds.max - bc.bounds.min) * 0.5f, Quaternion.identity, unitLayerMask);
+        foreach (var hit in hits) { MyOnTrigger(hit); }
     }
 }

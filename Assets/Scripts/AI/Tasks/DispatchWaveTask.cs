@@ -7,6 +7,10 @@ using static DispatchWaveTask;
 [CreateAssetMenu(fileName = "Dispatch Wave Task", menuName = "Ai Task/Dispatch Unit Wave", order = 2)]
 public class DispatchWaveTask : AiTask
 {
+    protected List<Transform> unitWave;
+
+    private AiUnit unit;    
+
     public enum UnitType
     {
         AFV, APHT, MBT, RCV
@@ -33,8 +37,10 @@ public class DispatchWaveTask : AiTask
 
     public override object Clone()
     {
+        taskStatus = "Not enough units";
         var clonedTask = new DispatchWaveTask();
         clonedTask.enemyWave = enemyWave;
+        clonedTask.taskStatus = taskStatus;
         return clonedTask;
     }
 
@@ -42,99 +48,31 @@ public class DispatchWaveTask : AiTask
 
     public override bool PerformTask()
     {
-        var afvs = GameObject.FindGameObjectsWithTag("ai AFV");
-        var aphts = GameObject.FindGameObjectsWithTag("ai APHT");
-        var mbts = GameObject.FindGameObjectsWithTag("ai MBT");
-        var rcvs = GameObject.FindGameObjectsWithTag("ai RCV");
+        unitWave = new List<Transform>();
 
-        List<Transform> unitWave = new List<Transform>();
-
-        // ensure that there are enough units of each type in the scene
-        foreach (var unitType in enemyWave)
+        if (AddUnitsToWave())
         {
-            switch(unitType.type)
+            if (FindObjectOfType<AiPlayer>())
             {
-                case UnitType.AFV:
+                var ai = FindObjectOfType<AiPlayer>();
+                ai.DispatchUnits(unitWave);
 
-                    // Todo: check if unit is in defensive mode
+                unitWave.Clear();
 
-                    if (afvs.Length < unitType.quantity)
-                    {
-                        taskStatus = "Not enough units";
-                        return false;
-                    }
+                return true;
+            }
+            else if (FindObjectOfType<SimpleAiPlayer>())
+            {
+                var ai = FindObjectOfType<SimpleAiPlayer>();
+                ai.DispatchUnits(unitWave);
 
-                    for(int i=0; i< unitType.quantity; i++)
-                    {
-                        unitWave.Add(afvs[i].transform);
-                    }
-                break;
+                unitWave.Clear();
 
-                case UnitType.APHT:
-
-                    // Todo: check if unit is in defensive mode
-
-                    if (aphts.Length < unitType.quantity)
-                    {
-                        taskStatus = "Not enough units";
-                        return false;                        
-                    }                        
-
-                    for (int i = 0; i < unitType.quantity; i++)
-                    {
-                        unitWave.Add(aphts[i].transform);
-                    }
-
-                break;
-
-                case UnitType.MBT:
-
-                    // Todo: check if unit is in defensive mode
-
-                    if (mbts.Length < unitType.quantity)
-                    {
-                        taskStatus = "Not enough units";
-                        return false;
-                    }
-
-                    for (int i = 0; i < unitType.quantity; i++)
-                    {
-                        unitWave.Add(mbts[i].transform);
-                    }
-                break;
-
-                case UnitType.RCV:
-
-                    // Todo: check if unit is in defensive mode
-
-                    if (rcvs.Length < unitType.quantity)
-                    {
-                        taskStatus = "Not enough units";
-                        return false;
-                    }
-
-                    for (int i = 0; i < unitType.quantity; i++)
-                    {
-                        unitWave.Add(rcvs[i].transform);
-                    }
-               break;
+                return true;
             }
         }
 
-        if (FindObjectOfType<AiPlayer>())
-        {
-            var ai = FindObjectOfType<AiPlayer>();
-            ai.DispatchUnits(unitWave);
-
-            return true;
-        }
-        else if (FindObjectOfType<SimpleAiPlayer>())
-        {
-            var ai = FindObjectOfType<SimpleAiPlayer>();
-            ai.DispatchUnits(unitWave);
-
-            return true;
-        }
+        unitWave.Clear();
 
         return false;
     }
@@ -143,5 +81,135 @@ public class DispatchWaveTask : AiTask
     {
         return true;
     }
+
+    protected bool AddUnitsToWave()
+    {
+        var afvs = GetFreeUnits("ai AFV");            
+        var aphts = GetFreeUnits("ai APHT");
+        var mbts = GetFreeUnits("ai MBT");
+        var rcvs = GetFreeUnits("ai RCV");
+
+        // ensure that there are enough units of each type in the scene
+        foreach (var unitType in enemyWave)
+        {
+            switch (unitType.type)
+            {
+                case UnitType.AFV:
+
+                    // Todo: check if unit is in defensive mode
+
+                    if (afvs.Count < unitType.quantity)
+                    {
+                        taskStatus = "Not enough units";
+                        return false;
+                    }
+
+                    for (int i = 0; i < unitType.quantity; i++)
+                    {
+                        if(!afvs[i].IsInWave)
+                        {
+                            unitWave.Add(afvs[i].transform);
+                        }
+                                              
+                    }
+                    break;
+
+                case UnitType.APHT:
+
+                    // Todo: check if unit is in defensive mode
+
+                    if (aphts.Count < unitType.quantity)
+                    {
+                        taskStatus = "Not enough units";
+                        return false;
+                    }
+
+                    for (int i = 0; i < unitType.quantity; i++)
+                    {
+                        if(!aphts[i].IsInWave)
+                        {
+                            unitWave.Add(aphts[i].transform);                            
+                        }
+
+                    }
+
+                    break;
+
+                case UnitType.MBT:
+
+                    // Todo: check if unit is in defensive mode
+
+                    if (mbts.Count < unitType.quantity)
+                    {
+                        taskStatus = "Not enough units";
+                        return false;
+                    }
+
+                    for (int i = 0; i < unitType.quantity; i++)
+                    {
+                        if (!mbts[i].IsInWave)
+                        {
+                            unitWave.Add(mbts[i].transform);                            
+                        }
+                    }
+                    break;
+
+                case UnitType.RCV:
+
+                    // Todo: check if unit is in defensive mode
+
+                    if (rcvs.Count < unitType.quantity)
+                    {
+                        taskStatus = "Not enough units";
+                        return false;
+                    }
+
+                    for (int i = 0; i < unitType.quantity; i++)
+                    {
+                        if (!rcvs[i].IsInWave)
+                        {
+                            unitWave.Add(rcvs[i].transform);                            
+                        }
+                    }
+                    break;
+            }
+        }
+
+        return true;
+    }
+
+    /*
+    private bool IsInWave(GameObject obj)
+    {
+        unit = obj.GetComponent<AiUnit>();
+        return unit.IsInWave;
+    }*/
+
+    // returns list of units matching a tag that are
+    // not already in an attack wave
+    private List<AiUnit> GetFreeUnits(string tag)
+    {
+        var unitTransforms = GameObject.FindGameObjectsWithTag(tag);
+
+        List<AiUnit> freeUnits = new List<AiUnit>();
+
+        foreach (var t in unitTransforms)
+        {
+            var unit = t.GetComponent<AiUnit>();
+            
+            if(!unit.IsInWave)
+            {
+                freeUnits.Add(unit);
+            }
+        }
+
+        return freeUnits;       
+    }
+
+    /*
+    private void AddToWave(Transform uniTransform)
+    { 
+        unitWave.Add(uniTransform);
+    }*/
     
 }

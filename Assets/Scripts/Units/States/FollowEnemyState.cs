@@ -43,7 +43,7 @@ public class FollowEnemyState : State
             if (closest && closest != unit.AttackTarget) // closest enemy was found
             {
                 // remove highlight from previous enemy
-                if(unit.SingleSelected)
+                if(unit.SingleSelected && unit.AttackTarget != null)
                     unit.AttackTarget.GetComponent<SelectionSprites>().ShowTargetedSprite = false;
 
                 unit.AttackTarget = closest;
@@ -64,9 +64,10 @@ public class FollowEnemyState : State
 
             agent.SetDestination(unit.AttackTarget.position + directionToTarget * unit.AttackRange);
 
+            float distanceFromTarget = Vector3.Distance(unit.transform.position, unit.AttackTarget.position);
+
             // check that the line of sight is vacant and we are in attack range
-            if (!ObstacleInWay(directionToTarget) &&
-                Vector3.Distance(unit.body.position, unit.AttackTarget.position) <= unit.AttackRange)
+            if (!ObstacleInWay(directionToTarget) && distanceFromTarget <= unit.AttackRange)
             {
                 agent.isStopped = true;
                 unit.ChangeState(UnitState.Attack);

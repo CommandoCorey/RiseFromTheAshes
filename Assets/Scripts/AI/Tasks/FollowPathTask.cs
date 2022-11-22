@@ -34,95 +34,39 @@ public class FollowPathTask : DispatchWaveTask
 
     public override bool PerformTask()
     {
-        var afvs = GameObject.FindGameObjectsWithTag("ai AFV");
-        var aphts = GameObject.FindGameObjectsWithTag("ai APHT");
-        var mbts = GameObject.FindGameObjectsWithTag("ai MBT");
-        var rcvs = GameObject.FindGameObjectsWithTag("ai RCV");
+        unitWave = new List<Transform>();
 
-        List<Transform> unitWave = new List<Transform>();
-
-        // ensure that there are enough units of each type in the scene
-        foreach (var unitType in enemyWave)
+        if (AddUnitsToWave()) // invoke from parent class
         {
-            switch (unitType.type)
+            if (FindObjectOfType<AiPlayer>())
             {
-                case UnitType.AFV:
-                    if (afvs.Length < unitType.quantity)
-                    {
-                        taskStatus = "Not enough units";
-                        return false;
-                    }
+                var ai = FindObjectOfType<AiPlayer>();
 
-                    for (int i = 0; i < unitType.quantity; i++)
-                    {
-                        unitWave.Add(afvs[i].transform);
-                    }
-                    break;
+                if (patrolRoute)
+                    ai.SendOnPatrol(unitWave);
+                else
+                    ai.SendAlongPath(unitWave, false);
 
-                case UnitType.APHT:
-                    if (aphts.Length < unitType.quantity)
-                    {
-                        taskStatus = "Not enough units";
-                        return false;
-                    }
+                unitWave.Clear();
 
-                    for (int i = 0; i < unitType.quantity; i++)
-                    {
-                        unitWave.Add(aphts[i].transform);
-                    }
+                completed = true;
 
-                    break;
-
-                case UnitType.MBT:
-                    if (mbts.Length < unitType.quantity)
-                    {
-                        taskStatus = "Not enough units";
-                        return false;
-                    }
-
-                    for (int i = 0; i < unitType.quantity; i++)
-                    {
-                        unitWave.Add(mbts[i].transform);
-                    }
-                    break;
-
-                case UnitType.RCV:
-                    if (rcvs.Length < unitType.quantity)
-                    {
-                        taskStatus = "Not enough units";
-                        return false;
-                    }
-
-                    for (int i = 0; i < unitType.quantity; i++)
-                    {
-                        unitWave.Add(rcvs[i].transform);
-                    }
-                    break;
+                return true;
             }
+            /*
+            else if (FindObjectOfType<SimpleAiPlayer>())
+            {
+                var ai = FindObjectOfType<SimpleAiPlayer>();
+                ai.SendOnPatrol(unitWave, waypoints);
+
+                unitWave.Clear();
+
+                completed = true;
+                return true;
+            }*/
         }
 
-        if (FindObjectOfType<AiPlayer>())
-        {
-            var ai = FindObjectOfType<AiPlayer>();
-
-            if (patrolRoute)
-                ai.SendOnPatrol(unitWave);
-            else
-                ai.SendAlongPath(unitWave, false);
-
-            completed = true;
-
-            return true;
-        }
-        else if (FindObjectOfType<SimpleAiPlayer>())
-        {
-            var ai = FindObjectOfType<SimpleAiPlayer>();
-            //ai.SendOnPatrol(unitWave, waypoints);
-
-            completed = true;
-            return true;
-        }
-
+        unitWave.Clear();
         return false;
     }
 }

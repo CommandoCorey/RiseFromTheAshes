@@ -11,12 +11,13 @@ GameObject:
   - component: {fileID: 259666285939150032}
   - component: {fileID: 3762017007239906165}
   - component: {fileID: 1428109202468091839}
-  - component: {fileID: -3799320269940539976}
+  - component: {fileID: 8683652343565451375}
+  - component: {fileID: -3046727709966828985}
   m_Layer: 0
   m_Name: PillarMonument
   m_TagString: Untagged
   m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
+  m_NavMeshLayer: 1
   m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &259666285939150032
@@ -83,7 +84,22 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &-3799320269940539976
+--- !u!114 &8683652343565451375
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 635383240718030442}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d746c29f4275ae409900733c19e6413, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unitLayerMask:
+    serializedVersion: 2
+    m_Bits: 192
+--- !u!65 &-3046727709966828985
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -91,8 +107,8 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 635383240718030442}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.24980405, y: 3.3053498, z: 0.24800773}
-  m_Center: {x: 0, y: 1.6526752, z: -0.0003689453}
+  m_Size: {x: 0.24980405, y: 3.3053498, z: 0.7581707}
+  m_Center: {x: 0, y: 1.6526752, z: 0.00000031292439}

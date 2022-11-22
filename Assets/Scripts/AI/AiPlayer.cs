@@ -262,6 +262,10 @@ public class AiPlayer : MonoBehaviour
             var unit = t.GetComponent<UnitController>();
             unit.ChangeState(UnitState.Patrol);
 
+            // mark the unit as being in a wave
+            var aiUnit = t.GetComponent<AiUnit>();
+            aiUnit.IsInWave = true;
+
             var followPathState = unit.GetComponent<FollowPathState>();
             followPathState.LoopPath = patrolling;
             followPathState.SetRoute(raidPaths[random].route);
@@ -315,7 +319,7 @@ public class AiPlayer : MonoBehaviour
         return false;
     }
 
-    public void ConstructBuilding(Transform ghostBuilding, Building buildItem, BuildTask task = null)
+    public void ConstructBuilding(Transform ghostBuilding, Building buildItem, BuildTask task = null, TaskSet set = null)
     {
         resources.AiSpendSteel(buildItem.steelCost);
 
@@ -334,6 +338,11 @@ public class AiPlayer : MonoBehaviour
         //buildingPlaceholders.Remove(ghostBuilding);
 
         task.SetBuildingInstance(building);
+
+        if(set != null && set.addRebuildTasks)
+        {
+            set.tasks.Remove(task);
+        }
     }
 
     /// <summary>

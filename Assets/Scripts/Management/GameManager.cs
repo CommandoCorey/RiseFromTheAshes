@@ -1,11 +1,12 @@
-using JetBrains.Annotations;
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using UnityEngine.VFX;
 using UnityEngine.Timeline;
+using UnityEngine.VFX;
+//using static UnityEditor.Experimental.GraphView.GraphView;
 
 public enum GameState
 {
@@ -52,6 +53,12 @@ public class GameManager : MonoBehaviour
 
     [Header("Keyboard Shortcuts")]
     public KeyCode pauseKey;
+    public KeyCode unitHealthbarKey;
+    public KeyCode unitIconsKey;
+    public KeyCode unitStatusTextKey;
+
+    [Header("Particle systems")]
+    public GameObject destroyPropEffect;
 
     private GameState state;
     private new AudioSource audio;
@@ -142,6 +149,20 @@ public class GameManager : MonoBehaviour
         if (enableCursorChanges && currentCursor == selectableCursor &&
             IsPointerOverUIElement())
             SetCursor(defaultCursor);
+
+        HandleKeyboardShortcuts();
+    }
+
+    private void HandleKeyboardShortcuts()
+    {
+        if (Input.GetKeyDown(unitHealthbarKey))
+            showHealthbars = !showHealthbars;
+
+        if(Input.GetKeyDown(unitIconsKey))
+            showIcons = !showIcons;
+
+        if(Input.GetKeyDown(unitStatusTextKey))
+            showStatusText = !showStatusText;
     }
 
     #region public functions
@@ -217,6 +238,13 @@ public class GameManager : MonoBehaviour
     public void InstantiateParticles(ParticleSystem prefab, Vector3 position)
     {
         var particles = Instantiate(prefab.gameObject, position, Quaternion.identity);
+        Destroy(particles, 3.0f);
+    }
+
+    public void InstantiateParticles(VisualEffect prefab, Vector3 position)
+    {
+        var particles = Instantiate(prefab.gameObject, position, Quaternion.identity);
+        Destroy(particles, 3.0f);
     }
 
     /// <summary>

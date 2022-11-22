@@ -11,6 +11,8 @@ public class AiUnit : MonoBehaviour
 {
     public UnitMode Mode { get; set; } = UnitMode.Intermediate;
 
+    public bool IsInWave { get; set; } = false;
+
     UnitController unit;
     AiPlayer ai;
 
