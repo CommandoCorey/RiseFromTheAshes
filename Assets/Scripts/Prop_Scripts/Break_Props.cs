@@ -7,14 +7,14 @@ public class Break_Props : MonoBehaviour
     BoxCollider bc;
     [SerializeField] LayerMask unitLayerMask;
 
-    // Start is called before the first frame update
     void MyOnTrigger(Collider other)
     {
-        //entering the trigger
-        Debug.Log("Break Prop");
+        var p = Instantiate(GameManager.Instance.destroyPropEffect, transform.position, Quaternion.identity);
+        Destroy(p, 1.0f);
 
         Destroy(gameObject);
     }
+
     private void OnEnable()
     {
         bc = GetComponent<BoxCollider>();
@@ -22,7 +22,9 @@ public class Break_Props : MonoBehaviour
 
     private void FixedUpdate()
     {
-        var hits = Physics.OverlapBox(bc.bounds.min, (bc.bounds.max - bc.bounds.min) * 0.5f, Quaternion.identity, unitLayerMask);
+        var hits = Physics.OverlapBox(
+            bc.bounds.min + (bc.bounds.max - bc.bounds.min) * 0.5f,
+            (bc.bounds.max - bc.bounds.min) * 0.5f, Quaternion.identity, unitLayerMask);
         foreach (var hit in hits) { MyOnTrigger(hit); }
     }
 }
