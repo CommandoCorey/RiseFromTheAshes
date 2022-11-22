@@ -287,6 +287,11 @@ public class SelectionManager : MonoBehaviour
 
         var collisions = Physics.OverlapBox(centerPoint, halfExtents, Quaternion.identity, unitSelection);
 
+        if(collisions.Length == 1)
+        {
+            collisions[0].GetComponent<UnitController>().SingleSelected = true;
+        }
+
         foreach (Collider collision in collisions)
         {
             //Debug.Log("Selected: " + collision.gameObject.name);
