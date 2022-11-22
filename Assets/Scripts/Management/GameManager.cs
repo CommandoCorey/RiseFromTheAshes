@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.VFX;
 using UnityEngine.Timeline;
+using UnityEngine.VFX;
 //using static UnityEditor.Experimental.GraphView.GraphView;
 
 public enum GameState
@@ -55,6 +56,9 @@ public class GameManager : MonoBehaviour
     public KeyCode unitHealthbarKey;
     public KeyCode unitIconsKey;
     public KeyCode unitStatusTextKey;
+
+    [Header("Particle systems")]
+    public GameObject destroyPropEffect;
 
     private GameState state;
     private new AudioSource audio;
