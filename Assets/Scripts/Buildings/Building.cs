@@ -215,7 +215,8 @@ public class Building : MonoBehaviour
 		if (destroyEffects.Length > 0)
 		{
 			int random = Random.Range(0, destroyEffects.Length - 1);
-			Instantiate(destroyEffects[random], transform.position, Quaternion.identity);
+			var fx = Instantiate(destroyEffects[random], transform.position, Quaternion.identity);
+			Destroy(fx, 10.0f);
 		}
 
 		Destroy(gameObject);
