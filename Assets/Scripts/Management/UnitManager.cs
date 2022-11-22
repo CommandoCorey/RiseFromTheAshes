@@ -172,18 +172,19 @@ public class UnitManager : MonoBehaviour
     /// Set an indivudal unit as the selection
     /// </summary>
     /// <param name="unit">The gameobject being selected as the unit</param>
-    public void SetSelectedUnit(GameObject unit)
+    public void SetSelectedUnit(GameObject obj)
     {
         // turn off selection highlights
         foreach(var selected in selectedUnits)
         {
-            selected.GetComponent<UnitController>().SetSelected(false);
+            var unit = selected.GetComponent<UnitController>();            
+            unit.SetSelected(false);            
         }
 
         selectedUnits.Clear();
-        selectedUnits.Add(unit);
+        selectedUnits.Add(obj);
 
-        unit.GetComponent<UnitController>().SetSelected(true);
+        obj.GetComponent<UnitController>().SetSelected(true);
     }
 
     /// <summary>
@@ -525,7 +526,8 @@ public class UnitManager : MonoBehaviour
     {
         if(selectedEnemyUnit != null)
         {
-            selectedEnemyUnit.SetSelected(false);        
+            selectedEnemyUnit.SetSelected(false);
+            selectedEnemyUnit.SingleSelected = false;
             selectedEnemyUnit = null;
         }
     }
