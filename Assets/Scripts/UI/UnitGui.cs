@@ -30,6 +30,19 @@ public class UnitGui : MonoBehaviour
 
     [Header("Unit Stats")]    
     public Image thumbnail;
+
+    [Header("Unit Stat bars")]
+    [SerializeField] float maxBarWidth = 500;
+    [SerializeField] RectTransform maxHPBar;
+    [SerializeField] float maxHP = 250;
+    [SerializeField] RectTransform dpsBar;
+    [SerializeField] float maxDps = 30;
+    [SerializeField] RectTransform speedBar;
+    [SerializeField] float maxSpeed = 10;
+    [SerializeField] RectTransform rangeBar;
+    [SerializeField] float maxRange = 40;
+
+    [Header("Unit Stat Numbers")]
     public TextMeshProUGUI unitName;
     public TextMeshProUGUI currentHealth;
     public TextMeshProUGUI maxHealth;
@@ -458,6 +471,12 @@ public class UnitGui : MonoBehaviour
         unitOnPanel = unit;
 
         unitInfoPanel.SetActive(true);
+
+        // update bars
+        /*maxHPBar.sizeDelta = new Vector2(maxBarWidth / maxHP * unit.MaxHealth, maxHPBar.sizeDelta.y);
+        dpsBar.sizeDelta = new Vector2(maxBarWidth / maxDps * unit.DPS, dpsBar.sizeDelta.y);
+        speedBar.sizeDelta = new Vector2(maxBarWidth / maxSpeed * unit.Speed, speedBar.sizeDelta.y);
+        rangeBar.sizeDelta = new Vector2(maxBarWidth / maxRange * unit.AttackRange, rangeBar.sizeDelta.y);*/
 
         thumbnail.sprite = unit.GuiIcon;
         unitName.text = unit.Name;

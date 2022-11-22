@@ -20,6 +20,7 @@ public enum UnitState
 public class UnitController : MonoBehaviour
 {
     [SerializeField] string unitName;
+    [SerializeField] string description;
 
     [SerializeField] int steelCost = 10;
     [SerializeField] int timeToTrain = 1;
@@ -151,6 +152,7 @@ public class UnitController : MonoBehaviour
 
     // unit stats
     public string Name { get => unitName; }
+    public string Description { get => description; }
     public int Cost { get => steelCost; }
     public int SpaceUsed { get => spaceUsed; }
     public float TimeToTrain { get => timeToTrain; }

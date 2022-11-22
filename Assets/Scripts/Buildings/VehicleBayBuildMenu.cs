@@ -27,6 +27,9 @@ public class VehicleBayBuildMenu : MonoBehaviour {
 	[Header("Unit Info Panel")]
 	[SerializeField] GameObject infoPanel;
 	[SerializeField] TextMeshProUGUI unitName;
+	[SerializeField] TextMeshProUGUI unitDescription;
+
+	[Header("Stats Numbers")]
 	[SerializeField] TextMeshProUGUI cost;
     [SerializeField] TextMeshProUGUI spaceUsed;
     [SerializeField] TextMeshProUGUI timeToBuild;
@@ -34,6 +37,17 @@ public class VehicleBayBuildMenu : MonoBehaviour {
 	[SerializeField] TextMeshProUGUI attackRange;
 	[SerializeField] TextMeshProUGUI damagePerSecond;
 	[SerializeField] TextMeshProUGUI movementSpeed;
+
+	[Header("Stat bars")]
+	[SerializeField] float maxBarWidth = 150;
+	[SerializeField] RectTransform maxHPBar;
+	[SerializeField] float maxHP = 250;
+	[SerializeField] RectTransform dpsBar;
+	[SerializeField] float maxDps = 30;
+	[SerializeField] RectTransform speedBar;
+	[SerializeField] float maxSpeed = 10;
+	[SerializeField] RectTransform rangeBar;
+	[SerializeField] float maxRange = 40;
 
 	private void Awake()
 	{
@@ -116,8 +130,15 @@ public class VehicleBayBuildMenu : MonoBehaviour {
 		var unit = units[number].unit;
 
 		unitName.text = unit.Name;
+		unitDescription.text = unit.Description;
 		cost.text = unit.Cost.ToString();
 		timeToBuild.text = unit.TimeToTrain.ToString();
+
+		// update bars
+		maxHPBar.sizeDelta = new Vector2(maxBarWidth / maxHP * unit.MaxHealth, maxHPBar.sizeDelta.y);
+		dpsBar.sizeDelta = new Vector2(maxBarWidth / maxDps * unit.DPS, dpsBar.sizeDelta.y);
+		speedBar.sizeDelta = new Vector2(maxBarWidth / maxSpeed * unit.Speed, speedBar.sizeDelta.y);
+		rangeBar.sizeDelta = new Vector2(maxBarWidth / maxRange * unit.AttackRange, rangeBar.sizeDelta.y);
 
 		spaceUsed.text = Mathf.Round(unit.SpaceUsed).ToString();
 		maxHealth.text = Mathf.Round(unit.MaxHealth).ToString();
