@@ -238,13 +238,13 @@ public class GameManager : MonoBehaviour
     public void InstantiateParticles(ParticleSystem prefab, Vector3 position)
     {
         var particles = Instantiate(prefab.gameObject, position, Quaternion.identity);
-        Destroy(particles, 3.0f);
+        Destroy(particles, 5.0f);
     }
 
     public void InstantiateParticles(VisualEffect prefab, Vector3 position)
     {
         var particles = Instantiate(prefab.gameObject, position, Quaternion.identity);
-        Destroy(particles, 3.0f);
+        Destroy(particles, 5.0f);
     }
 
     /// <summary>
