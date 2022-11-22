@@ -4,8 +4,6 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.VFX;
-using UnityEngine.Timeline;
-using UnityEngine.VFX;
 //using static UnityEditor.Experimental.GraphView.GraphView;
 
 public enum GameState
@@ -415,6 +413,11 @@ public struct CursorSprite
         CursorSprite other = (CursorSprite)otherObj;
 
         return image == other.image && hotspot == other.hotspot;
+    }
+
+    public override int GetHashCode()
+    {
+        return image.GetHashCode() ^ hotspot.GetHashCode();
     }
 
     public static bool operator ==(CursorSprite a, CursorSprite b)
