@@ -48,7 +48,6 @@ public class UnitGui : MonoBehaviour
     private UnitManager unitManager;
     private SelectionManager selectionManager;
     private UnitController unitOnPanel = null;
-    private Building selectedBuilding = null;
 
     // properties
     public ActionChosen ButtonClicked { get; set; } = ActionChosen.Null;
@@ -461,11 +460,11 @@ public class UnitGui : MonoBehaviour
 
         thumbnail.sprite = unit.GuiIcon;
         unitName.text = unit.Name;
-        currentHealth.text = unit.CurrentHealth.ToString();
-        maxHealth.text = unit.MaxHealth.ToString();
-        range.text = unit.AttackRange.ToString();
-        damagePerSecond.text = (unit.DamagePerHit / unit.AttackRate).ToString();
-        movementSpeed.text = unit.Speed.ToString();
+        currentHealth.text = Mathf.Round(unit.CurrentHealth).ToString();
+        maxHealth.text = Mathf.Round(unit.MaxHealth).ToString();
+        range.text = Mathf.Round(unit.AttackRange).ToString();
+        damagePerSecond.text = Mathf.Round((unit.DamagePerHit / unit.AttackRate)).ToString();
+        movementSpeed.text = Mathf.Round(unit.Speed).ToString();
     }
 
     /// <summary>

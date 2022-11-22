@@ -32,4 +32,9 @@ public class Outpost : MonoBehaviour
 
 		GameManager.Instance.IncreaseMaxUnits(maxUnitIncrease, gameObject.layer == 9);
 	}
+
+	public void OnDie()
+    {
+		GameManager.Instance.DecreaseMaxUnits(maxUnitIncrease, gameObject.layer == 9);
+    }
 }
