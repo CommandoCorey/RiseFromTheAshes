@@ -23,6 +23,7 @@ public class Notify : MonoBehaviour {
 	}
 
 	[SerializeField] TMPro.TextMeshProUGUI text;
+	[SerializeField] GameObject textContainer;
 
 	float timer;
 	Queue<Notification> queue = new Queue<Notification>();
@@ -45,6 +46,7 @@ public class Notify : MonoBehaviour {
 				if (queue.Count == 0)
 				{
 					text.gameObject.SetActive(false);
+					Instance.textContainer.SetActive(false);
 				}
 			}
 		}
@@ -63,9 +65,10 @@ public class Notify : MonoBehaviour {
 		if (c == 0)
 		{
 			Instance.timer = 0.0f;
-			Instance.text.gameObject.SetActive(true);
 			Instance.currentNotif = Instance.queue.Peek();
 			Instance.text.text = Instance.currentNotif.message;
+			Instance.text.gameObject.SetActive(true);
+			Instance.textContainer.SetActive(true);
 		}
 	}
 }

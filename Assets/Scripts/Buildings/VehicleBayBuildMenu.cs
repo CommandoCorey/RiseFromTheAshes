@@ -19,8 +19,6 @@ public class VehicleBayBuildMenu : MonoBehaviour {
 
 	[SerializeField] List<UnitDesc> units = new List<UnitDesc>();
 	[SerializeField] Button cancelButton;
-	[SerializeField] TextMeshProUGUI errorNotification;
-	[SerializeField] float notificationTimeout = 1;
 	
 	[SerializeField] bool hideOnConstructUnit = false;
 
