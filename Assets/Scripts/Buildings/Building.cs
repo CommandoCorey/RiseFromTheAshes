@@ -10,6 +10,7 @@ public class Building : MonoBehaviour
 	[SerializeField] bool startAtMaxHP = false;
 	public string buildingDescription;
 	public bool aiBuilding;
+	public Sprite thumbnailImage;
 
 	bool isBuilding;
 
@@ -42,7 +43,10 @@ public class Building : MonoBehaviour
 	[HideInInspector]
 	public Transform ghostTransform;
 
-	public bool IsBuilt {
+	public  bool StartAtMaxHP { get => startAtMaxHP; }
+
+
+    public bool IsBuilt {
 		get {
 			return buildTimer >= 1.0f;
 		}
@@ -161,17 +165,22 @@ public class Building : MonoBehaviour
 		EnableRendering(true);
 	}
 
-	void TryVehicleBayInteract()
+	public bool TryVehicleBayInteract()
 	{
 		VehicleBay vehicleBay;
-		if (!TryGetComponent<VehicleBay>(out vehicleBay)) { return; }
+		if (!TryGetComponent<VehicleBay>(out vehicleBay)) { return false; }
 
-		if (vehicleBay == null) { return; }
+		if (vehicleBay == null) { return false; }
 
-		if (gameObject.layer != 8) // Aded by Paul
-			return;
+		if (gameObject.layer != 8) // Added by Paul
+			return false;
 
-		vehicleBay.Interact();
+		if (isBuilding) // Added by Paul
+			return false;
+
+        vehicleBay.Interact();
+
+		return true;
 	}
 
 	public void OnDie()
@@ -236,13 +245,19 @@ public class Building : MonoBehaviour
 
 	public void Interact()
 	{
+		var buildingInfo = BuildingInfo.Instance;
+
 		// turn on selection highlight if player building
 		if (gameObject.layer == 8)
 		{
 			SelectionManager.Instance.SetSelectedBuilding(this);
 		}
 
-        TryVehicleBayInteract();
+		if (TryVehicleBayInteract())
+			buildingInfo.HidePanel();
+		else
+			buildingInfo.ShowPanel(this);
+
 	}
 
 	public void TakeDamage(Vector3 hitPoint, float amount) {

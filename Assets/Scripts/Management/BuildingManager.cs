@@ -48,6 +48,14 @@ public class BuildingManager : MonoBehaviour
 				{
 					building.Interact();
 				}
+				else
+				{
+                    BuildingInfo.Instance.HidePanel();
+                }
+			}
+			else
+			{
+				BuildingInfo.Instance.HidePanel();
 			}
 
 			if (!buildMenuShown)
