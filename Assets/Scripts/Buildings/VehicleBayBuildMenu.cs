@@ -85,20 +85,23 @@ public class VehicleBayBuildMenu : MonoBehaviour {
 						
 						if (hideOnConstructUnit) {
 							Hide();
-						}
+							BuildingInfo.Instance.ShowUnitBeingBuilt(currentVehicleBay, 
+								ud.unit);
+
+                        }
 					}
 					else
 					{
 						//Hide();
 						// Display not enough room text
-						Notify.Queue("Not enough space.", 1.0f);
+						Notify.Queue("Not enough space. Build more Outposts", 1.0f);
 					}
 
 				}
 				else
 				{
                     // Display not enough steel text
-					Notify.Queue("Not enough steel.", 1.0f);
+					Notify.Queue("Not enough steel to construct vehicle.", 1.0f);
 				}
 
 			});
@@ -116,7 +119,7 @@ public class VehicleBayBuildMenu : MonoBehaviour {
 	}
 
 	public void Hide()
-	{
+	{	
 		gameObject.SetActive(false);
 	}
 

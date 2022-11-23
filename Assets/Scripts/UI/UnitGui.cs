@@ -31,6 +31,7 @@ public class UnitGui : MonoBehaviour
     [Header("Unit Stats")]    
     public Image thumbnail;
 
+    /*
     [Header("Unit Stat bars")]
     [SerializeField] float maxBarWidth = 500;
     [SerializeField] RectTransform maxHPBar;
@@ -40,7 +41,7 @@ public class UnitGui : MonoBehaviour
     [SerializeField] RectTransform speedBar;
     [SerializeField] float maxSpeed = 10;
     [SerializeField] RectTransform rangeBar;
-    [SerializeField] float maxRange = 40;
+    [SerializeField] float maxRange = 40;*/
 
     [Header("Unit Stat Numbers")]
     public TextMeshProUGUI unitName;

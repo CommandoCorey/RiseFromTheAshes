@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class BuildingInfo : MonoBehaviour
 {
-    public GameObject InfoPanel;
+    public GameObject infoPanel;
 
     [Header("Individual Components")]
     public Image imageThunbnail;
@@ -16,6 +16,11 @@ public class BuildingInfo : MonoBehaviour
     public ProgressBar healthbar;    
 
     private Building building;
+    private VehicleBay bayUsed;
+
+    private bool buildingUnit = false;
+
+    public bool BuildingUnit { get => buildingUnit; }
 
     private void Awake()
     {
@@ -32,11 +37,11 @@ public class BuildingInfo : MonoBehaviour
     // Add singlton
     public static BuildingInfo Instance { get; private set; }
 
-    public void ShowPanel(Building building)
+    public void ShowBuildingPanel(Building building)
     {
         this.building = building;
 
-        InfoPanel.SetActive(true);
+        infoPanel.SetActive(true);
 
         imageThunbnail.sprite = building.thumbnailImage;
         buildingName.text = building.buildingName;
@@ -53,20 +58,55 @@ public class BuildingInfo : MonoBehaviour
             healthbar.gameObject.SetActive(false);            
             buildingDescription.text = "Under Construction";
         }
+
+        buildingUnit = false;
+    }
+
+    public void ShowUnitBeingBuilt(VehicleBay bay, UnitController unit)
+    {
+        bayUsed = bay;
+
+        infoPanel.SetActive(true);
+
+        imageThunbnail.sprite = unit.guiIcon;
+        buildingName.text = unit.Name;
+        buildingDescription.text = "Under Construction";
+
+        buildingUnit = true;
+
+        buildProgressBar.gameObject.SetActive(true);
+        healthbar.gameObject.SetActive(false);
     }
 
     public void HidePanel()
     {
-        InfoPanel.SetActive(false);
+        infoPanel.SetActive(false);
         building = null;
+        buildingUnit = false;
+    }
+
+    public void SwitchPanel()
+    {
+        
     }
 
     private void Update()
     {
-        if (building == null || !InfoPanel.activeInHierarchy)
+        if (!infoPanel.activeInHierarchy)
             return;
 
-        if (building.IsBuilt)
+        if(buildingUnit)
+        {
+            buildProgressBar.progress = bayUsed.buildTimer;
+
+            int percentage = (int)(bayUsed.buildTimer * 100);
+            buildProgressBar.textString = percentage + " %";
+
+        }
+        else if (building == null)
+            return;
+
+        else if ( building.IsBuilt)
         {
             buildingDescription.text = building.buildingDescription;
             healthbar.progress = building.HP;

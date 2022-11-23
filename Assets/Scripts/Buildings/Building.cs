@@ -175,10 +175,11 @@ public class Building : MonoBehaviour
 		if (gameObject.layer != 8) // Added by Paul
 			return false;
 
-		if (isBuilding) // Added by Paul
+		if (isBuilding) // Added by Paul	
 			return false;
 
-        vehicleBay.Interact();
+		if (vehicleBay.Interact())
+			BuildingInfo.Instance.infoPanel.SetActive(false);
 
 		return true;
 	}
@@ -253,10 +254,8 @@ public class Building : MonoBehaviour
 			SelectionManager.Instance.SetSelectedBuilding(this);
 		}
 
-		if (TryVehicleBayInteract())
-			buildingInfo.HidePanel();
-		else
-			buildingInfo.ShowPanel(this);
+		if(!TryVehicleBayInteract())
+			buildingInfo.ShowBuildingPanel(this);
 
 	}
 

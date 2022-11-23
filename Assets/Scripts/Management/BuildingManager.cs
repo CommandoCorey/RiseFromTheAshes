@@ -48,10 +48,10 @@ public class BuildingManager : MonoBehaviour
 				{
 					building.Interact();
 				}
-				else
+				/*else
 				{
                     BuildingInfo.Instance.HidePanel();
-                }
+                }*/
 			}
 			else
 			{
