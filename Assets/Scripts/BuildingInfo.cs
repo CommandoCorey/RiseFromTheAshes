@@ -41,6 +41,8 @@ public class BuildingInfo : MonoBehaviour
     {
         this.building = building;
 
+        BuildMenu.Instance.gameObject.SetActive(false);
+
         infoPanel.SetActive(true);
 
         imageThunbnail.sprite = building.thumbnailImage;
@@ -106,7 +108,7 @@ public class BuildingInfo : MonoBehaviour
         else if (building == null)
             return;
 
-        else if ( building.IsBuilt)
+        else if (building.IsBuilt)
         {
             buildingDescription.text = building.buildingDescription;
             healthbar.progress = building.HP;

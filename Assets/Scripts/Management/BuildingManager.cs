@@ -33,7 +33,7 @@ public class BuildingManager : MonoBehaviour
 			{
 				Ghost building = hit.collider.gameObject.GetComponent<Ghost>();
 
-				if (building)
+				if (building && !GameManager.Instance.PointerOverUI())
 				{
 					building.ShowBuildMenu();
 					buildMenuShown = true;
@@ -53,7 +53,7 @@ public class BuildingManager : MonoBehaviour
                     BuildingInfo.Instance.HidePanel();
                 }*/
 			}
-			else
+			else if(!GameManager.Instance.PointerOverUI()) // if the cursor is not over the UI
 			{
 				BuildingInfo.Instance.HidePanel();
 			}

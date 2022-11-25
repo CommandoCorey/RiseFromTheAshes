@@ -250,6 +250,7 @@ public class SelectionManager : MonoBehaviour
             }
 
             gui.unitInfoPanel.SetActive(false);
+
         }
     }
 

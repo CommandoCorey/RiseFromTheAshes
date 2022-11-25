@@ -98,8 +98,12 @@ public class VehicleBay : MonoBehaviour {
 
 					var buildingInfo = BuildingInfo.Instance;
 
-                    if (buildingInfo.BuildingUnit)
+					// Added By Paul
+					if (buildingInfo.BuildingUnit)
+					{
 						BuildingInfo.Instance.HidePanel();
+						VehicleBayBuildMenu.Instance.gameObject.SetActive(true);
+					}
 
                     isBuilding = false;
 				}

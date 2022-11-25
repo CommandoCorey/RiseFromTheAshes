@@ -107,13 +107,36 @@ public class UnitGui : MonoBehaviour
                 Debug.Log("Clicked on " + transform.gameObject.name);
         }*/
 
+        HandleActionButton();
+
+        if(Input.GetMouseButtonUp(0) && ButtonClicked == ActionChosen.Null)
+        {
+            selectionManager.enabled = true;
+        }
+
+        if (Input.GetMouseButtonUp(1) && ButtonClicked != ActionChosen.Null)
+        {
+            gameManager.ResetCursor();
+
+            if(selectedUnits.Count > 0)
+                EnableActionButtons();
+
+            ButtonClicked = ActionChosen.Null;
+
+            selectionManager.enabled = true;            
+        }
+    }
+
+    #region private functions
+    private void HandleActionButton()
+    {
         // check if mouse clicks on environment while an action is chosen
         if (Input.GetMouseButtonDown(0) && ButtonClicked != ActionChosen.Null)
         {
             RaycastHit hitInfo;
 
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo) &&
-                hitInfo.transform.gameObject.layer != 5)
+                !gameManager.PointerOverUI())
             {
 
                 if (ButtonClicked == ActionChosen.Move)
@@ -128,7 +151,7 @@ public class UnitGui : MonoBehaviour
                 }
                 else if (ButtonClicked == ActionChosen.Attack)
                 {
-                    bool attackSuccess = unitManager.AttackTarget(hitInfo.transform);                                    
+                    bool attackSuccess = unitManager.AttackTarget(hitInfo.transform);
 
                     if (!attackSuccess)
                     {
@@ -164,29 +187,12 @@ public class UnitGui : MonoBehaviour
 
                     ButtonClicked = ActionChosen.Null;
                 }
-                    
-            }            
-        }
 
-        if(Input.GetMouseButtonUp(0) && ButtonClicked == ActionChosen.Null)
-        {
-            selectionManager.enabled = true;
-        }
-
-        if (Input.GetMouseButtonUp(1) && ButtonClicked != ActionChosen.Null)
-        {
-            gameManager.ResetCursor();
-
-            if(selectedUnits.Count > 0)
-                EnableActionButtons();
-
-            ButtonClicked = ActionChosen.Null;
-
-            selectionManager.enabled = true;            
+            }
         }
     }
 
-    #region private functions
+
     private void UpdateUnitHealth()
     {
         try { 
