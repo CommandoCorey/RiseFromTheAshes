@@ -138,4 +138,12 @@ public class VehicleBay : MonoBehaviour {
 	{
 		Gizmos.DrawWireSphere(transform.position, healUnitRadius);
 	}
+
+	// Added by Paul
+	private void OnDestroy()
+	{
+		// check if this vehicle bay is selected and if it is hide the menu
+		if(SelectionManager.Instance.SelectedBuilding == building)
+			HideMenu();
+    }
 }

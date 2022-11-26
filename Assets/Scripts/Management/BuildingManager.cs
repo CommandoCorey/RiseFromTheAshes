@@ -61,6 +61,7 @@ public class BuildingManager : MonoBehaviour
 			if (!buildMenuShown)
 			{
 				BuildMenu.Instance.Hide();
+
 			}
 		}
 	}

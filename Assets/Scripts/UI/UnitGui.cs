@@ -19,7 +19,7 @@ public class UnitGui : MonoBehaviour
     public GameObject buttonPanel;
     public Transform unitPanal;
     public GameObject unitInfoPanel;
-    public GameObject unitIconPrefab;
+    public GameObject unitIconPrefab;    
     public TextMeshProUGUI alertMessage;
 
     [Header("Action Buttons")]

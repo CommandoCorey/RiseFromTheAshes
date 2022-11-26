@@ -128,7 +128,10 @@ public class Building : MonoBehaviour
 	void Start()
     {
 		if (startAtMaxHP)
+		{ 
 			HP = maxHP;
+			buildTimer = 1;
+			}
     }
 
 	void Update()
@@ -179,14 +182,17 @@ public class Building : MonoBehaviour
 			return false;
 
 		if (vehicleBay.Interact())
+		{
+			SelectionManager.Instance.SetPanelTooltip(false);
 			BuildingInfo.Instance.infoPanel.SetActive(false);
+		}
 
 		return true;
 	}
 
 	public void OnDie()
 	{
-		TriggerBuilding trigger;
+        TriggerBuilding trigger;
 		if (TryGetComponent(out trigger))
 		{
 			trigger.OnDie();
@@ -215,6 +221,7 @@ public class Building : MonoBehaviour
 			ghostTransform.gameObject.SetActive(true);
 		}
 
+		// Added by Paul
         // if the destroyed building is on the AIBuilding layer
 		// and it is nto the headquarters rebuild it
         if (gameObject.layer == 9 && 
@@ -241,7 +248,14 @@ public class Building : MonoBehaviour
 			Destroy(fx, 10.0f);
 		}
 
-		Destroy(gameObject);
+		// Added by Paul
+		// if the building currently selected is the destroy building hidw the info panel
+		if (SelectionManager.Instance.SelectedBuilding == this)
+		{
+			BuildingInfo.Instance.infoPanel.SetActive(false);
+		}
+
+        Destroy(gameObject);
 	}
 
 	public void Interact()

@@ -41,6 +41,7 @@ public class BuildingInfo : MonoBehaviour
     {
         this.building = building;
 
+        SelectionManager.Instance.SetPanelTooltip(false);
         BuildMenu.Instance.gameObject.SetActive(false);
 
         infoPanel.SetActive(true);
@@ -86,17 +87,12 @@ public class BuildingInfo : MonoBehaviour
         building = null;
         buildingUnit = false;
     }
-
-    public void SwitchPanel()
-    {
-        
-    }
-
     private void Update()
     {
         if (!infoPanel.activeInHierarchy)
             return;
 
+        // used fo vehicle bays
         if(buildingUnit)
         {
             buildProgressBar.progress = bayUsed.buildTimer;
@@ -108,11 +104,15 @@ public class BuildingInfo : MonoBehaviour
         else if (building == null)
             return;
 
-        else if (building.IsBuilt)
+        else if (building.IsBuilt || building.StartAtMaxHP) // construction is finished
         {
             buildingDescription.text = building.buildingDescription;
-            healthbar.progress = building.HP;
+
+            // update healthbar
             healthbar.maxValue = building.maxHP;
+            healthbar.progress = building.HPPerc;
+
+            //healthbar.SetProgress(building.HP, building.maxHP);
 
             if(buildProgressBar.gameObject.activeInHierarchy)
             {
@@ -126,7 +126,7 @@ public class BuildingInfo : MonoBehaviour
                 }
             }
         }
-        else
+        else // building under construction
         {            
             buildProgressBar.progress = building.BuiltPerc;
 

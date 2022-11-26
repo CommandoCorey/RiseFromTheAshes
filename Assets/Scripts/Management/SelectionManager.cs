@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -14,6 +15,9 @@ public class SelectionManager : MonoBehaviour
 
     public bool drawDebugBox = true;
     public UnitGui gui; // used to update unit icons
+
+    [Header("GUI Items")]
+    public TextMeshProUGUI tooltipText;
 
     // contains all of the selected units
     private Dictionary<int, GameObject> selectedTable = new Dictionary<int, GameObject>();    
@@ -44,6 +48,7 @@ public class SelectionManager : MonoBehaviour
 
     // properties
     public static SelectionManager Instance { get; private set; }
+    public Building SelectedBuilding { get => selectedBuilding; }
 
     /// <summary>
     /// Returns a list of unit gameobjects in the selection
@@ -141,16 +146,50 @@ public class SelectionManager : MonoBehaviour
 
             unitManager.SetSelectedUnits(Units);
 
+            if (Units.Count > 0)
+                tooltipText.gameObject.SetActive(false);
+
             // if only one unit is selected then display the unit stats/info
             if (Units.Count == 1)
-                gui.SelectSingleUnit(0);
-
-            // reset to default cursor
+                gui.SelectSingleUnit(0);            
 
         }
 
     }
 
+
+    #region public functions
+    // Not currently used
+    /// <summary>
+    /// Removes a specific unit from the selection specified by an id
+    /// </summary>
+    /// <param name="id">The instance id of the game object to be deselected</param>
+    public void Deselect(int id)
+    {
+        var unit = selectedTable[id].GetComponent<UnitController>();
+
+        unit.SetSelected(false);
+        unit.SingleSelected = false;
+
+        selectedTable.Remove(id);
+
+        //unitManager.SetTargetHighlight(unit, false);
+    }
+
+    public void SetSelectedBuilding(Building building)
+    {
+        ClearBuildingSelection();
+        selectedBuilding = building;
+        selectedBuilding.selectionHighlight.SetActive(true);
+    }
+
+    public void SetPanelTooltip(bool visible)
+    {
+        tooltipText.gameObject.SetActive(visible);
+    }
+    #endregion
+
+    #region private functions
     private void HoverOverObject()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -319,7 +358,7 @@ public class SelectionManager : MonoBehaviour
     /// if it is not already in there
     /// </summary>
     /// <param name="go">The unit to add to the selection</param>
-    public void AddSelected(GameObject go)
+    private void AddSelected(GameObject go)
     {
         int id = go.GetInstanceID();
 
@@ -332,7 +371,7 @@ public class SelectionManager : MonoBehaviour
 
             if (unit != null)
             {
-                unit.SetSelected(true);                
+                unit.SetSelected(true);
 
                 //Debug.Log("Added " + id + " to selected dict");
             }
@@ -342,25 +381,9 @@ public class SelectionManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Removes a specific unit from the selection specified by an id
-    /// </summary>
-    /// <param name="id">The instance id of the game object to be deselected</param>
-    public void Deselect(int id)
-    {
-        var unit = selectedTable[id].GetComponent<UnitController>();
-        
-        unit.SetSelected(false);
-        unit.SingleSelected = false;
-
-        selectedTable.Remove(id);
-
-        //unitManager.SetTargetHighlight(unit, false);
-    }
-
-    /// <summary>
     /// Remove all units from the selection
     /// </summary>
-    public void DeselectAll()
+    private void DeselectAll()
     {
         // looks trhough every value in the dictionary and if it is
         // not null, destroys it
@@ -384,16 +407,12 @@ public class SelectionManager : MonoBehaviour
         gui.DisableActionButtons();
 
         unitManager.DeselectEnemyUnit();
-    }
 
-    public void SetSelectedBuilding(Building building)
-    {
-        ClearBuildingSelection();
-        selectedBuilding = building;
-        selectedBuilding.selectionHighlight.SetActive(true);
-    }
+        //tooltipText.gameObject.SetActive(true);
+    }   
+    
 
-    public void ClearBuildingSelection()
+    private void ClearBuildingSelection()
     {
         if (selectedBuilding != null)
         {
@@ -408,7 +427,7 @@ public class SelectionManager : MonoBehaviour
     }
 
     // create a bounding vox (4 corners in order) from the start and end mouse position
-    Vector2[] GetBoundingBox(Vector2 p1, Vector2 p2)
+    private Vector2[] GetBoundingBox(Vector2 p1, Vector2 p2)
     {
         // Min and Max to get 2 corners of rectangle regardless of drag direction.
         var bottomLeft = Vector3.Min(p1, p2);
@@ -508,5 +527,5 @@ public class SelectionManager : MonoBehaviour
         Debug.DrawLine(p3, p7, Color.yellow, 1.0f);
         Debug.DrawLine(p4, p8, Color.yellow, 1.0f);
     }
-
+    #endregion
 }

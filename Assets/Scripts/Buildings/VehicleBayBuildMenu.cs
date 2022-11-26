@@ -22,6 +22,8 @@ public class VehicleBayBuildMenu : MonoBehaviour {
 	
 	[SerializeField] bool hideOnConstructUnit = false;
 
+	[SerializeField] GameObject buildingInfo;
+
 	[Header("Unit Info Panel")]
 	[SerializeField] GameObject infoPanel;
 	[SerializeField] TextMeshProUGUI unitName;
@@ -126,7 +128,8 @@ public class VehicleBayBuildMenu : MonoBehaviour {
 	// Added by Paul
 	public void ShowUnitInfo(int number)
     {
-		infoPanel.SetActive(true);
+		buildingInfo.SetActive(false);
+        infoPanel.SetActive(true);
 
 		var unit = units[number].unit;
 
@@ -152,5 +155,6 @@ public class VehicleBayBuildMenu : MonoBehaviour {
 	public void HideUnitInfo()
     {
 		infoPanel.SetActive(false);
-	}
+		buildingInfo.SetActive(true);
+    }
 }
