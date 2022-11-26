@@ -8,7 +8,9 @@ public class MainMenu : MonoBehaviour
     [SerializeField] GameObject mainMenu;
     [SerializeField] GameObject credits;
     [SerializeField] GameObject loadingScreen;
-    [SerializeField] float creditsRiseSpeed = 100.0f;
+    [SerializeField] GameObject gameOptions;
+    [SerializeField] [Range(1, 100)]
+    float creditsRiseSpeed = 100.0f;
     [SerializeField] RectTransform creditsMover;
 
     Vector3 creditsMoverOriginalPos;
@@ -55,6 +57,13 @@ public class MainMenu : MonoBehaviour
         mainMenu.SetActive(true);
         credits.SetActive(false);
         loadingScreen.SetActive(false);
+        gameOptions.SetActive(false);
+    }
+
+    public void OpenGameOptions()
+    {
+        mainMenu.SetActive(false);
+        gameOptions.SetActive(true);
     }
 
     public static Rect RectTransformToScreenSpace(RectTransform transform)
