@@ -4,6 +4,7 @@ using System.Reflection;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
 {
@@ -16,13 +17,19 @@ public class MainMenu : MonoBehaviour
     [SerializeField] RectTransform creditsMover;
     [SerializeField] TextMeshProUGUI loadPercent;
     [SerializeField] ProgressBar loadProgressBar;
+    [SerializeField] Toggle fowTextureCheckbox;
 
     Vector3 creditsMoverOriginalPos;    
 
     public void Awake()
 	{
 		creditsMoverOriginalPos = creditsMover.position;
-	}
+
+        fowTextureCheckbox.isOn = PlayerPrefs.GetInt("FOWTexture") != 0;
+        fowTextureCheckbox.onValueChanged.AddListener(SetFogOfWarTexture);
+
+        AiPlayer.Difficulty = (AiDifficulty)PlayerPrefs.GetInt("AIDiff");
+    }
 
     public void Update()
     {
@@ -111,5 +118,11 @@ public class MainMenu : MonoBehaviour
     public void SetAiDifficulty(int difficulty)
     {
         AiPlayer.Difficulty = (AiDifficulty) difficulty;
+        PlayerPrefs.SetInt("AIDiff", difficulty);
+    }
+
+    public static void SetFogOfWarTexture(bool val)
+    {
+        PlayerPrefs.SetInt("FOWTexture", val ? 1 : 0);
     }
 }

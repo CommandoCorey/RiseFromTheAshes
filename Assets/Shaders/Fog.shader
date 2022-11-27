@@ -66,6 +66,7 @@ Shader "Hidden/Fog"
 			uniform float4 _FogColour;
 			uniform float _CloudScale;
 			uniform float _RenderDistance;
+			uniform bool _Raytrace;
 
 			uniform float4 _FogTopCorner;
 			uniform float2 _FogMaskSize;
@@ -104,35 +105,40 @@ Shader "Hidden/Fog"
 					return col;
 				}
 
-				int maxSamples = min(_Samples, 32);
-
 				float density = 0.0;
 				float light = 1.0;
-				if (dist > 0.0 && dist < _RenderDistance) {
-					/* Ray trace from the hit point returned by the raymarch and
-					 * take samples from the 3-D noise to determine the density of the
-					 * fog at this pixel. */
+				if (_Raytrace) {
+					int maxSamples = min(_Samples, 32);
 
-					hitPoint = rayOrigin + rayDirection * dist;
+					if (dist > 0.0 && dist < _RenderDistance) {
+						/* Ray trace from the hit point returned by the raymarch and
+						 * take samples from the 3-D noise to determine the density of the
+						 * fog at this pixel. */
 
-					for (int i = 0; i < maxSamples; i++) {
-						float3 p = hitPoint + rayDirection * (float(i) * _StepSize);
+						hitPoint = rayOrigin + rayDirection * dist;
 
-						float3 samplePosMain   = (p * _CloudScale) + _ScrollDirection * _Time.y;
-						float3 samplePosDetail = (p * _CloudScale) - _ScrollDirection * _Time.y * 0.1;
-						float mainNoise   = _NoiseTexture.SampleLevel(sampler_NoiseTexture, samplePosMain, 0).r * 1;
-						float detailNoise = 0.0;
-						if (dist < 100.0) {
-							detailNoise = _NoiseTexture.SampleLevel(sampler_NoiseTexture, samplePosDetail, 0).g;
+						for (int i = 0; i < maxSamples; i++) {
+							float3 p = hitPoint + rayDirection * (float(i) * _StepSize);
+
+							float3 samplePosMain = (p * _CloudScale) + _ScrollDirection * _Time.y;
+							float3 samplePosDetail = (p * _CloudScale) - _ScrollDirection * _Time.y * 0.1;
+							float mainNoise = _NoiseTexture.SampleLevel(sampler_NoiseTexture, samplePosMain, 0).r * 1;
+							float detailNoise = 0.0;
+							if (dist < 100.0) {
+								detailNoise = _NoiseTexture.SampleLevel(sampler_NoiseTexture, samplePosDetail, 0).g;
+							}
+
+							float noise = mainNoise + detailNoise;
+
+							light -= noise * 0.01 * (_Height - p.y);
+							light = max(0.04, light);
+
+							density += max(0.1, noise - _Threshold);
 						}
-
-						float noise = mainNoise + detailNoise;
-
-						light -= noise * 0.01 * (_Height - p.y);
-						light = max(0.04, light);
-
-						density += max(0.1, noise - _Threshold);
 					}
+				}
+				else {
+					density = 1.0;
 				}
 
 				float2 hitPointMaskSpace = worldPosToFogMaskPos(hitPoint);
