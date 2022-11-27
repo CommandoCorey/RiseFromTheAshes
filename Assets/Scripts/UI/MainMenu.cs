@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -12,15 +14,45 @@ public class MainMenu : MonoBehaviour
     [SerializeField] [Range(1, 100)]
     float creditsRiseSpeed = 100.0f;
     [SerializeField] RectTransform creditsMover;
+    [SerializeField] TextMeshProUGUI loadPercent;
+    [SerializeField] ProgressBar loadProgressBar;
 
-    Vector3 creditsMoverOriginalPos;
+    Vector3 creditsMoverOriginalPos;    
 
-	public void Awake()
+    public void Awake()
 	{
 		creditsMoverOriginalPos = creditsMover.position;
 	}
 
-	public void QuitGame()
+    public void Update()
+    {
+        creditsMover.position += Vector3.up * Time.deltaTime * creditsRiseSpeed;
+
+        
+    }
+
+    private IEnumerator LoadLavel(int scene)
+    {
+        AsyncOperation sceneLoad = SceneManager.LoadSceneAsync(scene);
+
+        while (!sceneLoad.isDone)
+        {
+            float progress = Mathf.Clamp01(sceneLoad.progress / .9f);
+
+            loadPercent.text = (sceneLoad.progress * 100) + " %";
+
+            if (loadProgressBar)
+            {
+                loadProgressBar.maxValue = 100;
+                loadProgressBar.progress = progress;
+            }
+            //Debug.Log(sceneLoad.progress);
+
+            yield return null;
+        }
+    }
+
+    public void QuitGame()
     {
         Debug.Log("Quitting game...");
 
@@ -30,12 +62,13 @@ public class MainMenu : MonoBehaviour
         Application.Quit();
 #endif
     }
-    public void LoadScene(int index)
+    public void StartGame(int index)
     {
         mainMenu.SetActive(false);
         credits.SetActive(false);
         loadingScreen.SetActive(true);
-        SceneManager.LoadScene(index);
+
+        StartCoroutine(LoadLavel(index));
     }
 
 	private void Start()
@@ -75,8 +108,8 @@ public class MainMenu : MonoBehaviour
         return rect;
     }
 
-    public void Update()
-	{
-        creditsMover.position += Vector3.up * Time.deltaTime * creditsRiseSpeed;
+    public void SetAiDifficulty(int difficulty)
+    {
+        AiPlayer.Difficulty = (AiDifficulty) difficulty;
     }
 }

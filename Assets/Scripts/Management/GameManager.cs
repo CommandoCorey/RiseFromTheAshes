@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour
     [Header("Heads Up Display")]
     public TextMeshProUGUI totalUnitsText;
     public TextMeshProUGUI maxUnitsText;
+    public TextMeshProUGUI difficultyText;
 
     [Header("Cursors")]
     public bool enableCursorChanges;
@@ -195,6 +196,11 @@ public class GameManager : MonoBehaviour
     public void ResumeGame()
     {
         ChangeGameState(GameState.Running);        
+    }
+
+    public void SetDifficultyText(string text)
+    {
+        difficultyText.text = text;
     }
 
     /// <summary>
