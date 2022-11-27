@@ -36,6 +36,8 @@ public class BuildingManager : MonoBehaviour
 				if (building && !GameManager.Instance.PointerOverUI())
 				{
 					building.ShowBuildMenu();
+					UnitGui.Instance.Hide();
+					VehicleBayBuildMenu.Instance.Hide();
 					buildMenuShown = true;
 				}
 			} 
@@ -47,6 +49,9 @@ public class BuildingManager : MonoBehaviour
 				if (building)
 				{
 					building.Interact();
+					UnitGui.Instance.Hide();
+					BuildMenu.Instance.Hide();
+					buildMenuShown = true;
 				}
 				/*else
 				{
@@ -61,7 +66,7 @@ public class BuildingManager : MonoBehaviour
 			if (!buildMenuShown)
 			{
 				BuildMenu.Instance.Hide();
-
+				VehicleBayBuildMenu.Instance.Hide();
 			}
 		}
 	}
