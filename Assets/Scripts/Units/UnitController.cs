@@ -364,7 +364,7 @@ public class UnitController : MonoBehaviour
 
         ParticleSystem hitParticles = hitEffects[RandomPick(hitEffects)];
 
-        InstantiateParticles(hitParticles, hitPosition);
+        InstantiateParticles(hitParticles, hitPosition, Quaternion.identity);
 
         if (hitSounds.Length > 0)
         {
@@ -409,18 +409,20 @@ public class UnitController : MonoBehaviour
             child.Play();
     }
 
-    public void InstantiateParticles(ParticleSystem particles, Vector3 position)
+    public void InstantiateParticles(ParticleSystem particles, Vector3 position, Quaternion rotation)
     {
         if (particles == null)
             return;
 
-        Instantiate(particles, position, Quaternion.identity, transform);
+        var obj = Instantiate(particles, position, rotation, transform);
 
         var childParticles = particles.gameObject.GetComponentsInChildren<ParticleSystem>();
 
         particles.Play();
         foreach (ParticleSystem child in childParticles)
             child.Play();
+
+        Destroy(obj, 3.0f);
     }
 
     public void InstantiateParticles(VisualEffect particles, Vector3 position)
