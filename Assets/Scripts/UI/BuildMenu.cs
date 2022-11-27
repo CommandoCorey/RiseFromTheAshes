@@ -70,7 +70,8 @@ public class BuildMenu : MonoBehaviour
 
 	public void Hide()
 	{
-		gameObject.SetActive(false);
+		gameObject.SetActive(false);	
+
 	}
 
 	// added by Paul
@@ -114,7 +115,8 @@ public class BuildMenu : MonoBehaviour
 			insufficientResourcesText.gameObject.SetActive(false);
 
 			Hide();
-		}
+            BuildingInfo.Instance.ShowBuildingPanel(b);
+        }
 		else
         {
 			Notify.Queue("You don't have enough steel to construct this building", notificationTimeout);

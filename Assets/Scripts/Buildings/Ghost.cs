@@ -12,7 +12,9 @@ public class Ghost : MonoBehaviour
 		//BuildMenu.Instance.transform.position = transform.position + buildMenuOffset;
 		BuildMenu.Instance.ghostBuilding = this;
 		BuildMenu.Instance.gameObject.SetActive(true);
-	}
+
+		SelectionManager.Instance.SetPanelTooltip(false);
+    }
 
 	public void OnDrawGizmosSelected()
 	{

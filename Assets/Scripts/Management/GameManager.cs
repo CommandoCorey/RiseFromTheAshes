@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour
     [Header("Heads Up Display")]
     public TextMeshProUGUI totalUnitsText;
     public TextMeshProUGUI maxUnitsText;
+    public TextMeshProUGUI difficultyText;
 
     [Header("Cursors")]
     public bool enableCursorChanges;
@@ -145,7 +146,7 @@ public class GameManager : MonoBehaviour
         }
 
         if (enableCursorChanges && currentCursor == selectableCursor &&
-            IsPointerOverUIElement())
+            PointerOverUI())
             SetCursor(defaultCursor);
 
         HandleKeyboardShortcuts();
@@ -195,6 +196,28 @@ public class GameManager : MonoBehaviour
     public void ResumeGame()
     {
         ChangeGameState(GameState.Running);        
+    }
+
+    public void SetDifficultyText(string text)
+    {
+        difficultyText.text = text;
+    }
+
+    /// <summary>
+    /// Determines whether or not the cursor if over a an object on the UI layer
+    /// </summary>
+    /// <returns>True touched or hovered on Unity UI element, false if it didn't</returns>
+    public bool PointerOverUI()
+    {
+        var eventSystemRaysastResults = GetEventSystemRaycastResults();
+
+        for (int index = 0; index < eventSystemRaysastResults.Count; index++)
+        {
+            RaycastResult curRaysastResult = eventSystemRaysastResults[index];
+            if (curRaysastResult.gameObject.layer == 5) // UI Layer
+                return true;
+        }
+        return false;
     }
 
     /// <summary>
@@ -367,28 +390,6 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region private functions
-    //Returns 'true' if we touched or hovering on Unity UI element.
-    //public bool IsPointerOverUIElement()
-    //{
-    // return IsPointerOverUIElement(GetEventSystemRaycastResults());
-    //}
-
-
-    //Returns 'true' if we touched or hovering on Unity UI element.
-    private bool IsPointerOverUIElement()
-    {
-        var eventSystemRaysastResults = GetEventSystemRaycastResults();
-
-        for (int index = 0; index < eventSystemRaysastResults.Count; index++)
-        {
-            RaycastResult curRaysastResult = eventSystemRaysastResults[index];
-            if (curRaysastResult.gameObject.layer == 5) // UI Layer
-                return true;
-        }
-        return false;
-    }
-
-
     //Gets all event system raycast results of current mouse or touch position.
     private List<RaycastResult> GetEventSystemRaycastResults()
     {

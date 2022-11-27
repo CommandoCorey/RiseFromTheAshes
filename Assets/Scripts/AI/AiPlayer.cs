@@ -13,8 +13,20 @@ public struct RaidPath
     public Transform[] route;
 }
 
+public enum AiDifficulty
+{
+    Easy, Normal, Hard, VeryHard
+}
+
 public class AiPlayer : MonoBehaviour
 {
+    [Header("Difficulty Time Delays")]
+    public static AiDifficulty Difficulty = AiDifficulty.Normal;
+    [SerializeField] float easyDelay = 15;
+    [SerializeField] float normalDelay = 10;
+    [SerializeField] float hardDelay = 5;
+    [SerializeField] float veryHardDelay = 0;
+
     public Transform AiHeadquarters;
     public Transform playerBase;
     public Transform rallyPoint;
@@ -61,6 +73,11 @@ public class AiPlayer : MonoBehaviour
     public List<Transform> BuildingPlaceholders { get => buildingPlaceholders; }
     public List<Building> BaysInConstruction { get => baysInConstruction; }
     public List<UnitController> UnitsAttackingHQ { get => unitsAttackingHQ; } 
+
+    public float EASY_TIME_DELAY { get => easyDelay; }
+    public float NORMAL_TIME_DELAY { get => normalDelay; }
+    public float HARD_TIME_DELAY { get => hardDelay; }
+    public float VERY_HARD_TIME_DELAY { get => veryHardDelay; }
 
     public bool PlaceHoldersLeft
     {

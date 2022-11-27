@@ -19,7 +19,7 @@ public class UnitGui : MonoBehaviour
     public GameObject buttonPanel;
     public Transform unitPanal;
     public GameObject unitInfoPanel;
-    public GameObject unitIconPrefab;
+    public GameObject unitIconPrefab;    
     public TextMeshProUGUI alertMessage;
 
     [Header("Action Buttons")]
@@ -30,6 +30,20 @@ public class UnitGui : MonoBehaviour
 
     [Header("Unit Stats")]    
     public Image thumbnail;
+
+    /*
+    [Header("Unit Stat bars")]
+    [SerializeField] float maxBarWidth = 500;
+    [SerializeField] RectTransform maxHPBar;
+    [SerializeField] float maxHP = 250;
+    [SerializeField] RectTransform dpsBar;
+    [SerializeField] float maxDps = 30;
+    [SerializeField] RectTransform speedBar;
+    [SerializeField] float maxSpeed = 10;
+    [SerializeField] RectTransform rangeBar;
+    [SerializeField] float maxRange = 40;*/
+
+    [Header("Unit Stat Numbers")]
     public TextMeshProUGUI unitName;
     public TextMeshProUGUI currentHealth;
     public TextMeshProUGUI maxHealth;
@@ -93,13 +107,36 @@ public class UnitGui : MonoBehaviour
                 Debug.Log("Clicked on " + transform.gameObject.name);
         }*/
 
+        HandleActionButton();
+
+        if(Input.GetMouseButtonUp(0) && ButtonClicked == ActionChosen.Null)
+        {
+            selectionManager.enabled = true;
+        }
+
+        if (Input.GetMouseButtonUp(1) && ButtonClicked != ActionChosen.Null)
+        {
+            gameManager.ResetCursor();
+
+            if(selectedUnits.Count > 0)
+                EnableActionButtons();
+
+            ButtonClicked = ActionChosen.Null;
+
+            selectionManager.enabled = true;            
+        }
+    }
+
+    #region private functions
+    private void HandleActionButton()
+    {
         // check if mouse clicks on environment while an action is chosen
         if (Input.GetMouseButtonDown(0) && ButtonClicked != ActionChosen.Null)
         {
             RaycastHit hitInfo;
 
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo) &&
-                hitInfo.transform.gameObject.layer != 5)
+                !gameManager.PointerOverUI())
             {
 
                 if (ButtonClicked == ActionChosen.Move)
@@ -114,7 +151,7 @@ public class UnitGui : MonoBehaviour
                 }
                 else if (ButtonClicked == ActionChosen.Attack)
                 {
-                    bool attackSuccess = unitManager.AttackTarget(hitInfo.transform);                                    
+                    bool attackSuccess = unitManager.AttackTarget(hitInfo.transform);
 
                     if (!attackSuccess)
                     {
@@ -150,29 +187,12 @@ public class UnitGui : MonoBehaviour
 
                     ButtonClicked = ActionChosen.Null;
                 }
-                    
-            }            
-        }
 
-        if(Input.GetMouseButtonUp(0) && ButtonClicked == ActionChosen.Null)
-        {
-            selectionManager.enabled = true;
-        }
-
-        if (Input.GetMouseButtonUp(1) && ButtonClicked != ActionChosen.Null)
-        {
-            gameManager.ResetCursor();
-
-            if(selectedUnits.Count > 0)
-                EnableActionButtons();
-
-            ButtonClicked = ActionChosen.Null;
-
-            selectionManager.enabled = true;            
+            }
         }
     }
 
-    #region private functions
+
     private void UpdateUnitHealth()
     {
         try { 
@@ -457,6 +477,12 @@ public class UnitGui : MonoBehaviour
         unitOnPanel = unit;
 
         unitInfoPanel.SetActive(true);
+
+        // update bars
+        /*maxHPBar.sizeDelta = new Vector2(maxBarWidth / maxHP * unit.MaxHealth, maxHPBar.sizeDelta.y);
+        dpsBar.sizeDelta = new Vector2(maxBarWidth / maxDps * unit.DPS, dpsBar.sizeDelta.y);
+        speedBar.sizeDelta = new Vector2(maxBarWidth / maxSpeed * unit.Speed, speedBar.sizeDelta.y);
+        rangeBar.sizeDelta = new Vector2(maxBarWidth / maxRange * unit.AttackRange, rangeBar.sizeDelta.y);*/
 
         thumbnail.sprite = unit.GuiIcon;
         unitName.text = unit.Name;
