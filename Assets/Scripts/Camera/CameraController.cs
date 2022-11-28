@@ -13,6 +13,9 @@ public class CameraController : MonoBehaviour {
 	[SerializeField] float zoomInterpSpeed = 10.0f;
 	[SerializeField] BoxCollider bounds;
 
+	// default values
+
+
 	float zoom;
 
 	Vector2 mousePos;
@@ -27,7 +30,7 @@ public class CameraController : MonoBehaviour {
 	[SerializeField] [Tooltip("The size of the areas that are to trigger scrolling, in pixels.")] float edgeSize = 30.0f;
 	[SerializeField] float zoomedInEdgeScrollSpeed = 15.0f;
 	[SerializeField] float zoomedOutEdgeScrollSpeed = 30.0f;
-	[SerializeField] bool enableEdgeScrolling = true;
+	public bool enableEdgeScrolling = true;
 
 	bool firstMove;
 	bool moving;
@@ -168,4 +171,36 @@ public class CameraController : MonoBehaviour {
 			velocity = dir * Mathf.Lerp(zoomedInEdgeScrollSpeed, zoomedOutEdgeScrollSpeed, zoomPerc);
 		}
 	}
+
+	//---------------/
+	// Added by Paul /
+	//----------------/
+	public void ScaleKeyboardMoveSpeed(float multiplier)
+    {
+		zoomedInWASDSensitivity *= multiplier;
+		zoomedOutWASDSensitivity *= multiplier;
+		zoomedInWASDSensitivitySprint *= multiplier;
+		zoomedOutWASDSensitivitySprint *= multiplier;
+	}
+
+	public void ScaleMouseMoveSpeed(float multiplier)
+    {
+		zoomedInMouseSensitivity *= multiplier;
+		zoomedOutMouseSensitivity *= multiplier;
+    }
+
+	public void ScaleCameraZoomSpeed(float multiplier)
+	{
+		zoomInterpSpeed *= multiplier;
+	}
+
+	public void ScaleEdgeScrollSpeed(float multiplier)
+    {
+		zoomedInEdgeScrollSpeed *= multiplier;
+		zoomedOutEdgeScrollSpeed *= multiplier;
+    }
+	//-------------------------//
+	// End of Paul's functions //
+	//-------------------------//
+
 }

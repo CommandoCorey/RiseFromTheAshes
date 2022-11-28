@@ -47,17 +47,26 @@ public class GameOptions : MonoBehaviour
 
     //[Space]
     [Header("Camera Settings")]
-    [Header("GamePlay Options")]        
-    public Slider sensetivitySlider;
+    [Header("GamePlay Options")]
+    public Slider keyboardMoveSpeed;
+    public Slider mousePanSpeed;
+    public Slider zoomSpeed;
+    public Toggle enableEdgeScrolling;
+    public Slider edgeScrollSpeed;
 
     // private variables
     private float dB;
     private float cameraSensetivity = 1;
     private Resolution[] resolutions;
 
+    GameManager gameManager;
+    CameraController camera;
+
     // Start is called before the first frame update
     void Start()
     {
+        gameManager = GameManager.Instance;
+        camera = Camera.main.GetComponent<CameraController>();
         resolutions = Screen.resolutions;
 
         // Set audio volumes
@@ -134,6 +143,16 @@ public class GameOptions : MonoBehaviour
         }
         //screenResolution.AddOptions(resolutionText);
 
+        if(camera)
+        {
+            
+        }
+
+        // update options in game manager
+        if(gameManager)
+        {            
+
+        }
     }
 
     public void InitGUI()
@@ -190,22 +209,30 @@ public class GameOptions : MonoBehaviour
         vSyncCount.SetValueWithoutNotify(PlayerPrefs.GetInt("VSync", 1));
         antiAliasing.SetValueWithoutNotify(PlayerPrefs.GetInt("MSAA", 2));
         shadowQuality.SetValueWithoutNotify(PlayerPrefs.GetInt("Shadows", 2));
-    }
+        int textureOn = PlayerPrefs.GetInt("fowTexture", 1);                   
+        useTexture.isOn = (textureOn == 1) ? true : false;
 
-    /*
-    #region tab controls    
-    public void OpenAudioOptions()
-    {
-        audioOptions.SetActive(true);
-        videoOptions.SetActive(false);
-    }
+        // update game options
+        keyboardMoveSpeed.value = PlayerPrefs.GetFloat("cameraMoveSpeed", 1);
+        zoomSpeed.value = PlayerPrefs.GetFloat("cameraZoomSpeed", 1);
+        int edgeScrollingOn = PlayerPrefs.GetInt("edgeScrolling", 1);
+        enableEdgeScrolling.isOn = (edgeScrollingOn == 1) ? true : false;
+        edgeScrollSpeed.value = PlayerPrefs.GetFloat("edgeScrollingSpeed", 1);
 
-    public void OpenVideoOptions()
-    {
-        audioOptions.SetActive(false);
-        videoOptions.SetActive(true);
+        if(camera)
+        {
+            // load camera settings
+            /*
+            PlayerPrefs.SetFloat("cameraKeyboardMoveSpeed", keyboardMoveSpeed.value);
+            PlayerPrefs.SetFloat("cameraMousePanSpeed", mousePanSpeed.value);
+            PlayerPrefs.SetFloat("cameraZoomSpeed", zoomSpeed.value);
+            if (enableEdgeScrolling.isOn)
+                PlayerPrefs.SetInt("edgeScrolling", 1);
+            else
+                PlayerPrefs.SetInt("edgeScrolling", 0);
+            PlayerPrefs.SetFloat("edgeScrollingSpeed", edgeScrollSpeed.value);*/
+        }
     }
-    #endregion*/
 
     #region volume Controls
     public void SetMasterVolume()
@@ -292,25 +319,35 @@ public class GameOptions : MonoBehaviour
     }
     #endregion
 
-    /*
-    public void ToggleMotionBlur(bool inMainScene)
+    #region camera options
+    public void SetKeyboardMoveSpeed()
     {
-        if(inMainScene && game != null)
-            game.MotionBlur = motionBlur.isOn;
-    }*/
+        if(camera)        
+            camera.ScaleKeyboardMoveSpeed(keyboardMoveSpeed.value);        
+    }
 
-    #region controls options
-    public void SetCameraSensetivity(bool inMainScene)
+    public void SetMiddleMousePan()
     {
-        cameraSensetivity = sensetivitySlider.value;
+        if (camera)
+            camera.ScaleMouseMoveSpeed(mousePanSpeed.value);
+    }
 
-        if (inMainScene)
-        {
-            //PlayerMovement player = GameObject.Find("Player").GetComponent<PlayerMovement>();
-            //player.CameraSensetivty = cameraSensetivity;
+    public void SetZoomSpeed()
+    {
+        if (camera)
+            camera.ScaleCameraZoomSpeed(zoomSpeed.value);
+    }
 
-            // TODO: Replace with camera controller script
-        }
+    public void ToggleEdgeScrolling()
+    {
+        if (camera)
+            camera.enableEdgeScrolling = enableEdgeScrolling.isOn;
+    }
+
+    public void SetEdgeScrollSpeed()
+    {
+        if(camera)
+            camera.ScaleEdgeScrollSpeed(edgeScrollSpeed.value);
     }
     #endregion
 
@@ -332,8 +369,23 @@ public class GameOptions : MonoBehaviour
         PlayerPrefs.SetInt("MSAA", antiAliasing.value);
         PlayerPrefs.SetInt("Shadows", shadowQuality.value);
 
-        // save controls settings
-        //PlayerPrefs.SetFloat("CameraSensetivity", cameraSensetivity);        
+        if (useTexture.isOn)
+            PlayerPrefs.SetInt("fowTexture", 1);
+        else
+            PlayerPrefs.SetInt("fowTexture", 0);
+
+        // save camera settings
+        PlayerPrefs.SetFloat("cameraKeyboardMoveSpeed", keyboardMoveSpeed.value);
+        PlayerPrefs.SetFloat("cameraMousePanSpeed", mousePanSpeed.value);
+        PlayerPrefs.SetFloat("cameraZoomSpeed", zoomSpeed.value);
+        if (enableEdgeScrolling.isOn)
+            PlayerPrefs.SetInt("edgeScrolling", 1);
+        else
+            PlayerPrefs.SetInt("edgeScrolling", 0);
+        PlayerPrefs.SetFloat("edgeScrollingSpeed", edgeScrollSpeed.value);
+
+        // save unit display options
+
     }
 
 }
