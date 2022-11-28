@@ -136,6 +136,11 @@ public class GameOptions : MonoBehaviour
         //screenResolution.AddOptions(resolutionText);
 
 
+        if (!PlayerPrefs.HasKey("FOWTexture"))
+        {
+            PlayerPrefs.SetInt("FOWTexture", 1);
+        }
+
         fowTextureCheckbox.isOn = PlayerPrefs.GetInt("FOWTexture") != 0;
         fowTextureCheckbox.onValueChanged.AddListener(SetFogOfWarTexture);
     }
