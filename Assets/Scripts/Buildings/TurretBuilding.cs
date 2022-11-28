@@ -126,7 +126,7 @@ public class TurretBuilding : MonoBehaviour
         {
             if (hit.transform == target)
             {
-                Instantiate(fireEffect, firingPoint.position, firingPoint.rotation, transform);
+                var obj = Instantiate(fireEffect, firingPoint.position, firingPoint.rotation);
 
                 int layer = target.gameObject.layer;
 
@@ -136,6 +136,8 @@ public class TurretBuilding : MonoBehaviour
                     target.GetComponent<Building>().TakeDamage(hit.point, damagePerShot);
 
                 Invoke("Fire", fireRate);
+
+                Destroy(obj, 3.0f);
 
                 return;
             }

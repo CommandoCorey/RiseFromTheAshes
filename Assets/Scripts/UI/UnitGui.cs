@@ -476,6 +476,8 @@ public class UnitGui : MonoBehaviour
     {
         unitOnPanel = unit;
 
+        BuildMenu.Instance.Hide();
+        VehicleBayBuildMenu.Instance.Hide();
         unitInfoPanel.SetActive(true);
 
         // update bars
@@ -491,6 +493,11 @@ public class UnitGui : MonoBehaviour
         range.text = Mathf.Round(unit.AttackRange).ToString();
         damagePerSecond.text = Mathf.Round((unit.DamagePerHit / unit.AttackRate)).ToString();
         movementSpeed.text = Mathf.Round(unit.Speed).ToString();
+    }
+
+    public void Hide()
+    {
+        unitInfoPanel.SetActive(true);
     }
 
     /// <summary>
