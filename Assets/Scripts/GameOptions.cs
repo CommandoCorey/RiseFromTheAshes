@@ -145,7 +145,6 @@ public class GameOptions : MonoBehaviour
         }
         //screenResolution.AddOptions(resolutionText);
 
-
         if (!PlayerPrefs.HasKey("FOWTexture"))
         {
             PlayerPrefs.SetInt("FOWTexture", 1);
@@ -209,7 +208,7 @@ public class GameOptions : MonoBehaviour
         vSyncCount.SetValueWithoutNotify(PlayerPrefs.GetInt("VSync", 1));
         antiAliasing.SetValueWithoutNotify(PlayerPrefs.GetInt("MSAA", 2));
         shadowQuality.SetValueWithoutNotify(PlayerPrefs.GetInt("Shadows", 2));
-        int textureOn = PlayerPrefs.GetInt("fowTexture", 1);                   
+        int textureOn = PlayerPrefs.GetInt("FOWTexture", 1);                   
         useTexture.isOn = (textureOn == 1) ? true : false;
 
         // update game options
@@ -308,7 +307,6 @@ public class GameOptions : MonoBehaviour
         }
     }
 
-
     public static void SetFogOfWarTexture(bool val)
     {
         PlayerPrefs.SetInt("FOWTexture", val ? 1 : 0);
@@ -321,7 +319,7 @@ public class GameOptions : MonoBehaviour
 
     public void SetFowTexture()
     {
-        //useTexture.isOn;
+        SetFogOfWarTexture(useTexture.isOn);
     }
     #endregion
 
@@ -376,9 +374,9 @@ public class GameOptions : MonoBehaviour
         PlayerPrefs.SetInt("Shadows", shadowQuality.value);
 
         if (useTexture.isOn)
-            PlayerPrefs.SetInt("fowTexture", 1);
+            PlayerPrefs.SetInt("FOWTexture", 1);
         else
-            PlayerPrefs.SetInt("fowTexture", 0);
+            PlayerPrefs.SetInt("FOWTexture", 0);
 
         // save camera settings
         PlayerPrefs.SetFloat("cameraKeyboardMoveSpeed", keyboardMoveSpeed.value);

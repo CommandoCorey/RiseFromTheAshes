@@ -17,8 +17,6 @@ public class GameManager : MonoBehaviour
 
     [Range(0, 10)]
     public float timeScale = 1;
-    public GameObject minimap;
-    public bool showMinimap = false;
     public Transform marker;
 
     [Header("Headquater Buildings")]
@@ -50,12 +48,16 @@ public class GameManager : MonoBehaviour
     [SerializeField] bool showIcons = true;
     [SerializeField] bool showHealthbars = true;
     [SerializeField] bool showStatusText = true;
+    [SerializeField] bool showDetectionRadius = true;
+    [SerializeField] bool showAttackRange = true;
 
     [Header("Keyboard Shortcuts")]
     public KeyCode pauseKey;
     public KeyCode unitHealthbarKey;
     public KeyCode unitIconsKey;
     public KeyCode unitStatusTextKey;
+    public KeyCode toggleDetectionRangeKey;
+    public KeyCode toggleAttackRangeKey;    
 
     [Header("Particle systems")]
     public GameObject destroyPropEffect;
@@ -83,9 +85,12 @@ public class GameManager : MonoBehaviour
     public int MaxUnitsAi { get => maxUnitsAi; }
     public int UnitCountPlayer { get => unitCountPlayer; }
     public int UnitCountAi { get => unitCountAi; }
+
     public bool ShowIcons { get => showIcons; }
     public bool ShowHealthbars { get => showHealthbars; }
     public bool ShowStatusText { get => showStatusText; }
+    public bool ShowDetectionRange { get => showDetectionRadius; }
+    public bool ShowAttackRange { get => showAttackRange; }
 
     private void Awake()
     {
@@ -102,9 +107,6 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (showMinimap)
-            minimap.SetActive(true);
-
         marker.GetComponent<MeshRenderer>().enabled = false;
         audio = GetComponent<AudioSource>();
 
