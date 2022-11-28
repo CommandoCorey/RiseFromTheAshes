@@ -37,8 +37,13 @@ public class GameOptions : MonoBehaviour
     [Header("Video Settings")]
     public TMP_Dropdown displayMode;
     public TMP_Dropdown screenResolution;
+
+    [Header("Graphic Settings")]
     public TMP_Dropdown graphicsQuality;
     public TMP_Dropdown vSyncCount;
+    public TMP_Dropdown antiAliasing;
+    public TMP_Dropdown shadowQuality;
+    public Toggle useTexture;
 
     //[Space]
     [Header("Camera Settings")]
@@ -81,8 +86,6 @@ public class GameOptions : MonoBehaviour
 
         // set video settings
         Screen.fullScreenMode = (FullScreenMode) PlayerPrefs.GetInt("ScreenMode", 0);
-        QualitySettings.SetQualityLevel(PlayerPrefs.GetInt("Quality", 0), true);
-        QualitySettings.vSyncCount = PlayerPrefs.GetInt("VSync", 1);
 
         // set screen resolution
         int width = PlayerPrefs.GetInt("ScreenWidth", Screen.currentResolution.width);
@@ -90,7 +93,7 @@ public class GameOptions : MonoBehaviour
 
         foreach (Resolution res in resolutions)
         {
-            if(res.width == width && res.height == height)
+            if (res.width == width && res.height == height)
             {
                 Screen.SetResolution(res.width, res.height, Screen.fullScreenMode);
                 break;
@@ -98,17 +101,28 @@ public class GameOptions : MonoBehaviour
 
         }
 
-        // NOT CURRENTLY USED IN THIS PROJECT
-        // Set mition blur when in game
-        /*if(game != null)
-        {
-            int motionBlurOn = PlayerPrefs.GetInt("MotionBlur", 0);
+        // Set graphics settings
+        QualitySettings.SetQualityLevel(PlayerPrefs.GetInt("Quality", 2), true);
+        QualitySettings.vSyncCount = PlayerPrefs.GetInt("VSync", 1);
 
-            if (motionBlurOn == 1)
-                game.MotionBlur = true;
-            else if (motionBlurOn == 0)
-                game.MotionBlur = false;
-        }*/
+        int selectedOption = PlayerPrefs.GetInt("MSAA");
+
+        switch (selectedOption)
+        {
+            case 0: QualitySettings.antiAliasing = 0;
+                break;
+
+            case 1: QualitySettings.antiAliasing = 2;
+                break;
+
+            case 2: QualitySettings.antiAliasing = 4;
+                break;
+
+            case 3: QualitySettings.antiAliasing = 8;
+                break;
+        }
+        
+        QualitySettings.shadows = (ShadowQuality) PlayerPrefs.GetInt("Shadows", 2);
 
         // populate the screen resolutions dropdown  
         List<string> resolutionText = new List<string>();
@@ -171,9 +185,11 @@ public class GameOptions : MonoBehaviour
             Debug.LogException(e);
         }
 
-        //graphicsQuality.SetValueWithoutNotify(PlayerPrefs.GetInt("Quality", 2));
-        //vSyncCount.SetValueWithoutNotify(PlayerPrefs.GetInt("VSync", 1));
-
+        // update graphics tab
+        graphicsQuality.SetValueWithoutNotify(PlayerPrefs.GetInt("Quality", 2));
+        vSyncCount.SetValueWithoutNotify(PlayerPrefs.GetInt("VSync", 1));
+        antiAliasing.SetValueWithoutNotify(PlayerPrefs.GetInt("MSAA", 2));
+        shadowQuality.SetValueWithoutNotify(PlayerPrefs.GetInt("Shadows", 2));
     }
 
     /*
@@ -230,6 +246,9 @@ public class GameOptions : MonoBehaviour
         resolutions[screenResolution.value].height, (FullScreenMode)displayMode.value);
     }
 
+    #endregion
+
+    #region graphics options
     public void SetGraphicsQuality()
     {
         QualitySettings.SetQualityLevel(graphicsQuality.value, true);
@@ -240,13 +259,45 @@ public class GameOptions : MonoBehaviour
         QualitySettings.vSyncCount = vSyncCount.value;
     }
 
+    public void SetAntiAliasing()
+    {
+        switch (antiAliasing.value)
+        {
+            case 0:
+                QualitySettings.antiAliasing = 0;
+                break;
+
+            case 1:
+                QualitySettings.antiAliasing = 2;
+                break;
+
+            case 2:
+                QualitySettings.antiAliasing = 4;
+                break;
+
+            case 3:
+                QualitySettings.antiAliasing = 8;
+                break;
+        }
+    }
+
+    public void SetShadowQuality()
+    {
+        QualitySettings.shadows = (ShadowQuality) shadowQuality.value;
+    }
+
+    public void SetFowTexture()
+    {
+        //useTexture.isOn;
+    }
+    #endregion
+
     /*
     public void ToggleMotionBlur(bool inMainScene)
     {
         if(inMainScene && game != null)
             game.MotionBlur = motionBlur.isOn;
     }*/
-    #endregion
 
     #region controls options
     public void SetCameraSensetivity(bool inMainScene)
@@ -274,8 +325,12 @@ public class GameOptions : MonoBehaviour
         PlayerPrefs.SetInt("ScreenMode", displayMode.value);
         PlayerPrefs.SetInt("ScreenWidth", resolutions[screenResolution.value].width);
         PlayerPrefs.SetInt("ScreenHeight", resolutions[screenResolution.value].height);
-        //PlayerPrefs.SetInt("Quality", graphicsQuality.value);
-        //PlayerPrefs.SetInt("VSync", vSyncCount.value);
+
+        // save graphics settings
+        PlayerPrefs.SetInt("Quality", graphicsQuality.value);
+        PlayerPrefs.SetInt("VSync", vSyncCount.value);
+        PlayerPrefs.SetInt("MSAA", antiAliasing.value);
+        PlayerPrefs.SetInt("Shadows", shadowQuality.value);
 
         // save controls settings
         //PlayerPrefs.SetFloat("CameraSensetivity", cameraSensetivity);        
