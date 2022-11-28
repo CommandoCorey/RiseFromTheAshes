@@ -44,6 +44,7 @@ public class GameOptions : MonoBehaviour
     public TMP_Dropdown antiAliasing;
     public TMP_Dropdown shadowQuality;
     public Toggle useTexture;
+    [SerializeField] Toggle fowTextureCheckbox;
 
     //[Space]
     [Header("Camera Settings")]
@@ -134,6 +135,9 @@ public class GameOptions : MonoBehaviour
         }
         //screenResolution.AddOptions(resolutionText);
 
+
+        fowTextureCheckbox.isOn = PlayerPrefs.GetInt("FOWTexture") != 0;
+        fowTextureCheckbox.onValueChanged.AddListener(SetFogOfWarTexture);
     }
 
     public void InitGUI()
@@ -279,6 +283,12 @@ public class GameOptions : MonoBehaviour
                 QualitySettings.antiAliasing = 8;
                 break;
         }
+    }
+
+
+    public static void SetFogOfWarTexture(bool val)
+    {
+        PlayerPrefs.SetInt("FOWTexture", val ? 1 : 0);
     }
 
     public void SetShadowQuality()
