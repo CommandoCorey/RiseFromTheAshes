@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour
     [Header("Dialogs")]
     public GameObject pauseDialog;
     public GameObject GUI;
+    public GameObject optionsDialog;
     public GameObject winDialog;
     public GameObject loseDialog;
 
@@ -58,6 +59,9 @@ public class GameManager : MonoBehaviour
 
     [Header("Particle systems")]
     public GameObject destroyPropEffect;
+
+    //[Header("UI Sound Effects")]
+    //public AudioClip
 
     private GameState state;
     private new AudioSource audio;
@@ -249,6 +253,11 @@ public class GameManager : MonoBehaviour
     public void PlaySound(AudioClip clip, float volumeScale)
     {
         audio.PlayOneShot(clip, volumeScale);
+    }
+
+    public void PlaySound(AudioClip clip)
+    {
+        audio.PlayOneShot(clip);
     }
 
     /// <summary>
