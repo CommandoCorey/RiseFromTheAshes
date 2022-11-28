@@ -17,7 +17,6 @@ public class MainMenu : MonoBehaviour
     [SerializeField] RectTransform creditsMover;
     [SerializeField] TextMeshProUGUI loadPercent;
     [SerializeField] ProgressBar loadProgressBar;
-    [SerializeField] Toggle fowTextureCheckbox;
 
     [Header("Sound Effects")]
     [SerializeField] AudioClip hoverSound;
@@ -31,9 +30,6 @@ public class MainMenu : MonoBehaviour
     public void Awake()
 	{
 		creditsMoverOriginalPos = creditsMover.position;
-
-        fowTextureCheckbox.isOn = PlayerPrefs.GetInt("FOWTexture") != 0;
-        fowTextureCheckbox.onValueChanged.AddListener(SetFogOfWarTexture);
 
         AiPlayer.Difficulty = (AiDifficulty)PlayerPrefs.GetInt("AIDiff");
 
@@ -128,11 +124,6 @@ public class MainMenu : MonoBehaviour
     {
         AiPlayer.Difficulty = (AiDifficulty) difficulty;
         PlayerPrefs.SetInt("AIDiff", difficulty);
-    }
-
-    public static void SetFogOfWarTexture(bool val)
-    {
-        PlayerPrefs.SetInt("FOWTexture", val ? 1 : 0);
     }
 
     #region sound effects
