@@ -32,6 +32,8 @@ public class BuildMenu : MonoBehaviour
 	[SerializeField] TextMeshProUGUI insufficientResourcesText;
 	[SerializeField] float notificationTimeout = 1;
 
+	[SerializeField] GameObject tooltipPanel;
+
 	[Header("Build Stats Text")]
 	[SerializeField] GameObject statsPanel;
 	[SerializeField] TextMeshProUGUI buildingName;
@@ -84,6 +86,7 @@ public class BuildMenu : MonoBehaviour
 		//Debug.Log("pointer entered button number" + itemNumber);
 		
 		statsPanel.SetActive(true);
+		tooltipPanel.SetActive(false);
 
 		var building = buildItems[itemNumber].buildingPrefab;
 
@@ -98,6 +101,7 @@ public class BuildMenu : MonoBehaviour
     {
 		//Debug.Log("Pointer exited button");
 		statsPanel.SetActive(false);
+		tooltipPanel.SetActive(true);
 	}
 
 	public void Build(in BuildItem item)
