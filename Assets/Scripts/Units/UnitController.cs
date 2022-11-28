@@ -201,7 +201,7 @@ public class UnitController : MonoBehaviour
         if (healthBar)
             healthBarOffset = healthBar.transform.parent.localPosition;
 
-        audio = body.GetComponent<AudioSource>();
+        audio = GetComponent<AudioSource>();
 
         bool isAi = body.gameObject.layer == 7;
 
