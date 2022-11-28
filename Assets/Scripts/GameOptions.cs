@@ -66,7 +66,8 @@ public class GameOptions : MonoBehaviour
     void Start()
     {
         gameManager = GameManager.Instance;
-        camera = Camera.main.GetComponent<CameraController>();
+        if(Camera.main != null)
+            camera = Camera.main.GetComponent<CameraController>();
         resolutions = Screen.resolutions;
 
         // Set audio volumes

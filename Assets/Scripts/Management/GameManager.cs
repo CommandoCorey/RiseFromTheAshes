@@ -303,6 +303,8 @@ public class GameManager : MonoBehaviour
         pauseDialog.SetActive(paused);
         GUI.SetActive(!paused);
 
+        optionsDialog.SetActive(false);        
+
         // disable all other scripts on the game manageer
         GetComponent<UnitManager>().enabled = !paused;
         GetComponent<SelectionManager>().enabled = !paused;
