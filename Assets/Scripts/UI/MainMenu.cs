@@ -29,8 +29,6 @@ public class MainMenu : MonoBehaviour
 
     public void Awake()
 	{
-		creditsMoverOriginalPos = creditsMover.position;
-
         AiPlayer.Difficulty = (AiDifficulty)PlayerPrefs.GetInt("AIDiff");
 
         soundSource = GetComponents<AudioSource>()[0];
@@ -84,13 +82,14 @@ public class MainMenu : MonoBehaviour
     }
 
 	private void Start()
-	{
+    {
+        creditsMoverOriginalPos = creditsMover.position;
         ShowMainMenu();
     }
 
 	public void PlayCredits()
-	{
-        creditsMover.position = creditsMoverOriginalPos;
+    {
+        creditsMover.position = new Vector3(creditsMover.position.x, creditsMoverOriginalPos.y, creditsMover.position.z);
         mainMenu.SetActive(false);
         credits.SetActive(true);
         loadingScreen.SetActive(false);
@@ -98,7 +97,7 @@ public class MainMenu : MonoBehaviour
 
     public void ShowMainMenu()
     {
-        creditsMover.position = creditsMoverOriginalPos;
+        creditsMover.position = new Vector3(creditsMover.position.x, creditsMoverOriginalPos.y, creditsMover.position.z);
         mainMenu.SetActive(true);
         credits.SetActive(false);
         loadingScreen.SetActive(false);
