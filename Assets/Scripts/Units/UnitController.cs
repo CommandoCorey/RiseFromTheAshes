@@ -20,6 +20,7 @@ public enum UnitState
 public class UnitController : MonoBehaviour
 {
     [SerializeField] string unitName;
+    [SerializeField] string description;
 
     [SerializeField] int steelCost = 10;
     [SerializeField] int timeToTrain = 1;
@@ -151,6 +152,7 @@ public class UnitController : MonoBehaviour
 
     // unit stats
     public string Name { get => unitName; }
+    public string Description { get => description; }
     public int Cost { get => steelCost; }
     public int SpaceUsed { get => spaceUsed; }
     public float TimeToTrain { get => timeToTrain; }
@@ -199,7 +201,7 @@ public class UnitController : MonoBehaviour
         if (healthBar)
             healthBarOffset = healthBar.transform.parent.localPosition;
 
-        audio = body.GetComponent<AudioSource>();
+        audio = GetComponent<AudioSource>();
 
         bool isAi = body.gameObject.layer == 7;
 
@@ -241,18 +243,7 @@ public class UnitController : MonoBehaviour
 	// Update is called once per frame
 	void Update()
     {
-        // show/hide gui above unit
-        if(unitIcon)
-            unitIcon.gameObject.SetActive(gameManager.ShowIcons);
-        if(statusText)
-            statusText.gameObject.SetActive(gameManager.ShowStatusText);
-
-        if (healthBar)
-        {
-            healthBar.gameObject.SetActive(gameManager.ShowHealthbars);
-            healthBar.progress = health / maxHealth;
-            healthBar.SetProgress(health / maxHealth, maxHealth);
-        }
+        UpdateDisplayOptions();
 
         if (health <= 0)
         {
@@ -269,8 +260,6 @@ public class UnitController : MonoBehaviour
             if(destroyEffects != null)
                 gameManager.InstantiateParticles(destroyEffects[RandomPick(destroyEffects)], body.position);
         }
-
-        //healthBar.transform.position = body.position + healthBarOffset;
 
         if (UnitManager.Instance)
         {
@@ -309,6 +298,30 @@ public class UnitController : MonoBehaviour
 
     }
 
+    private void UpdateDisplayOptions()
+    {
+        // show/hide gui above unit
+        if (unitIcon)
+            unitIcon.gameObject.SetActive(gameManager.ShowIcons);
+
+        if (statusText)
+            statusText.gameObject.SetActive(gameManager.ShowStatusText);
+
+        if (healthBar)
+        {
+            healthBar.gameObject.SetActive(gameManager.ShowHealthbars);
+            healthBar.progress = health / maxHealth;
+            healthBar.SetProgress(health / maxHealth, maxHealth);
+        }
+
+        // show/hide circle meshes around unit
+        if (detectionRangeMesh && SingleSelected)
+            detectionRangeMesh.gameObject.SetActive(gameManager.ShowDetectionRange);
+
+        if (attackRangeMesh && SingleSelected)
+            attackRangeMesh.gameObject.SetActive(gameManager.ShowAttackRange);
+    }
+
     private void LateUpdate()
     {
         transform.position = body.position;
@@ -328,10 +341,10 @@ public class UnitController : MonoBehaviour
 
         if(selected && SingleSelected && showRanges)
         {
-            if(detectionRangeMesh != null)
+            if(detectionRangeMesh != null && gameManager.ShowDetectionRange)
                 detectionRangeMesh.gameObject.SetActive(true);
 
-            if(attackRangeMesh != null)
+            if(attackRangeMesh != null && gameManager.ShowAttackRange)
                 attackRangeMesh.gameObject.SetActive(true);
         }
         else if(!selected)
@@ -362,7 +375,7 @@ public class UnitController : MonoBehaviour
 
         ParticleSystem hitParticles = hitEffects[RandomPick(hitEffects)];
 
-        InstantiateParticles(hitParticles, hitPosition);
+        InstantiateParticles(hitParticles, hitPosition, Quaternion.identity);
 
         if (hitSounds.Length > 0)
         {
@@ -407,18 +420,20 @@ public class UnitController : MonoBehaviour
             child.Play();
     }
 
-    public void InstantiateParticles(ParticleSystem particles, Vector3 position)
+    public void InstantiateParticles(ParticleSystem particles, Vector3 position, Quaternion rotation)
     {
         if (particles == null)
             return;
 
-        Instantiate(particles, position, Quaternion.identity, transform);
+        var obj = Instantiate(particles, position, rotation, transform);
 
         var childParticles = particles.gameObject.GetComponentsInChildren<ParticleSystem>();
 
         particles.Play();
         foreach (ParticleSystem child in childParticles)
             child.Play();
+
+        Destroy(obj, 3.0f);
     }
 
     public void InstantiateParticles(VisualEffect particles, Vector3 position)

@@ -23,6 +23,9 @@ public class TaskSet
 
 public class AiTaskScheduler : MonoBehaviour
 {
+    public static float delayBetweenTasks = 10;
+    public bool useIndividualTaskDelay = false;
+
     [Header("Ai Tasks")]
     [SerializeField] AiStrategy playerStrategy;
     public TaskSet[] tasksSchedule;
@@ -73,6 +76,8 @@ public class AiTaskScheduler : MonoBehaviour
 
         activeTasks = new List<AiTask>();
 
+        SetTimeDelay();
+
         baysInConstruction = aiPlayer.BaysInConstruction;
 
         if (playerStrategy != null)
@@ -117,6 +122,7 @@ public class AiTaskScheduler : MonoBehaviour
         // check status of current tasks
         foreach (TaskSet set in tasksSchedule)
         {
+
             // Check if the task set requires completion of previous set
             if (set.waitForPreviousTaskSet && previousSet != null && !previousSet.Completed)
             {
@@ -154,6 +160,36 @@ public class AiTaskScheduler : MonoBehaviour
         }        
     }
 
+    private void SetTimeDelay()
+    {
+        //Debug.Log("Difficulty: " + AiPlayer.Difficulty);
+
+        switch (AiPlayer.Difficulty)
+        {
+            case AiDifficulty.Easy:
+                delayBetweenTasks = aiPlayer.EASY_TIME_DELAY;
+                gameManager.SetDifficultyText("Easy");
+            break;
+
+            case AiDifficulty.Normal:
+                delayBetweenTasks = aiPlayer.NORMAL_TIME_DELAY;
+                gameManager.SetDifficultyText("Normal");
+            break;
+
+            case AiDifficulty.Hard:
+                delayBetweenTasks = aiPlayer.HARD_TIME_DELAY;
+                gameManager.SetDifficultyText("Hard");
+            break;
+
+            case AiDifficulty.VeryHard:
+                delayBetweenTasks = aiPlayer.VERY_HARD_TIME_DELAY;
+                gameManager.SetDifficultyText("Very Hard");
+            break;
+        }
+
+        Debug.Log("Delay between tasks: " + delayBetweenTasks + " seconds");
+    }
+
     // sorts tasks in a specific task set by highest to lowst priority score
     private void SortTaskSet(TaskSet set)
     {
@@ -185,7 +221,10 @@ public class AiTaskScheduler : MonoBehaviour
     {
         //set.tasks[set.TaskNum].TaskStatus = "Performing Soon";
 
-        yield return new WaitForSeconds(set.tasks[set.TaskNum].timeDelay);
+        float delay = useIndividualTaskDelay 
+            ? set.tasks[set.TaskNum].timeDelay : delayBetweenTasks;
+
+        yield return new WaitForSeconds(delay);
 
         if (set.tasks[set.TaskNum].PerformTask()) // attempt to perform the task
         {

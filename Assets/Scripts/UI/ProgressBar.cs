@@ -18,10 +18,10 @@ public class ProgressBar : MonoBehaviour
 
 	[Header("Text")]
 	[SerializeField] ProgressBarTextType textType = ProgressBarTextType.Value;
-	[SerializeField] string textString;
+	public string textString;
 	[SerializeField] bool showText;
 	[SerializeField] TMPro.TMP_Text text;
-	[SerializeField] public float maxValue;
+	public float maxValue;
 
 	public void Update()
 	{
@@ -54,4 +54,5 @@ public class ProgressBar : MonoBehaviour
 		progress = currentValue;
 		this.maxValue = maxValue;
 	}
+
 }

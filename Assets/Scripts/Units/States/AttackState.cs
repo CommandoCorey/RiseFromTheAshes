@@ -100,7 +100,7 @@ public class AttackState : State
             {
                 ParticleSystem fireParticles = unit.fireEffects[Random.Range(0, unit.fireEffects.Length)];
                 //unit.PlayParticles(unit.fireEffect);
-                unit.InstantiateParticles(fireParticles, unit.firingPoint.position);
+                unit.InstantiateParticles(fireParticles, unit.firingPoint.position, unit.firingPoint.rotation);
             }
 
             unit.PlayFireSound();

@@ -17,8 +17,6 @@ public class GameManager : MonoBehaviour
 
     [Range(0, 10)]
     public float timeScale = 1;
-    public GameObject minimap;
-    public bool showMinimap = false;
     public Transform marker;
 
     [Header("Headquater Buildings")]
@@ -28,12 +26,14 @@ public class GameManager : MonoBehaviour
     [Header("Dialogs")]
     public GameObject pauseDialog;
     public GameObject GUI;
+    public GameObject optionsDialog;
     public GameObject winDialog;
     public GameObject loseDialog;
 
     [Header("Heads Up Display")]
     public TextMeshProUGUI totalUnitsText;
     public TextMeshProUGUI maxUnitsText;
+    public TextMeshProUGUI difficultyText;
 
     [Header("Cursors")]
     public bool enableCursorChanges;
@@ -48,15 +48,22 @@ public class GameManager : MonoBehaviour
     [SerializeField] bool showIcons = true;
     [SerializeField] bool showHealthbars = true;
     [SerializeField] bool showStatusText = true;
+    [SerializeField] bool showDetectionRadius = true;
+    [SerializeField] bool showAttackRange = true;
 
     [Header("Keyboard Shortcuts")]
     public KeyCode pauseKey;
     public KeyCode unitHealthbarKey;
     public KeyCode unitIconsKey;
     public KeyCode unitStatusTextKey;
+    public KeyCode detectionRangeKey;
+    public KeyCode attackRangeKey;    
 
     [Header("Particle systems")]
     public GameObject destroyPropEffect;
+
+    //[Header("UI Sound Effects")]
+    //public AudioClip
 
     private GameState state;
     private new AudioSource audio;
@@ -69,6 +76,8 @@ public class GameManager : MonoBehaviour
     private int unitCountPlayer = 0;
     private int unitCountAi = 0;
 
+    private GameOptions gameOptions;
+
     static GameManager gameManager;
 
     // properties
@@ -78,9 +87,12 @@ public class GameManager : MonoBehaviour
     public int MaxUnitsAi { get => maxUnitsAi; }
     public int UnitCountPlayer { get => unitCountPlayer; }
     public int UnitCountAi { get => unitCountAi; }
-    public bool ShowIcons { get => showIcons; }
-    public bool ShowHealthbars { get => showHealthbars; }
-    public bool ShowStatusText { get => showStatusText; }
+
+    public bool ShowIcons { get => showIcons; set => showIcons = value; }
+    public bool ShowHealthbars { get => showHealthbars; set => showHealthbars = value; }
+    public bool ShowStatusText { get => showStatusText; set => showStatusText = value; }
+    public bool ShowDetectionRange { get => showDetectionRadius; set => showDetectionRadius = value; }
+    public bool ShowAttackRange { get => showAttackRange; set => showAttackRange = value; }
 
     private void Awake()
     {
@@ -97,11 +109,9 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (showMinimap)
-            minimap.SetActive(true);
-
         marker.GetComponent<MeshRenderer>().enabled = false;
         audio = GetComponent<AudioSource>();
+        gameOptions = GameOptions.Instance;
 
         // set cursor sizes
         //defaultCursor.Resize(32, 32);
@@ -145,7 +155,7 @@ public class GameManager : MonoBehaviour
         }
 
         if (enableCursorChanges && currentCursor == selectableCursor &&
-            IsPointerOverUIElement())
+            PointerOverUI())
             SetCursor(defaultCursor);
 
         HandleKeyboardShortcuts();
@@ -154,13 +164,34 @@ public class GameManager : MonoBehaviour
     private void HandleKeyboardShortcuts()
     {
         if (Input.GetKeyDown(unitHealthbarKey))
+        { 
             showHealthbars = !showHealthbars;
+            gameOptions.showHealthbarsToggle.isOn = showHealthbars;
+        }
 
-        if(Input.GetKeyDown(unitIconsKey))
+        if (Input.GetKeyDown(unitIconsKey))
+        {
             showIcons = !showIcons;
+            gameOptions.showIconstoggle.isOn = showIcons;
+        }
 
-        if(Input.GetKeyDown(unitStatusTextKey))
+        if (Input.GetKeyDown(unitStatusTextKey))
+        {
             showStatusText = !showStatusText;
+            gameOptions.showStatusTextToggle.isOn = showStatusText;
+        }
+
+        if (Input.GetKeyDown(detectionRangeKey))
+        {
+            showAttackRange = !showAttackRange;
+            gameOptions.showDetectionRadiusToggle.isOn = showDetectionRadius;
+        }
+
+        if (Input.GetKeyDown(attackRangeKey))
+        {
+            showDetectionRadius = !showDetectionRadius;
+            gameOptions.showAttackRangeToggle.isOn = showAttackRange;
+        }
     }
 
     #region public functions
@@ -197,6 +228,28 @@ public class GameManager : MonoBehaviour
         ChangeGameState(GameState.Running);        
     }
 
+    public void SetDifficultyText(string text)
+    {
+        difficultyText.text = text;
+    }
+
+    /// <summary>
+    /// Determines whether or not the cursor if over a an object on the UI layer
+    /// </summary>
+    /// <returns>True touched or hovered on Unity UI element, false if it didn't</returns>
+    public bool PointerOverUI()
+    {
+        var eventSystemRaysastResults = GetEventSystemRaycastResults();
+
+        for (int index = 0; index < eventSystemRaysastResults.Count; index++)
+        {
+            RaycastResult curRaysastResult = eventSystemRaysastResults[index];
+            if (curRaysastResult.gameObject.layer == 5) // UI Layer
+                return true;
+        }
+        return false;
+    }
+
     /// <summary>
     /// Moves the marker gameobject to a specified location
     /// </summary>
@@ -208,7 +261,7 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 
+    /// Checks it a layer number is within a layer mask
     /// </summary>
     /// <param name="layer"></param>
     /// <param name="layerMask"></param>
@@ -226,6 +279,11 @@ public class GameManager : MonoBehaviour
     public void PlaySound(AudioClip clip, float volumeScale)
     {
         audio.PlayOneShot(clip, volumeScale);
+    }
+
+    public void PlaySound(AudioClip clip)
+    {
+        audio.PlayOneShot(clip);
     }
 
     /// <summary>
@@ -270,6 +328,8 @@ public class GameManager : MonoBehaviour
     {
         pauseDialog.SetActive(paused);
         GUI.SetActive(!paused);
+
+        optionsDialog.SetActive(false);        
 
         // disable all other scripts on the game manageer
         GetComponent<UnitManager>().enabled = !paused;
@@ -367,28 +427,6 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region private functions
-    //Returns 'true' if we touched or hovering on Unity UI element.
-    //public bool IsPointerOverUIElement()
-    //{
-    // return IsPointerOverUIElement(GetEventSystemRaycastResults());
-    //}
-
-
-    //Returns 'true' if we touched or hovering on Unity UI element.
-    private bool IsPointerOverUIElement()
-    {
-        var eventSystemRaysastResults = GetEventSystemRaycastResults();
-
-        for (int index = 0; index < eventSystemRaysastResults.Count; index++)
-        {
-            RaycastResult curRaysastResult = eventSystemRaysastResults[index];
-            if (curRaysastResult.gameObject.layer == 5) // UI Layer
-                return true;
-        }
-        return false;
-    }
-
-
     //Gets all event system raycast results of current mouse or touch position.
     private List<RaycastResult> GetEventSystemRaycastResults()
     {

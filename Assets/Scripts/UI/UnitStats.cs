@@ -54,6 +54,7 @@ public class UnitStats : MonoBehaviour
         title.text = unit.Name;
         trainTimeValue.text = unit.TimeToTrain.ToString();
 
+        tankImage.sprite = unit.GuiIcon;
         maxHPValue.text = unit.MaxHealth.ToString();
         attackRateValue.text = unit.AttackRate.ToString();
         damageValue.text = unit.DamagePerHit.ToString();
