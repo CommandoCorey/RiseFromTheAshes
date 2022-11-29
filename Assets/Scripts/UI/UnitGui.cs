@@ -497,7 +497,7 @@ public class UnitGui : MonoBehaviour
 
     public void Hide()
     {
-        unitInfoPanel.SetActive(true);
+        unitInfoPanel.SetActive(false);
     }
 
     /// <summary>

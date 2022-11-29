@@ -17,8 +17,6 @@ public class GameManager : MonoBehaviour
 
     [Range(0, 10)]
     public float timeScale = 1;
-    public GameObject minimap;
-    public bool showMinimap = false;
     public Transform marker;
 
     [Header("Headquater Buildings")]
@@ -50,12 +48,16 @@ public class GameManager : MonoBehaviour
     [SerializeField] bool showIcons = true;
     [SerializeField] bool showHealthbars = true;
     [SerializeField] bool showStatusText = true;
+    [SerializeField] bool showDetectionRadius = true;
+    [SerializeField] bool showAttackRange = true;
 
     [Header("Keyboard Shortcuts")]
     public KeyCode pauseKey;
     public KeyCode unitHealthbarKey;
     public KeyCode unitIconsKey;
     public KeyCode unitStatusTextKey;
+    public KeyCode detectionRangeKey;
+    public KeyCode attackRangeKey;    
 
     [Header("Particle systems")]
     public GameObject destroyPropEffect;
@@ -74,6 +76,8 @@ public class GameManager : MonoBehaviour
     private int unitCountPlayer = 0;
     private int unitCountAi = 0;
 
+    private GameOptions gameOptions;
+
     static GameManager gameManager;
 
     // properties
@@ -83,9 +87,12 @@ public class GameManager : MonoBehaviour
     public int MaxUnitsAi { get => maxUnitsAi; }
     public int UnitCountPlayer { get => unitCountPlayer; }
     public int UnitCountAi { get => unitCountAi; }
-    public bool ShowIcons { get => showIcons; }
-    public bool ShowHealthbars { get => showHealthbars; }
-    public bool ShowStatusText { get => showStatusText; }
+
+    public bool ShowIcons { get => showIcons; set => showIcons = value; }
+    public bool ShowHealthbars { get => showHealthbars; set => showHealthbars = value; }
+    public bool ShowStatusText { get => showStatusText; set => showStatusText = value; }
+    public bool ShowDetectionRange { get => showDetectionRadius; set => showDetectionRadius = value; }
+    public bool ShowAttackRange { get => showAttackRange; set => showAttackRange = value; }
 
     private void Awake()
     {
@@ -102,11 +109,9 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (showMinimap)
-            minimap.SetActive(true);
-
         marker.GetComponent<MeshRenderer>().enabled = false;
         audio = GetComponent<AudioSource>();
+        gameOptions = GameOptions.Instance;
 
         // set cursor sizes
         //defaultCursor.Resize(32, 32);
@@ -159,13 +164,34 @@ public class GameManager : MonoBehaviour
     private void HandleKeyboardShortcuts()
     {
         if (Input.GetKeyDown(unitHealthbarKey))
+        { 
             showHealthbars = !showHealthbars;
+            gameOptions.showHealthbarsToggle.isOn = showHealthbars;
+        }
 
-        if(Input.GetKeyDown(unitIconsKey))
+        if (Input.GetKeyDown(unitIconsKey))
+        {
             showIcons = !showIcons;
+            gameOptions.showIconstoggle.isOn = showIcons;
+        }
 
-        if(Input.GetKeyDown(unitStatusTextKey))
+        if (Input.GetKeyDown(unitStatusTextKey))
+        {
             showStatusText = !showStatusText;
+            gameOptions.showStatusTextToggle.isOn = showStatusText;
+        }
+
+        if (Input.GetKeyDown(detectionRangeKey))
+        {
+            showAttackRange = !showAttackRange;
+            gameOptions.showDetectionRadiusToggle.isOn = showDetectionRadius;
+        }
+
+        if (Input.GetKeyDown(attackRangeKey))
+        {
+            showDetectionRadius = !showDetectionRadius;
+            gameOptions.showAttackRangeToggle.isOn = showAttackRange;
+        }
     }
 
     #region public functions
@@ -235,7 +261,7 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 
+    /// Checks it a layer number is within a layer mask
     /// </summary>
     /// <param name="layer"></param>
     /// <param name="layerMask"></param>
@@ -302,6 +328,8 @@ public class GameManager : MonoBehaviour
     {
         pauseDialog.SetActive(paused);
         GUI.SetActive(!paused);
+
+        optionsDialog.SetActive(false);        
 
         // disable all other scripts on the game manageer
         GetComponent<UnitManager>().enabled = !paused;
