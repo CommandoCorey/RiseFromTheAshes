@@ -10,6 +10,7 @@ public class Building : MonoBehaviour
 	[SerializeField] bool startAtMaxHP = false;
 	public string buildingDescription;
 	public bool aiBuilding;
+	public Sprite thumbnailImage;
 
 	bool isBuilding;
 
@@ -42,7 +43,10 @@ public class Building : MonoBehaviour
 	[HideInInspector]
 	public Transform ghostTransform;
 
-	public bool IsBuilt {
+	public  bool StartAtMaxHP { get => startAtMaxHP; }
+
+
+    public bool IsBuilt {
 		get {
 			return buildTimer >= 1.0f;
 		}
@@ -124,7 +128,10 @@ public class Building : MonoBehaviour
 	void Start()
     {
 		if (startAtMaxHP)
+		{ 
 			HP = maxHP;
+			buildTimer = 1;
+			}
     }
 
 	void Update()
@@ -161,26 +168,47 @@ public class Building : MonoBehaviour
 		EnableRendering(true);
 	}
 
-	void TryVehicleBayInteract()
+	public bool TryVehicleBayInteract()
 	{
 		VehicleBay vehicleBay;
-		if (!TryGetComponent<VehicleBay>(out vehicleBay)) { return; }
+		if (!TryGetComponent<VehicleBay>(out vehicleBay)) { return false; }
 
-		if (vehicleBay == null) { return; }
+		if (vehicleBay == null) { return false; }
 
-		if (gameObject.layer != 8) // Aded by Paul
-			return;
+		if (gameObject.layer != 8) // Added by Paul
+			return false;
 
-		vehicleBay.Interact();
+		if (isBuilding) // Added by Paul	
+			return false;
+
+		if (vehicleBay.Interact())
+		{
+			SelectionManager.Instance.SetPanelTooltip(false);
+			BuildingInfo.Instance.infoPanel.SetActive(false);
+		}
+
+		return true;
 	}
 
 	public void OnDie()
 	{
-		TriggerBuilding trigger;
+        TriggerBuilding trigger;
 		if (TryGetComponent(out trigger))
 		{
 			trigger.OnDie();
 		}
+
+		ResourceBuilding rb;
+		if (TryGetComponent(out rb))
+        {
+			rb.OnDie();
+        }
+
+		Outpost outpost;
+		if (TryGetComponent(out outpost))
+        {
+			outpost.OnDie();
+        }
 
 		if (ghost)
 		{
@@ -193,6 +221,7 @@ public class Building : MonoBehaviour
 			ghostTransform.gameObject.SetActive(true);
 		}
 
+		// Added by Paul
         // if the destroyed building is on the AIBuilding layer
 		// and it is nto the headquarters rebuild it
         if (gameObject.layer == 9 && 
@@ -219,18 +248,29 @@ public class Building : MonoBehaviour
 			Destroy(fx, 10.0f);
 		}
 
-		Destroy(gameObject);
+		// Added by Paul
+		// if the building currently selected is the destroy building hidw the info panel
+		if (SelectionManager.Instance.SelectedBuilding == this)
+		{
+			BuildingInfo.Instance.infoPanel.SetActive(false);
+		}
+
+        Destroy(gameObject);
 	}
 
 	public void Interact()
 	{
+		var buildingInfo = BuildingInfo.Instance;
+
 		// turn on selection highlight if player building
 		if (gameObject.layer == 8)
 		{
 			SelectionManager.Instance.SetSelectedBuilding(this);
 		}
 
-        TryVehicleBayInteract();
+		if(!TryVehicleBayInteract())
+			buildingInfo.ShowBuildingPanel(this);
+
 	}
 
 	public void TakeDamage(Vector3 hitPoint, float amount) {

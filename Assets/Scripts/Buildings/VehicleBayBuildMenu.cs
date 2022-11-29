@@ -19,14 +19,17 @@ public class VehicleBayBuildMenu : MonoBehaviour {
 
 	[SerializeField] List<UnitDesc> units = new List<UnitDesc>();
 	[SerializeField] Button cancelButton;
-	[SerializeField] TextMeshProUGUI errorNotification;
-	[SerializeField] float notificationTimeout = 1;
 	
 	[SerializeField] bool hideOnConstructUnit = false;
+
+	[SerializeField] GameObject buildingInfo;
 
 	[Header("Unit Info Panel")]
 	[SerializeField] GameObject infoPanel;
 	[SerializeField] TextMeshProUGUI unitName;
+	[SerializeField] TextMeshProUGUI unitDescription;
+
+	[Header("Stats Numbers")]
 	[SerializeField] TextMeshProUGUI cost;
     [SerializeField] TextMeshProUGUI spaceUsed;
     [SerializeField] TextMeshProUGUI timeToBuild;
@@ -34,6 +37,17 @@ public class VehicleBayBuildMenu : MonoBehaviour {
 	[SerializeField] TextMeshProUGUI attackRange;
 	[SerializeField] TextMeshProUGUI damagePerSecond;
 	[SerializeField] TextMeshProUGUI movementSpeed;
+
+	[Header("Stat bars")]
+	[SerializeField] float maxBarWidth = 150;
+	[SerializeField] RectTransform maxHPBar;
+	[SerializeField] float maxHP = 250;
+	[SerializeField] RectTransform dpsBar;
+	[SerializeField] float maxDps = 30;
+	[SerializeField] RectTransform speedBar;
+	[SerializeField] float maxSpeed = 10;
+	[SerializeField] RectTransform rangeBar;
+	[SerializeField] float maxRange = 40;
 
 	private void Awake()
 	{
@@ -73,20 +87,23 @@ public class VehicleBayBuildMenu : MonoBehaviour {
 						
 						if (hideOnConstructUnit) {
 							Hide();
-						}
+							BuildingInfo.Instance.ShowUnitBeingBuilt(currentVehicleBay, 
+								ud.unit);
+
+                        }
 					}
 					else
 					{
 						//Hide();
 						// Display not enough room text
-						Notify.Queue("Not enough space.", 1.0f);
+						Notify.Queue("Not enough space. Build more Outposts", 1.0f);
 					}
 
 				}
 				else
 				{
                     // Display not enough steel text
-					Notify.Queue("Not enough steel.", 1.0f);
+					Notify.Queue("Not enough steel to construct vehicle.", 1.0f);
 				}
 
 			});
@@ -104,20 +121,28 @@ public class VehicleBayBuildMenu : MonoBehaviour {
 	}
 
 	public void Hide()
-	{
+	{	
 		gameObject.SetActive(false);
 	}
 
 	// Added by Paul
 	public void ShowUnitInfo(int number)
     {
-		infoPanel.SetActive(true);
+		buildingInfo.SetActive(false);
+        infoPanel.SetActive(true);
 
 		var unit = units[number].unit;
 
 		unitName.text = unit.Name;
+		unitDescription.text = unit.Description;
 		cost.text = unit.Cost.ToString();
 		timeToBuild.text = unit.TimeToTrain.ToString();
+
+		// update bars
+		maxHPBar.sizeDelta = new Vector2(maxBarWidth / maxHP * unit.MaxHealth, maxHPBar.sizeDelta.y);
+		dpsBar.sizeDelta = new Vector2(maxBarWidth / maxDps * unit.DPS, dpsBar.sizeDelta.y);
+		speedBar.sizeDelta = new Vector2(maxBarWidth / maxSpeed * unit.Speed, speedBar.sizeDelta.y);
+		rangeBar.sizeDelta = new Vector2(maxBarWidth / maxRange * unit.AttackRange, rangeBar.sizeDelta.y);
 
 		spaceUsed.text = Mathf.Round(unit.SpaceUsed).ToString();
 		maxHealth.text = Mathf.Round(unit.MaxHealth).ToString();
@@ -130,5 +155,6 @@ public class VehicleBayBuildMenu : MonoBehaviour {
 	public void HideUnitInfo()
     {
 		infoPanel.SetActive(false);
-	}
+		buildingInfo.SetActive(true);
+    }
 }

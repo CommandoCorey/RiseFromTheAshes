@@ -4,8 +4,6 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.VFX;
-using UnityEngine.Timeline;
-using UnityEngine.VFX;
 //using static UnityEditor.Experimental.GraphView.GraphView;
 
 public enum GameState
@@ -30,12 +28,14 @@ public class GameManager : MonoBehaviour
     [Header("Dialogs")]
     public GameObject pauseDialog;
     public GameObject GUI;
+    public GameObject optionsDialog;
     public GameObject winDialog;
     public GameObject loseDialog;
 
     [Header("Heads Up Display")]
     public TextMeshProUGUI totalUnitsText;
     public TextMeshProUGUI maxUnitsText;
+    public TextMeshProUGUI difficultyText;
 
     [Header("Cursors")]
     public bool enableCursorChanges;
@@ -59,6 +59,9 @@ public class GameManager : MonoBehaviour
 
     [Header("Particle systems")]
     public GameObject destroyPropEffect;
+
+    //[Header("UI Sound Effects")]
+    //public AudioClip
 
     private GameState state;
     private new AudioSource audio;
@@ -147,7 +150,7 @@ public class GameManager : MonoBehaviour
         }
 
         if (enableCursorChanges && currentCursor == selectableCursor &&
-            IsPointerOverUIElement())
+            PointerOverUI())
             SetCursor(defaultCursor);
 
         HandleKeyboardShortcuts();
@@ -199,6 +202,28 @@ public class GameManager : MonoBehaviour
         ChangeGameState(GameState.Running);        
     }
 
+    public void SetDifficultyText(string text)
+    {
+        difficultyText.text = text;
+    }
+
+    /// <summary>
+    /// Determines whether or not the cursor if over a an object on the UI layer
+    /// </summary>
+    /// <returns>True touched or hovered on Unity UI element, false if it didn't</returns>
+    public bool PointerOverUI()
+    {
+        var eventSystemRaysastResults = GetEventSystemRaycastResults();
+
+        for (int index = 0; index < eventSystemRaysastResults.Count; index++)
+        {
+            RaycastResult curRaysastResult = eventSystemRaysastResults[index];
+            if (curRaysastResult.gameObject.layer == 5) // UI Layer
+                return true;
+        }
+        return false;
+    }
+
     /// <summary>
     /// Moves the marker gameobject to a specified location
     /// </summary>
@@ -230,6 +255,11 @@ public class GameManager : MonoBehaviour
         audio.PlayOneShot(clip, volumeScale);
     }
 
+    public void PlaySound(AudioClip clip)
+    {
+        audio.PlayOneShot(clip);
+    }
+
     /// <summary>
     /// 
     /// </summary>
@@ -238,13 +268,13 @@ public class GameManager : MonoBehaviour
     public void InstantiateParticles(ParticleSystem prefab, Vector3 position)
     {
         var particles = Instantiate(prefab.gameObject, position, Quaternion.identity);
-        Destroy(particles, 3.0f);
+        Destroy(particles, 5.0f);
     }
 
     public void InstantiateParticles(VisualEffect prefab, Vector3 position)
     {
         var particles = Instantiate(prefab.gameObject, position, Quaternion.identity);
-        Destroy(particles, 3.0f);
+        Destroy(particles, 5.0f);
     }
 
     /// <summary>
@@ -347,39 +377,28 @@ public class GameManager : MonoBehaviour
             maxUnitsText.text = maxUnitsPlayer.ToString();
         }
     }
+    public void DecreaseMaxUnits(int amount, bool aiPlayer)
+    {
+        if (aiPlayer)
+        {
+            maxUnitsAi -= amount;
+        } else
+        {
+            maxUnitsPlayer -= amount;
+            maxUnitsText.text = maxUnitsPlayer.ToString();
+        }
+    }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    public void MoveUnitRallyPoint()
+        /// <summary>
+        /// 
+        /// </summary>
+        public void MoveUnitRallyPoint()
     {
         GetComponent<SelectionManager>().enabled = false;        
     }
     #endregion
 
     #region private functions
-    //Returns 'true' if we touched or hovering on Unity UI element.
-    //public bool IsPointerOverUIElement()
-    //{
-    // return IsPointerOverUIElement(GetEventSystemRaycastResults());
-    //}
-
-
-    //Returns 'true' if we touched or hovering on Unity UI element.
-    private bool IsPointerOverUIElement()
-    {
-        var eventSystemRaysastResults = GetEventSystemRaycastResults();
-
-        for (int index = 0; index < eventSystemRaysastResults.Count; index++)
-        {
-            RaycastResult curRaysastResult = eventSystemRaysastResults[index];
-            if (curRaysastResult.gameObject.layer == 5) // UI Layer
-                return true;
-        }
-        return false;
-    }
-
-
     //Gets all event system raycast results of current mouse or touch position.
     private List<RaycastResult> GetEventSystemRaycastResults()
     {
@@ -399,20 +418,26 @@ public struct CursorSprite
     public Texture2D image;
     public Vector2 hotspot;
 
+    public override bool Equals(object otherObj)
+    {
+        CursorSprite other = (CursorSprite)otherObj;
+
+        return image == other.image && hotspot == other.hotspot;
+    }
+
+    public override int GetHashCode()
+    {
+        return image.GetHashCode() ^ hotspot.GetHashCode();
+    }
+
     public static bool operator ==(CursorSprite a, CursorSprite b)
     {
-        if (a.image == b.image && a.hotspot == b.hotspot)
-            return true;
-
-        return false;
+        return a.Equals(b);
     }
 
     public static bool operator !=(CursorSprite a, CursorSprite b)
     {
-        if (a.image != b.image || a.hotspot != b.hotspot)
-            return true;
-
-        return false;
+        return !a.Equals(b);
     }
 }
 

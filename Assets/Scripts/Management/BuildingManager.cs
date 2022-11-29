@@ -33,9 +33,11 @@ public class BuildingManager : MonoBehaviour
 			{
 				Ghost building = hit.collider.gameObject.GetComponent<Ghost>();
 
-				if (building)
+				if (building && !GameManager.Instance.PointerOverUI())
 				{
 					building.ShowBuildMenu();
+					UnitGui.Instance.Hide();
+					VehicleBayBuildMenu.Instance.Hide();
 					buildMenuShown = true;
 				}
 			} 
@@ -47,12 +49,24 @@ public class BuildingManager : MonoBehaviour
 				if (building)
 				{
 					building.Interact();
+					UnitGui.Instance.Hide();
+					BuildMenu.Instance.Hide();
+					buildMenuShown = true;
 				}
+				/*else
+				{
+                    BuildingInfo.Instance.HidePanel();
+                }*/
+			}
+			else if(!GameManager.Instance.PointerOverUI()) // if the cursor is not over the UI
+			{
+				BuildingInfo.Instance.HidePanel();
 			}
 
 			if (!buildMenuShown)
 			{
 				BuildMenu.Instance.Hide();
+				VehicleBayBuildMenu.Instance.Hide();
 			}
 		}
 	}

@@ -49,19 +49,24 @@ public class VehicleBay : MonoBehaviour {
 		buildProgress.gameObject.SetActive(true);
 	}
 
-	public void Interact()
+	public bool Interact()
 	{
 		if (building != null && building.IsBuilt) {
 			if (isBuilding)
 			{
-				Notify.Queue("This vehicle bay is busy.", 1.5f);
-				return;
+                //Notify.Queue("This vehicle bay is busy.", 1.5f);
+                BuildingInfo.Instance.ShowUnitBeingBuilt(this, currentUnitDesc.unit);
+                return false;
 			}
 
 			//VehicleBayBuildMenu.Instance.transform.position = transform.position + buildMenuOffset;
 			VehicleBayBuildMenu.Instance.currentVehicleBay = this;
 			VehicleBayBuildMenu.Instance.gameObject.SetActive(true);
+
+			return true;
 		}
+
+		return false;
 	}
 
 	public void HideMenu()
@@ -91,7 +96,16 @@ public class VehicleBay : MonoBehaviour {
 
 					buildProgress.gameObject.SetActive(false);
 
-					isBuilding = false;
+					var buildingInfo = BuildingInfo.Instance;
+
+					// Added By Paul
+					if (buildingInfo.BuildingUnit)
+					{
+						BuildingInfo.Instance.HidePanel();
+						VehicleBayBuildMenu.Instance.gameObject.SetActive(true);
+					}
+
+                    isBuilding = false;
 				}
 			}
 
@@ -124,4 +138,12 @@ public class VehicleBay : MonoBehaviour {
 	{
 		Gizmos.DrawWireSphere(transform.position, healUnitRadius);
 	}
+
+	// Added by Paul
+	private void OnDestroy()
+	{
+		// check if this vehicle bay is selected and if it is hide the menu
+		if(SelectionManager.Instance.SelectedBuilding == building)
+			HideMenu();
+    }
 }

@@ -41,7 +41,6 @@ public class FormationManager : MonoBehaviour
     private Vector3 aiRallyPosition = new Vector3();
 
     private int playerId = 0;
-    private int enemyId = 0;    
 
     public static FormationManager Instance { get; private set; }
 
@@ -242,7 +241,6 @@ public class FormationManager : MonoBehaviour
         else
         {
             aiRallyFormation.Clear();
-            enemyId = 0;
         }
     }
 
@@ -295,9 +293,6 @@ public class FormationManager : MonoBehaviour
             {
                 //Debug.Log("Ai unit has moved from position: " + aiRallyFormation[positionNum]);
                 aiRallyFormation.Remove(positionNum);
-
-                if (aiRallyFormation.Count == 0)
-                    enemyId = 0;
             }
             else if (!aiPlayer && playerRallyFormation.Count > 0)
             {

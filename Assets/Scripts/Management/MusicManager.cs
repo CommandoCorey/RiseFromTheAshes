@@ -62,7 +62,7 @@ public class MusicManager : MonoBehaviour {
 	private void Update()
 	{
 		if (fading) {
-			fadeTime += Time.deltaTime;
+			fadeTime += Time.deltaTime * fadeSpeed;
 
 			if (fadeTime >= 1.0f)
 			{
