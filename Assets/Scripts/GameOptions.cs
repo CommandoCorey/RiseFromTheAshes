@@ -10,11 +10,6 @@ using static TMPro.TMP_Dropdown;
 
 public class GameOptions : MonoBehaviour
 {
-    // variable declaration
-    //[Header("Tabs and panes")]
-    //public Button startTab;
-    //public GameObject audioOptions, videoOptions;
-
     //[Header("Audio Mixers")]
     [Header("Audio Settings")]
     [Space]
@@ -55,13 +50,34 @@ public class GameOptions : MonoBehaviour
     public Toggle enableEdgeScrolling;
     public Slider edgeScrollSpeed;
 
+    [Header("Unit Display Options")]
+    public Toggle showIconstoggle;
+    public Toggle showHealthbarsToggle;
+    public Toggle showStatusTextToggle;
+    public Toggle showDetectionRadiusToggle;
+    public Toggle showAttackRangeToggle;
+
     // private variables
     private float dB;
-    private float cameraSensetivity = 1;
     private Resolution[] resolutions;
 
-    GameManager gameManager;
-    CameraController camera;
+    private GameManager gameManager;
+    private new CameraController camera;
+
+    // Singleton Instance
+    public static GameOptions Instance { get; private set; }
+
+    public void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(this);
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -152,6 +168,34 @@ public class GameOptions : MonoBehaviour
 
         fowTextureCheckbox.isOn = PlayerPrefs.GetInt("FOWTexture") != 0;
         fowTextureCheckbox.onValueChanged.AddListener(SetFogOfWarTexture);
+
+        // read camera settings
+        if (camera)
+        {
+            camera.ScaleKeyboardMoveSpeed(PlayerPrefs.GetFloat("cameraKeyboardMoveSpeed", 1));
+            camera.ScaleMouseMoveSpeed(PlayerPrefs.GetFloat("cameraMousePanSpeed", 1));
+            camera.ScaleCameraZoomSpeed(PlayerPrefs.GetFloat("cameraZoomSpeed", 1));
+            int edgeScrollingOn = PlayerPrefs.GetInt("edgeScrolling", 1);
+            camera.enableEdgeScrolling = (edgeScrollingOn == 1);
+            PlayerPrefs.SetFloat("edgeScrollingSpeed", 1);
+        }
+
+        // read unit display options
+        if(gameManager)
+        {
+            // update unit display options
+            int value = PlayerPrefs.GetInt("ShowIcon", 1);
+            gameManager.ShowIcons = (value == 1);
+            value = PlayerPrefs.GetInt("ShowHealthBars", 1);
+            gameManager.ShowHealthbars = (value == 1);
+            value = PlayerPrefs.GetInt("ShowStatus", 0);
+            gameManager.ShowStatusText = (value == 1);            
+            value = PlayerPrefs.GetInt("ShowDetectionRadius", 1);
+            gameManager.ShowDetectionRange = (value == 1);
+            value = PlayerPrefs.GetInt("ShowAttackRange", 1);
+            gameManager.ShowAttackRange = (value == 1);
+        }
+
     }
 
     public void InitGUI()
@@ -175,9 +219,6 @@ public class GameOptions : MonoBehaviour
             soundFxSlider.value = defaultSoundFXVolume;
             ambienceSlider.value = defaultAmbienceVolume;
         }
-
-        // set camera sensetivity slider
-        //sensetivitySlider.value = PlayerPrefs.GetFloat("CameraSensetivity", 1);
 
         // set drop down boxes
         displayMode.SetValueWithoutNotify(PlayerPrefs.GetInt("ScreenMode", 0));
@@ -212,25 +253,25 @@ public class GameOptions : MonoBehaviour
         useTexture.isOn = (textureOn == 1) ? true : false;
 
         // update game options
-        keyboardMoveSpeed.value = PlayerPrefs.GetFloat("cameraMoveSpeed", 1);
+        // update camera options
+        keyboardMoveSpeed.value = PlayerPrefs.GetFloat("cameraKeyboardMoveSpeed", 1);
+        mousePanSpeed.value = PlayerPrefs.GetFloat("cameraMousePanSpeed", 1);
         zoomSpeed.value = PlayerPrefs.GetFloat("cameraZoomSpeed", 1);
         int edgeScrollingOn = PlayerPrefs.GetInt("edgeScrolling", 1);
         enableEdgeScrolling.isOn = (edgeScrollingOn == 1) ? true : false;
         edgeScrollSpeed.value = PlayerPrefs.GetFloat("edgeScrollingSpeed", 1);
 
-        if(camera)
-        {
-            // load camera settings
-            /*
-            PlayerPrefs.SetFloat("cameraKeyboardMoveSpeed", keyboardMoveSpeed.value);
-            PlayerPrefs.SetFloat("cameraMousePanSpeed", mousePanSpeed.value);
-            PlayerPrefs.SetFloat("cameraZoomSpeed", zoomSpeed.value);
-            if (enableEdgeScrolling.isOn)
-                PlayerPrefs.SetInt("edgeScrolling", 1);
-            else
-                PlayerPrefs.SetInt("edgeScrolling", 0);
-            PlayerPrefs.SetFloat("edgeScrollingSpeed", edgeScrollSpeed.value);*/
-        }
+        // update unit display options
+        int value = PlayerPrefs.GetInt("ShowIcon", 1);
+        showIconstoggle.isOn = (value == 1);
+        value = PlayerPrefs.GetInt("ShowHealthBars", 1);
+        showHealthbarsToggle.isOn = (value == 1);
+        value = PlayerPrefs.GetInt("ShowStatus", 0);
+        showStatusTextToggle.isOn = (value == 1);
+        value = PlayerPrefs.GetInt("ShowDetectionRadius", 1);
+        showDetectionRadiusToggle.isOn = (value == 1);
+        value = PlayerPrefs.GetInt("ShowAttackRange", 1);
+        showAttackRangeToggle.isOn = (value == 1);               
     }
 
     #region volume Controls
@@ -355,6 +396,43 @@ public class GameOptions : MonoBehaviour
     }
     #endregion
 
+    #region unit display options
+    public void ToggleShowIcons()
+    {
+        if (gameManager)
+            gameManager.ShowIcons = showIconstoggle.isOn;
+        
+    }
+
+    public void ToggleShowHealthbars()
+    {
+        if (gameManager)        
+            gameManager.ShowHealthbars = showHealthbarsToggle.isOn;
+        
+    }
+
+    public void ToggleStatusText()
+    {
+        if (gameManager)
+            gameManager.ShowStatusText = showStatusTextToggle.isOn;
+        
+    }
+
+    public void ToggleDetectionRadius()
+    {
+        if (gameManager)
+            gameManager.ShowDetectionRange = showDetectionRadiusToggle.isOn;
+        
+    }
+
+    public void ToggleAttackRange()
+    {
+        if (gameManager)        
+            gameManager.ShowAttackRange = showAttackRangeToggle.isOn;
+        
+    }
+    #endregion
+
     public void SaveSettings()
     {
         // Save volume settings
@@ -382,14 +460,21 @@ public class GameOptions : MonoBehaviour
         PlayerPrefs.SetFloat("cameraKeyboardMoveSpeed", keyboardMoveSpeed.value);
         PlayerPrefs.SetFloat("cameraMousePanSpeed", mousePanSpeed.value);
         PlayerPrefs.SetFloat("cameraZoomSpeed", zoomSpeed.value);
-        if (enableEdgeScrolling.isOn)
-            PlayerPrefs.SetInt("edgeScrolling", 1);
-        else
-            PlayerPrefs.SetInt("edgeScrolling", 0);
+        int edgeScrollingOn =enableEdgeScrolling.isOn ? 1 : 0;
+        PlayerPrefs.SetInt("edgeScrolling", edgeScrollingOn);
         PlayerPrefs.SetFloat("edgeScrollingSpeed", edgeScrollSpeed.value);
 
         // save unit display options
-
+        int value = showIconstoggle.isOn ? 1 : 0;
+        PlayerPrefs.SetInt("ShowIcon", value);
+        value = showHealthbarsToggle.isOn ? 1 : 0;
+        PlayerPrefs.SetInt("ShowHealthBars", value);
+        value = showStatusTextToggle.isOn ? 1 : 0;
+        PlayerPrefs.SetInt("ShowStatus", value);
+        value = showDetectionRadiusToggle.isOn ? 1 : 0;
+        PlayerPrefs.SetInt("ShowDetectionRadius", value);
+        value = showAttackRangeToggle.isOn ? 1 : 0;
+        PlayerPrefs.SetInt("ShowAttackRange", value);        
     }
 
 }

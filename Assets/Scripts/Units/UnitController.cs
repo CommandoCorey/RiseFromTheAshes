@@ -243,18 +243,7 @@ public class UnitController : MonoBehaviour
 	// Update is called once per frame
 	void Update()
     {
-        // show/hide gui above unit
-        if(unitIcon)
-            unitIcon.gameObject.SetActive(gameManager.ShowIcons);
-        if(statusText)
-            statusText.gameObject.SetActive(gameManager.ShowStatusText);
-
-        if (healthBar)
-        {
-            healthBar.gameObject.SetActive(gameManager.ShowHealthbars);
-            healthBar.progress = health / maxHealth;
-            healthBar.SetProgress(health / maxHealth, maxHealth);
-        }
+        UpdateDisplayOptions();
 
         if (health <= 0)
         {
@@ -271,8 +260,6 @@ public class UnitController : MonoBehaviour
             if(destroyEffects != null)
                 gameManager.InstantiateParticles(destroyEffects[RandomPick(destroyEffects)], body.position);
         }
-
-        //healthBar.transform.position = body.position + healthBarOffset;
 
         if (UnitManager.Instance)
         {
@@ -311,6 +298,30 @@ public class UnitController : MonoBehaviour
 
     }
 
+    private void UpdateDisplayOptions()
+    {
+        // show/hide gui above unit
+        if (unitIcon)
+            unitIcon.gameObject.SetActive(gameManager.ShowIcons);
+
+        if (statusText)
+            statusText.gameObject.SetActive(gameManager.ShowStatusText);
+
+        if (healthBar)
+        {
+            healthBar.gameObject.SetActive(gameManager.ShowHealthbars);
+            healthBar.progress = health / maxHealth;
+            healthBar.SetProgress(health / maxHealth, maxHealth);
+        }
+
+        // show/hide circle meshes around unit
+        if (detectionRangeMesh && SingleSelected)
+            detectionRangeMesh.gameObject.SetActive(gameManager.ShowDetectionRange);
+
+        if (attackRangeMesh && SingleSelected)
+            attackRangeMesh.gameObject.SetActive(gameManager.ShowAttackRange);
+    }
+
     private void LateUpdate()
     {
         transform.position = body.position;
@@ -330,10 +341,10 @@ public class UnitController : MonoBehaviour
 
         if(selected && SingleSelected && showRanges)
         {
-            if(detectionRangeMesh != null)
+            if(detectionRangeMesh != null && gameManager.ShowDetectionRange)
                 detectionRangeMesh.gameObject.SetActive(true);
 
-            if(attackRangeMesh != null)
+            if(attackRangeMesh != null && gameManager.ShowAttackRange)
                 attackRangeMesh.gameObject.SetActive(true);
         }
         else if(!selected)
