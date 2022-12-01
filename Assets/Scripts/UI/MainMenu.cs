@@ -1,24 +1,68 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
 {
     [SerializeField] GameObject mainMenu;
     [SerializeField] GameObject credits;
     [SerializeField] GameObject loadingScreen;
-    [SerializeField] float creditsRiseSpeed = 100.0f;
+    [SerializeField] GameObject gameOptions;
+    [SerializeField] [Range(1, 100)]
+    float creditsRiseSpeed = 100.0f;
     [SerializeField] RectTransform creditsMover;
+    [SerializeField] TextMeshProUGUI loadPercent;
+    [SerializeField] ProgressBar loadProgressBar;
+
+    [Header("Sound Effects")]
+    [SerializeField] AudioClip hoverSound;
+    [SerializeField] AudioClip clickSound;
+    [SerializeField] AudioClip volumeSliderSound;
 
     Vector3 creditsMoverOriginalPos;
 
-	public void Awake()
-	{
-		creditsMoverOriginalPos = creditsMover.position;
-	}
+    AudioSource soundSource;
 
-	public void QuitGame()
+    public void Awake()
+	{
+        AiPlayer.Difficulty = (AiDifficulty)PlayerPrefs.GetInt("AIDiff");
+
+        soundSource = GetComponents<AudioSource>()[0];
+    }
+
+    public void Update()
+    {
+        creditsMover.position += Vector3.up * Time.deltaTime * creditsRiseSpeed;
+
+        
+    }
+
+    private IEnumerator LoadLavel(int scene)
+    {
+        AsyncOperation sceneLoad = SceneManager.LoadSceneAsync(scene);
+
+        while (!sceneLoad.isDone)
+        {
+            float progress = Mathf.Clamp01(sceneLoad.progress / .9f);
+
+            loadPercent.text = (sceneLoad.progress * 100) + " %";
+
+            if (loadProgressBar)
+            {
+                loadProgressBar.maxValue = 100;
+                loadProgressBar.progress = progress;
+            }
+            //Debug.Log(sceneLoad.progress);
+
+            yield return null;
+        }
+    }
+
+    public void QuitGame()
     {
         Debug.Log("Quitting game...");
 
@@ -28,22 +72,24 @@ public class MainMenu : MonoBehaviour
         Application.Quit();
 #endif
     }
-    public void LoadScene(int index)
+    public void StartGame(int index)
     {
         mainMenu.SetActive(false);
         credits.SetActive(false);
         loadingScreen.SetActive(true);
-        SceneManager.LoadScene(index);
+
+        StartCoroutine(LoadLavel(index));
     }
 
 	private void Start()
-	{
+    {
+        creditsMoverOriginalPos = creditsMover.position;
         ShowMainMenu();
     }
 
 	public void PlayCredits()
-	{
-        creditsMover.position = creditsMoverOriginalPos;
+    {
+        creditsMover.position = new Vector3(creditsMover.position.x, creditsMoverOriginalPos.y, creditsMover.position.z);
         mainMenu.SetActive(false);
         credits.SetActive(true);
         loadingScreen.SetActive(false);
@@ -51,10 +97,17 @@ public class MainMenu : MonoBehaviour
 
     public void ShowMainMenu()
     {
-        creditsMover.position = creditsMoverOriginalPos;
+        creditsMover.position = new Vector3(creditsMover.position.x, creditsMoverOriginalPos.y, creditsMover.position.z);
         mainMenu.SetActive(true);
         credits.SetActive(false);
         loadingScreen.SetActive(false);
+        gameOptions.SetActive(false);
+    }
+
+    public void OpenGameOptions()
+    {
+        mainMenu.SetActive(false);
+        gameOptions.SetActive(true);
     }
 
     public static Rect RectTransformToScreenSpace(RectTransform transform)
@@ -66,8 +119,26 @@ public class MainMenu : MonoBehaviour
         return rect;
     }
 
-    public void Update()
-	{
-        creditsMover.position += Vector3.up * Time.deltaTime * creditsRiseSpeed;
+    public void SetAiDifficulty(int difficulty)
+    {
+        AiPlayer.Difficulty = (AiDifficulty) difficulty;
+        PlayerPrefs.SetInt("AIDiff", difficulty);
     }
+
+    #region sound effects
+    public void PlayHoverSound()
+    {
+        soundSource.PlayOneShot(hoverSound, 0.5f);
+    }
+
+    public void PlayClickSound()
+    {
+        soundSource.PlayOneShot(clickSound);
+    }
+
+    public void PlayVolumeSilderSound()
+    {
+        soundSource.PlayOneShot(volumeSliderSound);
+    }
+    #endregion
 }

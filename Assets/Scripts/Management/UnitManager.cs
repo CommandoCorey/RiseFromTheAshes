@@ -29,7 +29,18 @@ public class UnitManager : MonoBehaviour
 
     public float unitInCombatTimeout = 30.0f;
 
+    [Header("Unit Range Material Colors")]
+    [SerializeField] Color detectionRangeColor = Color.yellow;
+    [SerializeField] [Range(0, 1)]
+    float detectionRangeAlpha = 0.1f;
+    [SerializeField] Color attackRangeColor = Color.red;
+    [SerializeField] [Range(0, 1)]
+    float attackRangeAlpha = 0.1f;
+
+    // properties
     public static UnitManager Instance { get; private set; }
+    public Color DetectionRangeColor { get => detectionRangeColor; }
+    public Color AttackRangeColor { get => attackRangeColor; }
 
     List<List<GameObject>> squads;
     Vector3[] groupPath;
@@ -111,6 +122,10 @@ public class UnitManager : MonoBehaviour
                 SetTargetHighlight(unit, true);
             }
         }*/
+
+        // Update circle materials
+        detectionRangeColor.a = detectionRangeAlpha;
+        attackRangeColor.a = attackRangeAlpha;
 
     }
     #endregion

@@ -112,6 +112,7 @@ class FogEffectPass : ScriptableRenderPass
 		fogMaterial.SetTexture("_NoiseTexture", FOWManager.Instance.perm.noiseTexture);
 		fogMaterial.SetFloat("_CloudScale", scale);
 		fogMaterial.SetFloat("_RenderDistance", renderDistance);
+		fogMaterial.SetInt("_Raytrace", PlayerPrefs.GetInt("FOWTexture"));
 
 		RenderTexture impermMask = FOWManager.Instance.imperm.MaskToTexture();
 		RenderTexture permMask   = FOWManager.Instance.perm.MaskToTexture();

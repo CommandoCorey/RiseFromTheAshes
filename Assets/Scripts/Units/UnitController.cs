@@ -20,6 +20,7 @@ public enum UnitState
 public class UnitController : MonoBehaviour
 {
     [SerializeField] string unitName;
+    [SerializeField] string description;
 
     [SerializeField] int steelCost = 10;
     [SerializeField] int timeToTrain = 1;
@@ -127,6 +128,13 @@ public class UnitController : MonoBehaviour
     private FollowEnemyState followState;
     private AttackState agentAttackState;
     private FollowPathState patrolState;
+
+    // circle material colours
+    Material deteectionRangeMaterial;
+    Material attackRangeMaterial;
+
+    UnitManager um;
+
     #endregion
 
     #region properties
@@ -144,6 +152,7 @@ public class UnitController : MonoBehaviour
 
     // unit stats
     public string Name { get => unitName; }
+    public string Description { get => description; }
     public int Cost { get => steelCost; }
     public int SpaceUsed { get => spaceUsed; }
     public float TimeToTrain { get => timeToTrain; }
@@ -185,13 +194,14 @@ public class UnitController : MonoBehaviour
     void Start()
     {
         gameManager = GameManager.Instance;
+        um = UnitManager.Instance;
 
         health = maxHealth;        
 
         if (healthBar)
             healthBarOffset = healthBar.transform.parent.localPosition;
 
-        audio = body.GetComponent<AudioSource>();
+        audio = GetComponent<AudioSource>();
 
         bool isAi = body.gameObject.layer == 7;
 
@@ -205,9 +215,9 @@ public class UnitController : MonoBehaviour
         if (ReachedRallyPoint || !moveToRallyPoint)
             ChangeState(UnitState.Idle);
 
-        if (UnitManager.Instance)
+        if (um)
         {
-            UnitManager.Instance.UCRefs.AddLast(this);
+            um.UCRefs.AddLast(this);
         }
 
         childMeshRenderers = GetComponentsInChildren<MeshRenderer>();
@@ -217,34 +227,23 @@ public class UnitController : MonoBehaviour
 
         agent = body.GetComponent<NavMeshAgent>();
         agent.speed = movementSpeed;
-
-        // set scale of circle meshes
+        
         if (detectionRangeMesh)
-        {
-            detectionRangeMesh.gameObject.SetActive(false);            
+        {            
+            detectionRangeMesh.gameObject.SetActive(false);
         }
 
         if (attackRangeMesh)
-        {
+        {            
             attackRangeMesh.gameObject.SetActive(false);
         }
+
     }
 
 	// Update is called once per frame
 	void Update()
     {
-        // show/hide gui above unit
-        if(unitIcon)
-            unitIcon.gameObject.SetActive(gameManager.ShowIcons);
-        if(statusText)
-            statusText.gameObject.SetActive(gameManager.ShowStatusText);
-
-        if (healthBar)
-        {
-            healthBar.gameObject.SetActive(gameManager.ShowHealthbars);
-            healthBar.progress = health / maxHealth;
-            healthBar.SetProgress(health / maxHealth, maxHealth);
-        }
+        UpdateDisplayOptions();
 
         if (health <= 0)
         {
@@ -261,8 +260,6 @@ public class UnitController : MonoBehaviour
             if(destroyEffects != null)
                 gameManager.InstantiateParticles(destroyEffects[RandomPick(destroyEffects)], body.position);
         }
-
-        //healthBar.transform.position = body.position + healthBarOffset;
 
         if (UnitManager.Instance)
         {
@@ -286,15 +283,43 @@ public class UnitController : MonoBehaviour
         // set scale of circle meshes
         if (detectionRangeMesh)
         {            
-            detectionRangeMesh.localScale = new Vector3(detectionRadius, detectionRangeMesh.localScale.y,
-                detectionRadius);
+            detectionRangeMesh.localScale = new Vector3(2*detectionRadius, detectionRangeMesh.localScale.y,
+                2*detectionRadius);
+
+            detectionRangeMesh.GetComponent<Renderer>().material.color = um.DetectionRangeColor;
         }
+
 
         if (attackRangeMesh)
         {            
-            attackRangeMesh.localScale = new Vector3(attackRange, attackRangeMesh.localScale.y, attackRange);
+            attackRangeMesh.localScale = new Vector3(2*attackRange, attackRangeMesh.localScale.y, 2*attackRange);
+            attackRangeMesh.GetComponent<Renderer>().material.color = um.AttackRangeColor;
         }
 
+    }
+
+    private void UpdateDisplayOptions()
+    {
+        // show/hide gui above unit
+        if (unitIcon)
+            unitIcon.gameObject.SetActive(gameManager.ShowIcons);
+
+        if (statusText)
+            statusText.gameObject.SetActive(gameManager.ShowStatusText);
+
+        if (healthBar)
+        {
+            healthBar.gameObject.SetActive(gameManager.ShowHealthbars);
+            healthBar.progress = health / maxHealth;
+            healthBar.SetProgress(health / maxHealth, maxHealth);
+        }
+
+        // show/hide circle meshes around unit
+        if (detectionRangeMesh && SingleSelected)
+            detectionRangeMesh.gameObject.SetActive(gameManager.ShowDetectionRange);
+
+        if (attackRangeMesh && SingleSelected)
+            attackRangeMesh.gameObject.SetActive(gameManager.ShowAttackRange);
     }
 
     private void LateUpdate()
@@ -316,10 +341,10 @@ public class UnitController : MonoBehaviour
 
         if(selected && SingleSelected && showRanges)
         {
-            if(detectionRangeMesh != null)
+            if(detectionRangeMesh != null && gameManager.ShowDetectionRange)
                 detectionRangeMesh.gameObject.SetActive(true);
 
-            if(attackRangeMesh != null)
+            if(attackRangeMesh != null && gameManager.ShowAttackRange)
                 attackRangeMesh.gameObject.SetActive(true);
         }
         else if(!selected)
@@ -350,7 +375,7 @@ public class UnitController : MonoBehaviour
 
         ParticleSystem hitParticles = hitEffects[RandomPick(hitEffects)];
 
-        InstantiateParticles(hitParticles, hitPosition);
+        InstantiateParticles(hitParticles, hitPosition, Quaternion.identity);
 
         if (hitSounds.Length > 0)
         {
@@ -395,18 +420,20 @@ public class UnitController : MonoBehaviour
             child.Play();
     }
 
-    public void InstantiateParticles(ParticleSystem particles, Vector3 position)
+    public void InstantiateParticles(ParticleSystem particles, Vector3 position, Quaternion rotation)
     {
         if (particles == null)
             return;
 
-        Instantiate(particles, position, Quaternion.identity, transform);
+        var obj = Instantiate(particles, position, rotation, transform);
 
         var childParticles = particles.gameObject.GetComponentsInChildren<ParticleSystem>();
 
         particles.Play();
         foreach (ParticleSystem child in childParticles)
             child.Play();
+
+        Destroy(obj, 3.0f);
     }
 
     public void InstantiateParticles(VisualEffect particles, Vector3 position)

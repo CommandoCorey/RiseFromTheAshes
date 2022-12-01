@@ -112,7 +112,7 @@ AudioSource:
   m_GameObject: {fileID: 4287867034258344001}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 1095790181896709802, guid: d74a42cb712d1514b8abfbeb69dbaaf5, type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
@@ -225,13 +225,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ce1311378444314781025cff0c15cca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildingName: HQ
+  buildingName: Headquarters
   steelCost: 0
   timeToBuild: 1
   maxHP: 1000
   startAtMaxHP: 1
-  buildingDescription: 
+  buildingDescription: Defend this building at all costs!
   aiBuilding: 0
+  thumbnailImage: {fileID: 21300000, guid: 557630aa1f83cc142a8676c7cbdb025f, type: 3}
   HP: 0
   selectionHighlight: {fileID: 9143008997224749134}
   hitSounds:
@@ -845,6 +846,18 @@ PrefabInstance:
     - target: {fileID: 5445242052473862573, guid: 034af8a138aaac94f8d541fc6f234da9, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5961994480839670138, guid: 034af8a138aaac94f8d541fc6f234da9, type: 3}
+      propertyPath: m_Color.b
+      value: 0.7529412
+      objectReference: {fileID: 0}
+    - target: {fileID: 5961994480839670138, guid: 034af8a138aaac94f8d541fc6f234da9, type: 3}
+      propertyPath: m_Color.g
+      value: 0.5529412
+      objectReference: {fileID: 0}
+    - target: {fileID: 5961994480839670138, guid: 034af8a138aaac94f8d541fc6f234da9, type: 3}
+      propertyPath: m_Color.r
+      value: 0.27450982
       objectReference: {fileID: 0}
     - target: {fileID: 6272836589082170509, guid: 034af8a138aaac94f8d541fc6f234da9, type: 3}
       propertyPath: m_RootOrder

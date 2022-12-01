@@ -22,9 +22,21 @@ public class Break_Props : MonoBehaviour
 
     private void FixedUpdate()
     {
+        /*
         var hits = Physics.OverlapBox(
             bc.bounds.min + (bc.bounds.max - bc.bounds.min) * 0.5f,
             (bc.bounds.max - bc.bounds.min) * 0.5f, Quaternion.identity, unitLayerMask);
         foreach (var hit in hits) { MyOnTrigger(hit); }
+        */
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        int layer = other.transform.gameObject.layer;
+
+        if (layer == 6 || layer == 7) // unit layers
+        {
+            MyOnTrigger(other);
+        }
     }
 }

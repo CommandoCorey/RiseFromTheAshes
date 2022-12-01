@@ -32,6 +32,8 @@ public class BuildMenu : MonoBehaviour
 	[SerializeField] TextMeshProUGUI insufficientResourcesText;
 	[SerializeField] float notificationTimeout = 1;
 
+	[SerializeField] GameObject tooltipPanel;
+
 	[Header("Build Stats Text")]
 	[SerializeField] GameObject statsPanel;
 	[SerializeField] TextMeshProUGUI buildingName;
@@ -70,7 +72,8 @@ public class BuildMenu : MonoBehaviour
 
 	public void Hide()
 	{
-		gameObject.SetActive(false);
+		gameObject.SetActive(false);	
+
 	}
 
 	// added by Paul
@@ -83,6 +86,7 @@ public class BuildMenu : MonoBehaviour
 		//Debug.Log("pointer entered button number" + itemNumber);
 		
 		statsPanel.SetActive(true);
+		tooltipPanel.SetActive(false);
 
 		var building = buildItems[itemNumber].buildingPrefab;
 
@@ -97,6 +101,7 @@ public class BuildMenu : MonoBehaviour
     {
 		//Debug.Log("Pointer exited button");
 		statsPanel.SetActive(false);
+		tooltipPanel.SetActive(true);
 	}
 
 	public void Build(in BuildItem item)
@@ -114,7 +119,8 @@ public class BuildMenu : MonoBehaviour
 			insufficientResourcesText.gameObject.SetActive(false);
 
 			Hide();
-		}
+            BuildingInfo.Instance.ShowBuildingPanel(b);
+        }
 		else
         {
 			Notify.Queue("You don't have enough steel to construct this building", notificationTimeout);

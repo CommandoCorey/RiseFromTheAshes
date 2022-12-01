@@ -3076,6 +3076,42 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[1]
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 5892311857527278379, guid: d5af27dcede9e9545bb65880caa270b1, type: 3}
+      propertyPath: attackRangeColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5892311857527278379, guid: d5af27dcede9e9545bb65880caa270b1, type: 3}
+      propertyPath: attackRangeColor.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5892311857527278379, guid: d5af27dcede9e9545bb65880caa270b1, type: 3}
+      propertyPath: attackRangeColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5892311857527278379, guid: d5af27dcede9e9545bb65880caa270b1, type: 3}
+      propertyPath: attackRangeOpacity
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5892311857527278379, guid: d5af27dcede9e9545bb65880caa270b1, type: 3}
+      propertyPath: detectionRangeColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5892311857527278379, guid: d5af27dcede9e9545bb65880caa270b1, type: 3}
+      propertyPath: detectionRangeColor.g
+      value: 0.9451673
+      objectReference: {fileID: 0}
+    - target: {fileID: 5892311857527278379, guid: d5af27dcede9e9545bb65880caa270b1, type: 3}
+      propertyPath: detectionRangeColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5892311857527278379, guid: d5af27dcede9e9545bb65880caa270b1, type: 3}
+      propertyPath: detectionRangeOpacity
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6117614908136113351, guid: d5af27dcede9e9545bb65880caa270b1, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6695366993430279488, guid: d5af27dcede9e9545bb65880caa270b1, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -5619,6 +5655,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65c81c12c96e7264d88709d8b451b5d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!54 &964800549
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 964800543}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1001 &966958694
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9153,6 +9205,7 @@ MonoBehaviour:
   unitHealthbarKey: 0
   unitIconsKey: 0
   unitStatusTextKey: 0
+  destroyPropEffect: {fileID: 0}
 --- !u!1 &1576155946
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class CameraController : MonoBehaviour {
+public class CameraController : MonoBehaviour 
+{
 	[SerializeField] float zoomedInMouseSensitivity = 0.001f;
 	[SerializeField] float zoomedOutMouseSensitivity = 0.01f;
 	[SerializeField] float zoomedInWASDSensitivity = 15.0f;
@@ -13,7 +14,20 @@ public class CameraController : MonoBehaviour {
 	[SerializeField] float zoomInterpSpeed = 10.0f;
 	[SerializeField] BoxCollider bounds;
 
-	float zoom;
+    // default values. Added By Paul
+    float defaultZoomedInMouse;
+    float defaultZoomedOutMouse;
+    float defaultZoomedInWASD;
+    float defaultZoomedOutWASD;
+    float defaultZoomedInWASDSprint;
+    float defaultZoomedOutWASDSprint;
+    float defaultMaxZoom;
+    float defaultMinZoom;
+    float defaultZoomSpeed;
+	float defaultZoomedInEdgeScroll;
+	float defaultZoomedOutEdgeScroll;
+
+    float zoom;
 
 	Vector2 mousePos;
 	Vector2 oldMousePos;
@@ -27,7 +41,7 @@ public class CameraController : MonoBehaviour {
 	[SerializeField] [Tooltip("The size of the areas that are to trigger scrolling, in pixels.")] float edgeSize = 30.0f;
 	[SerializeField] float zoomedInEdgeScrollSpeed = 15.0f;
 	[SerializeField] float zoomedOutEdgeScrollSpeed = 30.0f;
-	[SerializeField] bool enableEdgeScrolling = true;
+	public bool enableEdgeScrolling = true;
 
 	bool firstMove;
 	bool moving;
@@ -35,6 +49,20 @@ public class CameraController : MonoBehaviour {
 	float startPy;
 	float targetPy;
 	float zoomTime;
+
+	private void Awake()
+	{
+		// set default values
+		defaultZoomedInMouse = zoomedInMouseSensitivity;
+        defaultZoomedOutMouse = zoomedOutMouseSensitivity;
+        defaultZoomedInWASD = zoomedInWASDSensitivity;
+        defaultZoomedOutWASD = zoomedOutWASDSensitivity;
+        defaultZoomedInWASDSprint = zoomedInWASDSensitivitySprint;
+        defaultZoomedOutWASDSprint = zoomedOutWASDSensitivitySprint;
+		defaultZoomedInEdgeScroll = zoomedInEdgeScrollSpeed;
+		defaultZoomedOutEdgeScroll = zoomedOutEdgeScrollSpeed;
+        defaultZoomSpeed = zoomInterpSpeed;
+    }
 
 	private void Start()
 	{
@@ -168,4 +196,35 @@ public class CameraController : MonoBehaviour {
 			velocity = dir * Mathf.Lerp(zoomedInEdgeScrollSpeed, zoomedOutEdgeScrollSpeed, zoomPerc);
 		}
 	}
+
+	//---------------/
+	// Added by Paul /
+	//----------------/
+	public void ScaleKeyboardMoveSpeed(float multiplier)
+    {
+		zoomedInWASDSensitivity = defaultZoomedInWASD * multiplier;
+		zoomedOutWASDSensitivity = defaultZoomedOutWASD * multiplier;
+		zoomedInWASDSensitivitySprint = defaultZoomedInWASDSprint * multiplier;
+		zoomedOutWASDSensitivitySprint = defaultZoomedOutWASDSprint * multiplier;
+	}
+
+	public void ScaleMouseMoveSpeed(float multiplier)
+    {
+		zoomedInMouseSensitivity = defaultZoomedInMouse * multiplier;
+		zoomedOutMouseSensitivity = defaultZoomedOutMouse * multiplier;
+    }
+
+	public void ScaleCameraZoomSpeed(float multiplier)
+	{
+		zoomInterpSpeed = defaultZoomSpeed * multiplier;
+	}
+
+	public void ScaleEdgeScrollSpeed(float multiplier)
+    {
+		zoomedInEdgeScrollSpeed = defaultZoomedInEdgeScroll * multiplier;
+		zoomedOutEdgeScrollSpeed = defaultZoomedOutEdgeScroll * multiplier;
+    }
+	//-------------------------//
+	// End of Paul's functions //
+	//-------------------------//
 }
