@@ -42,15 +42,24 @@ public class SelectionSprites : MonoBehaviour
     public void SetSelectedSprite(bool active)
     {
         selectedSprite.gameObject.SetActive(active);
+        renderColor.a = 1;
+        selectedSprite.color = renderColor;
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        // set the opacity of the attacked sprite to zero
-        renderColor = Color.red;
-        renderColor.a = alpha;
-        attackedSprite.color = renderColor;
+        if (gameObject.layer == 7 || gameObject.layer == 9)
+        {
+            // set the opacity of the attacked sprite to zero
+            renderColor = Color.red;
+            renderColor.a = alpha;
+            attackedSprite.color = renderColor;
+        }
+        else
+        {
+            renderColor = Color.blue;
+        }
     }
 
     // Update is called once per frame
