@@ -109,7 +109,7 @@ public class AiPlayer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Difficulty = difficulty;
+        //Difficulty = difficulty;
 
         // seed the unit random number generator by using the time
         Random.InitState((int)DateTime.Now.Ticks);

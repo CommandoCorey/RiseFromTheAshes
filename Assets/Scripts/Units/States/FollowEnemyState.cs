@@ -60,7 +60,8 @@ public class FollowEnemyState : State
 
             directionToTarget = (unit.AttackTarget.position - unit.body.position).normalized;
 
-            agent.SetDestination(unit.AttackTarget.position + directionToTarget * unit.AttackRange);
+            if(!unit.UnitHalt)
+                agent.SetDestination(unit.AttackTarget.position + directionToTarget * unit.AttackRange);
 
             float distanceFromTarget = Vector3.Distance(unit.transform.position, unit.AttackTarget.position);
 

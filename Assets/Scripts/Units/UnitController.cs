@@ -584,8 +584,8 @@ public class UnitController : MonoBehaviour
            case UnitState.Patrol:
                 patrolState = gameObject.AddComponent<FollowPathState>();
            break;
-
         }
+
     }
 
     /// <summary>
@@ -599,7 +599,7 @@ public class UnitController : MonoBehaviour
 
         foreach (UnitController unit in selectedUnits)
         {
-            if(unit.AttackTarget.gameObject == this.gameObject)
+            if(unit.AttackTarget.gameObject == this)
                 return true;
         }
 

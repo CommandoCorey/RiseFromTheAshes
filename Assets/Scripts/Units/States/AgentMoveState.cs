@@ -92,6 +92,11 @@ public class AgentMoveState : State
         unit.PlayMoveSound();
     }
 
+    private void OnDestroy()
+    {
+        unit.body.GetComponent<NavMeshAgent>().isStopped = true;
+    }
+
     private void OnDrawGizmos()
     {        
         //Gizmos.color = Color.green;

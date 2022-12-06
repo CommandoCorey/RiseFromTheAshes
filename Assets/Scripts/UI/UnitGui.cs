@@ -131,7 +131,7 @@ public class UnitGui : MonoBehaviour
     private void HandleActionButton()
     {
         // check if mouse clicks on environment while an action is chosen
-        if (Input.GetMouseButtonDown(0) && ButtonClicked != ActionChosen.Null)
+        if (Input.GetMouseButtonDown(0) && ButtonClicked != ActionChosen.Null && ButtonClicked != ActionChosen.Halt)
         {
             RaycastHit hitInfo;
 
@@ -163,11 +163,7 @@ public class UnitGui : MonoBehaviour
                     attackButton.interactable = true;
 
                     ButtonClicked = ActionChosen.Null;
-                }
-                else if (ButtonClicked == ActionChosen.Halt)
-                {
-                    unitManager.HaltUnitSelection();
-                }
+                }                
                 else if (ButtonClicked == ActionChosen.MoveRallyPoint)
                 {
                     int layer = hitInfo.transform.gameObject.layer;
@@ -364,13 +360,15 @@ public class UnitGui : MonoBehaviour
     public void SetHaltClicked()
     {
         ButtonClicked = ActionChosen.Halt;
-        selectionManager.enabled = false;
+        //selectionManager.enabled = false;
 
         moveButton.interactable = true;
         attackButton.interactable = true;
         setRallyPointButton.interactable = true;
 
         gameManager.SetCursor(gameManager.defaultCursor);
+
+        unitManager.HaltUnitSelection();
     }
 
     /// <summary>
