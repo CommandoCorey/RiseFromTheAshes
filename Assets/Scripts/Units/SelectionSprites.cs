@@ -65,7 +65,11 @@ public class SelectionSprites : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (ShowTargetedSprite)
+        if (ShowAttackedSprite)
+        {
+            FlashSprite();
+        }
+        else if (ShowTargetedSprite)
         {
             if (!targetedSprite.gameObject.activeInHierarchy)
                 targetedSprite.gameObject.SetActive(true);
@@ -77,9 +81,7 @@ public class SelectionSprites : MonoBehaviour
         {
             targetedSprite.gameObject.SetActive(false);
         }
-
-        if (ShowAttackedSprite)
-            FlashSprite();
+        
     }
 
     private void RotateSprite()
@@ -131,7 +133,7 @@ public class SelectionSprites : MonoBehaviour
             curIteration = 0;
             attackedSprite.gameObject.SetActive(false);
 
-            ShowTargetedSprite = true;
+            //ShowTargetedSprite = true;
             ShowAttackedSprite = false;
         }
     }

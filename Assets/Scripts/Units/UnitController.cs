@@ -128,11 +128,6 @@ public class UnitController : MonoBehaviour
     private FollowEnemyState followState;
     private AttackState agentAttackState;
     private FollowPathState patrolState;
-
-    // circle material colours
-    Material deteectionRangeMaterial;
-    Material attackRangeMaterial;
-
     UnitManager um;
 
     #endregion
@@ -167,7 +162,9 @@ public class UnitController : MonoBehaviour
     public float MinAngle { get => minAngleBeforeFiring; }
     public float DPS { get => damagePerHit / attackRate; }
 
+    public bool Selected { get; set; } = false;
     public bool SingleSelected { get; set; } = false;
+
     public bool RotatingHighlight { get; set; } = false;
    
     public bool IsInCombat { get {
@@ -328,12 +325,15 @@ public class UnitController : MonoBehaviour
         body.localPosition = Vector3.zero;
     }
 
+    #region public functions
     /// <summary>
     /// Toggles the visibility of the unit selection highlight and health bar
     /// </summary>
     /// <param name="selected">true or false value</param>
     public void SetSelected(bool selected)
     {
+        Selected = selected;
+
         selectionHighlight.SetActive(selected);
         healthBar.gameObject.SetActive(selected);
 
@@ -355,7 +355,7 @@ public class UnitController : MonoBehaviour
             if (attackRangeMesh != null)
                 attackRangeMesh.gameObject.SetActive(false);
 
-            //SingleSelected = false;
+            Selected = false;
         }
 
         if(AttackTarget != null)
@@ -588,6 +588,32 @@ public class UnitController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Checks if unit has any enemies in selection targeting it
+    /// </summary>
+    /// <returns>true or false</returns>
+    public bool IsTargeted()
+    {
+        var unitManager = UnitManager.Instance;
+        var selectedUnits = unitManager.GetSelectedUnits();
+
+        foreach (UnitController unit in selectedUnits)
+        {
+            if(unit.AttackTarget.gameObject == this.gameObject)
+                return true;
+        }
+
+        if (unitManager.SelectedEnemyUnit != null &&
+            unitManager.SelectedEnemyUnit.AttackTarget == this)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    #endregion
+
     #region private functions
     private int RandomPick(Object[] array)
     {
@@ -600,7 +626,7 @@ public class UnitController : MonoBehaviour
         var unitGui = GameObject.FindObjectOfType<UnitGui>();
 
         if (UnitManager.Instance != null) {
-            UnitManager.Instance.RemoveFromSelection(this.gameObject);
+            UnitManager.Instance.RemoveFromSelection(gameObject);
             UnitManager.Instance.UCRefs.Remove(this);
         }
 

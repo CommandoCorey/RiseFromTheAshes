@@ -325,18 +325,6 @@ public class UnitGui : MonoBehaviour
         }
 
         selectedUnits.Remove(unit);
-
-        // This will cause problems in some scenarios
-        if (unit.AttackTarget != null)
-        {
-            unit.AttackTarget.GetComponent<SelectionSprites>().ShowTargetedSprite = false;
-        }
-
-        // turn off the buttons panel is all selected units are destroted
-        //if (selectedUnits.Count < 1)
-        //{
-            //buttonPanel.SetActive(false);
-        //}
     }
 
     /// <summary>

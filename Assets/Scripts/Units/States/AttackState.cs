@@ -15,7 +15,7 @@ public class AttackState : State
     {
         unit.PlayAimSound();
 
-        if (unit.AttackTarget != null && unit.SingleSelected)
+        if (unit.AttackTarget != null && unit.Selected)
         {
             var sprites = unit.AttackTarget.GetComponent<SelectionSprites>();
             if (sprites)
