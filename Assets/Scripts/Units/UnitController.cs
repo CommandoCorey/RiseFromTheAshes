@@ -123,7 +123,7 @@ public class UnitController : MonoBehaviour
     // state classes
     private IdleState idleState;
     //private SeekState moveState;
-    private AgentMoveState agentMoveState;
+    private MoveState agentMoveState;
     //private FlockState flockState;
     private FollowEnemyState followState;
     private AttackState agentAttackState;
@@ -564,7 +564,7 @@ public class UnitController : MonoBehaviour
             case UnitState.Moving:
 
                 if(agentMoveState == null)
-                    agentMoveState = gameObject.AddComponent<AgentMoveState>();
+                    agentMoveState = gameObject.AddComponent<MoveState>();
                 else                      
                     body.GetComponent<NavMeshAgent>().isStopped = true;
 
@@ -611,7 +611,6 @@ public class UnitController : MonoBehaviour
 
         return false;
     }
-
     #endregion
 
     #region private functions

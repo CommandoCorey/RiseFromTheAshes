@@ -415,7 +415,31 @@ public class UnitManager : MonoBehaviour
     public void RemoveFromSquad(GameObject unit, int squadNum)
     {
         squads[squadNum].Remove(unit);
-    }    
+    }
+
+    /// <summary>
+    /// Checks if a specified transform is being targeted by any units 
+    /// in the current selection
+    /// </summary>
+    /// <param name="target">The unit all building to be checked</param>
+    /// <returns>true or false</returns>
+    public bool TargetInSelection(Transform target)
+    {
+        var selectedUnits = GetSelectedUnits();
+
+        foreach (UnitController unit in selectedUnits)
+        {
+            if (unit.AttackTarget == target)
+                return true;
+        }
+
+        if (SelectedEnemyUnit != null && SelectedEnemyUnit.AttackTarget == this)
+        {
+            return true;
+        }
+
+        return false;
+    }
     #endregion
 
     #region private functions

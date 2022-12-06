@@ -31,18 +31,6 @@ public class UnitGui : MonoBehaviour
     [Header("Unit Stats")]    
     public Image thumbnail;
 
-    /*
-    [Header("Unit Stat bars")]
-    [SerializeField] float maxBarWidth = 500;
-    [SerializeField] RectTransform maxHPBar;
-    [SerializeField] float maxHP = 250;
-    [SerializeField] RectTransform dpsBar;
-    [SerializeField] float maxDps = 30;
-    [SerializeField] RectTransform speedBar;
-    [SerializeField] float maxSpeed = 10;
-    [SerializeField] RectTransform rangeBar;
-    [SerializeField] float maxRange = 40;*/
-
     [Header("Unit Stat Numbers")]
     public TextMeshProUGUI unitName;
     public TextMeshProUGUI currentHealth;
@@ -108,6 +96,9 @@ public class UnitGui : MonoBehaviour
         }*/
 
         HandleActionButton();
+
+        if (ButtonClicked == ActionChosen.Halt)
+            return;
 
         if(Input.GetMouseButtonUp(0) && ButtonClicked == ActionChosen.Null)
         {
@@ -281,8 +272,7 @@ public class UnitGui : MonoBehaviour
         moveButton.gameObject.SetActive(false);
         attackButton.gameObject.SetActive(false);
         haltButton.gameObject.SetActive(false);
-    }    
-
+    }
     #endregion
 
     #region public functions
@@ -360,7 +350,6 @@ public class UnitGui : MonoBehaviour
     public void SetHaltClicked()
     {
         ButtonClicked = ActionChosen.Halt;
-        //selectionManager.enabled = false;
 
         moveButton.interactable = true;
         attackButton.interactable = true;
@@ -369,6 +358,8 @@ public class UnitGui : MonoBehaviour
         gameManager.SetCursor(gameManager.defaultCursor);
 
         unitManager.HaltUnitSelection();
+
+        ButtonClicked = ActionChosen.Null;
     }
 
     /// <summary>

@@ -416,14 +416,6 @@ public class GameManager : MonoBehaviour
             maxUnitsText.text = maxUnitsPlayer.ToString();
         }
     }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public void MoveUnitRallyPoint()
-    {
-        GetComponent<SelectionManager>().enabled = false;        
-    }
     #endregion
 
     #region private functions

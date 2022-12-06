@@ -18,6 +18,20 @@ public class IdleState : State
     {
         unit.body.GetComponent<NavMeshAgent>().isStopped = true;
 
+        // turns off targeted sprite while in halt mode
+        if(unit.AttackTarget != null && unit.UnitHalt)
+        {
+            var um = UnitManager.Instance;
+
+            var prevTarget = unit.AttackTarget;
+            unit.AttackTarget = null;
+
+            if (!um.TargetInSelection(prevTarget))
+            {
+                prevTarget.GetComponent<SelectionSprites>().ShowTargetedSprite = false;
+            }
+        }
+
         AudioSource audio = GetComponentInParent<AudioSource>();
 
         if (audio != null && audio.isPlaying)

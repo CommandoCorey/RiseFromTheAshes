@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UIElements;
 
-public class AgentMoveState : State
+public class MoveState : State
 {
     //[SerializeField] float movementSpeed = 100;
     [SerializeField] float stoppingDistance = 0.5f;
@@ -90,11 +90,6 @@ public class AgentMoveState : State
         // plays random move sound
         AudioSource audio = unit.body.GetComponent<AudioSource>();
         unit.PlayMoveSound();
-    }
-
-    private void OnDestroy()
-    {
-        unit.body.GetComponent<NavMeshAgent>().isStopped = true;
     }
 
     private void OnDrawGizmos()
