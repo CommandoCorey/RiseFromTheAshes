@@ -21,8 +21,9 @@ public abstract class AiTask : ScriptableObject, ICloneable
     public string TaskStatus { get => taskStatus; set => taskStatus = value; }
     
     // abstract functions
-    public abstract int GetSteelCost();
+    //public abstract int GetSteelCost();
     public abstract bool PerformTask();
+    public abstract bool CanPerform();
     public abstract bool IsComplete();
 
     public abstract object Clone();

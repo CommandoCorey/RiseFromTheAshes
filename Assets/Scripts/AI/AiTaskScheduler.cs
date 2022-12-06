@@ -23,11 +23,15 @@ public class TaskSet
 
 public class AiTaskScheduler : MonoBehaviour
 {
-    public static float delayBetweenTasks = 10;
+    public float delayBetweenTasks = 10;
     public bool useIndividualTaskDelay = false;
 
     [Header("Ai Tasks")]
-    [SerializeField] AiStrategy playerStrategy;
+    [SerializeField] AiStrategy playerStrategyEasy;
+    [SerializeField] AiStrategy playerStrategyNormal;
+    [SerializeField] AiStrategy playerStrategyHard;
+    [SerializeField] AiStrategy playerStrategyVeryHard;
+
     public TaskSet[] tasksSchedule;
 
     [Header("Info Panel")]
@@ -80,8 +84,26 @@ public class AiTaskScheduler : MonoBehaviour
 
         baysInConstruction = aiPlayer.BaysInConstruction;
 
-        if (playerStrategy != null)
-            tasksSchedule = (TaskSet[])playerStrategy.Clone();
+        AiStrategy playerStrategy = null;
+
+        switch(AiPlayer.Difficulty)
+        {
+            case AiDifficulty.Easy: playerStrategy = playerStrategyEasy;
+                break;
+
+            case AiDifficulty.Normal: playerStrategy = playerStrategyNormal;
+                break;
+
+            case AiDifficulty.Hard: playerStrategy = playerStrategyHard;
+                break;
+
+            case AiDifficulty.VeryHard: playerStrategy = playerStrategyVeryHard;
+                break;
+        }
+
+        
+        tasksSchedule = (TaskSet[])playerStrategy.Clone();
+        //delayBetweenTasks = playerStrategy.delayBetweenTasks;
 
         //SortTasks();
 
@@ -96,7 +118,7 @@ public class AiTaskScheduler : MonoBehaviour
         for (int i = 0; i < tasksSchedule.Length; i++)
         {
             taskDisplays.Add(Instantiate(taskSetPanelPrefab, taskListPanel));
-            taskDisplays[i].taskSetNumber.text = "Task Set " + i + ":";
+            taskDisplays[i].taskSetNumber.text = tasksSchedule[i].description +":";
         }
         
     }
@@ -122,19 +144,20 @@ public class AiTaskScheduler : MonoBehaviour
         // check status of current tasks
         foreach (TaskSet set in tasksSchedule)
         {
-
-            // Check if the task set requires completion of previous set
-            if (set.waitForPreviousTaskSet && previousSet != null && !previousSet.Completed)
-            {
-                set.tasks[set.TaskNum].TaskStatus = "Waiting for previous set to finish";
-                continue;
-            }
-
             // if not looping move to the next set
             if (set.TaskNum >= set.tasks.Count && !set.loopTaskSet)
                 continue;
 
-            if (steel >= set.tasks[set.TaskNum].GetSteelCost() && set.ReadyToPerform)
+            // Check if the task set requires completion of previous set
+            if (set.waitForPreviousTaskSet && previousSet != null && !previousSet.Completed)
+            {
+                if(set.tasks.Count > 0)
+                    set.tasks[set.TaskNum].TaskStatus = "Waiting for previous set to finish";
+
+                continue;
+            }
+
+            if (set.tasks[set.TaskNum].CanPerform() && set.ReadyToPerform)
             {
                 StartCoroutine(PerformNextTask(set));
                 set.ReadyToPerform = false;
@@ -219,7 +242,7 @@ public class AiTaskScheduler : MonoBehaviour
 
     private IEnumerator PerformNextTask(TaskSet set)
     {
-        //set.tasks[set.TaskNum].TaskStatus = "Performing Soon";
+        set.tasks[set.TaskNum].TaskStatus = "Performing in " + delayBetweenTasks + " seconds";
 
         float delay = useIndividualTaskDelay 
             ? set.tasks[set.TaskNum].timeDelay : delayBetweenTasks;
@@ -228,7 +251,7 @@ public class AiTaskScheduler : MonoBehaviour
 
         if (set.tasks[set.TaskNum].PerformTask()) // attempt to perform the task
         {
-            //set.tasks[set.TaskNum].TaskStatus = "Task performed";
+            set.tasks[set.TaskNum].TaskStatus = "Task performed";
 
             activeTasks.Add(set.tasks[set.TaskNum]);
             set.TaskNum++;
@@ -258,21 +281,10 @@ public class AiTaskScheduler : MonoBehaviour
             }
             else
             {
-                //try
-                //{
-                    AiTask task = tasksSchedule[i].tasks[tasksSchedule[i].TaskNum];
+                AiTask task = tasksSchedule[i].tasks[tasksSchedule[i].TaskNum];
 
-                    taskDisplays[i].taskDescription.text = task.TaskDescription;
-
-                    if (steel < task.GetSteelCost())
-                        taskDisplays[i].taskStatus.text = "Not enough Steel";
-                    else
-                        taskDisplays[i].taskStatus.text = task.TaskStatus;
-                //}
-                //catch (Exception e)
-                //{
-                //    Debug.LogException(e);
-                //}
+                taskDisplays[i].taskDescription.text = task.TaskDescription;
+                taskDisplays[i].taskStatus.text = task.TaskStatus;
             }
         }
 

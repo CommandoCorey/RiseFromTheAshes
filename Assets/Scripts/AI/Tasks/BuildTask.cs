@@ -35,9 +35,30 @@ public class BuildTask : AiTask
         return clonedTask;
     }
 
+    /*
     public override int GetSteelCost()
     {
         return buildingToConstruct.steelCost;
+    }*/
+
+    public override bool CanPerform()
+    {
+        var ai = FindObjectOfType<AiPlayer>();
+        int steel = ResourceManager.Instance.aiResources[0].currentAmount;
+
+        if (steel >= buildingToConstruct.steelCost)
+        {
+            if (ai.PlaceHoldersLeft)
+                return true;
+            else
+                taskStatus = "No ghost buildings left";
+        }
+        else
+        {
+            taskStatus = "Not enough steel";
+        }
+
+        return false;
     }
 
     public override bool PerformTask()
@@ -119,5 +140,6 @@ public class BuildTask : AiTask
     {
         return instance.IsBuilding == false;
     }
+
     
 }

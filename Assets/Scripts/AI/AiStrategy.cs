@@ -6,6 +6,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Ai Player", menuName = "Ai Player Strategy", order = 1)]
 public class AiStrategy : ScriptableObject, ICloneable
 {
+    public float delayBetweenTasks = 0;
     public TaskSet[] tasksSchedule;
 
     public object Clone()

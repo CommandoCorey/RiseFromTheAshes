@@ -805,6 +805,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36518f83df217114386203b0d1dda425, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  easyDelay: 9
+  normalDelay: 6
+  hardDelay: 3
+  veryHardDelay: 0
   AiHeadquarters: {fileID: 0}
   playerBase: {fileID: 0}
   rallyPoint: {fileID: 0}
@@ -832,9 +836,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4441d7076f1bff47b4616fcd8df537d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerStrategy: {fileID: 11400000, guid: 14514190c2880204f931e89ced631512, type: 2}
+  useIndividualTaskDelay: 0
+  playerStrategyEasy: {fileID: 0}
+  playerStrategyNormal: {fileID: 0}
+  playerStrategyHard: {fileID: 0}
+  playerStrategyVeryHard: {fileID: 0}
   tasksSchedule: []
   showInfoPanel: 0
+  togglePanelKey: 0
   infoPanel: {fileID: 3892714476887254199}
   steelCurrentAmount: {fileID: 3892714476225376675}
   steelMaxAmount: {fileID: 5413209682913748920}

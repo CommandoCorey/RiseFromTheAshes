@@ -22,6 +22,8 @@ public class AiPlayer : MonoBehaviour
 {
     [Header("Difficulty Time Delays")]
     public static AiDifficulty Difficulty = AiDifficulty.Normal;
+
+    [SerializeField] AiDifficulty difficulty = AiDifficulty.Normal;
     [SerializeField] float easyDelay = 15;
     [SerializeField] float normalDelay = 10;
     [SerializeField] float hardDelay = 5;
@@ -107,6 +109,8 @@ public class AiPlayer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Difficulty = difficulty;
+
         // seed the unit random number generator by using the time
         Random.InitState((int)DateTime.Now.Ticks);
 

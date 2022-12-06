@@ -22,10 +22,11 @@ public class FollowPathTask : DispatchWaveTask
         return clonedTask;
     }
 
+    /*
     public override int GetSteelCost()
     {
         return 0;
-    }
+    }*/
 
     public override bool IsComplete()
     {

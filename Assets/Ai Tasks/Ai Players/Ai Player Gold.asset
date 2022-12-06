@@ -12,31 +12,84 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfec3beb6435167479a5e4427da4b2b8, type: 3}
   m_Name: Ai Player Gold
   m_EditorClassIdentifier: 
+  delayBetweenTasks: 0
   tasksSchedule:
-  - description: Construct Buildings
+  - description: Initial Phase
     loopTaskSet: 0
     addRebuildTasks: 0
     waitForPreviousTaskSet: 0
     tasks:
-    - {fileID: 11400000, guid: 52972dab28eec7a46a5bad7651046b8e, type: 2}
-    - {fileID: 11400000, guid: f330073f0b0f26548a69805ca021dd11, type: 2}
-    - {fileID: 11400000, guid: dd871d2a833b4684ab89860fb204542a, type: 2}
-  - description: Train Units
-    loopTaskSet: 1
-    addRebuildTasks: 0
-    waitForPreviousTaskSet: 0
-    tasks:
+    - {fileID: 11400000, guid: b008510ce44331443818d773a9a7526a, type: 2}
     - {fileID: 11400000, guid: 193e48b38a0b05c43a4d4accb7a63633, type: 2}
+    - {fileID: 11400000, guid: 1730439bc2dc4c24aac92bc9222419e7, type: 2}
+    - {fileID: 11400000, guid: 193e48b38a0b05c43a4d4accb7a63633, type: 2}
+    - {fileID: 11400000, guid: 193e48b38a0b05c43a4d4accb7a63633, type: 2}
+    - {fileID: 11400000, guid: 193e48b38a0b05c43a4d4accb7a63633, type: 2}
+    - {fileID: 11400000, guid: a58b67708357e5242b990f2b99b4898e, type: 2}
+    - {fileID: 11400000, guid: 193e48b38a0b05c43a4d4accb7a63633, type: 2}
+    - {fileID: 11400000, guid: 93d1f022331833740b41127ab8500768, type: 2}
+    - {fileID: 11400000, guid: 193e48b38a0b05c43a4d4accb7a63633, type: 2}
+    - {fileID: 11400000, guid: 93d1f022331833740b41127ab8500768, type: 2}
+    - {fileID: 11400000, guid: 554b2691b14272d40987d7a7e67be99e, type: 2}
+    - {fileID: 11400000, guid: 193e48b38a0b05c43a4d4accb7a63633, type: 2}
+    - {fileID: 11400000, guid: 193e48b38a0b05c43a4d4accb7a63633, type: 2}
+    - {fileID: 11400000, guid: 1e63546794e62c34696df0787f29b772, type: 2}
+    - {fileID: 11400000, guid: 93d1f022331833740b41127ab8500768, type: 2}
+    - {fileID: 11400000, guid: 93d1f022331833740b41127ab8500768, type: 2}
+    - {fileID: 11400000, guid: 93d1f022331833740b41127ab8500768, type: 2}
+    - {fileID: 11400000, guid: 93d1f022331833740b41127ab8500768, type: 2}
+    - {fileID: 11400000, guid: a58b67708357e5242b990f2b99b4898e, type: 2}
+    - {fileID: 11400000, guid: ab74243d8f5f6f944955bd739551d7d6, type: 2}
+    - {fileID: 11400000, guid: 193e48b38a0b05c43a4d4accb7a63633, type: 2}
+    - {fileID: 11400000, guid: ab74243d8f5f6f944955bd739551d7d6, type: 2}
+    - {fileID: 11400000, guid: 193e48b38a0b05c43a4d4accb7a63633, type: 2}
+    - {fileID: 11400000, guid: 193e48b38a0b05c43a4d4accb7a63633, type: 2}
+    - {fileID: 11400000, guid: 193e48b38a0b05c43a4d4accb7a63633, type: 2}
+    - {fileID: 11400000, guid: d3f7042942d54ad47b28b2c18229003d, type: 2}
+    - {fileID: 11400000, guid: ab74243d8f5f6f944955bd739551d7d6, type: 2}
+    - {fileID: 11400000, guid: 93d1f022331833740b41127ab8500768, type: 2}
     - {fileID: 11400000, guid: 93d1f022331833740b41127ab8500768, type: 2}
     - {fileID: 11400000, guid: ab74243d8f5f6f944955bd739551d7d6, type: 2}
     - {fileID: 11400000, guid: 93d1f022331833740b41127ab8500768, type: 2}
-  - description: Dispatch Units
+    - {fileID: 11400000, guid: 93d1f022331833740b41127ab8500768, type: 2}
+    - {fileID: 11400000, guid: 0b5a114bd6bc64842ba24b4e9238926a, type: 2}
+    - {fileID: 11400000, guid: ab74243d8f5f6f944955bd739551d7d6, type: 2}
+    - {fileID: 11400000, guid: 193e48b38a0b05c43a4d4accb7a63633, type: 2}
+    - {fileID: 11400000, guid: ab74243d8f5f6f944955bd739551d7d6, type: 2}
+    - {fileID: 11400000, guid: 193e48b38a0b05c43a4d4accb7a63633, type: 2}
+    - {fileID: 11400000, guid: ab74243d8f5f6f944955bd739551d7d6, type: 2}
+    - {fileID: 11400000, guid: 193e48b38a0b05c43a4d4accb7a63633, type: 2}
+    - {fileID: 11400000, guid: ab74243d8f5f6f944955bd739551d7d6, type: 2}
+    - {fileID: 11400000, guid: 193e48b38a0b05c43a4d4accb7a63633, type: 2}
+    - {fileID: 11400000, guid: 80675631163452246a56d5a60510e72c, type: 2}
+    - {fileID: 11400000, guid: ab74243d8f5f6f944955bd739551d7d6, type: 2}
+    - {fileID: 11400000, guid: ab74243d8f5f6f944955bd739551d7d6, type: 2}
+    - {fileID: 11400000, guid: 80675631163452246a56d5a60510e72c, type: 2}
+    - {fileID: 11400000, guid: ab74243d8f5f6f944955bd739551d7d6, type: 2}
+    - {fileID: 11400000, guid: ab74243d8f5f6f944955bd739551d7d6, type: 2}
+  - description: Looping Phase
+    loopTaskSet: 1
+    addRebuildTasks: 0
+    waitForPreviousTaskSet: 1
+    tasks: []
+  - description: Dispatch Waves
     loopTaskSet: 0
     addRebuildTasks: 0
     waitForPreviousTaskSet: 0
     tasks:
-    - {fileID: 11400000, guid: 77edb65a3c4eec54886c6a88a570d8bc, type: 2}
-  - description: Repair Buildings
+    - {fileID: 11400000, guid: a22574c4b5767204fa5154047f7529ec, type: 2}
+    - {fileID: 11400000, guid: d29b1eba25621324fbb87aee209fb2f4, type: 2}
+    - {fileID: 11400000, guid: 97d5d86fed0ca89499b181f06dedbf92, type: 2}
+    - {fileID: 11400000, guid: bc509bea8efff0f4a9ada03eb7cca1c5, type: 2}
+    - {fileID: 11400000, guid: 9bbb6e7505a1b134d85f8550a2168c7d, type: 2}
+    - {fileID: 11400000, guid: e611773c26498044e8995c15d4689dc5, type: 2}
+    - {fileID: 11400000, guid: 7164397a2fddfa94885ad4035ef227f7, type: 2}
+  - description: Endgame waves
+    loopTaskSet: 0
+    addRebuildTasks: 1
+    waitForPreviousTaskSet: 1
+    tasks: []
+  - description: Rebuild Tasks
     loopTaskSet: 0
     addRebuildTasks: 1
     waitForPreviousTaskSet: 0
