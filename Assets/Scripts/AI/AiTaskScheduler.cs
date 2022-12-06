@@ -80,7 +80,7 @@ public class AiTaskScheduler : MonoBehaviour
 
         activeTasks = new List<AiTask>();
 
-        SetTimeDelay();
+       
 
         baysInConstruction = aiPlayer.BaysInConstruction;
 
@@ -101,7 +101,9 @@ public class AiTaskScheduler : MonoBehaviour
                 break;
         }
 
-        
+        SetTimeDelay();
+
+
         tasksSchedule = (TaskSet[])playerStrategy.Clone();
         //delayBetweenTasks = playerStrategy.delayBetweenTasks;
 
