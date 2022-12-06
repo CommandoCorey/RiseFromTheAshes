@@ -8,6 +8,8 @@ public class FollowEnemyState : State
     private NavMeshAgent agent;
     private new Vector3 directionToTarget;
 
+    SelectionSprites sprites;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -19,13 +21,7 @@ public class FollowEnemyState : State
 
         unit.statusText.text = "Moving to enemy";
 
-        if (unit.AttackTarget != null && unit.SingleSelected)
-        {
-            var sprites = unit.AttackTarget.GetComponent<SelectionSprites>();
-            if (sprites)
-                sprites.ShowTargetedSprite = true;
-        }
-
+        ShowTargetedSprite();
     }
 
     // Update is called once per frame
@@ -44,12 +40,12 @@ public class FollowEnemyState : State
             {
                 // remove highlight from previous enemy
                 if(unit.SingleSelected && unit.AttackTarget != null)
-                    unit.AttackTarget.GetComponent<SelectionSprites>().ShowTargetedSprite = false;
+                    sprites.ShowTargetedSprite = false;
 
                 unit.AttackTarget = closest;
 
-                if (unit.SingleSelected)
-                    unit.AttackTarget.GetComponent<SelectionSprites>().ShowTargetedSprite = true;
+                if (unit.Selected)
+                    sprites.ShowTargetedSprite = true;
 
                 // update path
                 agent.SetDestination(unit.AttackTarget.position);
@@ -60,6 +56,8 @@ public class FollowEnemyState : State
 
         if (unit.AttackTarget != null)
         {
+            ShowTargetedSprite();
+
             directionToTarget = (unit.AttackTarget.position - unit.body.position).normalized;
 
             agent.SetDestination(unit.AttackTarget.position + directionToTarget * unit.AttackRange);
@@ -75,9 +73,15 @@ public class FollowEnemyState : State
         }
     }
 
-    private void SearchForCloserEnemies()
+    private void ShowTargetedSprite()
     {
+        if(unit.AttackTarget != null && unit.Selected)
+        {
+            sprites = unit.AttackTarget.GetComponent<SelectionSprites>();
 
+            if (sprites != null)
+                sprites.ShowTargetedSprite = true;
+        }
     }
 
     private void OnDestroy()

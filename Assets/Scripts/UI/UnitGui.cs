@@ -192,7 +192,6 @@ public class UnitGui : MonoBehaviour
         }
     }
 
-
     private void UpdateUnitHealth()
     {
         try { 
@@ -212,12 +211,13 @@ public class UnitGui : MonoBehaviour
                     }
 
                     if (unitIcons.Count > 0)
-                    {
-                        TextMeshProUGUI[] healthText = unitIcons[i].GetComponentsInChildren<TextMeshProUGUI>();
-                        healthText[0].text = selectedUnits[i].CurrentHealth.ToString();
+                    {                        
+                        //TextMeshProUGUI[] healthText = unitIcons[i].GetComponentsInChildren<TextMeshProUGUI>();
+                        //healthText[0].text = selectedUnits[i].CurrentHealth.ToString();
 
                         var healthBar = unitIcons[i].GetComponentInChildren<ProgressBar>();
                         healthBar.progress = selectedUnits[i].CurrentHealth / selectedUnits[i].MaxHealth;
+                        healthBar.textString = selectedUnits[i].CurrentHealth.ToString();
                     }
                 }
 
@@ -325,18 +325,6 @@ public class UnitGui : MonoBehaviour
         }
 
         selectedUnits.Remove(unit);
-
-        // This will cause problems in some scenarios
-        if (unit.AttackTarget != null)
-        {
-            unit.AttackTarget.GetComponent<SelectionSprites>().ShowTargetedSprite = false;
-        }
-
-        // turn off the buttons panel is all selected units are destroted
-        //if (selectedUnits.Count < 1)
-        //{
-            //buttonPanel.SetActive(false);
-        //}
     }
 
     /// <summary>
@@ -427,10 +415,7 @@ public class UnitGui : MonoBehaviour
         for (int i=0; i < selection.Count; i++)
         {
             unitIcons.Add(Instantiate(unitIconPrefab, unitPanal));
-
-            
             selectedUnits.Add(selection[i].GetComponent<UnitController>());
-
 
             TextMeshProUGUI[] healthText = unitIcons[i].GetComponentsInChildren<TextMeshProUGUI>();
 
