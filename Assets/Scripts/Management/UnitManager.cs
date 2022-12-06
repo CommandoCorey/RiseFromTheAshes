@@ -41,6 +41,7 @@ public class UnitManager : MonoBehaviour
     public static UnitManager Instance { get; private set; }
     public Color DetectionRangeColor { get => detectionRangeColor; }
     public Color AttackRangeColor { get => attackRangeColor; }
+    public UnitController SelectedEnemyUnit { get => selectedEnemyUnit; }
 
     List<List<GameObject>> squads;
     Vector3[] groupPath;
@@ -112,17 +113,6 @@ public class UnitManager : MonoBehaviour
         }
         DoTheMusic();
 
-        /*
-        foreach(GameObject go in selectedUnits)
-        {
-            var unit = go.GetComponent<UnitController>();
-
-            if(unit.SingleSelected && unit.AttackTarget != null)
-            {
-                SetTargetHighlight(unit, true);
-            }
-        }*/
-
         // Update circle materials
         detectionRangeColor.a = detectionRangeAlpha;
         attackRangeColor.a = attackRangeAlpha;
@@ -158,13 +148,8 @@ public class UnitManager : MonoBehaviour
     /// <param name="on">The on/off toggle to the highlight</param>
     public void SetTargetHighlight(UnitController unit, bool on)
     {
-        //int layer = unit.AttackTarget.gameObject.layer;
-
-        //if (layer == 6 || layer == 7 || layer == 8 || layer == 9)
-        //
         var highlight = unit.AttackTarget.root.GetComponent<SelectionSprites>();
-        highlight.enabled = on;
-        //}        
+        highlight.ShowTargetedSprite = on;
     }
 
     /// <summary>
@@ -175,7 +160,7 @@ public class UnitManager : MonoBehaviour
     {
         List<UnitController> selected = new List<UnitController>();
 
-        foreach(GameObject unit in selection.Units)
+        foreach(GameObject unit in selectedUnits)
         {
             selected.Add(unit.GetComponent<UnitController>());
         }
@@ -228,9 +213,24 @@ public class UnitManager : MonoBehaviour
     /// Removes an individual unit from the selected units list
     /// </summary>
     /// <param name="unit">the unit to be removed from the list</param>
-    public void RemoveFromSelection(GameObject unit)
+    public void RemoveFromSelection(GameObject obj)
     {
-        selectedUnits.Remove(unit);
+        if (!selectedUnits.Contains(obj))
+            return;
+
+        selectedUnits.Remove(obj);
+
+        var unit = obj.GetComponent<UnitController>();
+
+        // Turns off selection sprite if no other enemy is targeting it
+        if (unit.AttackTarget != null)
+        {
+            if(!unit.AttackTarget.GetComponent<UnitController>().IsTargeted())
+            {
+                unit.AttackTarget.GetComponent<SelectionSprites>().ShowTargetedSprite = false;
+            }
+            
+        }
     }    
 
     // Not currently used
@@ -242,49 +242,6 @@ public class UnitManager : MonoBehaviour
     {
         return GameObject.FindGameObjectsWithTag("PlayerUnit");
     }
-
-    // Not used anymore
-    /// <summary>
-    /// Returns all of the neigbhours units within a flock
-    /// </summary>
-    /// <param name="current">The current unit being checked around</param>
-    /// <param name="squad">the squad number that the current unit is within</param>
-    /// <returns>list of game objects</returns>
-    /*public List<GameObject> GetNeighbourUnits(GameObject current, int squad)
-    {
-        List<GameObject> neighbours = new List<GameObject>();
-        //var units = GameObject.FindGameObjectsWithTag("PlayerUnit");
-
-        foreach (var unit in squads[squad])
-        {
-            UnitState state = unit.GetComponent<UnitController>().State;
-
-            if (unit != current && state == UnitState.Flock)
-                neighbours.Add(unit);
-        }
-
-        return neighbours;
-    }
-  
-    /// <summary>
-    /// Returns all of the player's units in the scene which are currently moving
-    /// </summary>
-    /// <returns></returns>
-    public List<GameObject> GetMovingUnits()
-    {
-        List<GameObject> movingUnits = new List<GameObject>();
-        var units = GameObject.FindGameObjectsWithTag("PlayerUnit");
-
-        foreach(var unit in units)
-        {
-            UnitState state = unit.GetComponent<UnitController>().State;
-
-            if(state == UnitState.Moving || state == UnitState.Flock)
-                movingUnits.Add(unit);
-        }
-
-        return movingUnits;
-    }*/
 
     // Not currently Used
     /// <summary>
@@ -305,18 +262,7 @@ public class UnitManager : MonoBehaviour
     /// <returns>True or false value based on whether the object is valid</returns>
     public bool AttackTarget(Transform target)
     {
-        /*
-        if (target.gameObject.layer == 7) // Ai Unit
-        {
-            target.root.GetComponent<FlashSelection>().enabled = true;
-        }
-        else if (target.gameObject.layer == 9) // Ai Building
-        {
-            target.GetComponent<Building>().selectionHighlight.SetActive(true);
-            target.GetComponent<FlashSelection>().enabled = true;
-        }*/
-
-        target.GetComponent<SelectionSprites>().ShowAttackedSprite = true;
+        target.GetComponent<SelectionSprites>().ShowAttackedSprite = true;        
 
         // check if the target's layer is one of the enemy layers
         if (enemyLayers == (enemyLayers | (1 << target.gameObject.layer)))
@@ -325,8 +271,9 @@ public class UnitManager : MonoBehaviour
             {
                 var unit = unitObject.GetComponent<UnitController>();
 
-                //if (unit.AttackTarget != null)
-                    //SetTargetHighlight(unit, false);
+                // turn off highlight of previous target
+                if (unit.AttackTarget != null)
+                    SetTargetHighlight(unit, false);
 
                 unit.AttackTarget = target;
                 unit.AttackOrderGiven = true;
@@ -526,6 +473,10 @@ public class UnitManager : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Turns on highlights on enemy unit
+    /// </summary>
+    /// <param name="unit">The enemy unit being selected</param>
     public void SelectEnemyUnit(UnitController unit)
     {
         selectedEnemyUnit = unit;

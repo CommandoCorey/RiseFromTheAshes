@@ -173,7 +173,7 @@ public class SelectionManager : MonoBehaviour
 
         selectedTable.Remove(id);
 
-        //unitManager.SetTargetHighlight(unit, false);
+        //unitManager.SetTargetHighlight(unit, false);       
     }
 
     public void SetSelectedBuilding(Building building)
@@ -181,6 +181,9 @@ public class SelectionManager : MonoBehaviour
         ClearBuildingSelection();
         selectedBuilding = building;
         selectedBuilding.selectionHighlight.SetActive(true);
+
+        var sprites = selectedBuilding.GetComponent<SelectionSprites>();
+        sprites.SetSelectedSprite(true);
     }
 
     public void SetPanelTooltip(bool visible)
@@ -237,13 +240,6 @@ public class SelectionManager : MonoBehaviour
                 hit.transform.gameObject.layer != 5) // UI layer
                 ClearBuildingSelection();
         }
-
-        // dont select anything if the GUI is clicked
-        /*if (EventSystem.current.IsPointerOverGameObject())
-        {
-            //Debug.Log("Clicked on GUI");
-            return;
-        }*/
 
         if (Physics.Raycast(ray, out hit, 50000.0f, unitSelection))
         {
@@ -417,6 +413,7 @@ public class SelectionManager : MonoBehaviour
         if (selectedBuilding != null)
         {
             selectedBuilding.selectionHighlight.SetActive(false);
+            selectedBuilding.GetComponent<SelectionSprites>().SetSelectedSprite(false);
 
             var vehiclebay = selectedBuilding.GetComponent<VehicleBay>();
             if (vehiclebay != null)
