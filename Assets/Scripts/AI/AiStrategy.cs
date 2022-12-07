@@ -19,6 +19,5 @@ public class AiStrategy : ScriptableObject, ICloneable
         }
 
         return copiedTaskSchedule.ToArray();
-
     }
 }

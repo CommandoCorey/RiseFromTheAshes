@@ -32,7 +32,7 @@ public class AiUnit : MonoBehaviour
     }
 
     /// <summary>
-    /// 
+    /// attacks the nearest enemy attacking the headquarters
     /// </summary>
     public void AttackClosestHQEnemy()
     {
@@ -58,7 +58,13 @@ public class AiUnit : MonoBehaviour
         }
     }
 
-    /*
+    private void OnDestroy()
+    {
+        if (!IsInWave)
+            AiTaskScheduler.Instance.AddRetrainTrask(gameObject.tag);
+    }
+
+    /*NO LONGER USED
     //------------------------------------------------------------------
     // Checks if there is an outpost placeholder in detection range that
     // the AiPlayer has not already found

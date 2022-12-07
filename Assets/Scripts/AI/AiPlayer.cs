@@ -37,6 +37,7 @@ public class AiPlayer : MonoBehaviour
 
     [SerializeField] List<Transform> buildingPlaceholders;
     [SerializeField] Transform[] buildingPrefabs;
+    [SerializeField] Transform[] unitTypes;
 
     public List<VehicleBay> vehicleBays;
     public RaidPath[] raidPaths;
@@ -69,6 +70,7 @@ public class AiPlayer : MonoBehaviour
 
     // properties
     public Transform[] BuildingPrefabs { get => buildingPrefabs; }
+    public Transform[] UnitTypes { get => unitTypes; }
     public List<Transform> BuildingPlaceholders { get => buildingPlaceholders; }
     public List<Building> BaysInConstruction { get => baysInConstruction; }
     public List<UnitController> UnitsAttackingHQ { get => unitsAttackingHQ; } 

@@ -26,6 +26,7 @@ public class TaskSet
 
 public class AiTaskScheduler : MonoBehaviour
 {
+    #region variable declaration
     public float delayBetweenTasks = 10;
     public bool useIndividualTaskDelay = false;
 
@@ -65,7 +66,9 @@ public class AiTaskScheduler : MonoBehaviour
     private TaskSet previousSet;
 
     public static AiTaskScheduler Instance { get; private set; }
+    #endregion
 
+    #region awake, start and update
     private void Awake()
     {
         if (Instance == null)
@@ -148,7 +151,10 @@ public class AiTaskScheduler : MonoBehaviour
         {
             // if not looping move to the next set
             if (set.TaskNum >= set.tasks.Count && !set.loopTaskSet)
+            {
+                previousSet = set;
                 continue;
+            }
 
             // Check if the task set requires completion of previous set
             if (set.waitForPreviousTaskSet && previousSet != null && !previousSet.Completed)
@@ -158,10 +164,8 @@ public class AiTaskScheduler : MonoBehaviour
                     set.status = "Waiting for previous set to finish";
                 }
 
-                continue;
             }
-
-            if (set.tasks[set.TaskNum].CanPerform() && set.ReadyToPerform)
+            else if (set.tasks[set.TaskNum].CanPerform() && set.ReadyToPerform)
             {
                 StartCoroutine(PerformNextTask(set));
                 set.ReadyToPerform = false;                
@@ -190,7 +194,94 @@ public class AiTaskScheduler : MonoBehaviour
             showInfoPanel = !showInfoPanel;
         }        
     }
+    #endregion
 
+    #region public functions
+    /// <summary>
+    /// Adds a new build task to the rebuild set at runtime
+    /// </summary>
+    /// <param name="BuildingTag">The tag of the game object to be instantiated</param>
+    /// <param name="placholder">Game Object with the Ghost script to build on</param>
+    public void AddRebuildTask(string buildingTag, Transform placholder)
+    {
+        BuildTask rebuildTask = ScriptableObject.CreateInstance<BuildTask>();
+        Building buildingToConstruct = null;
+
+        foreach (Transform building in aiPlayer.BuildingPrefabs)
+        {
+            if (building.tag == buildingTag)
+            {
+                buildingToConstruct = building.GetComponent<Building>();
+                break;
+            }
+        }
+
+        if (buildingToConstruct == null)
+        {
+            Debug.LogError("No prefab found in list with tag '" + buildingTag + "'");
+            return;
+        }
+
+        rebuildTask.name = "Build " + buildingToConstruct.buildingName;
+        rebuildTask.buildingToConstruct = buildingToConstruct;
+        rebuildTask.placeholderNumber = aiPlayer.BuildingPlaceholders.IndexOf(placholder);
+        rebuildTask.timeDelay = delayBetweenTasks;
+
+        TaskSet taskSet = tasksSchedule[0];
+        foreach (TaskSet set in tasksSchedule)
+        {
+            if (set.addRebuildTasks)
+            {
+                taskSet = set;
+                break;
+            }
+        }
+
+        taskSet.tasks.Add(rebuildTask);
+        //SortTaskSet(taskSet);
+    }
+
+    public void AddRetrainTrask(string unitTag)
+    {
+        TrainUnitTask retrainTask = ScriptableObject.CreateInstance<TrainUnitTask>();
+        UnitController unitToTrain = null;
+
+        foreach (Transform unit in aiPlayer.UnitTypes)
+        {
+            if (unit.tag == unitTag)
+            {
+                unitToTrain = unit.GetComponent<UnitController>();
+                break;
+            }
+        }
+
+        if (unitToTrain == null)
+        {
+            Debug.LogError("No unit found in list with tag '" + unitTag + "'");
+            return;
+        }
+
+        retrainTask.name = "Train " + unitToTrain.name;
+        retrainTask.unitToTrain = unitToTrain;
+        retrainTask.timeDelay = delayBetweenTasks;
+
+        TaskSet taskSet = tasksSchedule[0];
+        foreach (TaskSet set in tasksSchedule)
+        {
+            if (set.addRebuildTasks)
+            {
+                taskSet = set;
+                break;
+            }
+        }
+
+        taskSet.tasks.Add(retrainTask);
+        //SortTaskSet(taskSet);
+    }
+
+    #endregion
+
+    #region private functions
     private void SetTimeDelay()
     {
         //Debug.Log("Difficulty: " + AiPlayer.Difficulty);
@@ -270,6 +361,10 @@ public class AiTaskScheduler : MonoBehaviour
                 set.TaskNum = 0;
             }
         }
+        else
+        {
+            set.status = set.tasks[set.TaskNum].TaskStatus;
+        }
 
         set.ReadyToPerform = true;
     }
@@ -337,51 +432,7 @@ public class AiTaskScheduler : MonoBehaviour
 
             set.tasks = sortedTasks.ToList();
         }
-    }*/
-
-    /// <summary>
-    /// Adds a new build task to the rebuild set at runtime
-    /// </summary>
-    /// <param name="BuildingTag">The tag of the game object to be instantiated</param>
-    /// <param name="placholder">Game Object with the Ghost script to build on</param>
-    public void AddRebuildTask(string buildingTag, Transform placholder)
-    {
-        BuildTask rebuildTask = ScriptableObject.CreateInstance<BuildTask>();
-        Building buildingToConstruct = null;
-
-        foreach (Transform building in aiPlayer.BuildingPrefabs)
-        {
-            if (building.tag == buildingTag)
-            {
-                buildingToConstruct = building.GetComponent<Building>();
-                break;
-            }
-        }
-
-        if (buildingToConstruct == null)
-        {
-            Debug.LogError("No prefab found in list with tag '" + buildingTag + "'");
-            return;
-        }
-
-        rebuildTask.name = "Build " + buildingToConstruct.buildingName;
-        rebuildTask.buildingToConstruct = buildingToConstruct;
-        rebuildTask.placeholderNumber = aiPlayer.BuildingPlaceholders.IndexOf(placholder);
-        rebuildTask.timeDelay = 0;
-
-        TaskSet taskSet = tasksSchedule[0];
-        foreach (TaskSet set in tasksSchedule)
-        {
-            if (set.addRebuildTasks)
-            {
-                taskSet = set;
-                break;
-            }
-        }
-
-        taskSet.tasks.Add(rebuildTask);
-        SortTaskSet(taskSet);
-    }
+    }*/    
 
     private void ClearRebuildTasks()
     {       
@@ -390,12 +441,17 @@ public class AiTaskScheduler : MonoBehaviour
             if (set.addRebuildTasks)
             {
                 set.tasks.Clear();
+                RemoveNullTasks(set.tasks);
             }
         }
+
     }
 
     private void OnDestroy()
     {      
         ClearRebuildTasks();
     }
+    #endregion
+
+    
 }

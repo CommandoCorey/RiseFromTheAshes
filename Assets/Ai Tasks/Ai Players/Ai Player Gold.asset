@@ -18,8 +18,13 @@ MonoBehaviour:
     loopTaskSet: 0
     addRebuildTasks: 1
     waitForPreviousTaskSet: 0
-    tasks: []
-    status: 
+    tasks:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    status: Task performed
   - description: Initial Phase
     loopTaskSet: 0
     addRebuildTasks: 0
@@ -73,7 +78,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 80675631163452246a56d5a60510e72c, type: 2}
     - {fileID: 11400000, guid: ab74243d8f5f6f944955bd739551d7d6, type: 2}
     - {fileID: 11400000, guid: ab74243d8f5f6f944955bd739551d7d6, type: 2}
-    status: Task performed
+    status: Performing in 6 seconds
   - description: Looping Phase
     loopTaskSet: 1
     addRebuildTasks: 0
@@ -101,7 +106,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: ab74243d8f5f6f944955bd739551d7d6, type: 2}
     - {fileID: 11400000, guid: ab74243d8f5f6f944955bd739551d7d6, type: 2}
     - {fileID: 11400000, guid: 80675631163452246a56d5a60510e72c, type: 2}
-    status: Performing in 6 seconds
+    status: Waiting for previous set to finish
   - description: Dispatch Waves
     loopTaskSet: 0
     addRebuildTasks: 0
@@ -114,7 +119,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 9bbb6e7505a1b134d85f8550a2168c7d, type: 2}
     - {fileID: 11400000, guid: e611773c26498044e8995c15d4689dc5, type: 2}
     - {fileID: 11400000, guid: 7164397a2fddfa94885ad4035ef227f7, type: 2}
-    status: Task performed
+    status: Not enough units
   - description: Endgame waves
     loopTaskSet: 0
     addRebuildTasks: 0
