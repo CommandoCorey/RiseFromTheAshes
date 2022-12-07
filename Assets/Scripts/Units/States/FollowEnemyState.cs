@@ -63,14 +63,22 @@ public class FollowEnemyState : State
             if(!unit.UnitHalt)
                 agent.SetDestination(unit.AttackTarget.position + directionToTarget * unit.AttackRange);
 
-            float distanceFromTarget = Vector3.Distance(unit.transform.position, unit.AttackTarget.position);
+            //if (Physics.Raycast(transform.position, directionToTarget, out RaycastHit hit, unit.DetectionRadius))
+            //{
+                //if(hit.transform == unit.AttackTarget)
+                //{ }
 
-            // check that the line of sight is vacant and we are in attack range
-            if (!ObstacleInWay(directionToTarget) && distanceFromTarget <= unit.AttackRange)
-            {
-                agent.isStopped = true;
-                unit.ChangeState(UnitState.Attack);
-            }
+
+
+                float distanceFromTarget = Vector3.Distance(unit.transform.position, unit.AttackTarget.position);
+
+                // check that the line of sight is vacant and we are in attack range
+                if (!ObstacleInWay(directionToTarget) && distanceFromTarget <= unit.AttackRange)
+                {
+                    agent.isStopped = true;
+                    unit.ChangeState(UnitState.Attack);
+                }
+            //}
         }
     }
 
