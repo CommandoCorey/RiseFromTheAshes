@@ -14,6 +14,8 @@ public class TaskSet
     //public bool addOutpostBuildTasks;
     public bool waitForPreviousTaskSet;
     public List<AiTask> tasks;
+
+    [HideInInspector]
     public String status = "";
 
     public int TaskNum { get; set; } = 0;
@@ -81,8 +83,6 @@ public class AiTaskScheduler : MonoBehaviour
 
         activeTasks = new List<AiTask>();
 
-       
-
         baysInConstruction = aiPlayer.BaysInConstruction;
 
         AiStrategy playerStrategy = null;
@@ -103,7 +103,6 @@ public class AiTaskScheduler : MonoBehaviour
         }
 
         SetTimeDelay();
-
 
         tasksSchedule = (TaskSet[])playerStrategy.Clone();
         //delayBetweenTasks = playerStrategy.delayBetweenTasks;
@@ -219,7 +218,7 @@ public class AiTaskScheduler : MonoBehaviour
             break;
         }
 
-        Debug.Log("Delay between tasks: " + delayBetweenTasks + " seconds");
+       //Debug.Log("Delay between tasks: " + delayBetweenTasks + " seconds");
     }
 
     // sorts tasks in a specific task set by highest to lowst priority score
