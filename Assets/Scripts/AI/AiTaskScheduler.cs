@@ -14,6 +14,7 @@ public class TaskSet
     //public bool addOutpostBuildTasks;
     public bool waitForPreviousTaskSet;
     public List<AiTask> tasks;
+    public String status = "";
 
     public int TaskNum { get; set; } = 0;
     public bool ReadyToPerform { get; set; } = true;
@@ -153,8 +154,10 @@ public class AiTaskScheduler : MonoBehaviour
             // Check if the task set requires completion of previous set
             if (set.waitForPreviousTaskSet && previousSet != null && !previousSet.Completed)
             {
-                if(set.tasks.Count > 0)
-                    set.tasks[set.TaskNum].TaskStatus = "Waiting for previous set to finish";
+                if (set.tasks.Count > 0)
+                {
+                    set.status = "Waiting for previous set to finish";
+                }
 
                 continue;
             }
@@ -162,7 +165,11 @@ public class AiTaskScheduler : MonoBehaviour
             if (set.tasks[set.TaskNum].CanPerform() && set.ReadyToPerform)
             {
                 StartCoroutine(PerformNextTask(set));
-                set.ReadyToPerform = false;
+                set.ReadyToPerform = false;                
+            }
+            else if (set.ReadyToPerform)
+            {
+                set.status = set.tasks[set.TaskNum].TaskStatus;
             }
 
             previousSet = set;
@@ -244,16 +251,17 @@ public class AiTaskScheduler : MonoBehaviour
 
     private IEnumerator PerformNextTask(TaskSet set)
     {
-        set.tasks[set.TaskNum].TaskStatus = "Performing in " + delayBetweenTasks + " seconds";
-
         float delay = useIndividualTaskDelay 
             ? set.tasks[set.TaskNum].timeDelay : delayBetweenTasks;
+
+        // update the status message for the set               
+        set.status = "Performing in " + delay + " seconds";
 
         yield return new WaitForSeconds(delay);
 
         if (set.tasks[set.TaskNum].PerformTask()) // attempt to perform the task
         {
-            set.tasks[set.TaskNum].TaskStatus = "Task performed";
+            set.status = "Task performed";
 
             activeTasks.Add(set.tasks[set.TaskNum]);
             set.TaskNum++;
@@ -286,7 +294,7 @@ public class AiTaskScheduler : MonoBehaviour
                 AiTask task = tasksSchedule[i].tasks[tasksSchedule[i].TaskNum];
 
                 taskDisplays[i].taskDescription.text = task.TaskDescription;
-                taskDisplays[i].taskStatus.text = task.TaskStatus;
+                taskDisplays[i].taskStatus.text = tasksSchedule[i].status;
             }
         }
 

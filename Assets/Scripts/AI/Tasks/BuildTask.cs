@@ -100,7 +100,7 @@ public class BuildTask : AiTask
 
             ai.ConstructBuilding(ghostBuilding, buildingToConstruct, this);
 
-            taskStatus = "Constructing building";
+            //taskStatus = "Constructing building";
             return true;
 
         }
@@ -123,7 +123,7 @@ public class BuildTask : AiTask
 
             ai.ConstructBuilding(ghostBuilding, buildingToConstruct, this);
 
-            taskStatus = "Constructing building";
+            //taskStatus = "Constructing building";
             return true;
 
         }

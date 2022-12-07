@@ -44,9 +44,6 @@ public class AiPlayer : MonoBehaviour
 
     // private variables
     private ResourceManager resources;
-    private int steel = 0;
-    private int maxSteel;
-    private UnitController unit;
 
     private int unitsTrained = 0;
 
@@ -137,7 +134,7 @@ public class AiPlayer : MonoBehaviour
     {
         //Debug.Log("Training Unit");
         resources.AiSpendSteel(unit.Cost);
-        steel = resources.aiResources[0].currentAmount;
+        var steel = resources.aiResources[0].currentAmount;
         vehicleBay.IsTraining = true;
         task.UnitTrained = false;
 
