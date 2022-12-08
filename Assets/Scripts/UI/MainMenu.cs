@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reflection;
 using TMPro;
 using UnityEngine;
@@ -64,7 +66,7 @@ public class MainMenu : MonoBehaviour
 
     public void QuitGame()
     {
-        Debug.Log("Quitting game...");
+        UnityEngine.Debug.Log("Quitting game...");
 
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
@@ -108,6 +110,12 @@ public class MainMenu : MonoBehaviour
     {
         mainMenu.SetActive(false);
         gameOptions.SetActive(true);
+    }
+
+    public void OpenInstructions()
+    {
+        //UnityEngine.Debug.Log(Environment.CurrentDirectory);
+        Process.Start(Environment.CurrentDirectory + "\\Instructions.pdf");
     }
 
     public static Rect RectTransformToScreenSpace(RectTransform transform)
