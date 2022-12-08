@@ -87,7 +87,7 @@ public class SimpleAiPlayer : MonoBehaviour
             infoPanel.SetActive(false);
         }
 
-        if (steel >= tasksSchedule[taskNum].GetSteelCost() && readyToPerform)
+        if (tasksSchedule[taskNum].CanPerform() && readyToPerform)
         {
             Invoke("PerformNextTask", tasksSchedule[taskNum].timeDelay);
             readyToPerform = false;
@@ -121,11 +121,7 @@ public class SimpleAiPlayer : MonoBehaviour
     {
         steelAmount.text = steel.ToString();
         taskDescription.text = tasksSchedule[taskNum].TaskDescription;
-
-        if (steel < tasksSchedule[taskNum].GetSteelCost())
-            taskStatus.text = "Not enough Steel";
-        else
-            taskStatus.text = tasksSchedule[taskNum].TaskStatus;
+        taskStatus.text = tasksSchedule[taskNum].TaskStatus;
 
         UpdateActiveTasks();
 

@@ -98,7 +98,7 @@ public class AttackState : State
 
             if (unit.fireEffects.Length > 0)
             {
-                ParticleSystem fireParticles = unit.fireEffects[Random.Range(0, unit.fireEffects.Length)];
+                var fireParticles = unit.fireEffects[Random.Range(0, unit.fireEffects.Length)];
                 //unit.PlayParticles(unit.fireEffect);
                 unit.InstantiateParticles(fireParticles, unit.firingPoint.position, unit.firingPoint.rotation);
             }

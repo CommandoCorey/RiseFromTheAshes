@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 using static UnityEngine.UI.CanvasScaler;
 
 public class IdleState : State
@@ -15,7 +16,21 @@ public class IdleState : State
 
     private void Start()
     {
-        //agent.StopMoving();
+        unit.body.GetComponent<NavMeshAgent>().isStopped = true;
+
+        // turns off targeted sprite while in halt mode
+        if(unit.AttackTarget != null && unit.UnitHalt)
+        {
+            var um = UnitManager.Instance;
+
+            var prevTarget = unit.AttackTarget;
+            unit.AttackTarget = null;
+
+            if (!um.TargetInSelection(prevTarget))
+            {
+                prevTarget.GetComponent<SelectionSprites>().ShowTargetedSprite = false;
+            }
+        }
 
         AudioSource audio = GetComponentInParent<AudioSource>();
 
@@ -45,6 +60,8 @@ public class IdleState : State
                 //if (gameObject.tag == "PlayerUnit")
                     //unit.ChangeState(UnitState.Attack);
                 //else if (gameObject.tag == "NavMesh Agent")
+
+                if(!unit.UnitHalt)
                     unit.ChangeState(UnitState.Follow);
             }
             else
@@ -55,7 +72,10 @@ public class IdleState : State
                 {
                     unit.AttackTarget = enemiesInRange[0].gameObject.transform;
                     
-                    unit.ChangeState(UnitState.Follow);
+                    if(!unit.UnitHalt)
+                        unit.ChangeState(UnitState.Follow);
+                    else if(Vector3.Distance(transform.position, unit.AttackTarget.position) <= unit.AttackRange)
+                        unit.ChangeState((UnitState)UnitState.Attack);
                 }
             }
         }
@@ -68,13 +88,11 @@ public class IdleState : State
 
     }
 
-
     private void ResetTurret()
     {
         unit.turret.rotation = Quaternion.RotateTowards(unit.turret.rotation, Quaternion.identity, Time.deltaTime * unit.TurretRotationSpeed);
 
     }
-
 
     private void OnDrawGizmos()
     {

@@ -44,7 +44,22 @@ public class DispatchWaveTask : AiTask
         return clonedTask;
     }
 
+    /*
     public override int GetSteelCost() { return 0; }
+    */
+
+    public override bool CanPerform()
+    {
+        if (AddUnitsToWave())
+        {
+            unitWave.Clear();
+            return true;
+        }
+
+        unitWave.Clear();
+        return false;
+
+    }
 
     public override bool PerformTask()
     {
@@ -204,12 +219,12 @@ public class DispatchWaveTask : AiTask
         }
 
         return freeUnits;       
-    }
+    }    
 
     /*
     private void AddToWave(Transform uniTransform)
     { 
         unitWave.Add(uniTransform);
     }*/
-    
+
 }
