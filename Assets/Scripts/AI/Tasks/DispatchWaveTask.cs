@@ -7,7 +7,7 @@ using static DispatchWaveTask;
 [CreateAssetMenu(fileName = "Dispatch Wave Task", menuName = "Ai Task/Dispatch Unit Wave", order = 2)]
 public class DispatchWaveTask : AiTask
 {
-    protected List<Transform> unitWave;
+    protected List<Transform> unitWave = new List<Transform>();
 
     private AiUnit unit;    
 
