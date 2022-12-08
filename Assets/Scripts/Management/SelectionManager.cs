@@ -109,7 +109,7 @@ public class SelectionManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (gui.ButtonClicked != UnitGui.ActionChosen.Null)
+        if (gameManager.PointerOverUI())
             return;
 
         if(gameManager.enableCursorChanges)        

@@ -12,7 +12,7 @@ public class TurretBuilding : MonoBehaviour
     [Header("Transforms")]
     public Transform turretGun;
     public Transform firingPoint;
-    public Transform fireEffect;
+    public ParticleSystem fireEffect;
 
     [Header("Stats")]
     [SerializeField][Range(1, 100)]

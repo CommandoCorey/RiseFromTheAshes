@@ -22,6 +22,8 @@ public class AiPlayer : MonoBehaviour
 {
     [Header("Difficulty Time Delays")]
     public static AiDifficulty Difficulty = AiDifficulty.Normal;
+
+    [SerializeField] AiDifficulty difficulty = AiDifficulty.Normal;
     [SerializeField] float easyDelay = 15;
     [SerializeField] float normalDelay = 10;
     [SerializeField] float hardDelay = 5;
@@ -35,6 +37,7 @@ public class AiPlayer : MonoBehaviour
 
     [SerializeField] List<Transform> buildingPlaceholders;
     [SerializeField] Transform[] buildingPrefabs;
+    [SerializeField] Transform[] unitTypes;
 
     public List<VehicleBay> vehicleBays;
     public RaidPath[] raidPaths;
@@ -42,9 +45,6 @@ public class AiPlayer : MonoBehaviour
 
     // private variables
     private ResourceManager resources;
-    private int steel = 0;
-    private int maxSteel;
-    private UnitController unit;
 
     private int unitsTrained = 0;
 
@@ -70,6 +70,7 @@ public class AiPlayer : MonoBehaviour
 
     // properties
     public Transform[] BuildingPrefabs { get => buildingPrefabs; }
+    public Transform[] UnitTypes { get => unitTypes; }
     public List<Transform> BuildingPlaceholders { get => buildingPlaceholders; }
     public List<Building> BaysInConstruction { get => baysInConstruction; }
     public List<UnitController> UnitsAttackingHQ { get => unitsAttackingHQ; } 
@@ -107,6 +108,8 @@ public class AiPlayer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //Difficulty = difficulty;
+
         // seed the unit random number generator by using the time
         Random.InitState((int)DateTime.Now.Ticks);
 
@@ -133,7 +136,7 @@ public class AiPlayer : MonoBehaviour
     {
         //Debug.Log("Training Unit");
         resources.AiSpendSteel(unit.Cost);
-        steel = resources.aiResources[0].currentAmount;
+        var steel = resources.aiResources[0].currentAmount;
         vehicleBay.IsTraining = true;
         task.UnitTrained = false;
 

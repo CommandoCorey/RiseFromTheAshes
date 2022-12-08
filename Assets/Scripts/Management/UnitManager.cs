@@ -277,6 +277,7 @@ public class UnitManager : MonoBehaviour
 
                 unit.AttackTarget = target;
                 unit.AttackOrderGiven = true;
+                unit.UnitHalt = false;
 
                 // if the unit is not already in follow enemy state then swith state
                 if(unit.State != UnitState.Follow)
@@ -299,14 +300,9 @@ public class UnitManager : MonoBehaviour
         foreach(GameObject unit in selectedUnits)
         {
             var controller = unit.GetComponent<UnitController>();
-
+            
+            controller.ChangeState(UnitState.Idle);
             controller.UnitHalt = true;
-
-            /*
-            if (controller.State == UnitState.Attack)
-                controller.ChangeState(UnitState.Halt);
-            else
-                controller.ChangeState(UnitState.Idle);*/
         }
 
     }
@@ -394,15 +390,9 @@ public class UnitManager : MonoBehaviour
             // move all units to their designated targets
             for (int i = 0; i < selectedUnits.Count; i++)
             {
-                //var agent = selectedUnits[i].GetComponent<AgentMovement>();
-                //agent.SquadNum = squads.Count - 1;
-
                 var unit = selectedUnits[i].GetComponent<UnitController>();
-
-                //if (flockWhileMoving)
-                    //unit.ChangeState(UnitState.Flock, formationPositions[i]);
-                //else
-                    unit.ChangeState(UnitState.Moving, formationPositions[i]);
+                unit.UnitHalt = false;
+                unit.ChangeState(UnitState.Moving, formationPositions[i]);
             }
 
         }
@@ -425,7 +415,31 @@ public class UnitManager : MonoBehaviour
     public void RemoveFromSquad(GameObject unit, int squadNum)
     {
         squads[squadNum].Remove(unit);
-    }    
+    }
+
+    /// <summary>
+    /// Checks if a specified transform is being targeted by any units 
+    /// in the current selection
+    /// </summary>
+    /// <param name="target">The unit all building to be checked</param>
+    /// <returns>true or false</returns>
+    public bool TargetInSelection(Transform target)
+    {
+        var selectedUnits = GetSelectedUnits();
+
+        foreach (UnitController unit in selectedUnits)
+        {
+            if (unit.AttackTarget == target)
+                return true;
+        }
+
+        if (SelectedEnemyUnit != null && SelectedEnemyUnit.AttackTarget == this)
+        {
+            return true;
+        }
+
+        return false;
+    }
     #endregion
 
     #region private functions

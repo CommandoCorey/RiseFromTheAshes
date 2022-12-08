@@ -28,9 +28,37 @@ public class TrainUnitTask : AiTask
         return clonedTask;
     }
 
+    /*
     public override int GetSteelCost()
     {
         return unitToTrain.Cost;
+    }*/
+
+    public override bool CanPerform()
+    {
+        if (FindObjectOfType<AiPlayer>())
+        {
+            var ai = FindObjectOfType<AiPlayer>();
+
+            if(ResourceManager.Instance.aiResources[0].currentAmount >= unitToTrain.Cost)
+            {
+                if(ai.vehicleBays.Count > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    taskStatus = "No vehicle bays";
+                }
+            }
+            else
+            {
+                taskStatus = "Not enough steel";
+            }
+
+        }
+
+        return false;
     }
 
     public override bool PerformTask()

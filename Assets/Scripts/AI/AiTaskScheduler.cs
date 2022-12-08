@@ -15,6 +15,9 @@ public class TaskSet
     public bool waitForPreviousTaskSet;
     public List<AiTask> tasks;
 
+    [HideInInspector]
+    public String status = "";
+
     public int TaskNum { get; set; } = 0;
     public bool ReadyToPerform { get; set; } = true;
 
@@ -23,11 +26,16 @@ public class TaskSet
 
 public class AiTaskScheduler : MonoBehaviour
 {
-    public static float delayBetweenTasks = 10;
+    #region variable declaration
+    public float delayBetweenTasks = 10;
     public bool useIndividualTaskDelay = false;
 
     [Header("Ai Tasks")]
-    [SerializeField] AiStrategy playerStrategy;
+    [SerializeField] AiStrategy playerStrategyEasy;
+    [SerializeField] AiStrategy playerStrategyNormal;
+    [SerializeField] AiStrategy playerStrategyHard;
+    [SerializeField] AiStrategy playerStrategyVeryHard;
+
     public TaskSet[] tasksSchedule;
 
     [Header("Info Panel")]
@@ -58,7 +66,9 @@ public class AiTaskScheduler : MonoBehaviour
     private TaskSet previousSet;
 
     public static AiTaskScheduler Instance { get; private set; }
+    #endregion
 
+    #region awake, start and update
     private void Awake()
     {
         if (Instance == null)
@@ -76,12 +86,29 @@ public class AiTaskScheduler : MonoBehaviour
 
         activeTasks = new List<AiTask>();
 
-        SetTimeDelay();
-
         baysInConstruction = aiPlayer.BaysInConstruction;
 
-        if (playerStrategy != null)
-            tasksSchedule = (TaskSet[])playerStrategy.Clone();
+        AiStrategy playerStrategy = null;
+
+        switch(AiPlayer.Difficulty)
+        {
+            case AiDifficulty.Easy: playerStrategy = playerStrategyEasy;
+                break;
+
+            case AiDifficulty.Normal: playerStrategy = playerStrategyNormal;
+                break;
+
+            case AiDifficulty.Hard: playerStrategy = playerStrategyHard;
+                break;
+
+            case AiDifficulty.VeryHard: playerStrategy = playerStrategyVeryHard;
+                break;
+        }
+
+        SetTimeDelay();
+
+        tasksSchedule = (TaskSet[])playerStrategy.Clone();
+        //delayBetweenTasks = playerStrategy.delayBetweenTasks;
 
         //SortTasks();
 
@@ -96,7 +123,7 @@ public class AiTaskScheduler : MonoBehaviour
         for (int i = 0; i < tasksSchedule.Length; i++)
         {
             taskDisplays.Add(Instantiate(taskSetPanelPrefab, taskListPanel));
-            taskDisplays[i].taskSetNumber.text = "Task Set " + i + ":";
+            taskDisplays[i].taskSetNumber.text = tasksSchedule[i].description +":";
         }
         
     }
@@ -122,22 +149,30 @@ public class AiTaskScheduler : MonoBehaviour
         // check status of current tasks
         foreach (TaskSet set in tasksSchedule)
         {
+            // if not looping move to the next set
+            if (set.TaskNum >= set.tasks.Count && !set.loopTaskSet)
+            {
+                previousSet = set;
+                continue;
+            }
 
             // Check if the task set requires completion of previous set
             if (set.waitForPreviousTaskSet && previousSet != null && !previousSet.Completed)
             {
-                set.tasks[set.TaskNum].TaskStatus = "Waiting for previous set to finish";
-                continue;
+                if (set.tasks.Count > 0)
+                {
+                    set.status = "Waiting for previous set to finish";
+                }
+
             }
-
-            // if not looping move to the next set
-            if (set.TaskNum >= set.tasks.Count && !set.loopTaskSet)
-                continue;
-
-            if (steel >= set.tasks[set.TaskNum].GetSteelCost() && set.ReadyToPerform)
+            else if (set.tasks[set.TaskNum].CanPerform() && set.ReadyToPerform)
             {
                 StartCoroutine(PerformNextTask(set));
-                set.ReadyToPerform = false;
+                set.ReadyToPerform = false;                
+            }
+            else if (set.ReadyToPerform)
+            {
+                set.status = set.tasks[set.TaskNum].TaskStatus;
             }
 
             previousSet = set;
@@ -159,7 +194,94 @@ public class AiTaskScheduler : MonoBehaviour
             showInfoPanel = !showInfoPanel;
         }        
     }
+    #endregion
 
+    #region public functions
+    /// <summary>
+    /// Adds a new build task to the rebuild set at runtime
+    /// </summary>
+    /// <param name="BuildingTag">The tag of the game object to be instantiated</param>
+    /// <param name="placholder">Game Object with the Ghost script to build on</param>
+    public void AddRebuildTask(string buildingTag, Transform placholder)
+    {
+        BuildTask rebuildTask = ScriptableObject.CreateInstance<BuildTask>();
+        Building buildingToConstruct = null;
+
+        foreach (Transform building in aiPlayer.BuildingPrefabs)
+        {
+            if (building.tag == buildingTag)
+            {
+                buildingToConstruct = building.GetComponent<Building>();
+                break;
+            }
+        }
+
+        if (buildingToConstruct == null)
+        {
+            Debug.LogError("No prefab found in list with tag '" + buildingTag + "'");
+            return;
+        }
+
+        rebuildTask.name = "Build " + buildingToConstruct.buildingName;
+        rebuildTask.buildingToConstruct = buildingToConstruct;
+        rebuildTask.placeholderNumber = aiPlayer.BuildingPlaceholders.IndexOf(placholder);
+        rebuildTask.timeDelay = delayBetweenTasks;
+
+        TaskSet taskSet = tasksSchedule[0];
+        foreach (TaskSet set in tasksSchedule)
+        {
+            if (set.addRebuildTasks)
+            {
+                taskSet = set;
+                break;
+            }
+        }
+
+        taskSet.tasks.Add(rebuildTask);
+        //SortTaskSet(taskSet);
+    }
+
+    public void AddRetrainTrask(string unitTag)
+    {
+        TrainUnitTask retrainTask = ScriptableObject.CreateInstance<TrainUnitTask>();
+        UnitController unitToTrain = null;
+
+        foreach (Transform unit in aiPlayer.UnitTypes)
+        {
+            if (unit.tag == unitTag)
+            {
+                unitToTrain = unit.GetComponent<UnitController>();
+                break;
+            }
+        }
+
+        if (unitToTrain == null)
+        {
+            Debug.LogError("No unit found in list with tag '" + unitTag + "'");
+            return;
+        }
+
+        retrainTask.name = "Train " + unitToTrain.name;
+        retrainTask.unitToTrain = unitToTrain;
+        retrainTask.timeDelay = delayBetweenTasks;
+
+        TaskSet taskSet = tasksSchedule[0];
+        foreach (TaskSet set in tasksSchedule)
+        {
+            if (set.addRebuildTasks)
+            {
+                taskSet = set;
+                break;
+            }
+        }
+
+        taskSet.tasks.Add(retrainTask);
+        //SortTaskSet(taskSet);
+    }
+
+    #endregion
+
+    #region private functions
     private void SetTimeDelay()
     {
         //Debug.Log("Difficulty: " + AiPlayer.Difficulty);
@@ -187,7 +309,7 @@ public class AiTaskScheduler : MonoBehaviour
             break;
         }
 
-        Debug.Log("Delay between tasks: " + delayBetweenTasks + " seconds");
+       //Debug.Log("Delay between tasks: " + delayBetweenTasks + " seconds");
     }
 
     // sorts tasks in a specific task set by highest to lowst priority score
@@ -219,16 +341,17 @@ public class AiTaskScheduler : MonoBehaviour
 
     private IEnumerator PerformNextTask(TaskSet set)
     {
-        //set.tasks[set.TaskNum].TaskStatus = "Performing Soon";
-
         float delay = useIndividualTaskDelay 
             ? set.tasks[set.TaskNum].timeDelay : delayBetweenTasks;
+
+        // update the status message for the set               
+        set.status = "Performing in " + delay + " seconds";
 
         yield return new WaitForSeconds(delay);
 
         if (set.tasks[set.TaskNum].PerformTask()) // attempt to perform the task
         {
-            //set.tasks[set.TaskNum].TaskStatus = "Task performed";
+            set.status = "Task performed";
 
             activeTasks.Add(set.tasks[set.TaskNum]);
             set.TaskNum++;
@@ -237,6 +360,10 @@ public class AiTaskScheduler : MonoBehaviour
             {
                 set.TaskNum = 0;
             }
+        }
+        else
+        {
+            set.status = set.tasks[set.TaskNum].TaskStatus;
         }
 
         set.ReadyToPerform = true;
@@ -258,21 +385,10 @@ public class AiTaskScheduler : MonoBehaviour
             }
             else
             {
-                //try
-                //{
-                    AiTask task = tasksSchedule[i].tasks[tasksSchedule[i].TaskNum];
+                AiTask task = tasksSchedule[i].tasks[tasksSchedule[i].TaskNum];
 
-                    taskDisplays[i].taskDescription.text = task.TaskDescription;
-
-                    if (steel < task.GetSteelCost())
-                        taskDisplays[i].taskStatus.text = "Not enough Steel";
-                    else
-                        taskDisplays[i].taskStatus.text = task.TaskStatus;
-                //}
-                //catch (Exception e)
-                //{
-                //    Debug.LogException(e);
-                //}
+                taskDisplays[i].taskDescription.text = task.TaskDescription;
+                taskDisplays[i].taskStatus.text = tasksSchedule[i].status;
             }
         }
 
@@ -316,51 +432,7 @@ public class AiTaskScheduler : MonoBehaviour
 
             set.tasks = sortedTasks.ToList();
         }
-    }*/
-
-    /// <summary>
-    /// Adds a new build task to the rebuild set at runtime
-    /// </summary>
-    /// <param name="BuildingTag">The tag of the game object to be instantiated</param>
-    /// <param name="placholder">Game Object with the Ghost script to build on</param>
-    public void AddRebuildTask(string buildingTag, Transform placholder)
-    {
-        BuildTask rebuildTask = ScriptableObject.CreateInstance<BuildTask>();
-        Building buildingToConstruct = null;
-
-        foreach (Transform building in aiPlayer.BuildingPrefabs)
-        {
-            if (building.tag == buildingTag)
-            {
-                buildingToConstruct = building.GetComponent<Building>();
-                break;
-            }
-        }
-
-        if (buildingToConstruct == null)
-        {
-            Debug.LogError("No prefab found in list with tag '" + buildingTag + "'");
-            return;
-        }
-
-        rebuildTask.name = "Build " + buildingToConstruct.buildingName;
-        rebuildTask.buildingToConstruct = buildingToConstruct;
-        rebuildTask.placeholderNumber = aiPlayer.BuildingPlaceholders.IndexOf(placholder);
-        rebuildTask.timeDelay = 0;
-
-        TaskSet taskSet = tasksSchedule[0];
-        foreach (TaskSet set in tasksSchedule)
-        {
-            if (set.addRebuildTasks)
-            {
-                taskSet = set;
-                break;
-            }
-        }
-
-        taskSet.tasks.Add(rebuildTask);
-        SortTaskSet(taskSet);
-    }
+    }*/    
 
     private void ClearRebuildTasks()
     {       
@@ -369,12 +441,17 @@ public class AiTaskScheduler : MonoBehaviour
             if (set.addRebuildTasks)
             {
                 set.tasks.Clear();
+                RemoveNullTasks(set.tasks);
             }
         }
+
     }
 
     private void OnDestroy()
     {      
         ClearRebuildTasks();
     }
+    #endregion
+
+    
 }

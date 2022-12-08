@@ -34,7 +34,14 @@ public class DispatchIdleUnitsTask : AiTask
         return clonedTask;
     }
 
+    /*
     public override int GetSteelCost() { return 0; }
+    */
+
+    public override bool CanPerform()
+    {
+        return true;
+    }
 
     public override bool PerformTask()
     {        

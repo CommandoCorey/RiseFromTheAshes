@@ -29,7 +29,7 @@ public class MainMenu : MonoBehaviour
 
     public void Awake()
 	{
-        AiPlayer.Difficulty = (AiDifficulty)PlayerPrefs.GetInt("AIDiff");
+        //AiPlayer.Difficulty = (AiDifficulty)PlayerPrefs.GetInt("AIDiff");
 
         soundSource = GetComponents<AudioSource>()[0];
     }
@@ -122,7 +122,7 @@ public class MainMenu : MonoBehaviour
     public void SetAiDifficulty(int difficulty)
     {
         AiPlayer.Difficulty = (AiDifficulty) difficulty;
-        PlayerPrefs.SetInt("AIDiff", difficulty);
+        //PlayerPrefs.SetInt("AIDiff", difficulty);
     }
 
     #region sound effects
